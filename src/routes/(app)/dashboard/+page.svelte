@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { readable, writable } from 'svelte/store';
 	import TodoList from '../../../lib/components/TodoList.svelte'
+	import Spaces from '../../../lib/components/Spaces.svelte'
     import type { PageData, Task } from '../../routes/$types';
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
@@ -32,15 +33,18 @@
 
 <div id = 'app'>
 
+	<!--
 	<div class = 'profile'>
 		<h1>{user.full_name} </h1>
 		<h2> {user.username} </h2>
 	</div>
+	-->
 
 	<TodoList {data} />
 
 
 
+	<Spaces {data} />
 
 </div>
 
@@ -68,16 +72,15 @@
 		text-align: left;
 	}
 
-
-
 	:global(#todo){
 		width: 300px;
-		height: 80vh;
+		height: 90vh;
+		margin-left: 20px;
 		overflow-y: scroll;
-		background: white;
-		padding: 20px 10px;
-		border-radius: 15px;
-	}
+		overflow-x: hidden;
+		border: 4px solid white;
+		box-shadow: 0px 20px 80px rgba(0,0,0,0.3);
 
+	}
 
 </style>

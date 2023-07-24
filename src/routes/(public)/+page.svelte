@@ -36,9 +36,24 @@
 		</div>
 
 	</div>
+
+	<div class = 'section'>
+
+		<div class = 'section_expo'>
+			<h1 class = 'section_title'> Organize your mind into Spaces </h1>
+		</div>
+
+		<div class = 'row'>
+
+			<img class = 'space s1' src = 'space.svg' alt = 'space'>
+			<img class = 'space s2' src = 'space-1.svg' alt = 'space'>
+			<img class = 'space s3' src = 'space-2.svg' alt = 'space'>
+		</div>
+	</div>
 </div>
 
 <style>
+
 
 	#app{
 		position: fixed;
@@ -49,14 +64,54 @@
 		background: white;
 		overflow-y: scroll;
 		overflow-x: hidden;
+		padding-bottom: 100px;
 	}
-
 
 	html{
 		background: white;
 		color: black;
+
 	}
 
+
+	/* Spaces */
+
+	.section_expo{
+		margin-bottom: 0px;
+	}
+
+
+	.section_title{
+		font-size: 50px;
+		font-weight: 800;
+		letter-spacing: -1px;
+	}
+
+
+	.row{
+		display: flex;
+		justify-content: center;
+		gap: 30px;
+	}
+
+	.space{
+		width: 30vw;
+		transition: 0.2s ease;
+	}
+
+	.s1{
+		margin-top: 150px;
+	}
+
+	.s3{
+		margin-top: 100px;
+	}
+
+	.space:hover{
+		transform: scale(1.05);
+	}
+
+	/* Splash */
 	#splash {
 		margin: 0;
 		width: 100vw;
@@ -111,7 +166,12 @@
 	}
 
 	.expo h1 span{
-		background-image: linear-gradient(black, white, to top left);
+		background: linear-gradient(to top left, #FD1490,#FC014D, #FF4733);
+		-webkit-background-clip: text;
+  		-webkit-text-fill-color: transparent;
+
+		transform: scale(2);
+
 	}
 
 	.expo h1 {
