@@ -1,16 +1,40 @@
 <script lang="ts">
-	import type { PageData } from './$types';
+    import type { PageData } from './$types';
+    import { supabaseClient } from '$lib/db';
+    import { onMount } from 'svelte';
 
-	export let data: PageData;
-	$: ({ profile } = data);
+    export let data: PageData;
+    let { profile } = data;
+
+    // Function to update user profile data in the database
+    async function updateProfile() {
+        try {
+            const { error } = await supabaseClient
+                .from('profiles')
+                .update({
+                    full_name: profile.full_name,
+                    username: profile.username
+                })
+                .eq('id', profile.id);
+
+            if (!error) {
+                console.log('Profile updated successfully!');
+            } else {
+                console.error('Error updating profile:', error);
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error.message);
+        }
+    }
+
+    onMount(() => {
+        // Fetch user profile data or perform any other necessary operations
+    });
 </script>
 
-<div class="card">
-    {JSON.stringify(profile)}
-</div>
-
 <div class="card max-w-3xl mx-auto">
-    <form method="post" class="flex flex-col gap-2">
+    <form on:submit|preventDefault="{updateProfile}" class="flex flex-col gap-2">
+        <!-- Full Name field -->
         <div class="field">
             <label for="full_name" class="label">Full Name</label>
             <p class="control">
@@ -19,11 +43,13 @@
                     name="full_name"
                     class="input"
                     type="text"
-                    value="{profile.full_name}"
+                    bind:value="{profile.full_name}"
                     required
                 />
             </p>
         </div>
+
+        <!-- Username field -->
         <div class="field">
             <label for="username" class="label">Username</label>
             <p class="control">
@@ -32,13 +58,15 @@
                     name="username"
                     class="input"
                     type="text"
-                    value="{profile.username}"
+                    bind:value="{profile.username}"
                     required
                 />
             </p>
         </div>
+
+        <!-- Save button -->
         <div class="mx-auto">
-                <button class="btn btn-filled-primary">Save</button>
+            <button type="submit" class="btn btn-filled-primary">Save</button>
         </div>
     </form>
 </div>

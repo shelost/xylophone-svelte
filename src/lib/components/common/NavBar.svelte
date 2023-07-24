@@ -7,6 +7,7 @@
 	import { loading } from '$lib/stores';
 	import { invalidate } from '$app/navigation';
 
+
 	const handleLogout: SubmitFunction = () => {
 		loading.set(true);
 		return async ({ result }) => {
@@ -19,50 +20,124 @@
 		};
 	};
 
+
 </script>
 
 
-<AppBar>
+<div id = 'navbar'>
 	<!-- Branding -->
-	<svelte:fragment slot="lead">
-		<a href="/" class="text-sm sm:text-lg md:text-3xl font-bold uppercase mr-4" title="Return to Homepage">{SITE_NAME}</a>
-	</svelte:fragment>
-	<!-- Navigation -->
-	<svelte:fragment slot="trail">
+
+		<a href="/">
+			<img id = 'logo' src = 'amateur-text.svg' alt = 'logo'>
+		</a>
+
+	<!-- Middle Section -->
+
+	<div class = 'text-btns'>
+
 		{#if !$page.url.pathname.startsWith('/dashboard')}
-			<section class="hidden lg:flex space-x-4">
-				<a class="btn" href="/pricing">Pricing</a>
-			</section>
-			<Divider vertical borderWidth="border-l-2" />
-		{/if}
-		<!-- Light Switch -->
-		<section class="flex space-x-4 items-center">
-			<LightSwitch origin="tr" />
-			<Divider vertical borderWidth="border-l-2" />
-			{#if $page.data.session?.user && $page.url.pathname.startsWith('/dashboard')}
-					<!-- <button class="btn-icon btn-filled-primary">
-						<span>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-								<path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clip-rule="evenodd" />
-							</svg>	
-						</span>
-					</button> -->
-					{#if $page.data.session}
-						<form action="/logout" method="post" use:enhance={handleLogout}>
-							<button class="btn btn-filled-primary" disabled={$loading}>Sign out</button>
-						</form>
-					{/if}
-			{:else}
-				<a class="btn btn-filled-primary btn-sm" href="/dashboard">
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0V12a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 12V5.25" />
-					</svg>
-					<span class="hidden sm:block">Dashboard</span>
+			<a href="/">
+				<h2 class = 'text-btn'>
+					Home
+				</h2>
+			</a>
+			<a href="/pricing">
+				<h2 class = 'text-btn'>
+					Pricing
+				</h2>
+			</a>
+
+		{:else}
+				<a href="/dashboard">
+					<h2 class = 'text-btn'>
+						Dashboard
+					</h2>
 				</a>
+				<a href="/dashboard/settings">
+					<h2 class = 'text-btn'>
+						Settings
+					</h2>
+				</a>
+				<a href="/dashboard/subscriptions">
+					<h2 class = 'text-btn'>
+						Subscriptions
+					</h2>
+				</a>
+
+		{/if}
+	</div>
+
+	<!-- Button -->
+		{#if $page.data.session?.user && $page.url.pathname.startsWith('/dashboard')}
+			{#if $page.data.session}
+				<form action="/logout" method="post" use:enhance={handleLogout}>
+					<button disabled={$loading}>
+						<h1> Log Out</h1>
+					</button>
+				</form>
 			{/if}
-		</section>
-	</svelte:fragment>
-</AppBar>
-{#if $page.data.session?.user && $page.url.pathname.startsWith('/dashboard')}
-	<QuickLinks />
-{/if}
+		{:else}
+
+			<a class="button" href="/dashboard">
+				<button>
+					<h1> Dashboard </h1>
+				</button>
+			</a>
+		{/if}
+
+
+
+</div>
+
+
+<style>
+
+	#navbar{
+		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		background: white;
+		padding: 0 15px;
+	}
+
+	#logo{
+		height: 24px;
+	}
+
+	button{
+		background: black;
+		color: white;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+		padding: 2px 15px;
+		border-radius: 5px;
+		font-size: 14px;
+		box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
+		transition: 0.2s ease;
+	}
+
+	button:hover{
+		background: #202020;
+	}
+
+	button h1{
+		font-size: 14px;
+		margin: 0;
+	}
+
+	.text-btns{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+	}
+
+	.text-btn{
+		color: black;
+		text-decoration: none;
+	}
+
+</style>

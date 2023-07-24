@@ -15,18 +15,27 @@ export interface Database {
           email: string;
           stripe_customer_id: string | null;
           created_at: string | null;
+          projects: Array<Object> | null;
+          tasks: Array<Object> | null;
+          spaces: Array<Object> | null;
         };
         Insert: {
           id: string;
           email: string;
           stripe_customer_id?: string | null;
           created_at?: string | null;
+          projects: Array<Object> | null;
+          tasks: Array<Object> | null;
+          spaces: Array<Object> | null;
         };
         Update: {
           id?: string;
           email?: string;
           stripe_customer_id?: string | null;
           created_at?: string | null;
+          projects: Array<Object> | null;
+          tasks: Array<Object> | null;
+          spaces: Array<Object> | null;
         };
       };
       profiles: {
