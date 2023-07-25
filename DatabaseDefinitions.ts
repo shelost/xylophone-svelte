@@ -58,6 +58,35 @@ export interface Database {
           updated_at?: string;
         };
       };
+      spaces: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string | null;
+          subtitle: string | null;
+          members: Array<string>;
+          notes: Array<Object>;
+          tasks: Array<Object>;
+        };
+        Insert: {
+          id: string;
+          user_id: string;
+          title: string | null;
+          subtitle: string | null;
+          members: Array<string>;
+          notes: Array<Object>;
+          tasks: Array<Object>;
+        };
+        Update: {
+          id: string;
+          user_id: string;
+          title: string | null;
+          subtitle: string | null;
+          members: Array<string>;
+          notes: Array<Object>;
+          tasks: Array<Object>;
+        };
+      };
     };
     Functions: {};
   };

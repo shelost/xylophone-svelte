@@ -23,27 +23,33 @@
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
 		"autoprefixer": "^10.4.7",
+		"date-fns": "^2.30.0",
 		"eslint": "^8.16.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^4.0.0",
+		"lodash": "^4.17.21",
+		"node-sass": "^9.0.0",
 		"postcss": "^8.4.14",
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^2.6.2",
 		"prettier-plugin-svelte": "^2.7.0",
+		"sass": "^1.64.1",
 		"stripe": "^10.17.0",
 		"svelte": "^3.44.0",
 		"svelte-check": "^2.7.1",
+		"svelte-dnd-action": "^0.9.24",
 		"svelte-loading-spinners": "^0.3.4",
 		"svelte-preprocess": "^4.10.7",
+		"svelte-sortablejs": "^0.2.0",
 		"tailwindcss": "^3.1.5",
 		"tslib": "^2.3.1",
-		"typescript": "^4.7.4"
+		"typescript": "^4.9.5"
 	},
 	"type": "module",
 	"dependencies": {
+		"sortablejs": "^1.15.0",
 		"supabase": "^1.77.9",
-		"svelte-dnd-action": "^0.9.24",
 		"svelte-dnd-list": "^0.1.8",
-		"svelte-sortablejs": "^0.2.0"
+		"svelte-sortable": "^0.1.0"
 	}
 }

@@ -42,15 +42,25 @@
 
 	<TodoList {data} />
 
+	<section>
 
+		<h1> Spaces </h1>
+		<Spaces {data} />
 
-	<Spaces {data} />
+	</section>
+
 
 </div>
 
 
 
 <style>
+
+	section{
+		position: absolute;
+		top:20px;
+		left: 400px;
+	}
 
 	.profile{
 		border: 1px solid black;
@@ -72,14 +82,26 @@
 		text-align: left;
 	}
 
+	section h1{
+		font-size: 24px;
+		font-weight: 600;
+		text-align: left;
+		margin: 0;
+		margin-bottom: 30px;
+	}
+
 	:global(#todo){
 		width: 300px;
-		height: 90vh;
-		margin-left: 20px;
+		height: 85vh;
+		margin-top: 20px;
+		margin-left: 30px;
 		overflow-y: scroll;
 		overflow-x: hidden;
 		border: 4px solid white;
-		box-shadow: 0px 20px 80px rgba(0,0,0,0.3);
+		box-shadow: 0px 20px 80px rgba(0,0,0,0.2);
+	}
+
+	:global(#spaces){
 
 	}
 
