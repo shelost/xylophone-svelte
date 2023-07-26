@@ -2,6 +2,7 @@
     import { supabaseClient } from '$lib/db';
     import { onMount } from 'svelte';
     import { readable, writable } from 'svelte/store';
+
     import type { PageData, Task } from '../../routes/$types';
     export let data: PageData;
     $: ({ user } = data);
@@ -37,7 +38,7 @@
     #spaces{
         display: flex;
         flex-wrap: wrap;
-        gap: 30px;
+        gap: 20px;
     }
 
     .space{
@@ -51,7 +52,6 @@
         border-radius: 20px;
         color: black;
         transition: 0.2s ease;
-		box-shadow: 0px 20px 80px rgba(0,0,0,0.1);
     }
 
     .space:hover{
@@ -74,12 +74,10 @@
     }
 
     .space_title{
-        font-size: 22px;
-        font-weight: 700;
+        font-size: 20px;
+        font-weight: 600;
         margin: 0;
-        margin-top: 30px;
-        margin-bottom: 5px;
-        text-align: center;
+        margin-top: 20px;
     }
 
     .space_subtitle{
@@ -88,10 +86,15 @@
         margin: 0;
     }
 
+
 </style>
 
 
+{JSON.stringify(spaces)}
+
+
 <div id = 'spaces'>
+
 
     {#each $spaces as space}
 

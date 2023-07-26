@@ -2,16 +2,15 @@
 	"name": "svelte-saas-kit",
 	"version": "0.0.1",
 	"private": true,
-	"type": "module",
 	"scripts": {
-	  "dev": "vite dev",
-	  "build": "vite build",
-	  "preview": "vite preview",
-	  "test": "playwright test",
-	  "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-	  "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-	  "lint": "prettier --plugin-search-dir . --check . && eslint .",
-	  "format": "prettier --plugin-search-dir . --write ."
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"test": "playwright test",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
 	  "@brainandbones/skeleton": "^0.67.5",
@@ -47,12 +46,11 @@
 	  "tslib": "^2.3.1",
 	  "typescript": "^4.9.5"
 	},
+	"type": "module",
 	"dependencies": {
-	  "canvas": "^2.11.2",
-	  "pressure": "^2.2.0",
-	  "sortablejs": "^1.15.0",
-	  "supabase": "^1.77.9",
-	  "svelte-dnd-list": "^0.1.8",
-	  "svelte-sortable": "^0.1.0"
+		"sortablejs": "^1.15.0",
+		"supabase": "^1.77.9",
+		"svelte-dnd-list": "^0.1.8",
+		"svelte-sortable": "^0.1.0"
 	}
-  }
+}
