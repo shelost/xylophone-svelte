@@ -27,9 +27,9 @@
 <div id = 'navbar'>
 	<!-- Branding -->
 
-		<a href="/">
-			<img id = 'logo' src = 'amateur-text.svg' alt = 'logo'>
-		</a>
+	<a href="/">
+		<img id = 'logo' src = 'amateur-text.svg' alt = 'logo'>
+	</a>
 
 	<!-- Middle Section -->
 
