@@ -4,7 +4,6 @@
 	import { page } from '$app/stores';
 	import QuickLinks from '../private/QuickLinks.svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { loading } from '$lib/stores';
 	import { invalidate } from '$app/navigation';
 
 
@@ -71,7 +70,7 @@
 		{#if $page.data.session?.user && $page.url.pathname.startsWith('/dashboard')}
 			{#if $page.data.session}
 				<form action="/logout" method="post" use:enhance={handleLogout}>
-					<button disabled={$loading}>
+					<button>
 						<h1> Log Out</h1>
 					</button>
 				</form>
