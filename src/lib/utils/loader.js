@@ -1,3 +1,4 @@
+/*
 import Spinner from '../components/Spinner.svelte';
 
 export const loader = (node, loading) => {
@@ -16,3 +17,9 @@ export const loader = (node, loading) => {
 		}
 	});
 };
+
+/*/
+
+export const loader = (node, landing) => {
+	console.log('loading...')
+}

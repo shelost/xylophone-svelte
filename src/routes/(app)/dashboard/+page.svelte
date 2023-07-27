@@ -19,6 +19,7 @@
             .eq('id', data.user.id) // Use the user.id to fetch data for the active user
 			.single()
 
+
         if (!error) {
             user = d || {}; // Store the fetched user data into the 'user' variable
             console.log(user); // Log the user data for testing

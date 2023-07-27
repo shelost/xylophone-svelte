@@ -9,6 +9,8 @@
     let showModal = false; // Control the visibility of the modal
     let noteToEdit = { id: null, title: '', body: '' }; // Store the note to be edited
 
+
+
     // Fetch the notes on mount
     onMount(async () => {
       const { data: n , error } = await supabaseClient
@@ -39,7 +41,7 @@
           })
           .eq('id', noteToEdit.id);
       } else {
-        const { data, error } = await supabaseClient
+        const { data: d, error } = await supabaseClient
           .from('notes')
           .insert([{
             title: noteToEdit.title,
@@ -47,6 +49,10 @@
             space_id: data.id
           }]);
       }
+
+    }
+
+    async function updateNote(){
       showModal = false;
       noteToEdit = { id: null, title: '', body: '' };
     }
@@ -79,27 +85,36 @@
 
     <h1 class = 'header'> Notes </h1>
 
-    {#each $notes as note}
+
+    <div class = 'notes'>
 
       <div class= "add_note note">
-          <button on:click={() => (showModal = false)}>Close</button>
-          <input bind:value={noteToEdit.title} placeholder="Note Title">
-          <textarea bind:value={noteToEdit.body} placeholder="Note Body"></textarea>
-          <button on:click={newNote}>Add Note</button>
+        <button on:click={() => (showModal = false)}>Close</button>
+        <input bind:value={noteToEdit.title} placeholder="Note Title">
+        <textarea bind:value={noteToEdit.body} placeholder="Note Body"></textarea>
+        <button on:click={newNote}>Add Note</button>
       </div>`
 
-      <a href = 'dashboard/space/{data.id}/note/{note.id}'>
-          <div class = 'note'>
-              <div class = 'note_expo'>
-                  <h1 class = 'note_title'> {note.title} </h1>
-                  <p class = 'note_subtitle'> {note.body} </p>
-              </div>
-          </div>
-      </a>
 
-        <button on:click={() => editNote(note)}>Edit</button>
+      {#each $notes as note}
 
-    {/each}
+        <a href = 'dashboard/space/{data.id}/note/{note.id}'>
+            <div class = 'note'>
+                <div class = 'note_expo'>
+                    <h1 class = 'note_title'> {note.title} </h1>
+                    <p class = 'note_subtitle'> {note.body} </p>
+                </div>
+            </div>
+        </a>
+
+        <!--
+          <button on:click={() => editNote(note)}>Edit</button>
+          -->
+
+      {/each}
+
+    </div>
+
 
     <!-- Add the following to your component's markup -->
 
@@ -114,10 +129,20 @@
 
     #app{
         min-height: calc(100vh - 60px);
+        height: 100%;
         padding: 50px;
+        padding-bottom: 100px !important;
+        overflow-y: scroll;
     }
 
     /* Note */
+
+    .notes{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      height: 300px;
+    }
 
     .note{
         width: 300px;

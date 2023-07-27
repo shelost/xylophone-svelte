@@ -10,10 +10,10 @@
 	// ... other imports ...
 
 	// Import the newly created Loader component
-	import Spinner from '$lib/components/Spinner.svelte';
+	//import Loader from '$lib/components/Loader.svelte';
   </script>
 
-  <div class="h-full overflow-hidden">
+  <div class="h-full overflow-hidden" use:loader = {loader}>
 	<!-- Use the Loader component here -->
 
 	<AppShell>
