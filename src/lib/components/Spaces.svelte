@@ -27,9 +27,6 @@
         // Update the spaces store with the fetched data
         spaces.set(fetchedSpaces);
       }
-
-      console.log(user.id)
-      console.log($spaces)
     });
   </script>
 

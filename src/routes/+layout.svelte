@@ -1,8 +1,7 @@
 <!-- +layout.svelte -->
 <script>
-	import '@brainandbones/skeleton/themes/theme-crimson.css';
-	import '@brainandbones/skeleton/styles/all.css';
-	import '../app.postcss';
+
+	import '../app.css';
 	import { loader } from '$lib/utils/loader';
 	import { AppShell } from '@brainandbones/skeleton';
 	import NavBar from '$lib/components/common/NavBar.svelte';
