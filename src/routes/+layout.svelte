@@ -15,7 +15,6 @@
 
   <div class="h-full overflow-hidden">
 	<!-- Use the Loader component here -->
-	<Spinner />
 
 	<AppShell>
 	  <!-- Header -->

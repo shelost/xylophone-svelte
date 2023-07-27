@@ -67,6 +67,7 @@
 
 
 
+
 <div id = 'app' style = 'background: {data.color}'>
     <div class = 'mast'>
         <img class = 'icon' src = {data.icon} alt = 'icon'>
@@ -80,33 +81,28 @@
 
     {#each $notes as note}
 
-        <a href = 'dashboard/space/{data.id}/note/{note.id}'>
-            <div class = 'note'>
-                <div class = 'note_expo'>
-                    <h1 class = 'note_title'> {note.title} </h1>
-                    <p class = 'note_subtitle'> {note.body} </p>
-                </div>
-            </div>
-        </a>
+      <div class= "add_note note">
+          <button on:click={() => (showModal = false)}>Close</button>
+          <input bind:value={noteToEdit.title} placeholder="Note Title">
+          <textarea bind:value={noteToEdit.body} placeholder="Note Body"></textarea>
+          <button on:click={newNote}>Add Note</button>
+      </div>`
+
+      <a href = 'dashboard/space/{data.id}/note/{note.id}'>
+          <div class = 'note'>
+              <div class = 'note_expo'>
+                  <h1 class = 'note_title'> {note.title} </h1>
+                  <p class = 'note_subtitle'> {note.body} </p>
+              </div>
+          </div>
+      </a>
 
         <button on:click={() => editNote(note)}>Edit</button>
 
     {/each}
 
-
     <!-- Add the following to your component's markup -->
 
-<button on:click={newNote}>Add Note</button>
-
-<!-- Add/Edit note modal -->
-{#if showModal}
-  <div class="modal">
-    <button on:click={() => (showModal = false)}>Close</button>
-    <input bind:value={noteToEdit.title} placeholder="Note Title">
-    <textarea bind:value={noteToEdit.body} placeholder="Note Body"></textarea>
-
-  </div>
-{/if}
 
 
 

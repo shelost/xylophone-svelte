@@ -90,9 +90,6 @@
 </style>
 
 
-{JSON.stringify(spaces)}
-
-
 <div id = 'spaces'>
 
 
