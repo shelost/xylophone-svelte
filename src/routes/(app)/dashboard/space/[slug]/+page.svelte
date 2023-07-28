@@ -2,24 +2,114 @@
   import { supabaseClient } from '$lib/db';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import Notes from '$lib/components/Notes.svelte'
-
+  import Notes from '$lib/components/Notes.svelte';
+  import { fly } from 'svelte/transition';
   export let data;
 
-  let notes = writable([]);
-  let noteToEdit = { id: null, title: '', body: '' }; // Store the note to be edited
+  async function handleFileUpload(event, field) {
+
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Upload the file to Supabase Storage
+    const { data: uploadedFile, error : uploadError } = await supabaseClient.storage
+      .from('images')
+      .upload(`space/${data.id}/${field}/${file.name}`, file);
+
+    if (!uploadError) {
+      // Update the data object with the file's metadata
+      data[field] =  supabaseClient.storage
+          .from('images')
+          .getPublicUrl(`space/${data.id}/${field}/${file.name}`).data.publicUrl
 
 
+      // Update the "spaces" table with the file's metadata
+      const { data: updatedData, error: updateError } = await supabaseClient
+        .from('spaces')
+        .update({ [field]: data[field] })
+        .eq('id', data.id);
+
+
+        updateSpace()
+
+      if (!updateError) {
+        console.log(`${field} updated successfully:`, updatedData);
+      } else {
+        console.error(`Error updating ${field}:`, updateError);
+      }
+
+    } else if (uploadError.statusCode == '409'){
+
+        data[field] =  supabaseClient.storage
+            .from('images')
+            .getPublicUrl(`space/${data.id}/${field}/${file.name}`).data.publicUrl
+
+        const { data: updatedData, error: updateError } = await supabaseClient
+          .from('spaces')
+          .update({ [field]: data[field] })
+          .eq('id', data.id);
+
+        updateSpace()
+    }else{
+      console.error('Error uploading file:', uploadError);
+    }
+  }
+
+  async function updateSpace() {
+    const { data: updatedData, error } = await supabaseClient
+      .from('spaces')
+      .update({
+        title: data.title,
+        subtitle: data.subtitle,
+        icon: data.icon,
+        banner: data.banner,
+      })
+      .eq('id', data.id);
+
+    if (!error) {
+      console.log('Space updated successfully:', updatedData);
+      console.log(data)
+    } else {
+      console.error('Error updating space:', error);
+    }
+  }
 
 </script>
 
 
 
-<div id = 'app' style='background-color:{data.color}'>
-  <div id = 'banner'></div>
+
+
+<!-- HTML -->
+
+<div id = 'app' in:fly={{ x: -200, duration: 300, delay: 300 }}
+out:fly={{ x: 200, duration: 300 }}>
+
+  <!---->
+
+  <div id = 'banner' style= 'background-image: url({data.banner})'></div>
+
+  <input
+    type="file"
+    id="banner-upload"
+    accept="image/*"
+    on:change={(event) => handleFileUpload(event, 'banner')}
+  />
+
   <div class="mast">
 
-      <img id="icon" style='border: 5px solid {data.color}' src={data.icon} alt="icon">
+      <div id = 'icon-container'>
+        <img id="icon" style='border: 5px solid white' src={data.icon} alt="icon">
+
+        <input
+          type="file"
+          id="icon-upload"
+          accept="image/*"
+          on:change={(event) => handleFileUpload(event, 'icon')}
+        />
+
+      </div>
+
       <div class="expo">
         <input class="title" type="text" value={data.title} placeholder="Untitled Space">
         <input class="subtitle" type="text" value={data.subtitle} placeholder="A place for my awesome stuff">
@@ -38,6 +128,7 @@
 
 
 
+<!-- Styles -->
 
 <style>
 
@@ -45,6 +136,7 @@
         min-height: calc(100vh - 60px);
         padding: 50px;
         padding-bottom: 100px !important;
+        height: 200px;
         overflow-y: scroll;
         position: relative;
     }
@@ -104,22 +196,55 @@
         position: relative;
     }
 
-    #banner{
+    #banner {
+        position: absolute;
+        top: -0px;
+        left: -0px;
+        width: 100vw;
+        height: 150px;
+        background-color: red;
+        z-index: 0;
+
+        background-size: cover;
+        background-position: center;
+    }
+
+    #icon-container{
+      position: relative;
+      transition: 0.1s ease;
+      cursor: pointer;
+      width: 300px;
+      height: 300px;
+    }
+
+
+    #icon-container:hover{
+      filter: brightness(50%);
+    }
+
+
+    #icon-container:hover #icon-upload{
+      opacity: 1;
+    }
+
+    #icon-upload{
       position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 150px;
-      background-color: red;
-      z-index: 0;
+      opacity: 0;
+      width: 250px;
     }
+
 
     #icon{
         height: 140px;
         border-radius: 15px;
         margin-bottom: 5px;
         z-index: 2;
+        transition: 0.2s ease;
     }
+
+
 
     .expo{
         display: flex;
@@ -127,6 +252,7 @@
         align-items: flex-start;
         justify-content: flex-start;
         gap: 5px;
+        margin-top: -150px;
     }
 
 

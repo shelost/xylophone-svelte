@@ -1,4 +1,11 @@
-<div id = 'app'>
+<script lang="ts">
+	import { fly } from 'svelte/transition'
+</script>
+
+
+<div id = 'app' in:fly={{ x: -200, duration: 300, delay: 300 }}
+out:fly={{ x: 200, duration: 300 }}>
+
     <slot />
 </div>
 

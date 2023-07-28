@@ -20,7 +20,6 @@
 		};
 	};
 
-
 </script>
 
 
@@ -28,7 +27,7 @@
 	<!-- Branding -->
 
 		<a href="/">
-			<img id = 'logo' src = 'amateur-text.svg' alt = 'logo'>
+			<img id = 'logo' src = 'smiles-text.svg' alt = 'logo'>
 		</a>
 
 	<!-- Middle Section -->

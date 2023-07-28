@@ -1,8 +1,34 @@
 <script>
+	import { onMount } from 'svelte'
+	import { writable } from 'svelte/store'
+	import { supabaseClient } from '$lib/db';
+	import Space from '$lib/components/Space.svelte'
 
-	import {onMount} from 'svelte'
+	// Create a Svelte store to hold the spaces data
+	let spaces = writable([]);
+
+	async function fetchSpaces(){
+		const { data: fetchedSpaces, error } = await supabaseClient
+											.from('spaces')
+											.select('*')
+
+		if (error) {
+			console.error('Error fetching spaces:', error);
+			return;
+		}
+
+		if (fetchedSpaces) {
+			// Update the spaces store with the fetched data
+			spaces.set(fetchedSpaces);
+		}
+		console.log($spaces)
+	}
+
+	onMount(fetchSpaces)
 
 </script>
+
+
 
 <svelte:head>
 	<title> Amateur </title>
@@ -12,11 +38,11 @@
 <div id = 'app'>
 	<div id="splash" class="section center">
 
-		<img id = 'logo' src = 'Amateur.png' alt = 'logo'>
+		<img id = 'logo' src = 'smiles.svg' alt = 'logo'>
 
 		<div class="expo">
-			<h1> Your <span> Final </span> Productivity App. </h1>
-			<h2> Amateur works the way your mind does. </h2>
+			<h1> <span> Launch </span> Your Projects. </h1>
+			<h2> Plan. Build. Sell. All in one place. </h2>
 
 
 			<div id="socials">
@@ -37,22 +63,27 @@
 
 	</div>
 
+
 	<div class = 'section'>
 
-		<div class = 'section_expo'>
-			<h1 class = 'section_title'> Organize your mind into Spaces </h1>
+		<div id = 'spaces'>
+			{#each $spaces as space}
+				<Space {space} />
+			{/each}
 		</div>
 
-		<div class = 'row'>
-
-			<img class = 'space s1' src = 'space.svg' alt = 'space'>
-			<img class = 'space s2' src = 'space-1.svg' alt = 'space'>
-			<img class = 'space s3' src = 'space-2.svg' alt = 'space'>
-		</div>
 	</div>
+
 </div>
 
 <style>
+
+	#spaces{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+	}
 
 
 	#app{

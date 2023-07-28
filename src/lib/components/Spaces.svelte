@@ -1,7 +1,10 @@
+
 <script lang="ts">
     import { supabaseClient } from '$lib/db';
     import { onMount } from 'svelte';
-    import { readable, writable } from 'svelte/store';
+    import { writable } from 'svelte/store';
+
+    import Space from './Space.svelte'
 
     import type { PageData, Task } from '../../routes/$types';
     export let data: PageData;
@@ -27,8 +30,10 @@
         // Update the spaces store with the fetched data
         spaces.set(fetchedSpaces);
       }
+      console.log($spaces)
     });
-  </script>
+</script>
+
 
 <style>
 
@@ -38,69 +43,12 @@
         gap: 20px;
     }
 
-    .space{
-        height: 300px;
-        width: 300px;
-        background: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        border-radius: 20px;
-        color: black;
-        transition: 0.2s ease;
-    }
-
-    .space:hover{
-        transform: scale(1.03);
-    }
-
-    .space:hover .space_icon{
-        transform: scale(1.01) translateY(-5px);
-    }
-
-    a:hover{
-        text-decoration: none;
-    }
-
-    .space_icon{
-        height: 100px;
-        border-radius: 10px;
-        box-shadow: 0px 15px 40px rgba(0,0,0,0.1);
-        transition: 0.2s ease;
-    }
-
-    .space_title{
-        font-size: 20px;
-        font-weight: 600;
-        margin: 0;
-        margin-top: 20px;
-    }
-
-    .space_subtitle{
-        font-size: 14px;
-        font-weight: 300;
-        margin: 0;
-    }
-
 
 </style>
 
 
-<div id = 'spaces'>
-
-
+<div id='spaces'>
     {#each $spaces as space}
-
-        <a href = 'dashboard/space/{space.id}'>
-            <div class = 'space' style='background-color: {space.color}'>
-                <img class = 'space_icon' src = {space.icon} alt = 'icon'>
-                <div class = 'space_expo'>
-                    <h1 class = 'space_title'> {space.title} </h1>
-                    <h2 class = 'space_subtitle'> {space.subtitle} </h2>
-                </div>
-            </div>
-        </a>
-
+      <Space {space} />
     {/each}
-</div>
+  </div>

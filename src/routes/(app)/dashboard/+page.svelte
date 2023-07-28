@@ -5,6 +5,7 @@
 	import TodoList from '../../../lib/components/TodoList.svelte'
 	import Spaces from '../../../lib/components/Spaces.svelte'
     import type { PageData, Task } from '../../routes/$types';
+	import {fly} from 'svelte/transition'
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
 
@@ -20,6 +21,7 @@
 			.single()
 
 
+			console.log(d)
         if (!error) {
             user = d || {}; // Store the fetched user data into the 'user' variable
             console.log(user); // Log the user data for testing
@@ -41,9 +43,12 @@
 	</div>
 	-->
 
+	<!---->
+
 	<TodoList {data} />
 
-	<section>
+	<section in:fly={{ x: -200, duration: 300, delay: 300 }}
+	out:fly={{ x: 200, duration: 300 }}>
 
 		<h1> Spaces </h1>
 		<Spaces {data} />
