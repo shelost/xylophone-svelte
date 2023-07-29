@@ -37,15 +37,8 @@
 <div id = 'app'>
 
 	<!--
-	<div class = 'profile'>
-		<h1>{user.full_name} </h1>
-		<h2> {user.username} </h2>
-	</div>
-	-->
-
-	<!---->
-
 	<TodoList {data} />
+	-->
 
 	<section in:fly={{ x: -200, duration: 300, delay: 300 }}
 	out:fly={{ x: 200, duration: 300 }}>
@@ -55,7 +48,6 @@
 
 	</section>
 
-
 </div>
 
 
@@ -63,9 +55,7 @@
 <style>
 
 	section{
-		position: absolute;
-		top:20px;
-		left: 400px;
+		margin: 30px 50px;
 	}
 
 	.profile{

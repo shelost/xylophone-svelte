@@ -1,56 +1,49 @@
 <script lang="ts">
   import { supabaseClient } from '$lib/db';
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { writable } from 'svelte/store';
   import Notes from '$lib/components/Notes.svelte';
   import { fly } from 'svelte/transition';
+
   export let data;
 
   async function handleFileUpload(event, field) {
-
     const file = event.target.files[0];
     if (!file) return;
 
-    // Upload the file to Supabase Storage
-    const { data: uploadedFile, error : uploadError } = await supabaseClient.storage
+    const { data: uploadedFile, error: uploadError } = await supabaseClient.storage
       .from('images')
       .upload(`space/${data.id}/${field}/${file.name}`, file);
 
     if (!uploadError) {
-      // Update the data object with the file's metadata
-      data[field] =  supabaseClient.storage
-          .from('images')
-          .getPublicUrl(`space/${data.id}/${field}/${file.name}`).data.publicUrl
+      data[field] = supabaseClient.storage
+        .from('images')
+        .getPublicUrl(`space/${data.id}/${field}/${file.name}`).data.publicUrl;
 
-
-      // Update the "spaces" table with the file's metadata
       const { data: updatedData, error: updateError } = await supabaseClient
         .from('spaces')
         .update({ [field]: data[field] })
         .eq('id', data.id);
 
-
-        updateSpace()
+      updateSpace();
 
       if (!updateError) {
         console.log(`${field} updated successfully:`, updatedData);
       } else {
         console.error(`Error updating ${field}:`, updateError);
       }
+    } else if (uploadError.statusCode == '409') {
+      data[field] = supabaseClient.storage
+        .from('images')
+        .getPublicUrl(`space/${data.id}/${field}/${file.name}`).data.publicUrl;
 
-    } else if (uploadError.statusCode == '409'){
+      const { data: updatedData, error: updateError } = await supabaseClient
+        .from('spaces')
+        .update({ [field]: data[field] })
+        .eq('id', data.id);
 
-        data[field] =  supabaseClient.storage
-            .from('images')
-            .getPublicUrl(`space/${data.id}/${field}/${file.name}`).data.publicUrl
-
-        const { data: updatedData, error: updateError } = await supabaseClient
-          .from('spaces')
-          .update({ [field]: data[field] })
-          .eq('id', data.id);
-
-        updateSpace()
-    }else{
+      updateSpace();
+    } else {
       console.error('Error uploading file:', uploadError);
     }
   }
@@ -68,67 +61,58 @@
 
     if (!error) {
       console.log('Space updated successfully:', updatedData);
-      console.log(data)
+      console.log(data);
     } else {
       console.error('Error updating space:', error);
     }
   }
 
+  // Throttle the file upload function to avoid rapid calls
+  import { throttle } from 'lodash';
+  const handleFileUploadThrottled = throttle(handleFileUpload, 1000);
+
+  // Clean up the throttle function on component destruction
+  onDestroy(() => {
+    handleFileUploadThrottled.cancel();
+  });
 </script>
-
-
-
-
 
 <!-- HTML -->
 
-<div id = 'app' in:fly={{ x: -200, duration: 300, delay: 300 }}
-out:fly={{ x: 200, duration: 300 }}>
+<div id="app" in:fly={{ x: -200, duration: 300, delay: 300 }} out:fly={{ x: 200, duration: 300 }}>
 
-  <!---->
-
-  <div id = 'banner' style= 'background-image: url({data.banner})'></div>
+  <div id="banner" style="background-image: url({data.banner})" loading="lazy"></div>
 
   <input
     type="file"
     id="banner-upload"
     accept="image/*"
-    on:change={(event) => handleFileUpload(event, 'banner')}
+    on:change={(event) => handleFileUploadThrottled(event, 'banner')}
   />
 
   <div class="mast">
+    <div id="icon-container">
+      <img id="icon" style="border: 5px solid white" src={data.icon} alt="icon" />
+      <input
+        type="file"
+        id="icon-upload"
+        accept="image/*"
+        on:change={(event) => handleFileUploadThrottled(event, 'icon')}
+      />
+    </div>
 
-      <div id = 'icon-container'>
-        <img id="icon" style='border: 5px solid white' src={data.icon} alt="icon">
-
-        <input
-          type="file"
-          id="icon-upload"
-          accept="image/*"
-          on:change={(event) => handleFileUpload(event, 'icon')}
-        />
-
-      </div>
-
-      <div class="expo">
-        <input class="title" type="text" value={data.title} placeholder="Untitled Space">
-        <input class="subtitle" type="text" value={data.subtitle} placeholder="A place for my awesome stuff">
-      </div>
+    <div class="expo">
+      <input class="title" type="text" value={data.title} placeholder="Untitled Space" />
+      <input class="subtitle" type="text" value={data.subtitle} placeholder="A place for my awesome stuff" />
+    </div>
   </div>
 
-  <div class = 'scroll'>
-
+  <div class="scroll" in:fly={{ x: -200, duration: 300, delay: 300 }} out:fly={{ x: 200, duration: 300 }}>
     <h1 class="header">Notes</h1>
-
-    <Notes {data}/>
-
+    <Notes {data} />
   </div>
-
 </div>
 
-
-
-<!-- Styles -->
 
 <style>
 

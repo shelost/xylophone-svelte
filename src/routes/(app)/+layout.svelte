@@ -1,13 +1,19 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition'
-</script>
+	import { fade } from 'svelte/transition'
+	import { cubicIn, cubicOut } from 'svelte/easing'
+
+	export let data
+  </script>
 
 
-<div id = 'app' in:fly={{ x: -200, duration: 300, delay: 300 }}
-out:fly={{ x: 200, duration: 300 }}>
-
-    <slot />
-</div>
+  {#key data.pathname}
+	<div id = 'app'
+	  in:fade={{ easing: cubicOut, duration: 300, delay: 400 }}
+	  out:fade={{ easing: cubicIn, duration: 300 }}
+	>
+	  <slot />
+	</div>
+  {/key}
 
 <style>
 
