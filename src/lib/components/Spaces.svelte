@@ -43,7 +43,7 @@
     #spaces{
         display: flex;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 20px 200px;
     }
 
     #add_space{

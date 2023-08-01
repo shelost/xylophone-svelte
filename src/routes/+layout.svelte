@@ -12,15 +12,19 @@
 	//import Loader from '$lib/components/Loader.svelte';
   </script>
 
-  <div class="h-full overflow-hidden" use:loader = {loader}>
-	<!-- Use the Loader component here -->
 
+<svelte:head>
+
+  <link rel='icon' type='image/png' href='scrollable.png' />
+</svelte:head>
+
+
+<div class="h-full overflow-hidden" use:loader = {loader}>
+	<!-- Use the Loader component here -->
 	<AppShell>
-	  <!-- Header -->
-	  <svelte:fragment slot="pageHeader"><NavBar /></svelte:fragment>
-	  <!-- Page Content Slot -->
-	  <div class="">
+		<!-- Header -->
+		<svelte:fragment slot="pageHeader"><NavBar/></svelte:fragment>
+		<!-- Page Content Slot -->
 		<slot />
-	  </div>
 	</AppShell>
-  </div>
+</div>

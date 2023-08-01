@@ -27,7 +27,7 @@
 	<!-- Branding -->
 
 		<a href="/">
-			<img id = 'logo' src = 'smiles-text.svg' alt = 'logo'>
+			<img id = 'logo' src = 'scrollable.svg' alt = 'logo'>
 		</a>
 
 	<!-- Middle Section -->
@@ -79,7 +79,7 @@
 
 			<a class="button" href="/dashboard">
 				<button>
-					<h1> Dashboard </h1>
+					<h1> Log In </h1>
 				</button>
 			</a>
 		{/if}
@@ -101,7 +101,7 @@
 	}
 
 	#logo{
-		height: 24px;
+		height: 28px;
 	}
 
 	button{
@@ -111,7 +111,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 5px;
-		padding: 2px 15px;
+		padding: 5px 15px;
 		border-radius: 5px;
 		font-size: 14px;
 		box-shadow: 0px 10px 20px rgba(0,0,0,0.2);

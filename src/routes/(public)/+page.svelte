@@ -92,80 +92,44 @@
 
 
 <svelte:head>
-	<title> Amateur </title>
+	<title> Scrollable </title>
+	<link rel='icon' type='image/png' href='scrollable.png' />
 </svelte:head>
 
 
 <div id = 'app'>
-	<!--
-	<div id="splash" class="section center">
-
-		<img id = 'logo' src = 'smiles.svg' alt = 'logo'>
-
-		<div class="expo">
-			<h1> <span> Launch </span> Your Projects. </h1>
-			<h2> Plan. Build. Sell. All in one place. </h2>
-
-
-			<div id="socials">
-				<a href="https://twitter.com/peyostudio">
-					<img src="twitter.svg" class="icon" alt="icon" />
-				</a>
-				<a href="https://linkedin.com/in/peyostudio">
-					<img src="linkedin.svg" class="icon" alt="icon" />
-				</a>
-				<a href="https://medium.com/@peyostudio">
-					<img src="medium.svg" class="icon" alt="icon" />
-				</a>
-				<a href="https://instagram.com/peyostudio">
-					<img src="instagram.svg" class="icon" alt="icon" />
-				</a>
-			</div>
-		</div>
-
-	</div>
-	-->
-
 
 	<div class = 'section'>
 
 
-		<h1 class = 'title'> Today's Top Series </h1>
+		<div class = 'expo'>
+			<h1> Create <span> Scrollable</span> Stories. </h1>
+			<p> </p>
+		</div>
+
 
 		<div id = 'spaces'>
 			{#each $spaces as space}
 				<Space {space} page={true} />
 			{/each}
 		</div>
-
-		<h1 class = 'title'> Recently Uploaded </h1>
-
-		<div id = 'notes'>
-			{#each $notes as note}
-				<a href="p/note/{note.id}">
-					<div class="note">
-						<div class = 'note_icon' style='background-image:url({note.space_icon})'></div>
-						<div class="note_expo">
-
-						<h1 class="note_title"> {note.title} </h1>
-
-						<div class = 'byline'>
-							<p> from </p>
-							<p class='bold note_space'> {note.space} </p>
-
-						</div>
-
-						</div>
-					</div>
-				</a>
-			{/each}
-		  </div>
-
 	</div>
 
 </div>
 
 <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+
+	h1{
+		font-family: 'Libre Baskerville', sans-serif;
+		font-size: 80px;
+		font-weight: 700;
+		text-align: center;
+		letter-spacing: -5px;
+		padding: 80px;
+	}
 
 	.title{
 		font-weight: 900;
@@ -229,7 +193,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
-		gap: 20px;
+		flex-wrap: wrap;
+		gap: 130px 30px;
 		padding: 30px;
 	}
 
