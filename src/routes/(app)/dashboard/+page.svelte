@@ -44,7 +44,7 @@
 	out:fly={{ x: 200, duration: 300 }}>
 
 		<h1> Spaces </h1>
-		<Spaces {data} />
+		<Spaces {data} page = {false}/>
 
 	</section>
 

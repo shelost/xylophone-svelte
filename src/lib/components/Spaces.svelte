@@ -10,6 +10,9 @@
     export let data: PageData;
     $: ({ user } = data);
 
+
+    export let page = false
+
     // Create a Svelte store to hold the spaces data
     let spaces = writable([]);
 
@@ -43,12 +46,33 @@
         gap: 20px;
     }
 
+    #add_space{
+      border: 1px solid black;
+      width: 300px;
+      border-radius: 15px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    #add_space:hover{
+      background: rgba(0,0,0,0.05);
+    }
+
 
 </style>
 
 
 <div id='spaces'>
     {#each $spaces as space}
-      <Space {space} />
+      <Space {space} page = {page} />
     {/each}
+    <div id = 'add_space'>
+      <h2> + </h2>
+      <h1> Add Project </h1>
+    </div>
   </div>
