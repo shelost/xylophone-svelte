@@ -193,7 +193,14 @@
 
 <div id = 'app'>
 
+  <div id = 'buttons'>
+    <button class = 'prev'> Prev </button>
+    <button class = 'next'> Next </button>
+  </div>
+
 <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
+
+
 
 {#if data}
   {#await space}
@@ -202,10 +209,7 @@
 
   {:then space}
 
-    <div id = 'buttons'>
-      <button class = 'prev'> Prev </button>
-      <button class = 'next'> Next </button>
-    </div>
+
 
 
     <div id = 'hero'>
@@ -224,11 +228,6 @@
           <p> {elem.content} </p>
         </div>
       {/each}
-
-      <div id = 'buttons'>
-        <button class = 'prev'> Prev </button>
-        <button class = 'next'> Next </button>
-      </div>
 
     </div>
 
@@ -271,16 +270,26 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100vw !important;
     height: 100vh !important;
     color: white;
     font-family: 'Libre Baskerville', sans-serif;
   }
 
   #buttons{
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 60px;
+    padding: 0 10px;
+    width: 100vw !important;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.1);
+
+    background: #101010;
   }
 
 
@@ -308,12 +317,11 @@
   }
 
   #hero h1{
-    font-size: 50px;
+    font-size: 60px !important;
     text-align: center;
     text-justify: center;
     margin: 20px 0;
     line-height: 95% !important;
-    width: 80%;
     font-weight: 600;
     letter-spacing: -0.6px;
     font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
@@ -327,7 +335,9 @@
 
   #app{
       height: calc(100vh - 60px);
+      width: 100vw !important;
       padding-bottom: 100px;
+      overflow-x: hidden;
       overflow-y: scroll;
   }
 
@@ -389,16 +399,7 @@
       left: 0;
       height: 5px;
       width: 10px;
-      background: rgb(255, 0, 115);
-  }
-
-  #buttons {
-    width: 800px;
-    max-width: 90%;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 0;
+      background:white;
   }
 
 
