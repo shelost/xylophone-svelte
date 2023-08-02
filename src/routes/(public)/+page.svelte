@@ -4,15 +4,14 @@
 	import { supabaseClient } from '$lib/db';
 	import Space from '$lib/components/Space.svelte'
 	import bg from '$lib/img/background.svg'
+	import icon from '$lib/img/favicon.png'
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
 	let notes = writable([]);
 
 
-
     // Fetch
-
 	async function fetchNotes(){
 
 		// Get notes
@@ -31,8 +30,6 @@
 						.select('*')
 						.eq('id', note.user_id)
 
-
-
 				if (!error) {
 					$notes[i].author = d[0].username;
 				} else {
@@ -47,8 +44,6 @@
 						.from('spaces')
 						.select('*')
 						.eq('id', note.space_id)
-
-
 
 
 				if (!e) {
@@ -94,6 +89,7 @@
 
 <svelte:head>
 	<title> Scrollable </title>
+	<link rel="icon" href={icon} />
 </svelte:head>
 
 

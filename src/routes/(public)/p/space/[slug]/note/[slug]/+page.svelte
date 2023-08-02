@@ -42,24 +42,45 @@
 
   async function getAdjacentNotes(){
 
-    const { data: n, error: e1 } = await supabaseClient
-      .from('notes')
-      .select('*')
-      .eq('index', data.index+1)
-      .single()
+    try {
 
-    if (!e1) {
-      next = n
-    }
-    const { data: p, error: e2 } = await supabaseClient
-      .from('notes')
-      .select('*')
-      .eq('index', data.index-1)
-      .single()
+      const { data: n, error: e1 } = await supabaseClient
+        .from('notes')
+        .select('*')
+        .match({ index: data.index+1, space_id: data.space_id })
+        .single()
 
-    if (!e2) {
-      prev = p
+      if (!e1) {
+        next = n
+
+        console.log(n, data.index+1)
+      }else{
+        console.error('failed to fetch next note', e1)
+      }
+
+    }catch{
+
     }
+
+    if (data.index > 0){
+      try {
+        const { data: p, error: e2 } = await supabaseClient
+          .from('notes')
+          .select('*')
+          .match({ index: data.index-1, space_id: data.space_id })
+          .single()
+
+        if (!e2) {
+          prev = p
+          console.log(p, data.index-1)
+        }else{
+          console.error('failed to fetch prev note', e2)
+        }
+      }catch{
+
+      }
+    }
+
   }
 
 
@@ -73,23 +94,33 @@
     let scroll = Id('app')
     let progress = Id('progress')
 
+
     let loop = () => {
       for (let i=0; i<Class('next').length; i++){
         let btn = Class('next')[i]
         btn.onclick = () => {
+          console.log(next.id)
           if (next.id){
             window.location.href = next.id
           }
         }
       }
 
+
       for (let i=0; i<Class('prev').length; i++){
         let btn = Class('prev')[i]
-        btn.onclick = () => {
-          if (next.id){
-            window.location.href = prev.id
+
+        if (data.index > 0){
+            btn.onclick = () => {
+            console.log(prev.id)
+            if (next.id){
+              window.location.href = prev.id
+            }
           }
+        }else{
+          btn.disabled = true
         }
+
       }
 
       progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
@@ -164,11 +195,18 @@
 
 <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
+{#if data}
   {#await space}
 
    <h1> Loading... </h1>
 
   {:then space}
+
+    <div id = 'buttons'>
+      <button class = 'prev'> Prev </button>
+      <button class = 'next'> Next </button>
+    </div>
+
 
     <div id = 'hero'>
       <!--
@@ -180,10 +218,6 @@
 
     <div id = 'scrollable'>
 
-      <div id = 'buttons'>
-        <button class = 'prev'> Prev </button>
-        <button class = 'next'> Next </button>
-      </div>
 
       {#each $elems as elem}
         <div class = 'elem'>
@@ -199,6 +233,8 @@
     </div>
 
   {/await}
+
+{/if}
 
 </section>
 
@@ -222,6 +258,14 @@
     color: black !important;
   }
 
+  button:hover{
+    opacity: 0.7;
+  }
+
+  button:disabled{
+    opacity: 0.5;
+  }
+
   #app{
     background: black;
     position: fixed;
@@ -239,13 +283,9 @@
       align-items: center;
   }
 
-  button{
-      background: rgba(0,0,0,0.05);
-      color: black;
-      font-weight: 600;
-      box-shadow: none;
-      border-radius: 8px;
-  }
+
+
+
 
   button:hover{
       background: rgba(0,0,0,0.1);
@@ -264,14 +304,19 @@
     align-items: center;
     margin: 50px;
     margin-bottom: 100px;
+    text-align: center;
   }
 
   #hero h1{
     font-size: 50px;
     text-align: center;
+    text-justify: center;
     margin: 20px 0;
-    line-height: 120%;
+    line-height: 95% !important;
     width: 80%;
+    font-weight: 600;
+    letter-spacing: -0.6px;
+    font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
   }
 
   #hero h2{
@@ -311,16 +356,21 @@
   }
 
   .elem{
+    margin: auto;
     margin-bottom: 150px;
     text-align: center;
     font-weight: 200;
   }
 
+
   .elem p{
     font-size: 14px;
     line-height: 200%;
-    width: 80%;
     margin: auto;
+    letter-spacing: 0.15px;
+    font-weight: 300 !important;
+    opacity: 0.7;
+    font-family: 'Inter', sans-serif;
   }
 
 
@@ -377,9 +427,38 @@
     overflow-y: hidden; /* Hide vertical scrollbar */
     min-height: 300px;
     flex-shrink: 0;
+
+
   }
 
   textarea:focus {
     @apply ring-0;
   }
+
+  @media screen and (max-width: 800px){
+
+
+    #hero h1{
+      font-size: 50px;
+      text-align: center;
+      margin: 20px 0;
+      line-height: 120%;
+      width: 80%;
+    }
+
+    .elem{
+      width: 80vw !important;
+    }
+
+    .elem p{
+      width: 100% !important;
+    }
+
+    .elem p{
+
+      font-weight: 100;
+    }
+
+  }
+
 </style>
