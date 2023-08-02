@@ -35,6 +35,7 @@
 	<div class = 'text-btns'>
 
 		{#if !$page.url.pathname.startsWith('/dashboard')}
+		<!--
 			<a href="/">
 				<h2 class = 'text-btn'>
 					Home
@@ -45,6 +46,7 @@
 					Pricing
 				</h2>
 			</a>
+			-->
 
 		{:else}
 				<a href="/dashboard">
@@ -97,7 +99,15 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 15px;
-		background: none;
+		background: rgba(0,0,0,0);
+		position: fixed;
+		top: 20px;
+		left: 20px;
+		width: calc(100vw - 40px);
+		background: white;
+		border-radius: 10px;
+		box-shadow: 0px 20px 60px rgba(0,0,0,0.2);
+		z-index: 6;
 	}
 
 	#logo{

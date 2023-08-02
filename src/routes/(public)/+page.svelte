@@ -99,15 +99,29 @@
 
 <div id = 'app'>
 
-	<div class = 'section'>
 
+	<div id = 'splash'>
 
-		<div class = 'expo'>
-			<h1> Create <span> Scrollable</span> Stories. </h1>
-			<p> </p>
+		<div class = 'split white'>
+		  <h1> Why read like this... </h1>
+		  <img src = 'phone.svg' alt = 'phone'>
 		</div>
 
+		<div class = 'split'>
+		  <h1> ... when you can do it like this? </h1>
+		  <img src = 'phone-1.svg' alt = 'phone'>
+		</div>
 
+	</div>
+
+
+	<div class = 'section_expo'>
+		<h1> Read the Classics </h1>
+		<h2> Now in Scrollable form. </h2>
+	</div>
+
+
+	<div class = 'section'>
 		<div id = 'spaces'>
 			{#each $spaces as space}
 				<Space {space} page={true} />
@@ -119,16 +133,28 @@
 
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
-
+	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
 	h1{
 		font-family: 'Libre Baskerville', sans-serif;
-		font-size: 80px;
+		font-size: 50px;
 		font-weight: 700;
 		text-align: center;
-		letter-spacing: -5px;
-		padding: 80px;
+		letter-spacing: -2.5px;
+		margin-bottom: 20px;
+	}
+
+	h2{
+		font-family: 'Libre Baskerville', sans-serif;
+		font-size: 18px;
+		font-weight: 300;
+		text-align: center;
+		letter-spacing: -1px;
+	}
+
+	.section_expo{
+		text-align: center;
+		padding: 80px 0 50px 0;
 	}
 
 	.title{
@@ -164,7 +190,6 @@
 		background-position: center center;
 	}
 
-
 	.byline{
 		display: flex;
 		align-items: center;
@@ -192,30 +217,28 @@
 	#spaces{
 		display: flex;
 		align-items: center;
-		justify-content: flex-start;
+		justify-content: center;
 		flex-wrap: wrap;
 		gap: 130px 30px;
 		padding: 30px;
 	}
 
-
-
 	#app{
 		position: fixed;
-		top: 60px;
+		top: 0px;
 		left: 0;
 		width: 100vw;
-		height: calc(100vh - 60px);
+		height: calc(100vh);
 		background: white;
 		overflow-y: scroll;
 		overflow-x: hidden;
-		padding-bottom: 100px;
+		padding-bottom: 200px;
+
 	}
 
 	html{
 		background: white;
 		color: black;
-
 	}
 
 
@@ -231,7 +254,6 @@
 		font-weight: 800;
 		letter-spacing: -1px;
 	}
-
 
 	.row{
 		display: flex;
@@ -260,13 +282,40 @@
 	#splash {
 		margin: 0;
 		width: 100vw;
-		height: calc(100vh - 60px);
-		background: white;
+		height: 100vh;
+		background-image: url('background.svg');
+		background-size: cover;
+		background-position: center center;
 
 		display: flex;
-		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+	}
+
+	.split{
+		width: 50vw;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+	}
+
+	#splash h1{
+		font-size: 32px;
+		letter-spacing: -0.8px;
+		margin: 0;
+		padding: 15px;
+		margin-top: 70px;
+	}
+
+	#splash img{
+		height: 70vh;
+		width: 40vh;
+	}
+
+	.white h1{
+		color: white;
 	}
 
 
@@ -381,6 +430,7 @@
 		justify-content: center;
 		width: 90vw;
 	}
+
 
 	.post {
 		width: 900px;

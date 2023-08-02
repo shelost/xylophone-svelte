@@ -43,20 +43,28 @@
     #spaces{
         display: flex;
         flex-wrap: wrap;
-        gap: 20px 200px;
+        gap: 80px 30px;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 30px;
+        padding-bottom: 100px !important;
     }
 
     #add_space{
-      border: 1px solid black;
+      border: 2px solid black;
       width: 300px;
+      height: 500px;
       border-radius: 15px;
+      text-align: center;
 
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: center;
+
       transition: 0.2s ease;
       cursor: pointer;
+      margin-top: 40px;
     }
 
     #add_space:hover{

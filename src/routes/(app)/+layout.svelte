@@ -19,10 +19,10 @@
 
     #app{
 		position: fixed;
-		top: 60px;
+		top: 0;
 		left: 0;
 		width: 100vw;
-		height: calc(100vh -100px);
+		height: 100vh;
 		overflow-y: scroll;
         z-index: 4;
 	}

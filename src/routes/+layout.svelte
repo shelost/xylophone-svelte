@@ -19,12 +19,10 @@
 </svelte:head>
 
 
-<div class="h-full overflow-hidden" use:loader = {loader}>
+<div  use:loader = {loader}>
 	<!-- Use the Loader component here -->
 	<AppShell>
-		<!-- Header -->
-		<svelte:fragment slot="pageHeader"><NavBar/></svelte:fragment>
-		<!-- Page Content Slot -->
+		<NavBar/>
 		<slot />
 	</AppShell>
 </div>
