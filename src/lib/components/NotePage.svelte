@@ -20,19 +20,19 @@
         adjustTextareaHeight(document.getElementById('note-body'))
 
         const s = Id('scrollable')
-        let scroll = Id('app')
+
+        let scroll = Id('scrollable')
         let progress = Id('progress')
 
         let loop = () => {
+
+            console.log(scroll.scrollTop)
             progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
             window.requestAnimationFrame(loop)
         }
         window.requestAnimationFrame(loop)
 
     })
-
-
-
 
 
 
@@ -114,19 +114,8 @@
         on:input={updateNote}
     ></textarea>
 
-    <div id = 'scrollable'>
-    </div>
 
 </section>
-
-
-<div id = 'buttons'>
-    <button id = 'p'> Paragraph </button>
-    <button id = 'i'> Image </button>
-    <button id = 'v'> Video </button>
-</div>
-
-
 
 </div>
 
@@ -135,6 +124,11 @@
 </div>
 
 <style>
+
+    #app{
+        height: 100vh !important;
+        padding-top: 120px;
+    }
 
     #buttons{
         display: flex;
@@ -188,6 +182,7 @@
       overflow-y: scroll;
       margin: auto;
       margin-top: 20px;
+      padding-bottom: 60px;
     }
 
 

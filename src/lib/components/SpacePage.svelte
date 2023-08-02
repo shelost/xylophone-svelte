@@ -162,12 +162,6 @@
 
       <div class = 'secs'>
 
-        <div class = 'sec'>
-          <h1> Creator </h1>
-          <div class = 'profile'>
-            <h2> Heewon </h2>
-          </div>
-        </div>
 
         <div class = 'sec'>
           <h1> Description </h1>
@@ -436,11 +430,20 @@
         flex: 1 !important;
       }
 
+      .secs{
+        margin-top: 30px;
+      }
+
 
   @media screen and (max-width: 800px){
 
+
+    #banner{
+      height: 40vw;
+    }
+
     .scroll{
-      margin-top: 0;
+      margin-top: -100px;
     }
 
     #app{
@@ -461,6 +464,10 @@
       line-height: 120%;
     }
 
+    .mast{
+      margin-top: -40px;
+    }
+
     .secs{
       width: 90vw;
     }
@@ -472,6 +479,7 @@
     #banner{
       width: 100vw;
     }
+
   }
 
   </style>

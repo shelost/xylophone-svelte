@@ -4,6 +4,8 @@
 	import { page } from '$app/stores';
 	import QuickLinks from '../private/QuickLinks.svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
+	import logo from '$lib/img/scrollable.svg';
+
 
 	import { invalidate } from '$app/navigation';
 
@@ -27,7 +29,7 @@
 	<!-- Branding -->
 
 		<a href="/">
-			<img id = 'logo' src = 'scrollable.svg' alt = 'logo'>
+			<img id = 'logo' src = {logo} alt = 'logo'>
 		</a>
 
 	<!-- Middle Section -->

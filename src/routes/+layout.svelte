@@ -13,10 +13,7 @@
   </script>
 
 
-<svelte:head>
 
-  <link rel='icon' type='image/png' href='scrollable.png' />
-</svelte:head>
 
 
 <div  use:loader = {loader}>

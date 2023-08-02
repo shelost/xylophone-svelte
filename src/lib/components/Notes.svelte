@@ -11,6 +11,7 @@
   export let icon = null;
 
   let sortable;
+  let order = []
 
   let notes = writable([]);
   let noteToEdit = { id: null, title: '', body: '' }; // Store the note to be edited
@@ -28,23 +29,12 @@
     const { data: d, error } = await supabaseClient
       .from('notes')
       .select('*')
-      .eq('space_id', data?.id)
-      .order('sort_order', { ascending: false });
+      .eq('space_id', data.id)
+      .order('index', { ascending: true });
 
     if (!error) {
       // Handle conflicts in sort_order and resolve them by giving the higher number to the note with the alphabetically foremost title
-      const resolvedData = d.map((note, index) => {
-        if (index > 0 && note.sort_order <= d[index - 1].sort_order) {
-          // Handle conflicts by ensuring the current note has a sort_order one greater than the previous note's sort_order
-          const prevSortOrder = d[index - 1].sort_order;
-          return {
-            ...note,
-            sort_order: prevSortOrder + 1,
-          };
-        } else {
-          return note;
-        }
-      });
+      let resolvedData = d.sort((a, b) => a.index - b.index);
 
       notes.set(resolvedData);
     } else {
@@ -52,21 +42,33 @@
     }
   }
 
-  async function updateIndex(e){
-    let id = e.item.id
-    let index = e.newIndex
+  async function updateIndices(e){
+
+    [].forEach.call(e.from.getElementsByClassName('note'), function (el,index) {
+        let id = el.id
+        updateIndex(id, index)
+
+    });
+    fetchNotes()
+    /*
+    order = sortable.toArray()
+    sortable.sort(order);
+    */
+  }
+
+  async function updateIndex(id, index){
     const { data: d, error } = await supabaseClient
-        .from('notes')
-          .update({
-            index: index
+          .from('notes')
+            .update({
+              index: index
           })
           .eq('id', id);
 
-    if (!error){
+        if (!error){
 
-    }else{
-      console.error('Error updating index:', error);
-    }
+        }else{
+          console.error('Error updating index:', error);
+        }
   }
 
 
@@ -80,17 +82,26 @@
           put: true,
           pull: false,
         },
-        onEnd: e => {
-
-
-
-
-        },
+        easing: "cubic-bezier(1, 0, 0, 1)",
+        dragoverBubble: false,
+        removeCloneOnHide: true,
+        sort: true,
+        onEnd: updateIndices,
         animation: 200
       }
       );
 
-      console.log(sortable)
+      setTimeout(()=>{
+        var order = sortable.toArray();
+        console.log(sortable)
+        console.log($notes)
+
+        for (let i=0; i<sortable.el.children.length; i++){
+          let note = sortable.el.children[i]
+          let id = note.id
+          console.log(note.id)
+        }
+      }, 1000)
 
     });
 
@@ -286,7 +297,6 @@
           <div class="note_expo">
             {#if !page}
               <div class="handle" data-sortable-handle>☰</div>
-              {note.sort_order}
             {/if}
             <div class="note_icon" style='background-image:url({data.icon})'></div>
             <h1 class="note_title">{note.title}</h1>
@@ -304,6 +314,11 @@
 
 <style>
       /* Note */
+
+
+      .note_index{
+        width: 10px;
+      }
 
 
       button{
@@ -366,6 +381,7 @@
         background-size: cover;
         background-position: center center;
         border-radius: 5px;
+        margin-right: 5px;
       }
 
       .note button{
@@ -380,6 +396,7 @@
           font-size: 18px;
           font-weight: 600;
           width: 300px;
+          line-height: 110%;
       }
 
       .note p{
@@ -400,6 +417,8 @@
 
       .handle {
         cursor: grab;
+        margin-right: 5px;
+        opacity: 0.3;
       }
 
 
@@ -446,7 +465,6 @@
       @media screen and (max-width: 900px){
 
         .notes{
-
           width: calc(90vw - 10px);
         }
       }

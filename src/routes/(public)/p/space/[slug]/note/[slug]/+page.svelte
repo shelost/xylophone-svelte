@@ -5,13 +5,16 @@
   import { writable } from 'svelte/store';
 
   export let data;
-  export let page = false;
 
   let updatedTitle = data.title;
   let updatedBody = data.body;
 
   let elems = writable([])
-  let series = {}
+  let space = getSpace()
+  let title = null
+
+  let next = {}
+  let prev = {}
 
   const ELEMS = data.body.split('\n');
 
@@ -23,24 +26,46 @@
       }));
   });
 
-
-  async function getSeries(){
-    const { data: space, error } = await supabaseClient
+  async function getSpace(){
+    const { data: s, error } = await supabaseClient
       .from('spaces')
       .select('*')
       .eq('id', data.space_id)
       .single()
 
     if (!error) {
-      series = space
+      return s
     } else {
-      console.error('Error fetching series', error);
+      console.error('Error fetching space', error);
+    }
+  }
+
+  async function getAdjacentNotes(){
+
+    const { data: n, error: e1 } = await supabaseClient
+      .from('notes')
+      .select('*')
+      .eq('index', data.index+1)
+      .single()
+
+    if (!e1) {
+      next = n
+    }
+    const { data: p, error: e2 } = await supabaseClient
+      .from('notes')
+      .select('*')
+      .eq('index', data.index-1)
+      .single()
+
+    if (!e2) {
+      prev = p
     }
   }
 
 
   onMount(() => {
-    getSeries()
+    getSpace()
+    getAdjacentNotes()
     adjustTextareaHeight(document.getElementById('note-title'))
     adjustTextareaHeight(document.getElementById('note-body'))
 
@@ -49,10 +74,29 @@
     let progress = Id('progress')
 
     let loop = () => {
+      for (let i=0; i<Class('next').length; i++){
+        let btn = Class('next')[i]
+        btn.onclick = () => {
+          if (next.id){
+            window.location.href = next.id
+          }
+        }
+      }
+
+      for (let i=0; i<Class('prev').length; i++){
+        let btn = Class('prev')[i]
+        btn.onclick = () => {
+          if (next.id){
+            window.location.href = prev.id
+          }
+        }
+      }
+
       progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
       window.requestAnimationFrame(loop)
     }
     window.requestAnimationFrame(loop)
+
 
 
 
@@ -107,6 +151,11 @@
       return document.getElementsByTagName(id)
   }
 
+  function Class(id){
+      return document.getElementsByClassName(id)
+  }
+
+
 
 </script>
 
@@ -115,21 +164,41 @@
 
 <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
-  <div id = 'hero'>
-    <img src = '{series.icon}' alt = 'icon'>
-    <h1> {series.title} </h1>
-    <h2> {data.title} </h2>
-  </div>
+  {#await space}
 
-  <div id = 'scrollable'>
+   <h1> Loading... </h1>
 
-    {#each $elems as elem}
-      <div class = 'elem'>
-        <p> {elem.content} </p>
+  {:then space}
+
+    <div id = 'hero'>
+      <!--
+      <img src = '{series.icon}' alt = 'icon'>
+      -->
+      <h1> {space.title} </h1>
+      <h2> {data.title} </h2>
+    </div>
+
+    <div id = 'scrollable'>
+
+      <div id = 'buttons'>
+        <button class = 'prev'> Prev </button>
+        <button class = 'next'> Next </button>
       </div>
-    {/each}
 
-  </div>
+      {#each $elems as elem}
+        <div class = 'elem'>
+          <p> {elem.content} </p>
+        </div>
+      {/each}
+
+      <div id = 'buttons'>
+        <button class = 'prev'> Prev </button>
+        <button class = 'next'> Next </button>
+      </div>
+
+    </div>
+
+  {/await}
 
 </section>
 
@@ -146,6 +215,11 @@
 
   :global(#navbar){
     display: none !important;
+  }
+
+  button{
+    background: white !important;
+    color: black !important;
   }
 
   #app{
@@ -188,6 +262,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 50px;
+    margin-bottom: 100px;
   }
 
   #hero h1{
@@ -252,16 +328,16 @@
       position: fixed;
       bottom: 0;
       left: 0;
-      height: 10px;
+      height: 5px;
       width: 100vw;
-      background: #f0f0f0;
+      background: rgba(255,255,255,0.1);
   }
 
   #progress{
       position: fixed;
       bottom: 0;
       left: 0;
-      height: 10px;
+      height: 5px;
       width: 10px;
       background: rgb(255, 0, 115);
   }

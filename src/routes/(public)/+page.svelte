@@ -3,6 +3,7 @@
 	import { writable } from 'svelte/store'
 	import { supabaseClient } from '$lib/db';
 	import Space from '$lib/components/Space.svelte'
+	import bg from '$lib/img/background.svg'
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
@@ -93,14 +94,13 @@
 
 <svelte:head>
 	<title> Scrollable </title>
-	<link rel='icon' type='image/png' href='scrollable.png' />
 </svelte:head>
 
 
 <div id = 'app'>
 
 
-	<div id = 'splash'>
+	<div id = 'splash' style ='background-image: url({bg});'>
 
 		<div class = 'split white'>
 		  <h1> Why read like this... </h1>
@@ -133,14 +133,15 @@
 
 <style>
 
-	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
+
 
 	h1{
-		font-family: 'Libre Baskerville', sans-serif;
+		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
 		font-size: 50px;
-		font-weight: 700;
+		font-weight: 600;
 		text-align: center;
-		letter-spacing: -2.5px;
+		letter-spacing: -2px;
 		margin-bottom: 20px;
 	}
 
@@ -283,7 +284,7 @@
 		margin: 0;
 		width: 100vw;
 		height: 100vh;
-		background-image: url('background.svg');
+
 		background-size: cover;
 		background-position: center center;
 
