@@ -76,20 +76,22 @@
     onMount(()=>{
       fetchNotes()
 
-      sortable = Sortable.create(document.getElementById('sortable'), {
-        group: {
-          name: 'sortable',
-          put: true,
-          pull: false,
-        },
-        easing: "cubic-bezier(1, 0, 0, 1)",
-        dragoverBubble: false,
-        removeCloneOnHide: true,
-        sort: true,
-        onEnd: updateIndices,
-        animation: 200
+      if (!page){
+        sortable = Sortable.create(document.getElementById('sortable'), {
+          group: {
+            name: 'sortable',
+            put: true,
+            pull: false,
+          },
+          easing: "cubic-bezier(1, 0, 0, 1)",
+          dragoverBubble: false,
+          removeCloneOnHide: true,
+          sort: true,
+          onEnd: updateIndices,
+          animation: 200
+        }
+        );
       }
-      );
 
       setTimeout(()=>{
         var order = sortable.toArray();
@@ -290,15 +292,12 @@
   <div id="sortable" bind:this={sortable}>
     {#each $notes as note (note.id)}
       <div id='{note.id}' class="note">
-        <!-- Add a handle element (e.g., a drag icon) -->
-
-
         <a href="{data.id}/note/{note.id}">
           <div class="note_expo">
             {#if !page}
-              <div class="handle" data-sortable-handle>☰</div>
+              <div class="handle" data-sortable-handle> ☰ </div>
             {/if}
-            <div class="note_icon" style='background-image:url({data.icon})'></div>
+            <div class="note_icon" style='background-image:url({data.cover})'></div>
             <h1 class="note_title">{note.title}</h1>
           </div>
         </a>

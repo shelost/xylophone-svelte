@@ -120,15 +120,17 @@
     <!-- Banner -->
     <div id="banner-container" class = 'container' style="background-image: url({data.banner})" >
       <div id="banner" style="background-image: url({data.banner})" loading="lazy"></div>
-      <label id = 'banner-upload-container' class = 'upload-container'>
-        <input
-        type="file"
-        id="banner-upload"
-        accept="image/*"
-        on:change={(event) => handleFileUploadThrottled(event, 'banner')}
-        />
-        Upload File
+      {#if !page}
+        <label id = 'banner-upload-container' class = 'upload-container'>
+          <input
+          type="file"
+          id="banner-upload"
+          accept="image/*"
+          on:change={(event) => handleFileUploadThrottled(event, 'banner')}
+          />
+          Upload File
         </label>
+      {/if}
     </div>
 
 
@@ -138,16 +140,34 @@
     <div class="mast">
       <div id="icon-container" class = 'container'>
         <img id="icon" src={data.icon} alt="icon" />
-        <label id = 'icon-upload-container' class = 'upload-container'>
-        <input
-          type="file"
-          id="icon-upload"
-          accept="image/*"
-          on:change={(event) => handleFileUploadThrottled(event, 'icon')}
-        />
-        Upload File
-        </label>
+        {#if !page}
+          <label id = 'icon-upload-container' class = 'upload-container'>
+          <input
+            type="file"
+            id="icon-upload"
+            accept="image/*"
+            on:change={(event) => handleFileUploadThrottled(event, 'icon')}
+          />
+          Upload File
+          </label>
+        {/if}
       </div>
+
+      <div id="cover-container" class = 'container'>
+        <img id="cover" src={data.cover} alt="cover" />
+        {#if !page}
+          <label id = 'cover-upload-container' class = 'upload-container'>
+          <input
+            type="file"
+            id="cover-upload"
+            accept="image/*"
+            on:change={(event) => handleFileUploadThrottled(event, 'cover')}
+          />
+          Upload File
+          </label>
+        {/if}
+      </div>
+
       <div class="expo">
         <textarea id="title" bind:value={data.title}
                 placeholder="Untitled Space"
@@ -200,6 +220,7 @@
 
 <style>
 
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
 
       #app{
@@ -217,6 +238,7 @@
           font-weight: 500;
           margin-bottom: 30px;
           margin-top: 40px;
+
       }
 
 
@@ -255,8 +277,52 @@
       }
 
 
+      #banner-container .upload-container{
+        bottom: 20px;
+        right: 100px;
+        z-index: 9 !important;
+      }
 
 
+      /* Cover */
+
+      #cover-container{
+        position: relative;
+        transition: 0.1s ease;
+        cursor: pointer;
+        width: 150px;
+        height: 150px;
+      }
+
+      #cover-container .upload-container{
+        top: 50px;
+        left: 10px;
+      }
+
+      #cover-container:hover #icon{
+        filter: brightness(50%);
+      }
+
+
+      #cover-container:hover .upload-container{
+        opacity: 1;
+      }
+
+      #cover-upload{
+        display: none;
+      }
+
+      #cover-container:hover #cover{
+        filter: brightness(50%);
+      }
+
+
+      #cover-container:hover .upload-container{
+        opacity: 1;
+      }
+
+
+      /* Icon */
 
       #icon-container{
         position: relative;
@@ -265,16 +331,6 @@
         width: 150px;
         height: 150px;
       }
-
-
-
-      #banner-container .upload-container{
-        bottom: 20px;
-        right: 100px;
-        z-index: 9 !important;
-      }
-
-
 
       #icon-container .upload-container{
         top: 50px;
@@ -290,49 +346,7 @@
         opacity: 1;
       }
 
-
-      .upload-container{
-        position: absolute;
-        border: 1px solid white;
-        background: white;
-        color: black;
-        display: inline-block;
-        width: 120px;
-        height: 35px;
-        line-height: 35px;
-        cursor: pointer;
-        opacity: 0;
-        z-index: 10 !important;
-        border-radius: 5px;
-        text-align: center;
-        transition: 0.2s ease;
-        font-weight: 500;
-        font-size: 14px;
-        letter-spacing: -0.2px;
-      }
-
-
-      #icon-upload{
-        display: none;
-      }
-
-      #icon{
-        position: absolute;
-          height: 140px;
-          border-radius: 10px;
-          margin-bottom: 5px;
-          z-index: 2;
-          transition: 0.2s ease;
-      }
-
-      .expo{
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          justify-content: flex-start;
-          gap: 5px;
-      }
-
+      /* Banner */
 
       #banner-container:hover #banner{
         filter: brightness(50%);
@@ -359,7 +373,6 @@
         width: 100vw;
         height: 20vw;
 
-
         transition: 0.2s ease;
         background-size: cover;
         background-position: center;
@@ -374,6 +387,52 @@
         bottom: 30px;
         right: -30px;
         opacity: 0;
+      }
+
+      /* Icon */
+
+      #icon-upload{
+        display: none;
+      }
+
+      #icon{
+        position: absolute;
+          height: 140px;
+          border-radius: 10px;
+          margin-bottom: 5px;
+          z-index: 2;
+          transition: 0.2s ease;
+      }
+
+      .expo{
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: flex-start;
+          gap: 5px;
+      }
+
+
+
+
+      .upload-container{
+        position: absolute;
+        border: 1px solid white;
+        background: white;
+        color: black;
+        display: inline-block;
+        width: 120px;
+        height: 35px;
+        line-height: 35px;
+        cursor: pointer;
+        opacity: 0;
+        z-index: 10 !important;
+        border-radius: 5px;
+        text-align: center;
+        transition: 0.2s ease;
+        font-weight: 500;
+        font-size: 14px;
+        letter-spacing: -0.2px;
       }
 
       textarea{

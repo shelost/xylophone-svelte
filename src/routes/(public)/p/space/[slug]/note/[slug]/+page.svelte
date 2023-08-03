@@ -3,6 +3,8 @@
   import { fly } from 'svelte/transition';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
+  import AnimatedElement from '$lib/components/AnimatedElement.svelte';
+  import Jagged from '$lib/img/jagged.svg'
 
   export let data;
 
@@ -210,12 +212,8 @@
   {:then space}
 
 
-
-
-    <div id = 'hero'>
-      <!--
-      <img src = '{series.icon}' alt = 'icon'>
-      -->
+    <div id = 'hero' style = 'background-image:url({Jagged})'>
+      <img src = {space.icon} alt = 'icon'>
       <h1> {space.title} </h1>
       <h2> {data.title} </h2>
     </div>
@@ -225,8 +223,10 @@
 
       {#each $elems as elem}
         <div class = 'elem'>
-          <p> {elem.content} </p>
+          <p> . </p>
         </div>
+
+        <AnimatedElement text={elem.content}></AnimatedElement>
       {/each}
 
     </div>
@@ -251,6 +251,7 @@
   :global(#navbar){
     display: none !important;
   }
+
 
   button{
     background: white !important;
@@ -288,13 +289,8 @@
     justify-content: space-between;
     align-items: center;
     border: 1px solid rgba(255,255,255,0.1);
-
     background: #101010;
   }
-
-
-
-
 
   button:hover{
       background: rgba(0,0,0,0.1);
@@ -312,8 +308,15 @@
     flex-direction: column;
     align-items: center;
     margin: 50px;
-    margin-bottom: 100px;
+    margin-top: 0;
+    margin-bottom: 50px;
     text-align: center;
+    text-justify: center;
+
+    width: 80vw;
+
+    background-size: cover;
+    background-position: 50% 50%;
   }
 
   #hero h1{
@@ -325,6 +328,8 @@
     font-weight: 600;
     letter-spacing: -0.6px;
     font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
+    white-space: pre-wrap;
+    width: 65%;
   }
 
   #hero h2{
@@ -332,6 +337,8 @@
     opacity: 0.5;
   }
 
+  #scrollable{
+  }
 
   #app{
       height: calc(100vh - 60px);
@@ -367,7 +374,7 @@
 
   .elem{
     margin: auto;
-    margin-bottom: 150px;
+    margin-bottom: 50px;
     text-align: center;
     font-weight: 200;
   }
@@ -381,6 +388,7 @@
     font-weight: 300 !important;
     opacity: 0.7;
     font-family: 'Inter', sans-serif;
+    opacity: 0;
   }
 
 
@@ -440,9 +448,9 @@
 
 
     #hero h1{
-      font-size: 50px;
+      font-size: 40px !important;
       text-align: center;
-      margin: 20px 0;
+      text-justify: center;
       line-height: 120%;
       width: 80%;
     }

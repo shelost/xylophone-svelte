@@ -25,13 +25,16 @@
 			// Get author
 			for (let i=0; i<$notes.length; i++){
 				let note = $notes[i]
+
+				console.log(note)
+
 				const {data : d, error: e} = await supabaseClient
 						.from('profiles')
 						.select('*')
 						.eq('id', note.user_id)
 
 				if (!error) {
-					$notes[i].author = d[0].username;
+
 				} else {
 					console.error('Error fetching user_data:', error);
 				}
@@ -80,6 +83,7 @@
 
 	onMount(()=>{
 		fetchSpaces()
+
 		fetchNotes()
 	})
 
@@ -104,7 +108,7 @@
 		</div>
 
 		<div class = 'split'>
-		  <h1> ... when you can do it like this? </h1>
+		  <h1> ... when you can read like this? </h1>
 		  <img src = 'phone-1.svg' alt = 'phone'>
 		</div>
 

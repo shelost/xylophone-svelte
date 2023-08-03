@@ -10,7 +10,7 @@
 
 <a class = 'space_a' href='p/space/{space.id}'>
     <div class = 'container'>
-        <div class = 'background' style='background-image: url({space.icon})'></div>
+        <div class = 'background' style='background-image: url({space.cover})'></div>
         <div class='space' >
 
             <div class='space_expo'>
@@ -23,7 +23,7 @@
 {:else}
 <a class = 'space_a' href='dashboard/space/{space.id}'>
     <div class = 'container'>
-        <div class = 'background' style='background-image: url({space.icon})'></div>
+        <div class = 'background' style='background-image: url({space.cover})'></div>
         <div class='space' >
             <div class='space_expo'>
                 <h1> Enter </h1>

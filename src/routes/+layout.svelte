@@ -18,8 +18,8 @@
 
 <div  use:loader = {loader}>
 	<!-- Use the Loader component here -->
-	<AppShell>
+
 		<NavBar/>
 		<slot />
-	</AppShell>
+
 </div>
