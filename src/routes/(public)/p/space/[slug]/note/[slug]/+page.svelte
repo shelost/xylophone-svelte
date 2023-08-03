@@ -92,47 +92,46 @@
     adjustTextareaHeight(document.getElementById('note-title'))
     adjustTextareaHeight(document.getElementById('note-body'))
 
-    const s = Id('scrollable')
-    let scroll = Id('app')
-    let progress = Id('progress')
+
+    setTimeout(() => {
+      const s = Id('scrollable')
+      let scroll = Id('app')
+      let progress = Id('progress')
 
 
-    let loop = () => {
-      for (let i=0; i<Class('next').length; i++){
-        let btn = Class('next')[i]
-        btn.onclick = () => {
-          console.log(next.id)
-          if (next.id){
-            window.location.href = next.id
-          }
-        }
-      }
-
-
-      for (let i=0; i<Class('prev').length; i++){
-        let btn = Class('prev')[i]
-
-        if (data.index > 0){
-            btn.onclick = () => {
-            console.log(prev.id)
+      let loop = () => {
+        for (let i=0; i<Class('next').length; i++){
+          let btn = Class('next')[i]
+          btn.onclick = () => {
+            console.log(next.id)
             if (next.id){
-              window.location.href = prev.id
+              window.location.href = next.id
             }
           }
-        }else{
-          btn.disabled = true
         }
 
+
+        for (let i=0; i<Class('prev').length; i++){
+          let btn = Class('prev')[i]
+          if (data.index > 0){
+              btn.onclick = () => {
+              console.log(prev.id)
+              if (prev.id){
+                window.location.href = prev.id
+              }
+            }
+          }else{
+            btn.disabled = true
+          }
+
+        }
+
+        progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
+        window.requestAnimationFrame(loop)
       }
-
-      progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
       window.requestAnimationFrame(loop)
-    }
-    window.requestAnimationFrame(loop)
 
-
-
-
+    }, 2000);
   })
 
 
@@ -193,24 +192,30 @@
 </script>
 
 
-<div id = 'app'>
-
-  <div id = 'buttons'>
-    <button class = 'prev'> Prev </button>
-    <button class = 'next'> Next </button>
-  </div>
-
-<section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
-
 
 
 {#if data}
   {#await space}
 
-   <h1> Loading... </h1>
+  <div id = 'loading'>
+    <h1> Loading... </h1>
+  </div>
+
 
   {:then space}
 
+
+  <div id = 'app' style='background: {space.color}'>
+
+    <div id = 'buttons' style='background: {space.color}'>
+      <button class = 'prev'> Prev </button>
+
+      <button> Settings </button>
+
+      <button class = 'next'> Next </button>
+    </div>
+
+  <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
     <div id = 'hero' style = 'background-image:url({Jagged})'>
       <img src = {space.icon} alt = 'icon'>
@@ -230,15 +235,18 @@
       {/each}
 
     </div>
+  </section>
+
+</div>
 
   {/await}
 
 {/if}
 
-</section>
 
 
-</div>
+
+
 
 <div id = 'bar'>
   <div id = 'progress'></div>
@@ -252,6 +260,16 @@
     display: none !important;
   }
 
+  #loading{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    color: white;
+  }
 
   button{
     background: white !important;
@@ -307,16 +325,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 50px;
-    margin-top: 0;
+    margin-top: -10px;
     margin-bottom: 50px;
     text-align: center;
     text-justify: center;
+    padding: 60px 0;
 
-    width: 80vw;
+    width: 100vw !important;
+    height: 800px;
+    margin-bottom: -300px;
 
     background-size: cover;
-    background-position: 50% 50%;
+    background-position: center center;
   }
 
   #hero h1{
@@ -356,7 +376,7 @@
 
   section {
     width: 800px;
-    max-width: 100vw;
+    width: 100vw;
     border-radius: 20px;
 
     display: flex;
@@ -370,6 +390,9 @@
 
   #scrollable{
     margin-top: 50px;
+
+    width: 800px;
+    max-width: 90vw;
   }
 
   .elem{

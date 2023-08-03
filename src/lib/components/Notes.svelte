@@ -91,19 +91,18 @@
           animation: 200
         }
         );
+
+        setTimeout(()=>{
+
+      for (let i=0; i<sortable.el.children.length; i++){
+        let note = sortable.el.children[i]
+        let id = note.id
+        //console.log(note.id)
+      }
+      }, 1000)
+
       }
 
-      setTimeout(()=>{
-        var order = sortable.toArray();
-        console.log(sortable)
-        console.log($notes)
-
-        for (let i=0; i<sortable.el.children.length; i++){
-          let note = sortable.el.children[i]
-          let id = note.id
-          console.log(note.id)
-        }
-      }, 1000)
 
     });
 
@@ -174,7 +173,7 @@
           body: '',
           space_id: data.id,
           user_id: data.user_id,
-          sort_order: newSortOrder, // Set the new sort_order for the new note
+          index: newSortOrder, // Set the new sort_order for the new note
         },
       ])
       .select('*');
@@ -250,11 +249,11 @@
   function getNewSortOrder() {
     const sortedNotes = $notes.sort((a, b) => {
       // Sort by sort_order in descending order
-      return b.sort_order - a.sort_order;
+      return b.index - a.index
     });
 
     // Get the maximum sort_order present in $notes
-    const maxSortOrder = sortedNotes.length > 0 ? sortedNotes[0].sort_order : -1;
+    const maxSortOrder = sortedNotes.length > 0 ? sortedNotes[0].index : -1;
 
     // Increment the maximum sort_order to get the new sort_order for the new note
     return maxSortOrder + 1;

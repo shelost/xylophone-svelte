@@ -138,34 +138,41 @@
 
     <!-- Mast -->
     <div class="mast">
-      <div id="icon-container" class = 'container'>
-        <img id="icon" src={data.icon} alt="icon" />
-        {#if !page}
-          <label id = 'icon-upload-container' class = 'upload-container'>
-          <input
-            type="file"
-            id="icon-upload"
-            accept="image/*"
-            on:change={(event) => handleFileUploadThrottled(event, 'icon')}
-          />
-          Upload File
-          </label>
-        {/if}
-      </div>
 
-      <div id="cover-container" class = 'container'>
-        <img id="cover" src={data.cover} alt="cover" />
+      <div class = 'carousel'>
         {#if !page}
-          <label id = 'cover-upload-container' class = 'upload-container'>
-          <input
-            type="file"
-            id="cover-upload"
-            accept="image/*"
-            on:change={(event) => handleFileUploadThrottled(event, 'cover')}
-          />
-          Upload File
-          </label>
+
+        <div id="icon-container" class = 'container'>
+          <img id="icon" src={data.icon} alt="icon" />
+
+            <label id = 'icon-upload-container' class = 'upload-container'>
+            <input
+              type="file"
+              id="icon-upload"
+              accept="image/*"
+              on:change={(event) => handleFileUploadThrottled(event, 'icon')}
+            />
+            Upload File
+            </label>
+
+        </div>
         {/if}
+
+        <div id="cover-container" class = 'container'>
+          <img id="cover" src={data.cover} alt="cover" />
+          {#if !page}
+            <label id = 'cover-upload-container' class = 'upload-container'>
+            <input
+              type="file"
+              id="cover-upload"
+              accept="image/*"
+              on:change={(event) => handleFileUploadThrottled(event, 'cover')}
+            />
+            Upload File
+            </label>
+          {/if}
+        </div>
+
       </div>
 
       <div class="expo">
@@ -193,16 +200,6 @@
         </div>
 
 
-
-        <!--
-        <div class = 'buttons'>
-            {#if page}
-            <button id = 'subscribe'> Add to my inbox </button>
-            <button id = 'support'> Support this page </button>
-          {/if}
-        </div>
-        -->
-
       </div>
 
 
@@ -229,9 +226,14 @@
           height: 200px;
           overflow-y: scroll;
           position: relative;
-
       }
 
+      .carousel{
+        display: flex;
+        gap: 20px;
+        justify-content: flex-end;
+        align-items: flex-end !important;
+      }
 
       .header{
           font-size: 22px;
@@ -240,8 +242,6 @@
           margin-top: 40px;
 
       }
-
-
 
       .sec h1{
         font-weight: 600;
@@ -316,6 +316,11 @@
         filter: brightness(50%);
       }
 
+      #cover{
+        height: 140px;
+        border-radius: 10px;
+      }
+
 
       #cover-container:hover .upload-container{
         opacity: 1;
@@ -363,7 +368,7 @@
         top: 0px;
         left: 0px;
         width: 100vw !important;
-        height: 20vw;
+        height: 250px;
       }
 
       #banner {
@@ -371,7 +376,7 @@
         top: 0px;
         left: 0px;
         width: 100vw;
-        height: 20vw;
+        height: 250px;
 
         transition: 0.2s ease;
         background-size: cover;
@@ -485,7 +490,7 @@
       }
 
       .scroll{
-        margin-top: 100px;
+        margin-top: 50px;
         flex: 1 !important;
       }
 
@@ -496,9 +501,12 @@
 
   @media screen and (max-width: 800px){
 
+    #banner-container{
+      height: 200px;
+    }
 
     #banner{
-      height: 40vw;
+      height: 200px;
     }
 
     .scroll{
