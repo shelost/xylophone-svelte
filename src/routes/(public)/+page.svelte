@@ -468,4 +468,45 @@
 		font-weight: 300;
 		margin-top: var(--size-3);
 	}
+
+	@media screen and (max-width: 800px){
+
+		#splash{
+			gap: -50px !important;
+		}
+
+		.split{
+			margin: 0 -10px;
+		}
+
+		.split img{
+			width: 40vw !important;
+			height: 70vw !important;
+			margin: 0;
+		}
+
+		.split{
+			transform: translateY(40px);
+		}
+
+		.split.white{
+			transform: translateY(-60px);
+		}
+
+		.split h1{
+			line-height: 110%;
+			font-size: 24px !important;
+		}
+
+		.expo h1{
+			margin-bottom: 0px !important;
+			padding-bottom: 0px !important;
+		}
+
+		.expo h2{
+			margin-top: 0px !important;
+		}
+	}
+
+
 </style>
