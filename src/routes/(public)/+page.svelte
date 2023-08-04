@@ -26,8 +26,6 @@
 			for (let i=0; i<$notes.length; i++){
 				let note = $notes[i]
 
-				console.log(note)
-
 				const {data : d, error: e} = await supabaseClient
 						.from('profiles')
 						.select('*')
@@ -107,6 +105,22 @@
 		  <img src = 'phone.svg' alt = 'phone'>
 		</div>
 
+		<div class = 'center'>
+			<a href="https://www.producthunt.com/posts/scrollable?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-scrollable" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=408082&theme=light" alt="Scrollable - Your&#0032;Ultimate&#0032;Reading&#0032;App&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+			<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
+
+				<h2> Reserve My Spot </h2>
+
+				<label for='Email'> My Email </label>
+				<input id = 'email' name = 'Email' type = 'email' placeholder = 'your@email.com' required>
+
+				<label for='Task'> I would like to read... </label>
+				<input id = 'task' name = 'Task' type = 'text' placeholder = 'Thinking Fast and Slow' required>
+
+				<button id = 'submit' type = 'submit'> Let's Go! </button>
+			</form>
+		</div>
+
 		<div class = 'split'>
 		  <h1> ... when you can read like this? </h1>
 		  <img src = 'phone-1.svg' alt = 'phone'>
@@ -133,9 +147,74 @@
 
 <style>
 
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
+
+	.center{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 40px;
+	}
+
+	#form{
+		background: white;
+		border-radius: 15px;
+		padding: 35px;
+
+		display: flex;
+		flex-direction: column;
+		box-shadow: 0px 20px 80px rgba(0,0,0,0.1);
+
+		transition: 0.2s ease;
+	}
+
+	#form h2{
+		font-weight: 600;
+		letter-spacing: -0.5px;
+		margin-bottom: 20px;
+	}
+
+	#form:hover{
+		transform: translateY(-5px);
+	}
+
+	#submit{
+		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
+		font-size: 18px;
+		font-weight: 600;
+		padding: 12px 0;
+	}
 
 
+	#form button{
+		background: black;
+	}
+
+	#form button:hover{
+		background: #202020;
+	}
+
+	.form_title{
+		font-weight: 700;
+		margin-bottom: 30px;
+	}
+
+	label{
+		font-size: 14px;
+		opacity: 0.4;
+		margin-bottom: 5px;
+	}
+
+	input{
+		background: rgba(0,0,0,0.08) !important;
+		margin-bottom: 30px;
+		width: 300px;
+		font-size: 14px;
+		border-radius: 5px;
+	}
+
+
+	/**/
 	h1{
 		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
 		font-size: 50px;
@@ -371,6 +450,7 @@
 
 	.expo h1 {
 		font-size: 80px;
+
 		font-weight: 800;
 		letter-spacing: -3px;
 		color: black;
@@ -378,6 +458,10 @@
 
 		opacity: 0;
 		animation: float 0.6s ease 0.1s forwards;
+	}
+
+	.section_expo h1{
+		line-height: 110%;
 	}
 
 	.expo h2 {
@@ -471,6 +555,11 @@
 
 	@media screen and (max-width: 800px){
 
+		.center{
+			display: none !important;
+			background: none;
+		}
+
 		#splash{
 			gap: -50px !important;
 		}
@@ -506,6 +595,9 @@
 		.expo h2{
 			margin-top: 0px !important;
 		}
+
+
+
 	}
 
 

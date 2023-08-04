@@ -26,6 +26,8 @@
 
 
   async function fetchNotes() {
+
+
     const { data: d, error } = await supabaseClient
       .from('notes')
       .select('*')
@@ -50,10 +52,7 @@
 
     });
     fetchNotes()
-    /*
-    order = sortable.toArray()
-    sortable.sort(order);
-    */
+
   }
 
   async function updateIndex(id, index){
@@ -163,28 +162,28 @@
 
     // Function to add new note
     async function newNote() {
-    const newSortOrder = getNewSortOrder(); // Calculate the new sort_order for the new note
+      const newSortOrder = getNewSortOrder(); // Calculate the new sort_order for the new note
 
-    const { data: d, error } = await supabaseClient
-      .from('notes')
-      .insert([
-        {
-          title: '',
-          body: '',
-          space_id: data.id,
-          user_id: data.user_id,
-          index: newSortOrder, // Set the new sort_order for the new note
-        },
-      ])
-      .select('*');
+      const { data: d, error } = await supabaseClient
+        .from('notes')
+        .insert([
+          {
+            title: '',
+            body: '',
+            space_id: data.id,
+            user_id: data.user_id,
+            index: newSortOrder, // Set the new sort_order for the new note
+          },
+        ])
+        .select('*');
 
-    // Update the notes store with the newly added note
-    if (!error) {
-      notes.update((prevNotes) => [...prevNotes, d[0]]);
-      window.location.href = `./${data.id}/note/${d[0].id}`;
-    } else {
-      console.error('Error inserting the new note:', error);
-    }
+      // Update the notes store with the newly added note
+      if (!error) {
+        notes.update((prevNotes) => [...prevNotes, d[0]]);
+        window.location.href = `./${data.id}/note/${d[0].id}`;
+      } else {
+        console.error('Error inserting the new note:', error);
+      }
   }
 
 

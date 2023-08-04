@@ -20,6 +20,7 @@
           }
     })
 
+    console.log(data)
 
     async function handleFileUpload(event, field) {
       const file = event.target.files[0];
@@ -299,10 +300,9 @@
         left: 10px;
       }
 
-      #cover-container:hover #icon{
+      #cover-container:hover #cover{
         filter: brightness(50%);
       }
-
 
       #cover-container:hover .upload-container{
         opacity: 1;
@@ -317,7 +317,7 @@
       }
 
       #cover{
-        height: 140px;
+        height: 150px;
         border-radius: 10px;
       }
 
@@ -335,6 +335,8 @@
         cursor: pointer;
         width: 150px;
         height: 150px;
+        background: black;
+        border-radius: 10px;
       }
 
       #icon-container .upload-container{
@@ -464,7 +466,7 @@
           font-size: 60px;
           font-weight: 800;
           margin-bottom: 20px;
-          margin-top: 10px;
+          margin-top: 30px;
           letter-spacing: -2.5px;
           line-height: 100%;
           height: 54px;

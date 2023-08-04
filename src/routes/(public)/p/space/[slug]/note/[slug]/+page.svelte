@@ -210,8 +210,6 @@
     <div id = 'buttons' style='background: {space.color}'>
       <button class = 'prev'> Prev </button>
 
-      <button> Settings </button>
-
       <button class = 'next'> Next </button>
     </div>
 
@@ -283,6 +281,7 @@
   button:disabled{
     opacity: 0.5;
   }
+
 
   #app{
     background: black;
@@ -487,9 +486,22 @@
     }
 
     .elem p{
-
       font-weight: 100;
+      border-radius: 0;
     }
+
+    #app{
+      margin-top: -20px;
+      border-radius: 0;
+    }
+
+    #hero{
+      margin-top: -100px;
+    }
+
+    #buttons{
+      transform: translateY(calc(100vh - 65px));
+		}
 
   }
 

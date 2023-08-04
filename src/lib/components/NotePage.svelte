@@ -17,8 +17,12 @@
 
 
     onMount(() => {
+        /*
         adjustTextareaHeight(document.getElementById('note-title'))
         adjustTextareaHeight(document.getElementById('note-body'))
+        */
+
+        console.log('s')
 
         const s = Id('scrollable')
 
@@ -99,6 +103,7 @@
 
 <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
+    <!--
     <textarea
         id="note-title"
         bind:value={updatedTitle}
@@ -112,6 +117,21 @@
         bind:value={updatedBody}
         placeholder="Untitled Article"
         on:input|preventDefault={adjustTextareaHeightEvent}
+        on:input={updateNote}
+    ></textarea>
+    -->
+
+    <textarea
+        id="note-title"
+        bind:value={updatedTitle}
+        placeholder="Untitled Article"
+        on:input={updateNote}
+    ></textarea>
+
+    <textarea
+        id="note-body"
+        bind:value={updatedBody}
+        placeholder="Untitled Article"
         on:input={updateNote}
     ></textarea>
 
@@ -129,6 +149,7 @@
     #app{
         height: 100vh !important;
         padding-top: 120px;
+        overflow: visible;
     }
 
     #buttons{
@@ -159,7 +180,7 @@
     #app{
         height: calc(100vh - 60px);
         padding-bottom: 100px;
-        overflow-y: scroll;
+        overflow-y: hidden;
     }
 
     #title{
@@ -172,18 +193,17 @@
       width: 800px;
       max-width: 90vw;
 
-      background: white;
+      height: calc(100vh - 150px);
       border-radius: 20px;
-      box-shadow: 0px 20px 50px rgba(0,0,0,0.1);
 
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      overflow-y: scroll;
+      overflow: visible;
       margin: auto;
-      margin-top: 20px;
-      padding-bottom: 60px;
+
+
     }
 
 
@@ -237,9 +257,13 @@
       border: none;
       padding: none;
       resize: none; /* Disable resizing for better control over textarea height */
-      overflow-y: hidden; /* Hide vertical scrollbar */
-      min-height: 300px;
+      overflow-y: scroll;
       flex-shrink: 0;
+
+        flex: 1;
+
+      padding: 40px;
+      box-shadow: 0px 20px 50px rgba(0,0,0,0.1);
     }
 
     textarea:focus {

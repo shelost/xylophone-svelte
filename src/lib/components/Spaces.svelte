@@ -1,4 +1,3 @@
-
 <script lang="ts">
     import { supabaseClient } from '$lib/db';
     import { onMount } from 'svelte';
@@ -35,6 +34,32 @@
       }
       console.log($spaces)
     });
+
+
+
+    async function newSpace() {
+      const { data: d, error } = await supabaseClient
+        .from('spaces')
+        .upsert([
+          {
+            id: crypto.randomUUID(),
+            title: '',
+            user_id: user.id,
+          },
+        ])
+        .select()
+
+      // Update the notes store with the newly added note
+      if (!error) {
+
+        spaces.update((prevSpaces) => [...prevSpaces, d[0]]);
+        window.location.href = `./dashboard/space/${d[0].id}`
+
+      } else {
+        console.error('Error inserting the new space:', error);
+      }
+    }
+
 </script>
 
 
@@ -43,7 +68,7 @@
     #spaces{
         display: flex;
         flex-wrap: wrap;
-        gap: 80px 30px;
+        gap: 130px 30px;
         justify-content: flex-start;
         align-items: center;
         padding-top: 30px;
@@ -79,8 +104,8 @@
     {#each $spaces as space}
       <Space {space} page = {page} />
     {/each}
-    <div id = 'add_space'>
+    <div on:click={newSpace} id = 'add_space'>
       <h2> + </h2>
-      <h1> Add Project </h1>
+      <h1> Add Scrollable </h1>
     </div>
   </div>

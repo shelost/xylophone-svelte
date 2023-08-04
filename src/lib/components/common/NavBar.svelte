@@ -37,18 +37,18 @@
 	<div class = 'text-btns'>
 
 		{#if !$page.url.pathname.startsWith('/dashboard')}
-		<!--
+
 			<a href="/">
 				<h2 class = 'text-btn'>
 					Home
 				</h2>
 			</a>
-			<a href="/pricing">
+			<a href="/about">
 				<h2 class = 'text-btn'>
-					Pricing
+					About
 				</h2>
 			</a>
-			-->
+
 
 		{:else}
 				<a href="/dashboard">
@@ -96,15 +96,15 @@
 <style>
 
 	#navbar{
-		height: 60px;
+		height: 60px !important;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0 15px;
 		background: rgba(0,0,0,0);
-		position: fixed;
-		top: 20px;
-		left: 20px;
+		position: fixed !important;
+		top: 20px !important;
+		left: 20px !important;
 		width: calc(100vw - 40px);
 		background: white;
 		border-radius: 10px;
