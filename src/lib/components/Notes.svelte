@@ -186,7 +186,6 @@
       }
   }
 
-
   async function updateNoteOrder() {
     const sortedNotes = [...notesData].sort((a, b) => a.sort_order - b.sort_order); // Clone the notesData and sort it based on sort_order
     const notesWithNewOrder = sortedNotes.map((note, index) => ({
@@ -215,11 +214,7 @@
     }
   }
 
-
-
-
-
-    async function deleteNote(id) {
+  async function deleteNote(id) {
       try {
         const { data, error } = await supabaseClient.from('notes').delete().eq('id', id);
 
@@ -355,7 +350,12 @@
       .note{
         width: 100%;
         background: white;
-        background: rgba(0,0,0,0.05);
+        /*background: rgba(0,0,0,0.05);*/
+
+
+
+        box-shadow: 0px 20px 50px rgba(0,0,0,0.05);
+
         border-radius: 8px;
         color: black;
         padding: 20px;

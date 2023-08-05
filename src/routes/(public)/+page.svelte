@@ -67,6 +67,8 @@
 											.from('spaces')
 											.select('*')
 
+		console.log(fetchedSpaces)
+
 		if (error) {
 			console.error('Error fetching spaces:', error);
 			return;
@@ -126,6 +128,13 @@
 		  <img src = 'phone-1.svg' alt = 'phone'>
 		</div>
 
+
+		<div id = 'down'>
+			<h2>
+				👇 Scroll Down to Read
+			</h2>
+		</div>
+
 	</div>
 
 
@@ -154,6 +163,36 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 40px;
+	}
+
+
+	#down{
+		background: #ffce00;
+		position: absolute;
+		bottom: 30px;
+		width: 250px;
+		left: calc(50vw - 125px);
+		z-index: 3;
+		border-radius: 50px;
+		animation: pill 0.6s ease-in-out infinite alternate-reverse;
+		box-shadow: 0px 20px 50px rgba(0,0,0,0.1);
+	}
+
+	@keyframes pill{
+		from{
+			bottom: 30px;
+		}
+		to{
+			bottom: 20px;
+		}
+	}
+
+	#down h2{
+		font-family: 'Inter', sans-serif !important;
+		font-weight: 600;
+		font-size: 16px;
+		padding: 12px 20px;
+		letter-spacing: -0.3px;
 	}
 
 	#form{

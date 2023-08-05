@@ -106,17 +106,22 @@
 
 	input{
 		width: 300px;
+		border-radius: 5px;
+		background: rgba(0,0,0,0.05) !important;
+		padding: 10px 15px;
+		margin-top: -10px;
 	}
 
 	label{
 		font-size: 14px;
+		display: none;
 	}
 
 	h1{
 		font-family: 'Libre Baskerville', sans-serif;
 		font-size: 24px;
 		font-weight: 400;
-		margin-bottom: 30px;
+		margin-bottom: 50px;
 	}
 
 	button{

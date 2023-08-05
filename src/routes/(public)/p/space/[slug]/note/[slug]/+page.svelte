@@ -57,7 +57,10 @@
 
         console.log(n, data.index+1)
       }else{
-        console.error('failed to fetch next note', e1)
+        for (let i=0; i<Class('next').length; i++){
+          let btn = Class('next')[i]
+          btn.disabled = true
+        }
       }
 
     }catch{
@@ -76,7 +79,10 @@
           prev = p
           console.log(p, data.index-1)
         }else{
-          console.error('failed to fetch prev note', e2)
+          for (let i=0; i<Class('prev').length; i++){
+            let btn = Class('prev')[i]
+            btn.disabled = true
+          }
         }
       }catch{
 
@@ -106,6 +112,8 @@
             console.log(next.id)
             if (next.id){
               window.location.href = next.id
+            }else{
+              btn.disabled = true
             }
           }
         }
@@ -198,6 +206,7 @@
   {#await space}
 
   <div id = 'loading'>
+    <div class="lds-ripple"><div></div><div></div></div>
     <h1> Loading... </h1>
   </div>
 
@@ -207,11 +216,31 @@
 
   <div id = 'app' style='background: {space.color}'>
 
-    <div id = 'buttons' style='background: {space.color}'>
-      <button class = 'prev'> Prev </button>
 
-      <button class = 'next'> Next </button>
+    <div id = 'header'>
+      <div class = 'mast'>
+        <a href = '/p/space/{space.id}'>
+          <button id = 'back'> ← </button>
+        </a>
+        <h2 id = 'title'> {space.title} </h2>
+      </div>
+
+      <div id = 'buttons'>
+        <button class = 'nav prev'>
+          <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 10.5L16 21L16 0L0 10.5Z" fill="white"/>
+          </svg>
+        </button>
+        <h3 id = 'chapter'> {data.title} </h3>
+        <button class = 'nav next'>
+          <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 10.5L0 0V21L16 10.5Z" fill="white"/>
+          </svg>
+        </button>
+      </div>
     </div>
+
+
 
   <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
@@ -221,17 +250,13 @@
       <h2> {data.title} </h2>
     </div>
 
-    <div id = 'scrollable'>
-
-
+    <div id = 'scrollable'  style='background: {space.color}'>
       {#each $elems as elem}
         <div class = 'elem'>
           <p> . </p>
         </div>
-
         <AnimatedElement text={elem.content}></AnimatedElement>
       {/each}
-
     </div>
   </section>
 
@@ -258,6 +283,96 @@
     display: none !important;
   }
 
+  /* Loader */
+
+  .lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ripple div {
+  position: absolute;
+  border: 4px solid #fff;
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  4.9% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  5% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
+
+
+  .nav{
+    transform: scale(0.6);
+  }
+
+  /* Mast */
+  .mast{
+    display: flex;
+    align-items: center;
+    gap: 0px;
+  }
+
+  #title{
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  #chapter{
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  button{
+    background: black;
+    color: white;
+  }
+
+  #header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    z-index: 3;
+    background: black;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
   #loading{
     display: flex;
     flex-direction: column;
@@ -267,11 +382,6 @@
     height: 100vh;
     background: black;
     color: white;
-  }
-
-  button{
-    background: white !important;
-    color: black !important;
   }
 
   button:hover{
@@ -295,18 +405,10 @@
   }
 
   #buttons{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 60px;
-    padding: 0 10px;
-    width: 100vw !important;
-    z-index: 2;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: #101010;
+    gap: 20px;
   }
 
   button:hover{
@@ -367,11 +469,6 @@
       overflow-y: scroll;
   }
 
-  #title{
-      font-size: 22px;
-      font-weight: 700;
-  }
-
 
   section {
     width: 800px;
@@ -416,18 +513,18 @@
 
   #bar{
       position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
-      height: 5px;
+      height: 1px;
       width: 100vw;
       background: rgba(255,255,255,0.1);
   }
 
   #progress{
       position: fixed;
-      bottom: 0;
+      top: 0;
       left: 0;
-      height: 5px;
+      height: 1px;
       width: 10px;
       background:white;
   }
@@ -468,6 +565,10 @@
 
   @media screen and (max-width: 800px){
 
+    #chapter{
+      display: none;
+    }
+
 
     #hero h1{
       font-size: 40px !important;
@@ -499,9 +600,6 @@
       margin-top: -100px;
     }
 
-    #buttons{
-      transform: translateY(calc(100vh - 65px));
-		}
 
   }
 
