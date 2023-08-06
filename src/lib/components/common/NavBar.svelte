@@ -83,7 +83,7 @@
 
 			<a class="button" href="/dashboard">
 				<button>
-					<h1> Dashboard </h1>
+					<h1> Create a Scrollable </h1>
 				</button>
 			</a>
 		{/if}

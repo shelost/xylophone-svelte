@@ -43,16 +43,13 @@
         border: 2px solid rgba(255,255,255, 0.05);
     }
 
-    .background:hover{
-        transform: translateY(-10px);
-    }
-
     .container{
         width: 250px;
         height: 400px;
         background: white;
         border-radius: 20px;
         position: relative;
+        transition: 0.2s ease;
     }
 
     .space{
@@ -72,11 +69,10 @@
         text-align: center;
         opacity: 0;
         margin-bottom: -100px !important;
-
     }
 
-    .space:hover{
-        transform: translateY(-20px);
+    .container:hover{
+        transform: translate(-5px, -5px) rotate(-2deg);
     }
 
     .space_expo h1{
@@ -117,13 +113,10 @@
     }
 
     .space_subtitle{
-
-
         font-size: 16px;
         font-weight: 400;
         letter-spacing: -0.05px;
         margin: auto;
-
         color: rgba(255,255,255, 0.8);
     }
 

@@ -178,6 +178,8 @@
 
       </div>
 
+
+      {#if !page}
       <div class="expo">
         <textarea id="title" bind:value={data.title}
                 placeholder="Untitled Space"
@@ -189,37 +191,61 @@
                   on:input|preventDefault={adjustTextareaHeightEvent}></textarea>
       </div>
 
+      {:else}
+
+      <div class="expo">
+        <textarea id="title" bind:value={data.title}
+                placeholder="Untitled Space"
+                on:change={updateSpace}
+                on:input|preventDefault={adjustTextareaHeightEvent} disabled></textarea>
+        <textarea id="subtitle" bind:value={data.subtitle}
+                  placeholder="A place for my awesome stuff"
+                  on:change={updateSpace}
+                  on:input|preventDefault={adjustTextareaHeightEvent} disabled></textarea>
+      </div>
+
+      {/if}
+
 
       <div class = 'secs'>
 
-        <div class = 'sec'>
+        {#if !page}
+          <div class = 'sec'>
 
-          <h1> Color </h1>
+            <h1> Color </h1>
 
-          <div class = 'pill'>
-            <div class = 'c' style='background:{data.color}'></div>
-            <input id = 'color' type ='text' bind:value={data.color}>
+            <div class = 'pill'>
+              <div class = 'c' style='background:{data.color}'></div>
+              <input id = 'color' type ='text' bind:value={data.color}>
+            </div>
+
+            <div class = 'pill'>
+              <div class = 'c' style='background:{data.secondary}'></div>
+              <input id = 'secondary' type ='text' bind:value={data.secondary}>
+            </div>
+
           </div>
 
-          <div class = 'pill'>
-            <div class = 'c' style='background:{data.secondary}'></div>
-            <input id = 'secondary' type ='text' bind:value={data.secondary}>
-          </div>
-
-        </div>
-
-        <div class = 'sec'>
-          <h1> Description </h1>
-          <textarea id = 'description'
-          bind:value={data.description}
+          <div class = 'sec'>
+            <h1> Description </h1>
+            <textarea id = 'description'
+                bind:value={data.description}
                 placeholder="An Awesome Novel"
                 on:change={updateSpace}
                 on:input|preventDefault={adjustTextareaHeightEvent}></textarea>
-        </div>
+          </div>
+
+        {:else}
+
+        <button id = 'start'> Begin Reading </button>
+
+        <button id = 'back'> Go Back </button>
+
+        {/if}
+
 
 
       </div>
-
 
     </div>
 
@@ -237,6 +263,21 @@
 
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
+
+  #start{
+    background: #ffce00;
+    color: black;
+    border-radius: 100px;
+    padding: 15px 30px;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.3px;
+
+  }
+
+  #start:hover{
+    background: #ffc000;
+  }
 
       #app{
           min-height:100vh;
