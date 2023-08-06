@@ -244,15 +244,14 @@
 
   <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
-    <div id = 'hero'>
-      <img src = {space.icon} alt = 'Scrollable Icon'>
-      <!--
-      <h1> {space.title} </h1>
-      <h2> {data.title} </h2>
-      -->
-    </div>
 
     <div id = 'scrollable'  style='background: {space.color}'>
+
+      <div id = 'hero'>
+        <img src = {space.icon} alt = 'Scrollable Icon'>
+      </div>
+
+
       {#each $elems as elem}
         <div class = 'elem'>
           <p> . </p>
@@ -424,6 +423,10 @@
     padding: 50px 0;
   }
 
+  #scrollable{
+    background: red;
+  }
+
   #hero{
     display: flex;
     flex-direction: column;
@@ -492,10 +495,9 @@
   }
 
   #scrollable{
-    margin-top: 50px;
 
     width: 800px;
-    max-width: 90vw;
+    max-width: 100vw;
   }
 
   .elem{
@@ -522,16 +524,16 @@
       position: fixed;
       top: 0;
       left: 0;
-      height: 1px;
+      height: 10px;
       width: 100vw;
-      background: rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.9);
   }
 
   #progress{
       position: fixed;
       top: 0;
       left: 0;
-      height: 1px;
+      height: 10px;
       width: 10px;
       background:white;
   }

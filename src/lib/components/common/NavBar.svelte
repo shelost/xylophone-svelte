@@ -83,7 +83,7 @@
 
 			<a class="button" href="/dashboard">
 				<button>
-					<h1> Create My Own </h1>
+					<h1> Dashboard </h1>
 				</button>
 			</a>
 		{/if}
