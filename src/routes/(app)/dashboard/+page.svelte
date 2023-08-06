@@ -54,8 +54,12 @@
 
 <style>
 
+	h1{
+		color: white;
+	}
+
 	section{
-		margin: 30px 50px;
+		margin: 30px 30px;
 	}
 
 	.profile{

@@ -144,7 +144,7 @@
         {#if !page}
 
         <div id="icon-container" class = 'container'>
-          <img id="icon" src={data.icon} alt="icon" />
+          <img id="icon" src={data.icon} alt="Scrollable Icon" />
 
             <label id = 'icon-upload-container' class = 'upload-container'>
             <input
@@ -160,7 +160,7 @@
         {/if}
 
         <div id="cover-container" class = 'container'>
-          <img id="cover" src={data.cover} alt="cover" />
+          <img id="cover" src={data.cover} alt="Banner Image" />
           {#if !page}
             <label id = 'cover-upload-container' class = 'upload-container'>
             <input
@@ -227,6 +227,8 @@
           height: 200px;
           overflow-y: scroll;
           position: relative;
+          background: #121212;
+          color: white;
       }
 
       .carousel{

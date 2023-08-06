@@ -29,7 +29,7 @@
 	<!-- Branding -->
 
 		<a href="/">
-			<img id = 'logo' src = {logo} alt = 'logo'>
+			<img id = 'logo' src = {logo} alt = 'Scrollable Logo'>
 		</a>
 
 	<!-- Middle Section -->
@@ -83,7 +83,7 @@
 
 			<a class="button" href="/dashboard">
 				<button>
-					<h1> Log In </h1>
+					<h1> Create My Own </h1>
 				</button>
 			</a>
 		{/if}
@@ -106,9 +106,14 @@
 		top: 20px !important;
 		left: 20px !important;
 		width: calc(100vw - 40px);
-		background: white;
+		background: rgba(255,255,255,0.8);
+		border: 1px solid white;
+
+		backdrop-filter: blur(15px);
+
+
 		border-radius: 10px;
-		box-shadow: 0px 20px 60px rgba(0,0,0,0.2);
+
 		z-index: 6 !important;
 	}
 
@@ -149,6 +154,12 @@
 	.text-btn{
 		color: black;
 		text-decoration: none;
+	}
+
+	@media screen and (max-width: 800px){
+		.text-btn{
+			display: none;
+		}
 	}
 
 </style>

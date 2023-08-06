@@ -244,10 +244,12 @@
 
   <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
-    <div id = 'hero' style = 'background-image:url({Jagged})'>
-      <img src = {space.icon} alt = 'icon'>
+    <div id = 'hero'>
+      <img src = {space.icon} alt = 'Scrollable Icon'>
+      <!--
       <h1> {space.title} </h1>
       <h2> {data.title} </h2>
+      -->
     </div>
 
     <div id = 'scrollable'  style='background: {space.color}'>
@@ -361,7 +363,7 @@
 
   #header{
     position: fixed;
-    top: 0;
+    bottom: 0;
     left: 0;
     width: 100vw;
     display: flex;
@@ -426,18 +428,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -10px;
+    margin-top: -160px;
     margin-bottom: 50px;
     text-align: center;
     text-justify: center;
     padding: 60px 0;
-
-    width: 100vw !important;
-    height: 800px;
-    margin-bottom: -300px;
+    width: 800px;
+    max-width: 100vw;
+    aspect-ratio: 1;
 
     background-size: cover;
     background-position: center center;
+  }
+
+  #hero img{
+    width: 800px;
+    max-width: 100vw;
+    aspect-ratio: 1;
   }
 
   #hero h1{
@@ -576,6 +583,7 @@
       text-justify: center;
       line-height: 120%;
       width: 80%;
+      margin-top: 60px;
     }
 
     .elem{

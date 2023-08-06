@@ -19,7 +19,6 @@
 <div  use:loader = {loader}>
 	<!-- Use the Loader component here -->
 
-		<NavBar/>
 		<slot />
 
 </div>

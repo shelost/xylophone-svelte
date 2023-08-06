@@ -349,23 +349,18 @@
 
       .note{
         width: 100%;
-        background: white;
+        background: rgba(255,255,255,0.05);
         /*background: rgba(0,0,0,0.05);*/
-
-
-
         box-shadow: 0px 20px 50px rgba(0,0,0,0.05);
-
         border-radius: 8px;
-        color: black;
+        color: white;
+
         padding: 20px;
         padding-left: 25px;
         transform: none;
         transition: 0.2s ease;
-
         margin-bottom: 20px;
         gap: 25px;
-
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -390,10 +385,13 @@
       }
 
       .note_title{
-          font-size: 18px;
-          font-weight: 600;
+
+          font-size: 16px;
+          font-weight: 400;
           width: 300px;
-          line-height: 110%;
+          line-height: 130%;
+          letter-spacing: -0px;
+          color: rgba(255,255,255,0.7);
       }
 
       .note p{

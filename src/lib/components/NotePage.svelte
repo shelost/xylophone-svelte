@@ -3,8 +3,6 @@
     import { fly } from 'svelte/transition';
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
-
-
     export let data;
     export let page = false;
 
@@ -12,49 +10,159 @@
     let updatedBody = data.body;
 
     let site = writable([])
-
-
+    let elems = writable([])
 
 
     onMount(() => {
+
+        fetchNote()
+
+
+        try {
+            let body = JSON.parse(data.body)
+
+            if (typeof body != Array || !body[0].type){
+
+                let res = []
+
+                for (let i=0; i<body.length; i++){
+                    let obj = body[i]
+                    res.push(obj)
+                }
+
+                elems.set(res)
+            }
+        }catch{
+
+            let res = []
+
+            let arr = data.body.split("\n\n")
+            for (let i=0; i<arr.length; i++){
+                let obj = {
+                    type: 'p',
+                    content: arr[i],
+                    animation: null
+                }
+                res.push(obj)
+            }
+
+            elems.set(res)
+        }
+
+
+        setTimeout(() => {
+            updateTextareaHeights()
+        }, 100);
+
+
+        $: updateTextareaHeights()
+
         /*
-        adjustTextareaHeight(document.getElementById('note-title'))
-        adjustTextareaHeight(document.getElementById('note-body'))
-        */
-
-        console.log('s')
-
         const s = Id('scrollable')
-
         let scroll = Id('scrollable')
         let progress = Id('progress')
 
-        let loop = () => {
+        console.log(elems)
 
-            console.log(scroll.scrollTop)
-            progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
-            window.requestAnimationFrame(loop)
+        $: progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
+        */
+
+
+        window.onkeyup = e => {
         }
-        window.requestAnimationFrame(loop)
-
     })
 
+    function backspace(e){
+        console.log(e)
+        console.log()
+        console.log()
 
+        let index = JSON.parse(e.target.parentElement.id.substring(5))
+
+        console.log(e.inputType == 'deleteContentBackward')
+        console.log(e.target.value.length == 0)
+
+        if (e.inputType == 'deleteContentBackward' && e.target.value.length == 0 && $elems.length > 0){
+            console.log($elems[index])
+
+            $elems.splice(index, 1)
+            document.getElementById(`elem-${index-1}`).lastElementChild.focus()
+            updateNote()
+            fetchNote()
+        }
+    }
+
+    function updateTextareaHeights(){
+        for (let i=0; i<document.getElementsByTagName('textarea').length; i++){
+            let area = document.getElementsByTagName('textarea')[i]
+            adjustTextareaHeight(area)
+        }
+    }
+
+
+
+    $: for (let i=0; i<$elems.length; i++){
+        let elem = $elems[i]
+
+        if (elem.content.includes("\n\n")){
+            let index = elem.content.indexOf("\n\n")
+            let arr = elem.content.split("\n\n")
+
+            $elems.splice(i, 1)
+
+            let objs = []
+
+            for (let j=0; j<arr.length; j++){
+
+                let obj = {
+                    type: 'p',
+                    content: arr[j],
+                    animation: null
+                }
+                objs.push(obj)
+            }
+
+            elems.set($elems.slice(0,i).concat(objs, $elems.slice(i, $elems.length)))
+            document.getElementById(`elem-${i+1}`).lastElementChild.focus()
+
+            setTimeout(() => {
+                updateNote()
+                updateTextareaHeights()
+
+            }, 500);
+        }
+    }
+
+
+    async function fetchNote(){
+        const { data: d, error } = await supabaseClient
+        .from('notes')
+        .select('*')
+        .eq('id', data.id);
+
+      if (!error) {
+
+        data.body = JSON.parse(d[0].body)
+
+      } else {
+        console.error('Error fetching note:', error);
+      }
+    }
 
     async function updateNote() {
+
       const { data: updatedData, error } = await supabaseClient
         .from('notes')
         .update({
           title: updatedTitle,
-          body: updatedBody,
+          body: JSON.stringify($elems),
         })
         .eq('id', data.id);
 
-      console.log(data.id, error);
-
       if (!error) {
-        console.log('Note updated successfully:', updatedData);
-        // Navigate back to the note list page or any other desired location
+
+        console.log($elems)
+
       } else {
         console.error('Error updating note:', error);
       }
@@ -103,23 +211,6 @@
 
 <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
 
-    <!--
-    <textarea
-        id="note-title"
-        bind:value={updatedTitle}
-        placeholder="Untitled Article"
-        on:input|preventDefault={adjustTextareaHeightEvent}
-        on:input={updateNote}
-    ></textarea>
-
-    <textarea
-        id="note-body"
-        bind:value={updatedBody}
-        placeholder="Untitled Article"
-        on:input|preventDefault={adjustTextareaHeightEvent}
-        on:input={updateNote}
-    ></textarea>
-    -->
 
     <textarea
         id="note-title"
@@ -128,12 +219,20 @@
         on:input={updateNote}
     ></textarea>
 
-    <textarea
-        id="note-body"
-        bind:value={updatedBody}
-        placeholder="Untitled Article"
-        on:input={updateNote}
-    ></textarea>
+
+    {#each $elems as elem, i}
+
+        <div class = 'elem' id = 'elem-{i}'>
+            <div class = 'menu'> {i} </div>
+            <textarea class = 'content'
+            bind:value={elem.content}
+            on:input={updateNote}
+            on:input={adjustTextareaHeightEvent}
+            on:input={backspace}
+        ></textarea>
+        </div>
+
+    {/each}
 
 
 </section>
@@ -145,6 +244,22 @@
 </div>
 
 <style>
+
+    .elem{
+        background: rgba(0,0,0,0.05);
+        margin: 20px;
+        padding: 25px;
+        border-radius: 10px;
+        width: 100%;
+    }
+
+    textarea{
+        background: none;
+        border: none;
+        width: 100%;
+        resize: none;
+        overflow-y: hidden;
+    }
 
     #app{
         height: 100vh !important;

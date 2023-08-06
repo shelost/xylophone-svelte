@@ -13,9 +13,6 @@
         <div class = 'background' style='background-image: url({space.cover})'></div>
         <div class='space' >
 
-            <div class='space_expo'>
-                <h1> Enter </h1>
-            </div>
         </div>
     </div>
 </a>
@@ -25,9 +22,7 @@
     <div class = 'container'>
         <div class = 'background' style='background-image: url({space.cover})'></div>
         <div class='space' >
-            <div class='space_expo'>
-                <h1> Enter </h1>
-            </div>
+
         </div>
     </div>
 </a>
@@ -38,13 +33,14 @@
 
     .background{
         display: block;
-        width: 300px;
-        height: 500px;
+        width: 250px;
+        height: 400px;
         background-size: cover;
         background-position: center center;
         transition: 0.2s ease;
         box-shadow: 0px 20px 50px rgba(0,0,0, 0.1);
-        border-radius: 20px;
+        border-radius: 10px;
+        border: 2px solid rgba(255,255,255, 0.05);
     }
 
     .background:hover{
@@ -52,10 +48,10 @@
     }
 
     .container{
+        width: 250px;
         height: 400px;
-        width: 300px;
         background: white;
-        border-radius: 15px;
+        border-radius: 10px;
         position: relative;
     }
 
@@ -63,9 +59,9 @@
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: 15px;
-        width: 300px;
-        height: 500px;
+        border-radius: 10px;
+        width: 250px;
+        height: 400px;
         z-index: 2;
         display: flex;
         flex-direction: column;
@@ -75,6 +71,12 @@
         transition: 0.2s ease;
         text-align: center;
         opacity: 0;
+        margin-bottom: -100px !important;
+
+    }
+
+    .space:hover{
+        transform: translateY(-20px);
     }
 
     .space_expo h1{
@@ -87,12 +89,6 @@
 
         background: rgba(255,255,255,0.2);
         border: 2px solid rgba(255,255,255,0.3);
-    }
-
-    .space:hover{
-        background: rgba(0,0,0,0.8);
-        opacity: 1;
-        font-weight: 600;
     }
 
 

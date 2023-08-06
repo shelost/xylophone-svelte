@@ -53,6 +53,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@capacitor/android": "^5.2.2",
+		"@capacitor/cli": "^5.2.2",
+		"@capacitor/core": "^5.2.2",
+		"@capacitor/ios": "^5.2.2",
+		"@sveltejs/adapter-static": "^2.0.3",
 		"prosemirror": "^0.11.1",
 		"prosemirror-commands": "^1.5.2",
 		"prosemirror-dropcursor": "^1.8.1",

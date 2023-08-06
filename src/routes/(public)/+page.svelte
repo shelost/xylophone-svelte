@@ -2,9 +2,11 @@
 	import { onMount } from 'svelte'
 	import { writable } from 'svelte/store'
 	import { supabaseClient } from '$lib/db';
+	import { fly } from 'svelte/transition'
 	import Space from '$lib/components/Space.svelte'
 	import bg from '$lib/img/background.svg'
 	import icon from '$lib/img/favicon.png'
+	import Navbar from '$lib/components/common/NavBar.svelte'
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
@@ -67,8 +69,6 @@
 											.from('spaces')
 											.select('*')
 
-		console.log(fetchedSpaces)
-
 		if (error) {
 			console.error('Error fetching spaces:', error);
 			return;
@@ -78,28 +78,38 @@
 			// Update the spaces store with the fetched data
 			spaces.set(fetchedSpaces);
 		}
-		console.log($spaces)
 	}
 
 	onMount(()=>{
 		fetchSpaces()
 
 		fetchNotes()
+
+		/*
+		document.getElementById('down').onclick = () => {
+			document.getElementById('app').scrollTo({
+				top: window.innerHeight,
+				left: 0,
+				behavior: 'smooth'
+			})
+		}
+		*/
 	})
 
 </script>
 
-
-
 <svelte:head>
-	<title> Scrollable </title>
+	<title> Scrollable: Your Ultimate Reading App </title>
+	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
 	<link rel="icon" href={icon} />
 </svelte:head>
 
 
 <div id = 'app'>
 
+	<Navbar />
 
+	<!--
 	<div id = 'splash' style ='background-image: url({bg});'>
 
 		<div class = 'split white'>
@@ -137,14 +147,43 @@
 
 	</div>
 
+	-->
+
+	<div id = 'banner'>
+
+		<div id = 'mast'>
+
+
+			<h1>
+				Your Final Reading App.
+			</h1>
+
+			<div class = 'center'>
+				<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
+					<input id = 'email' name = 'Email' type = 'email' placeholder = 'your@email.com' required>
+					<button id = 'submit' type = 'submit'> Let's Go! </button>
+				</form>
+			</div>
+
+
+			<!--
+		<a href="https://www.producthunt.com/posts/scrollable?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-scrollable" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=408082&theme=light" alt="Scrollable - Your&#0032;Ultimate&#0032;Reading&#0032;App&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+-->
+
+		</div>
+	</div>
+	<!--
 
 	<div class = 'section_expo'>
 		<h1> Read the Classics </h1>
 		<h2> Now in Scrollable form. </h2>
 	</div>
+	-->
+
+	<h3 class = 'header'  in:fly="{{ y: 200, duration: 500, delay: 200 }}"> Recent Releases <h3>
 
 
-	<div class = 'section'>
+	<div class = 'section'  in:fly="{{ y: 200, duration: 500, delay: 200 }}">
 		<div id = 'spaces'>
 			{#each $spaces as space}
 				<Space {space} page={true} />
@@ -158,12 +197,67 @@
 
 	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
+
+	#banner{
+		height: 60vh;
+		background: #ffce00;
+		display: flex;
+		align-items: center;
+		position: relative;
+	}
+
+	.header{
+		font-size: 24px;
+		font-weight: 500;
+		color: white;
+		margin: 40px;
+		text-align: center;
+	}
+
+	#banner h1{
+		font-size: 80px;
+		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
+		font-weight: 600;
+		letter-spacing: -2px;
+		margin-bottom: 40px;
+		margin-top: 30px;
+
+		width: 100vw;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#mast{
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+
 	.center{
+
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 40px;
+		margin-bottom: 30px;
 	}
+
+	.section_expo{
+		color: white;
+	}
+
+	.section_expo h1{
+		font-size: 38px;
+		letter-spacing: -0.3px;
+	}
+
+
+
 
 
 	#down{
@@ -176,6 +270,12 @@
 		border-radius: 50px;
 		animation: pill 0.6s ease-in-out infinite alternate-reverse;
 		box-shadow: 0px 20px 50px rgba(0,0,0,0.1);
+		transition: 0.2s ease;
+		cursor: pointer;
+	}
+
+	#down:hover{
+		background: #ffb700;
 	}
 
 	@keyframes pill{
@@ -196,15 +296,12 @@
 	}
 
 	#form{
-		background: white;
-		border-radius: 15px;
-		padding: 35px;
-
 		display: flex;
-		flex-direction: column;
-		box-shadow: 0px 20px 80px rgba(0,0,0,0.1);
-
+		align-items: center;
+		background: white;
 		transition: 0.2s ease;
+		padding: 10px;
+		border-radius: 10px;
 	}
 
 	#form h2{
@@ -227,6 +324,9 @@
 
 	#form button{
 		background: black;
+		padding: 10px 20px;
+		font-family: 'Inter', sans-serif;
+		font-size: 14px;
 	}
 
 	#form button:hover{
@@ -245,8 +345,6 @@
 	}
 
 	input{
-		background: rgba(0,0,0,0.08) !important;
-		margin-bottom: 30px;
 		width: 300px;
 		font-size: 14px;
 		border-radius: 5px;
@@ -254,21 +352,26 @@
 
 
 	/**/
-	h1{
+	.section_expo h1{
 		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
 		font-size: 50px;
 		font-weight: 600;
-		text-align: center;
+		text-align: left;;
 		letter-spacing: -2px;
 		margin-bottom: 20px;
+		margin-left: 40px;
+		text-align: center;
 	}
 
-	h2{
+	.section_expo h2{
 		font-family: 'Libre Baskerville', sans-serif;
 		font-size: 18px;
 		font-weight: 300;
+		text-align: left;
+		letter-spacing: -0.5px;
+		margin-left: 40px;
+		color: rgba(255,255,255,0.3);
 		text-align: center;
-		letter-spacing: -1px;
 	}
 
 	.section_expo{
@@ -338,7 +441,7 @@
 		align-items: center;
 		justify-content: center;
 		flex-wrap: wrap;
-		gap: 130px 30px;
+		gap: 30px 30px;
 		padding: 30px;
 	}
 
@@ -352,7 +455,7 @@
 		overflow-y: scroll;
 		overflow-x: hidden;
 		padding-bottom: 200px;
-
+		background: #121212;
 	}
 
 	html{

@@ -32,7 +32,6 @@
         // Update the spaces store with the fetched data
         spaces.set(fetchedSpaces);
       }
-      console.log($spaces)
     });
 
 
@@ -68,7 +67,7 @@
     #spaces{
         display: flex;
         flex-wrap: wrap;
-        gap: 130px 30px;
+        gap: 30px 30px;
         justify-content: flex-start;
         align-items: center;
         padding-top: 30px;
@@ -76,10 +75,11 @@
     }
 
     #add_space{
-      border: 2px solid black;
-      width: 300px;
-      height: 500px;
-      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      width: 250px;
+      height: 400px;
+      border-radius: 10px;
       text-align: center;
 
       display: flex;
@@ -89,11 +89,10 @@
 
       transition: 0.2s ease;
       cursor: pointer;
-      margin-top: 40px;
     }
 
     #add_space:hover{
-      background: rgba(0,0,0,0.05);
+      background: rgba(255,255,255,0.1);
     }
 
 
