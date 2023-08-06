@@ -72,7 +72,9 @@
           icon: data.icon,
           cover: data.cover,
           banner: data.banner,
-          description: data.description
+          description: data.description,
+          color: data.color,
+          secondary: data.secondary
         })
         .eq('id', data.id);
 
@@ -190,6 +192,21 @@
 
       <div class = 'secs'>
 
+        <div class = 'sec'>
+
+          <h1> Color </h1>
+
+          <div class = 'pill'>
+            <div class = 'c' style='background:{data.color}'></div>
+            <input id = 'color' type ='text' bind:value={data.color}>
+          </div>
+
+          <div class = 'pill'>
+            <div class = 'c' style='background:{data.secondary}'></div>
+            <input id = 'secondary' type ='text' bind:value={data.secondary}>
+          </div>
+
+        </div>
 
         <div class = 'sec'>
           <h1> Description </h1>
@@ -264,6 +281,19 @@
         margin-top: 130px;
       }
 
+
+      .pill{
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+      }
+      .c{
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        border: 1px solid rgba(255,255,255,0.3);
+      }
 
       /* Space */
 

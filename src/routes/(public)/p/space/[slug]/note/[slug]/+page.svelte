@@ -195,8 +195,6 @@
       return document.getElementsByClassName(id)
   }
 
-
-
 </script>
 
 
@@ -217,10 +215,14 @@
   <div id = 'app' style='background: {space.color}'>
 
 
-    <div id = 'header'>
+  <div id = 'header'>
       <div class = 'mast'>
         <a href = '/p/space/{space.id}'>
-          <button id = 'back'> ← </button>
+          <button class = 'nav' id = 'back'>
+            <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 10.5L16 21L16 0L0 10.5Z" fill="white"/>
+            </svg>
+          </button>
         </a>
         <h2 id = 'title'> {space.title} </h2>
       </div>
@@ -238,26 +240,27 @@
           </svg>
         </button>
       </div>
-    </div>
+  </div>
 
 
 
   <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
-
-
     <div id = 'scrollable'  style='background: {space.color}'>
 
       <div id = 'hero'>
         <img src = {space.icon} alt = 'Scrollable Icon'>
       </div>
 
-
       {#each $elems as elem}
         <div class = 'elem'>
           <p> . </p>
         </div>
-        <AnimatedElement text={elem.content}></AnimatedElement>
+        <AnimatedElement text={elem.content} color={space.secondary}></AnimatedElement>
       {/each}
+
+      <button class = 'cta next'> Next </button>
+
+
     </div>
   </section>
 
@@ -270,13 +273,13 @@
 
 
 
-
-
 <div id = 'bar'>
   <div id = 'progress'></div>
 </div>
 
 <style>
+
+
 
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
@@ -333,6 +336,16 @@
   }
 }
 
+.cta{
+  width: 100%;
+  background: white;
+  color: black;
+  margin-top: 200px;
+}
+
+.cta:hover{
+  background: #f6f6f6;
+}
 
   .nav{
     transform: scale(0.6);
@@ -424,7 +437,6 @@
   }
 
   #scrollable{
-    background: red;
   }
 
   #hero{
@@ -439,7 +451,6 @@
     width: 800px;
     max-width: 100vw;
     aspect-ratio: 1;
-
     background-size: cover;
     background-position: center center;
   }
@@ -466,9 +477,6 @@
   #hero h2{
     font-size: 18px;
     opacity: 0.5;
-  }
-
-  #scrollable{
   }
 
   #app{

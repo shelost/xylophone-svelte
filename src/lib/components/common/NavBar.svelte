@@ -97,9 +97,9 @@
 
 	#navbar{
 		height: 60px !important;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
+		display: flex  !important;
+		align-items: center  !important;
+		justify-content: space-between  !important;
 		padding: 0 15px;
 		background: rgba(0,0,0,0);
 		position: fixed !important;
@@ -110,8 +110,6 @@
 		border: 1px solid white;
 
 		backdrop-filter: blur(15px);
-
-
 		border-radius: 10px;
 
 		z-index: 6 !important;

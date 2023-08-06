@@ -39,7 +39,7 @@
         background-position: center center;
         transition: 0.2s ease;
         box-shadow: 0px 20px 50px rgba(0,0,0, 0.1);
-        border-radius: 10px;
+        border-radius: 20px;
         border: 2px solid rgba(255,255,255, 0.05);
     }
 
@@ -51,7 +51,7 @@
         width: 250px;
         height: 400px;
         background: white;
-        border-radius: 10px;
+        border-radius: 20px;
         position: relative;
     }
 
@@ -59,7 +59,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: 10px;
+        border-radius: 20px;
         width: 250px;
         height: 400px;
         z-index: 2;
