@@ -126,4 +126,26 @@
 
         color: rgba(255,255,255, 0.8);
     }
+
+
+    @media screen and (max-width: 800px){
+
+        .background{
+            width: 80vw;
+            height: 140vw;
+        }
+
+
+        .space{
+            width: 80vw;
+            height: 140vw;
+        }
+
+
+        .container{
+            width: 80vw;
+            height: 140vw;
+        }
+
+    }
  </style>

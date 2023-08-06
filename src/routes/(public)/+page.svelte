@@ -7,6 +7,7 @@
 	import bg from '$lib/img/background.svg'
 	import icon from '$lib/img/favicon.png'
 	import Navbar from '$lib/components/common/NavBar.svelte'
+	import Gradient from '$lib/img/gradient.png'
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
@@ -149,19 +150,22 @@
 
 	-->
 
-	<div id = 'banner'>
+	<div id = 'banner' style='background-image: url({Gradient})'>
 
 		<div id = 'mast'>
 
 
-			<h1>
-				Your Final Reading App.
-			</h1>
 
 			<div class = 'center'>
+
+
+			<h1>
+				Your Ultimate Reading App.
+			</h1>
+
 				<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
 					<input id = 'email' name = 'Email' type = 'email' placeholder = 'your@email.com' required>
-					<button id = 'submit' type = 'submit'> Let's Go! </button>
+					<button id = 'submit' type = 'submit'> Reserve My Spot </button>
 				</form>
 			</div>
 
@@ -199,11 +203,14 @@
 
 
 	#banner{
-		height: 60vh;
-		background: #ffce00;
+		height: 40vw;
+		width: 100vw;
 		display: flex;
 		align-items: center;
 		position: relative;
+
+		background-size: cover;
+		background-position: center center;
 	}
 
 	.header{
@@ -215,18 +222,16 @@
 	}
 
 	#banner h1{
-		font-size: 80px;
+
+		font-size: 60px;
 		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
 		font-weight: 600;
 		letter-spacing: -2px;
-		margin-bottom: 40px;
 		margin-top: 30px;
+		width: 70%;
+		line-height: 100%;
+		text-align: left;
 
-		width: 100vw;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
 	}
 
 	#mast{
@@ -235,6 +240,8 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+
+		background-size: cover;
 	}
 
 
@@ -242,9 +249,9 @@
 
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		align-items: flex-start;
 		gap: 40px;
-		margin-bottom: 30px;
+		margin-left: 50px;
 	}
 
 	.section_expo{
@@ -255,8 +262,6 @@
 		font-size: 38px;
 		letter-spacing: -0.3px;
 	}
-
-
 
 
 
@@ -302,6 +307,7 @@
 		transition: 0.2s ease;
 		padding: 10px;
 		border-radius: 10px;
+		margin: 0;
 	}
 
 	#form h2{
@@ -697,9 +703,36 @@
 
 	@media screen and (max-width: 800px){
 
+		#banner{
+			height: 80vh !important;
+			background-image: linear-gradient(to bottom left, #A1EEFF, #A1FFE9) !important;
+		}
+
+		#banner h1{
+			width: 100vw;
+			font-size: 50px;
+			line-height: 100%;
+		}
+
 		.center{
-			display: none !important;
-			background: none;
+			align-items: center;
+			margin: 0;
+
+		}
+
+		#mast h1{
+			text-align: center;
+		}
+
+		#form{
+			padding: 10px;
+			display: flex;
+			flex-direction: column;
+		}
+
+		#form button{
+			margin-top: 10px;
+			width: 100%;
 		}
 
 		#splash{
