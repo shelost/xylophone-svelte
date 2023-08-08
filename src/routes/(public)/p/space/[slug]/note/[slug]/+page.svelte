@@ -36,7 +36,10 @@
       .single()
 
     if (!error) {
+
+
       return s
+
     } else {
       console.error('Error fetching space', error);
     }
@@ -92,6 +95,22 @@
   }
 
 
+  var isPlaying = false;
+
+      function togglePlay() {
+        console.log('yo')
+        isPlaying ? audio.pause() : audio.play();
+
+        for (let i=0; i<Class('wave').length; i++){
+          let wave = Class('wave')[i]
+
+          isPlaying ? wave.classList.add('paused') : wave.classList.remove('paused')
+        }
+
+      };
+
+
+
   onMount(() => {
     getSpace()
     getAdjacentNotes()
@@ -99,7 +118,20 @@
     adjustTextareaHeight(document.getElementById('note-body'))
 
 
+
     setTimeout(() => {
+
+      let audio = document.getElementById("audio")
+
+      audio.load()
+
+      audio.onplaying = function() {
+        isPlaying = true;
+      };
+      audio.onpause = function() {
+        isPlaying = false;
+      };
+
       const s = Id('scrollable')
       let scroll = Id('app')
       let progress = Id('progress')
@@ -131,7 +163,6 @@
           }else{
             btn.disabled = true
           }
-
         }
 
         progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
@@ -195,7 +226,11 @@
       return document.getElementsByClassName(id)
   }
 
+
+
 </script>
+
+
 
 
 
@@ -213,6 +248,41 @@
 
 
   <div id = 'app' style='background: {space.color}'>
+
+
+
+    <div id = 'music'>
+
+      <audio id="audio" controls>
+        <source src="{space.music}" id="src" />
+      </audio>
+
+
+      <div class = 'flex'>
+        <div id = 'waveform'>
+          <div class="wave wave1">
+          </div>
+          <div class="wave wave2">
+          </div>
+          <div class="wave wave3">
+          </div>
+        </div>
+        <h3 id ='music_title'> {space.music_title} </h3>
+      </div>
+
+      <div id = 'play' on:click={togglePlay}>
+
+        {#if isPlaying}
+          Pause
+        {:else}
+          Play
+        {/if}
+
+      </div>
+
+
+    </div>
+
 
 
   <div id = 'header'>
@@ -251,6 +321,8 @@
         <img src = {space.icon} alt = 'Scrollable Icon'>
       </div>
 
+      <h1 id = 'chapter_title'> {data.title} </h1>
+
       {#each $elems as elem}
         <div class = 'elem'>
           <p> . </p>
@@ -286,6 +358,118 @@
   :global(#navbar){
     display: none !important;
   }
+
+  :root {
+    --m: 2;
+    --wavefreq: calc(100ms * var(--m));
+  }
+
+  #music{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: black;
+    width: fit-content;
+    border-radius: 12px;
+    gap: 20px;
+    padding: 15px 20px;
+
+    position: fixed;
+    top: 10px;
+    left: 15vw;
+    width: 70vw;
+    box-shadow: 0px 20px 40px rgba(0,0,0,0.3);
+    z-index: 5;
+  }
+
+  #play{
+    background: white;
+    cursor: pointer;
+    color: black;
+    padding: 0 15px;
+    border-radius: 50px;
+  }
+
+  #music_title{
+    font-size: 14px;
+  }
+
+  .flex{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  #audio{
+    display: none;
+  }
+
+  #waveform {
+    display: flex;
+    gap: 5px;
+  }
+
+  .wave{
+    animation: waveform var(--wavefreq)
+              ease-in-out infinite
+              forwards;
+    background-color: white;
+    border-radius: 15px;
+    width: 5px;
+    height: 8px;
+    background: #0074ff;
+  }
+
+
+  .wave.paused{
+    animation: none !important;
+    transform: none !important;
+    background: yellow !important;
+  }
+
+
+  .wave1 {
+    --wavefreq: calc(200ms * var(--m));
+  }
+
+
+  .wave2 {
+    --wavefreq: calc(300ms * var(--m));
+  }
+
+  .wave3 {
+    --wavefreq: calc(400ms * var(--m));
+  }
+
+  .wave4 {
+    --wavefreq: calc(500ms * var(--m));
+  }
+
+  .wave5 {
+    --wavefreq: calc(600ms * var(--m));
+  }
+
+  .wave6 {
+    --wavefreq: calc(700ms * var(--m));
+  }
+
+
+
+
+
+  @keyframes waveform {
+  0% {
+    transform: scaleY(.5);
+  }
+  50% {
+    transform: scaleY(1.5);
+  }
+  100% {
+    transform: scaleY(.5);
+  }
+}
+
+
+
 
   /* Loader */
 
@@ -433,23 +617,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 50px 0;
   }
 
   #scrollable{
+    background: red;
+    border-radius: 0;
   }
 
   #hero{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: -160px;
     margin-bottom: 50px;
     text-align: center;
     text-justify: center;
     padding: 60px 0;
     width: 800px;
     max-width: 100vw;
+    border-radius: 0;
     aspect-ratio: 1;
     background-size: cover;
     background-position: center center;
@@ -459,6 +644,7 @@
     width: 800px;
     max-width: 100vw;
     aspect-ratio: 1;
+    border-radius: 0;
   }
 
   #hero h1{
@@ -530,18 +716,18 @@
 
   #bar{
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
-      height: 10px;
+      height: 1px;
       width: 100vw;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.4);
   }
 
   #progress{
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
-      height: 10px;
+      height: 1px;
       width: 10px;
       background:white;
   }
@@ -581,6 +767,12 @@
   }
 
   @media screen and (max-width: 800px){
+
+
+    #music{
+      width: 94vw !important;
+      left: 3vw !important;
+    }
 
     #chapter{
       display: none;

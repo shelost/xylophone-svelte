@@ -18,6 +18,8 @@
             adjustTextareaHeight(document.getElementById('body'))
             adjustTextareaHeight(document.getElementById('description'))
           }
+
+
     })
 
     console.log(data)
@@ -114,9 +116,45 @@
     onDestroy(() => {
       handleFileUploadThrottled.cancel();
     });
+
+    async function handleMusicUpload(event) {
+      var files = event.target.files;
+      let file = files[0]
+      const { data: uploadedFile, error: uploadError } = await supabaseClient.storage
+        .from('music')
+        .upload(`${file.name}`, file);
+
+      document.getElementById("src").setAttribute("src", file);
+      document.getElementById("audio").load();
+
+
+      if (!uploadError) {
+        data.music = supabaseClient.storage
+          .from('music')
+          .getPublicUrl(`${file.name}`).data.publicUrl;
+
+        const { data: updatedData, error: updateError } = await supabaseClient
+          .from('spaces')
+          .update({ music: data.music, music_title: file.name })
+          .eq('id', data.id);
+
+        updateSpace();
+
+        if (!updateError) {
+          console.log(`Music updated successfully:`, updatedData);
+        } else {
+          console.error(`Error updating music:`, updateError);
+        }
+      }else{
+        console.error(`Error uploading music:`, uploadError);
+      }
+  }
+
   </script>
 
+
   <!-- HTML -->
+
 
 <div id="app" in:fly={{ x: -200, duration: 300, delay: 300 }} out:fly={{ x: 200, duration: 300 }}>
 
@@ -145,20 +183,26 @@
       <div class = 'carousel'>
         {#if !page}
 
-        <div id="icon-container" class = 'container'>
-          <img id="icon" src={data.icon} alt="Scrollable Icon" />
+          <div id="icon-container" class = 'container'>
+            <img id="icon" src={data.icon} alt="Scrollable Icon" />
 
-            <label id = 'icon-upload-container' class = 'upload-container'>
-            <input
-              type="file"
-              id="icon-upload"
-              accept="image/*"
-              on:change={(event) => handleFileUploadThrottled(event, 'icon')}
-            />
-            Upload File
-            </label>
+              <label id = 'icon-upload-container' class = 'upload-container'>
+              <input
+                type="file"
+                id="icon-upload"
+                accept="image/*"
+                on:change={(event) => handleFileUploadThrottled(event, 'icon')}
+              />
+              Upload File
+              </label>
+          </div>
 
-        </div>
+         <h2> Music </h2>
+          <input type="file" id="upload" on:change={handleMusicUpload}/>
+
+
+
+
         {/if}
 
         <div id="cover-container" class = 'container'>
