@@ -8,7 +8,7 @@
 
 {#if page}
 
-<a class = 'space_a' href='p/space/{space.id}'>
+<a class = 'space_a' href='p/space/{space.slug}'>
     <div class = 'container'>
         <div class = 'background' style='background-image: url({space.cover})'></div>
         <div class='space' >
@@ -18,7 +18,7 @@
 </a>
 
 {:else}
-<a class = 'space_a' href='dashboard/space/{space.id}'>
+<a class = 'space_a' href='dashboard/space/{space.slug}'>
     <div class = 'container'>
         <div class = 'background' style='background-image: url({space.cover})'></div>
         <div class='space' >

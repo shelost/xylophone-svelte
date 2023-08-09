@@ -18,6 +18,8 @@
   let next = {}
   let prev = {}
 
+  let scrolling = false
+
   const ELEMS = data.body.split('\n');
 
   elems.update((currentElems) => {
@@ -98,7 +100,6 @@
   var isPlaying = false;
 
       function togglePlay() {
-        console.log('yo')
         isPlaying ? audio.pause() : audio.play();
 
         for (let i=0; i<Class('wave').length; i++){
@@ -109,7 +110,8 @@
 
       };
 
-
+      let clicked = false
+      let speed = 1
 
   onMount(() => {
     getSpace()
@@ -118,6 +120,10 @@
     adjustTextareaHeight(document.getElementById('note-body'))
 
 
+
+
+
+    let scrolldelay
 
     setTimeout(() => {
 
@@ -135,6 +141,29 @@
       const s = Id('scrollable')
       let scroll = Id('app')
       let progress = Id('progress')
+
+
+      Id('fab').onclick = () => {
+        scrolling = !scrolling
+        pageScroll()
+      }
+
+      window.onkeyup = e => {
+
+        if (e.code == 'Space'){
+          scrolling = !scrolling
+          pageScroll()
+        }
+      }
+
+      function pageScroll() {
+        if (scrolling){
+          scroll.scrollBy(0,speed);
+          scrolldelay = setTimeout(pageScroll,10);
+        }
+      }
+
+
 
 
       let loop = () => {
@@ -170,7 +199,7 @@
       }
       window.requestAnimationFrame(loop)
 
-    }, 2000);
+    }, 1000);
   })
 
 
@@ -227,7 +256,6 @@
   }
 
 
-
 </script>
 
 
@@ -250,14 +278,10 @@
   <div id = 'app' style='background: {space.color}'>
 
 
-
     <div id = 'music'>
-
-      <audio id="audio" controls>
+      <audio id="audio" controls autoplay>
         <source src="{space.music}" id="src" />
       </audio>
-
-
       <div class = 'flex'>
         <div id = 'waveform'>
           <div class="wave wave1">
@@ -273,9 +297,14 @@
       <div id = 'play' on:click={togglePlay}>
 
         {#if isPlaying}
-          Pause
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="21" y="12" width="19" height="75" rx="9.5" fill="white"/>
+            <rect x="61" y="12" width="19" height="75" rx="9.5" fill="white"/>
+          </svg>
         {:else}
-          Play
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M79.7778 45.9586L25.1537 11.7179C22.0306 9.76019 18 12.0372 18 15.7593V84.2407C18 87.9628 22.0306 90.2398 25.1537 88.2821L79.7778 54.0414C82.7407 52.1841 82.7407 47.8159 79.7778 45.9586Z" fill="white"/>
+          </svg>
         {/if}
 
       </div>
@@ -287,7 +316,7 @@
 
   <div id = 'header'>
       <div class = 'mast'>
-        <a href = '/p/space/{space.id}'>
+        <a href = '../'>
           <button class = 'nav' id = 'back'>
             <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 10.5L16 21L16 0L0 10.5Z" fill="white"/>
@@ -332,9 +361,27 @@
 
       <button class = 'cta next'> Next </button>
 
-
     </div>
   </section>
+
+  <div id = 'fab'>
+
+    {#if scrolling}
+
+    <svg id = 'ps' width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="21" y="12" width="19" height="75" rx="9.5" fill="white"/>
+      <rect x="61" y="12" width="19" height="75" rx="9.5" fill="white"/>
+    </svg>
+
+    {:else}
+
+    <svg id = 'pl' width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M79.7778 45.9586L25.1537 11.7179C22.0306 9.76019 18 12.0372 18 15.7593V84.2407C18 87.9628 22.0306 90.2398 25.1537 88.2821L79.7778 54.0414C82.7407 52.1841 82.7407 47.8159 79.7778 45.9586Z" fill="white"/>
+    </svg>
+
+    {/if}
+
+  </div>
 
 </div>
 
@@ -343,21 +390,75 @@
 {/if}
 
 
-
-
 <div id = 'bar'>
   <div id = 'progress'></div>
 </div>
 
+
+
 <style>
-
-
 
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
   :global(#navbar){
     display: none !important;
   }
+
+  #fab svg{
+    width: 40px;
+    height: 40px;
+  }
+
+  #play{
+    height: 25px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #play svg{
+    height: 15px;
+    width: 15px;
+  }
+
+  #play svg path{
+    fill: black;
+  }
+
+  #play svg rect{
+    fill: black;
+  }
+
+
+  #fab{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    right: 30px;
+    bottom: 100px;
+    background: #FF003D;
+    width: 70px;
+    height: 70px;
+    border-radius: 500px;
+    z-index: 5;
+    box-shadow: 0x 20px 60px rgba(0,0,0,0.6);
+    transition: 0.2s ease;
+    cursor: pointer;
+  }
+
+  #fab:hover{
+    background: #e3002a;
+  }
+
+  #fab svg{
+    height: 36px;
+    width: 36px;
+  }
+
+
+
 
   :root {
     --m: 2;
@@ -542,9 +643,13 @@
     gap: 0px;
   }
 
-  #title{
-    font-size: 14px;
+  #chapter_title{
+    font-size: 24px;
     font-weight: 600;
+    margin-bottom: 40px;
+    letter-spacing: -0.3px;
+    color: black !important;
+    text-align: center;
   }
 
   #chapter{

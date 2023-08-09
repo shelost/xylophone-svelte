@@ -6,8 +6,13 @@
 	import Space from '$lib/components/Space.svelte'
 	import bg from '$lib/img/background.svg'
 	import icon from '$lib/img/favicon.png'
+
+
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Gradient from '$lib/img/gradient.png'
+	import Hero from '$lib/img/Hero.png'
+	import Feature from '$lib/img/Feature.png'
+	import Collection from '$lib/img/Collection.png'
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
@@ -97,6 +102,8 @@
 		*/
 	})
 
+
+
 </script>
 
 <svelte:head>
@@ -150,42 +157,32 @@
 
 	-->
 
-	<div id = 'banner' style='background-image: url({Gradient})'>
+	<div id = 'splash'>
 
 		<div id = 'mast'>
-
-
-
-			<div class = 'center'>
-
 
 			<h1>
 				Your Ultimate Reading App.
 			</h1>
 
-				<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
-					<input id = 'email' name = 'Email' type = 'email' placeholder = 'your@email.com' required>
-					<button id = 'submit' type = 'submit'> Reserve My Spot </button>
-				</form>
-			</div>
-
-
-			<!--
-		<a href="https://www.producthunt.com/posts/scrollable?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-scrollable" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=408082&theme=light" alt="Scrollable - Your&#0032;Ultimate&#0032;Reading&#0032;App&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
--->
+			<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
+				<input id = 'email' name = 'Email' type = 'email' placeholder = 'your@email.com' required>
+				<button id = 'submit' type = 'submit'> Reserve My Spot </button>
+			</form>
 
 		</div>
-	</div>
-	<!--
 
-	<div class = 'section_expo'>
-		<h1> Read the Classics </h1>
-		<h2> Now in Scrollable form. </h2>
+		<img id = 'hero' src = '{Hero}' alt = 'Hero Image'>
 	</div>
-	-->
+
+
+	<div class = 'section white' style='background-image: url({Feature})'></div>
+	<div class = 'section black' style='background-image: url({Collection})'>
+
+
+	</div>
 
 	<h3 class = 'header'  in:fly="{{ y: 200, duration: 500, delay: 200 }}"> Recent Releases <h3>
-
 
 	<div class = 'section'  in:fly="{{ y: 200, duration: 500, delay: 200 }}">
 		<div id = 'spaces'>
@@ -195,12 +192,41 @@
 		</div>
 	</div>
 
+
+	<div class = 'section' id = 'footer'>
+
+		<div id = 'socials'>
+
+			<a href = ''>
+				<img src = ''>
+			</a>
+
+			<a href = ''>
+				<img src = ''>
+			</a>
+
+			<a href = ''>
+				<img src = ''>
+			</a>
+
+			<a href = ''>
+				<img src = ''>
+			</a>
+
+		</div>
+
+		<p> © 2023 Capsule Corporation </p>
+	</div>
+
 </div>
 
 <style>
 
 	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
+	#app{
+		background: #f0f0f0;
+	}
 
 	#banner{
 		height: 40vw;
@@ -222,7 +248,6 @@
 	}
 
 	#banner h1{
-
 		font-size: 60px;
 		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
 		font-weight: 600;
@@ -231,19 +256,15 @@
 		width: 70%;
 		line-height: 100%;
 		text-align: left;
-
 	}
 
 	#mast{
-
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-
 		background-size: cover;
 	}
-
 
 	.center{
 
@@ -254,6 +275,21 @@
 		margin-left: 50px;
 	}
 
+	.section{
+		height: 100vh;
+		background-size: contain;
+		background-position: center center;
+		background-repeat: no-repeat;
+	}
+
+	.section.white{
+		background-color: white;
+	}
+
+	.section.black{
+		background-color: #202020;
+	}
+
 	.section_expo{
 		color: white;
 	}
@@ -262,8 +298,6 @@
 		font-size: 38px;
 		letter-spacing: -0.3px;
 	}
-
-
 
 	#down{
 		background: #ffce00;
@@ -310,14 +344,12 @@
 		margin: 0;
 	}
 
-	#form h2{
+	#mast h1{
 		font-weight: 600;
 		letter-spacing: -0.5px;
 		margin-bottom: 20px;
-	}
-
-	#form:hover{
-		transform: translateY(-5px);
+		font-size: 100px;
+		color: white;
 	}
 
 	#submit{
@@ -516,8 +548,28 @@
 		background-position: center center;
 
 		display: flex;
-		justify-content: center;
-		align-items: center;
+		justify-content: space-between;
+		align-items: flex-end;
+
+		background: #151515;
+		padding: 60px;
+	}
+
+	#splash img{
+		width: 28vw !important;
+		height: 56vw !important;
+		animation: slide 0.4s ease-in-out forwards;
+	}
+
+	@keyframes slide{
+		from{
+			opacity: 0;
+			transform: translate(100px, 120px);
+		}
+		to{
+			opacity: 1;
+			transform: rotate(-10deg) translate(30px, 150px);
+		}
 	}
 
 	.split{
@@ -529,17 +581,25 @@
 		gap: 20px;
 	}
 
-	#splash h1{
-		font-size: 32px;
-		letter-spacing: -0.8px;
-		margin: 0;
-		padding: 15px;
-		margin-top: 70px;
+	#mast{
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		margin-bottom: 50px;
+	}
+
+	#mast h1{
+		font-size: 100px !important;
+		line-height: 100%;
+		letter-spacing: -2px;
+		margin-bottom: 50px;
+		text-align: flex-start;
+		font-family: 'Newsreader', sans-serif;
 	}
 
 	#splash img{
-		height: 70vh;
-		width: 40vh;
+		height: 80vh;
+		width: 45vh;
 	}
 
 	.white h1{

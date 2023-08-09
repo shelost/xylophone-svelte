@@ -18,11 +18,7 @@
             adjustTextareaHeight(document.getElementById('body'))
             adjustTextareaHeight(document.getElementById('description'))
           }
-
-
     })
-
-    console.log(data)
 
     async function handleFileUpload(event, field) {
       const file = event.target.files[0];
@@ -30,12 +26,12 @@
 
       const { data: uploadedFile, error: uploadError } = await supabaseClient.storage
         .from('images')
-        .upload(`space/${data.id}/${field}/${file.name}`, file);
+        .upload(`space/${data.slug}/${field}/${file.name}`, file);
 
       if (!uploadError) {
         data[field] = supabaseClient.storage
           .from('images')
-          .getPublicUrl(`space/${data.id}/${field}/${file.name}`).data.publicUrl;
+          .getPublicUrl(`space/${data.slug}/${field}/${file.name}`).data.publicUrl;
 
         const { data: updatedData, error: updateError } = await supabaseClient
           .from('spaces')
@@ -76,7 +72,10 @@
           banner: data.banner,
           description: data.description,
           color: data.color,
-          secondary: data.secondary
+          secondary: data.secondary,
+          music: data.music,
+          slug: data.slug,
+          music_title: data.music_title
         })
         .eq('id', data.id);
 
@@ -124,33 +123,45 @@
         .from('music')
         .upload(`${file.name}`, file);
 
-      document.getElementById("src").setAttribute("src", file);
-      document.getElementById("audio").load();
 
-
-      if (!uploadError) {
         data.music = supabaseClient.storage
           .from('music')
           .getPublicUrl(`${file.name}`).data.publicUrl;
 
+        data.music_title = file.name
+
         const { data: updatedData, error: updateError } = await supabaseClient
           .from('spaces')
-          .update({ music: data.music, music_title: file.name })
+          .update({ music: data.music, music_title: data.music_title })
           .eq('id', data.id);
 
         updateSpace();
 
         if (!updateError) {
+
+          document.getElementById('src').src = data.music
+
           console.log(`Music updated successfully:`, updatedData);
         } else {
           console.error(`Error updating music:`, updateError);
         }
-      }else{
-        console.error(`Error uploading music:`, uploadError);
-      }
   }
 
-  </script>
+  var isPlaying = false;
+
+function togglePlay() {
+  isPlaying ? audio.pause() : audio.play();
+
+  for (let i=0; i<Class('wave').length; i++){
+    let wave = Class('wave')[i]
+
+    isPlaying ? wave.classList.add('paused') : wave.classList.remove('paused')
+  }
+
+};
+
+
+</script>
 
 
   <!-- HTML -->
@@ -158,21 +169,50 @@
 
 <div id="app" in:fly={{ x: -200, duration: 300, delay: 300 }} out:fly={{ x: 200, duration: 300 }}>
 
-    <!-- Banner -->
-    <div id="banner-container" class = 'container' style="background-image: url({data.banner})" >
-      <div id="banner" style="background-image: url({data.banner})" loading="lazy"></div>
-      {#if !page}
-        <label id = 'banner-upload-container' class = 'upload-container'>
-          <input
-          type="file"
-          id="banner-upload"
-          accept="image/*"
-          on:change={(event) => handleFileUploadThrottled(event, 'banner')}
-          />
-          Upload File
-        </label>
-      {/if}
+
+
+  <div id = 'bar'>
+
+    <a href = '../'>
+      <div id = 'back'></div>
+      <h2> Back </h2>
+    </a>
+
+    <!--
+    <div id = 'music'>
+      <audio id="audio" controls>
+        <source src="{damusic}" id="src" />
+      </audio>
+      <div class = 'flex'>
+        <div id = 'waveform'>
+          <div class="wave wave1">
+          </div>
+          <div class="wave wave2">
+          </div>
+          <div class="wave wave3">
+          </div>
+        </div>
+        <h3 id ='music_title'> {space.music_title} </h3>
+      </div>
+
+      <div id = 'play' on:click={togglePlay}>
+
+        {#if isPlaying}
+          Pause
+        {:else}
+          Play
+        {/if}
+
+      </div>
+      </div>
+    -->
+
+
+      <div id = 'settings'>
+        Settings
+      </div>
     </div>
+
 
 
     <div class = 'flex'>
@@ -183,6 +223,7 @@
       <div class = 'carousel'>
         {#if !page}
 
+          <!-- Icon -->
           <div id="icon-container" class = 'container'>
             <img id="icon" src={data.icon} alt="Scrollable Icon" />
 
@@ -197,17 +238,14 @@
               </label>
           </div>
 
+          <!-- Music -->
          <h2> Music </h2>
-          <input type="file" id="upload" on:change={handleMusicUpload}/>
+          <input type="file" src = {data.music} id="upload" on:change={handleMusicUpload}/>
 
-
-
-
-        {/if}
+        <!-- Banner -->
 
         <div id="cover-container" class = 'container'>
           <img id="cover" src={data.cover} alt="Banner Image" />
-          {#if !page}
             <label id = 'cover-upload-container' class = 'upload-container'>
             <input
               type="file"
@@ -217,8 +255,17 @@
             />
             Upload File
             </label>
-          {/if}
         </div>
+
+
+        {:else}
+
+          <!-- Banner -->
+          <img id="banner" src={data.banner} alt="Space Banner" />
+          <img id="icon" src={data.icon} alt="Scrollable Icon" />
+
+        {/if}
+
 
       </div>
 
@@ -299,6 +346,9 @@
       <Notes {data} page = {page} icon={data.icon} />
     </div>
 
+
+
+
 </div>
 </div>
 
@@ -306,7 +356,6 @@
 <style>
 
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
-
 
   #start{
     background: #ffce00;

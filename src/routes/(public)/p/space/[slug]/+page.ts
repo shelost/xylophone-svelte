@@ -6,8 +6,8 @@ export async function load({ params }) {
         const { data: space, error } = await supabaseClient
         .from('spaces')
         .select('*')
-        .eq('id', params.slug)
-            .single();
+        .eq('slug', params.slug)
+         .single();
 
         return space
 

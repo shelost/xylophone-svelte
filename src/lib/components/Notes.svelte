@@ -10,6 +10,7 @@
   export let page = false;
   export let icon = null;
 
+
   let sortable;
   let order = []
 
@@ -255,8 +256,6 @@
 
 
   function onSort(e) {
-    console.log('hello')
-    console.log(e)
     updateNoteOrder(); // Call the updateNoteOrder function when the sort happens
 
     // Get the sorted elements after the sorting is done
@@ -285,7 +284,7 @@
   <div id="sortable" bind:this={sortable}>
     {#each $notes as note (note.id)}
       <div id='{note.id}' class="note">
-        <a href="{data.id}/note/{note.id}">
+        <a href="{data.slug}/note/{note.id}">
           <div class="note_expo">
             {#if !page}
               <div class="handle" data-sortable-handle> ☰ </div>
@@ -344,17 +343,13 @@
         flex-direction: column;
         gap: 20px;
         padding-bottom: 50px;
-
       }
 
       .note{
         width: 100%;
-        background: rgba(255,255,255,0.05);
-        /*background: rgba(0,0,0,0.05);*/
-        box-shadow: 0px 20px 50px rgba(0,0,0,0.05);
+        background: rgba(0,0,0,0.05);
         border-radius: 8px;
-        color: white;
-
+        color: black !important;
         padding: 20px;
         padding-left: 25px;
         transform: none;
@@ -364,6 +359,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        cursor: pointer;
       }
 
       .note_icon{
@@ -381,17 +377,17 @@
       }
 
       .note:hover{
-          transform: translateY(-5px);
+        background: rgba(0,0,0,0.1);
+        transform: none;
       }
 
       .note_title{
-
           font-size: 16px;
           font-weight: 400;
           width: 300px;
           line-height: 130%;
           letter-spacing: -0px;
-          color: rgba(255,255,255,0.7);
+          color: black;
       }
 
       .note p{

@@ -83,7 +83,7 @@
 
 			<a class="button" href="/dashboard">
 				<button>
-					<h1> Create a Scrollable </h1>
+					<h1> Log In </h1>
 				</button>
 			</a>
 		{/if}
@@ -96,39 +96,34 @@
 <style>
 
 	#navbar{
-		height: 60px !important;
-		display: flex  !important;
-		align-items: center  !important;
-		justify-content: space-between  !important;
-		padding: 0 15px;
+		height: 80px;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 20px 30px;
 		background: rgba(0,0,0,0);
-		position: fixed !important;
-		top: 20px !important;
-		left: 20px !important;
-		width: calc(100vw - 40px);
-		background: rgba(255,255,255,0.8);
-		border: 1px solid white;
-
+		width: 100vw;
 		backdrop-filter: blur(15px);
 		border-radius: 10px;
-
 		z-index: 6 !important;
 	}
 
 	#logo{
 		height: 28px;
+		filter: invert(100%);
 	}
 
 	button{
-		background: black;
-		color: white;
+		background:white;
+		color: black;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 5px;
-		padding: 5px 15px;
+		padding: 6px 15px;
 		border-radius: 5px;
 		font-size: 14px;
+		font-weight: 600;
 		box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
 		transition: 0.2s ease;
 	}
