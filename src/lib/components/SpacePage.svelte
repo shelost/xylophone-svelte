@@ -157,120 +157,21 @@ function togglePlay() {
 
     isPlaying ? wave.classList.add('paused') : wave.classList.remove('paused')
   }
-
 };
 
 
 </script>
 
-
-  <!-- HTML -->
-
+<!-- HTML -->
 
 <div id="app" in:fly={{ x: -200, duration: 300, delay: 300 }} out:fly={{ x: 200, duration: 300 }}>
-
-
-
-  <div id = 'bar'>
-
-    <a href = '../'>
-      <div id = 'back'></div>
-      <h2> Back </h2>
-    </a>
-
-    <!--
-    <div id = 'music'>
-      <audio id="audio" controls>
-        <source src="{damusic}" id="src" />
-      </audio>
-      <div class = 'flex'>
-        <div id = 'waveform'>
-          <div class="wave wave1">
-          </div>
-          <div class="wave wave2">
-          </div>
-          <div class="wave wave3">
-          </div>
-        </div>
-        <h3 id ='music_title'> {space.music_title} </h3>
-      </div>
-
-      <div id = 'play' on:click={togglePlay}>
-
-        {#if isPlaying}
-          Pause
-        {:else}
-          Play
-        {/if}
-
-      </div>
-      </div>
-    -->
-
-
-      <div id = 'settings'>
-        Settings
-      </div>
-    </div>
-
-
 
     <div class = 'flex'>
 
     <!-- Mast -->
     <div class="mast">
 
-      <div class = 'carousel'>
-        {#if !page}
 
-          <!-- Icon -->
-          <div id="icon-container" class = 'container'>
-            <img id="icon" src={data.icon} alt="Scrollable Icon" />
-
-              <label id = 'icon-upload-container' class = 'upload-container'>
-              <input
-                type="file"
-                id="icon-upload"
-                accept="image/*"
-                on:change={(event) => handleFileUploadThrottled(event, 'icon')}
-              />
-              Upload File
-              </label>
-          </div>
-
-          <!-- Music -->
-         <h2> Music </h2>
-          <input type="file" src = {data.music} id="upload" on:change={handleMusicUpload}/>
-
-        <!-- Banner -->
-
-        <div id="cover-container" class = 'container'>
-          <img id="cover" src={data.cover} alt="Banner Image" />
-            <label id = 'cover-upload-container' class = 'upload-container'>
-            <input
-              type="file"
-              id="cover-upload"
-              accept="image/*"
-              on:change={(event) => handleFileUploadThrottled(event, 'cover')}
-            />
-            Upload File
-            </label>
-        </div>
-
-
-        {:else}
-
-          <!-- Banner -->
-          <img id="banner" src={data.banner} alt="Space Banner" />
-          <img id="icon" src={data.icon} alt="Scrollable Icon" />
-
-        {/if}
-
-
-      </div>
-
-
-      {#if !page}
       <div class="expo">
         <textarea id="title" bind:value={data.title}
                 placeholder="Untitled Space"
@@ -282,28 +183,21 @@ function togglePlay() {
                   on:input|preventDefault={adjustTextareaHeightEvent}></textarea>
       </div>
 
-      {:else}
-
-      <div class="expo">
-        <textarea id="title" bind:value={data.title}
-                placeholder="Untitled Space"
-                on:change={updateSpace}
-                on:input|preventDefault={adjustTextareaHeightEvent} disabled></textarea>
-        <textarea id="subtitle" bind:value={data.subtitle}
-                  placeholder="A place for my awesome stuff"
-                  on:change={updateSpace}
-                  on:input|preventDefault={adjustTextareaHeightEvent} disabled></textarea>
-      </div>
-
-      {/if}
-
-
       <div class = 'secs'>
+          <div class = 'sec'>
+            <h1 class = 'section_title'> Description </h1>
 
-        {#if !page}
+            <textarea id = 'description'
+                bind:value={data.description}
+                placeholder="An Awesome Novel"
+                on:change={updateSpace}
+                on:input|preventDefault={adjustTextareaHeightEvent}></textarea>
+          </div>
+
+        </div>
           <div class = 'sec'>
 
-            <h1> Color </h1>
+            <h1 class = 'section_title'> Color </h1>
 
             <div class = 'pill'>
               <div class = 'c' style='background:{data.color}'></div>
@@ -317,33 +211,104 @@ function togglePlay() {
 
           </div>
 
-          <div class = 'sec'>
-            <h1> Description </h1>
-            <textarea id = 'description'
-                bind:value={data.description}
-                placeholder="An Awesome Novel"
-                on:change={updateSpace}
-                on:input|preventDefault={adjustTextareaHeightEvent}></textarea>
+
+
+
+
+            <!-- Icon -->
+            <div id="icon-container" class = 'container'>
+
+              <h1 class = 'section_title'> Icon </h1>
+
+              <div class = 'box'>
+
+                  <img id="icon" class = 'file' src={data.icon} alt="Scrollable Icon" />
+
+                  <label id = 'icon-upload-container' class = 'upload-container'>
+                  <input
+                    type="file"
+                    id="icon-upload"
+                    accept="image/*"
+                    on:change={(event) => handleFileUploadThrottled(event, 'icon')}
+                  />
+                  Upload File
+                  </label>
+
+                </div>
+            </div>
+
+
+
+
+          <!-- Banner -->
+
+          <div id="cover-container" class = 'container'>
+
+            <h1 class = 'section_title'> Cover </h1>
+
+            <div class = 'box'>
+
+              <img id="cover" class = 'file' src={data.cover} alt="Banner Image" />
+
+              <label id = 'cover-upload-container' class = 'upload-container'>
+                <input
+                  type="file"
+                  id="cover-upload"
+                  accept="image/*"
+                  on:change={(event) => handleFileUploadThrottled(event, 'cover')}
+                />
+                Upload File
+                </label>
+
+              </div>
+
           </div>
 
-        {:else}
-
-        <button id = 'start'> Begin Reading </button>
-
-        <button id = 'back'> Go Back </button>
-
-        {/if}
 
 
+          <!-- Mast -->
 
-      </div>
+          <div id="mast-container" class = 'container'>
+
+            <h1 class = 'section_title'> Mast </h1>
+
+            <div class = 'box'>
+
+              <img id="mast" class = 'file' src={data.mast} alt="Mast Image" />
+
+              <label id = 'mast-upload-container' class = 'upload-container'>
+                <input
+                  type="file"
+                  id="mast-upload"
+                  accept="image/*"
+                  on:change={(event) => handleFileUploadThrottled(event, 'mast')}
+                />
+                Upload File
+                </label>
+
+              </div>
+
+          </div>
+
+          <!-- Music -->
+          <div id = 'music-container' class = 'container'>
+            <h1 class = 'section_title'> Music </h1>
+            <div class = 'box'>
+              <h2> {data.music_title} </h2>
+              <label id = 'music-upload-container' class = 'upload-container'>
+                <input type="file" src = {data.music} id="upload" on:change={handleMusicUpload}/>
+                Upload File
+              </label>
+            </div>
+          </div>
+
 
     </div>
 
     <!-- Scroll -->
     <div class="scroll" in:fly={{ x: -200, duration: 300, delay: 300 }} out:fly={{ x: 200, duration: 300 }}>
       <h1 class="header"> Chapters </h1>
-      <Notes {data} page = {page} icon={data.icon} />
+      <Notes {data} page = {false} icon={data.icon} />
     </div>
 
 
@@ -368,6 +333,10 @@ function togglePlay() {
 
   }
 
+  input{
+    color: black;
+  }
+
   #start:hover{
     background: #ffc000;
   }
@@ -378,15 +347,16 @@ function togglePlay() {
           height: 200px;
           overflow-y: scroll;
           position: relative;
-          background: #121212;
-          color: white;
+          background: white;
+          color: black;
       }
 
       .carousel{
         display: flex;
         gap: 20px;
-        justify-content: flex-end;
-        align-items: flex-end !important;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-wrap: wrap;
       }
 
       .header{
@@ -397,7 +367,7 @@ function togglePlay() {
 
       }
 
-      .sec h1{
+      .section_title{
         font-weight: 600;
         font-size: 14px;
         margin: 10px 0;
@@ -412,7 +382,6 @@ function togglePlay() {
       .flex{
         display: flex;
         gap: 60px;
-        margin-top: 130px;
       }
 
 
@@ -420,11 +389,24 @@ function togglePlay() {
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 10px;
+        margin-bottom: 20px;
       }
+
+      .pill input{
+        background: rgba(0,0,0,0.05) !important;
+        padding: 10px;
+        padding-left: 15px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .file{
+
+      }
+
       .c{
-        width: 20px;
-        height: 20px;
+        width: 32px;
+        height: 32px;
         border-radius: 5px;
         border: 1px solid rgba(255,255,255,0.3);
       }
@@ -443,13 +425,21 @@ function togglePlay() {
           flex-shrink: 0;
       }
 
-
-      #banner-container .upload-container{
-        bottom: 20px;
-        right: 100px;
-        z-index: 9 !important;
+      .label{
+        color: rgba(0,0,0,0.5);
+        margin-bottom: 5px;
+        font-size: 14px;
       }
 
+      .box{
+        display: flex;
+        align-items: center;
+        background: rgba(0,0,0,0.05);
+        padding: 15px;
+        width: 100%;
+        align-self: stretch;
+        border-radius: 10px;
+      }
 
       /* Cover */
 
@@ -460,36 +450,45 @@ function togglePlay() {
         width: 150px;
         height: 150px;
       }
-
-      #cover-container .upload-container{
-        top: 50px;
-        left: 10px;
-      }
-
-      #cover-container:hover #cover{
-        filter: brightness(50%);
-      }
-
-      #cover-container:hover .upload-container{
-        opacity: 1;
-      }
-
       #cover-upload{
         display: none;
       }
 
-      #cover-container:hover #cover{
-        filter: brightness(50%);
-      }
-
       #cover{
         height: 150px;
-        border-radius: 10px;
       }
 
 
-      #cover-container:hover .upload-container{
-        opacity: 1;
+      /* Mast */
+
+      #mast-container{
+        position: relative;
+        transition: 0.1s ease;
+        cursor: pointer;
+        width: 150px;
+        height: 150px;
+        margin-top: 30px;
+      }
+      #mast-upload{
+        display: none;
+      }
+
+      #mast{
+        height: 150px;
+      }
+
+
+
+
+      /* Music */
+
+
+      #music-container{
+        margin-top: 40px;
+      }
+
+      #upload{
+        display: none;
       }
 
 
@@ -501,81 +500,32 @@ function togglePlay() {
         cursor: pointer;
         width: 150px;
         height: 150px;
-        background: black;
-        border-radius: 10px;
+
       }
-
-      #icon-container .upload-container{
-        top: 50px;
-        left: 10px;
-      }
-
-      #icon-container:hover #icon{
-        filter: brightness(50%);
-      }
-
-
-      #icon-container:hover .upload-container{
-        opacity: 1;
-      }
-
-      /* Banner */
-
-      #banner-container:hover #banner{
-        filter: brightness(50%);
-      }
-
-
-      #banner-container:hover #banner-upload-container{
-        opacity: 1;
-      }
-
-
-      #banner-container{
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: 100vw !important;
-        height: 250px;
-      }
-
-      #banner {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        width: 100vw;
-        height: 250px;
-
-        transition: 0.2s ease;
-        background-size: cover;
-        background-position: center;
-      }
-
-      #banner-upload{
-        display: none;
-      }
-
-      #banner-upload-container{
-        position: absolute;
-        bottom: 30px;
-        right: -30px;
-        opacity: 0;
-      }
-
-      /* Icon */
 
       #icon-upload{
         display: none;
       }
 
-      #icon{
-        position: absolute;
-          height: 140px;
-          border-radius: 10px;
-          margin-bottom: 5px;
-          z-index: 2;
-          transition: 0.2s ease;
+
+
+      #icon-upload-container{
+        display: block;
+        position: auto;
       }
+
+      #icon{
+        height: 120px;
+        width: 120px;
+        margin-bottom: 5px;
+        transition: 0.2s ease;
+
+      }
+
+
+      /* Banner */
+
+
 
       .expo{
           display: flex;
@@ -586,30 +536,27 @@ function togglePlay() {
       }
 
 
-
-
       .upload-container{
-        position: absolute;
-        border: 1px solid white;
-        background: white;
         color: black;
         display: inline-block;
         width: 120px;
         height: 35px;
         line-height: 35px;
         cursor: pointer;
-        opacity: 0;
-        z-index: 10 !important;
         border-radius: 5px;
         text-align: center;
         transition: 0.2s ease;
         font-weight: 500;
         font-size: 14px;
         letter-spacing: -0.2px;
+        background: white;
+        margin-top: 10px;
+        white-space: nowrap;
+        margin: auto;
+        margin-top: 50px;
       }
 
       textarea{
-        background: none;
         border: none;
         outline: none;
         padding: 0;
@@ -632,21 +579,30 @@ function togglePlay() {
           font-size: 60px;
           font-weight: 800;
           margin-bottom: 20px;
-          margin-top: 30px;
+          margin-top: -30px;
           letter-spacing: -2.5px;
           line-height: 100%;
           height: 54px;
           width: 100%;
+          color: black;
       }
 
       #description{
-        font-size: 14px;
+          font-size: 14px;
           font-weight: 400;
           height: 24px;
           letter-spacing: -0.2px;
           width: 500px;
           line-height: 140%;
-          color: rgba(0,0,0,0.4);
+          color: rgba(0,0,0,1);
+          background: rgba(0,0,0,0.05);
+          padding: 20px;
+          border-radius: 10px;
+      }
+
+      .container{
+        margin-bottom: 50px;
+        width: 100% !important;
       }
 
       #subtitle{
@@ -655,10 +611,15 @@ function togglePlay() {
           height: 24px;
           letter-spacing: -0.2px;
           width: 100%;
+          color: black;
+      }
+
+      h1{
+        color: black;
       }
 
       .scroll{
-        margin-top: 50px;
+        margin-top: -70px !important;
         flex: 1 !important;
       }
 

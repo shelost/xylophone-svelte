@@ -11,8 +11,8 @@
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Gradient from '$lib/img/gradient.png'
 	import Hero from '$lib/img/Hero.png'
-	import Feature from '$lib/img/Feature.png'
-	import Collection from '$lib/img/Collection.png'
+	import Feature from '$lib/img/feature.png'
+	import Collection from '$lib/img/collection.png'
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
@@ -162,7 +162,7 @@
 		<div id = 'mast'>
 
 			<h1>
-				Your Ultimate Reading App.
+				Read On the Go, Delightfully.
 			</h1>
 
 			<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
@@ -193,7 +193,7 @@
 	</div>
 
 
-	<div class = 'section' id = 'footer'>
+	<div id = 'footer'>
 
 		<div id = 'socials'>
 
@@ -215,7 +215,7 @@
 
 		</div>
 
-		<p> © 2023 Capsule Corporation </p>
+
 	</div>
 
 </div>
@@ -777,10 +777,33 @@
 		.center{
 			align-items: center;
 			margin: 0;
+		}
 
+		#splash{
+			margin: 0;
+			padding: 0 !important;
+			display: flex;
+			flex-direction: column-reverse !important;
+			align-items: center !important;
+			justify-content: center !important;
+		}
+
+		#splash img{
+			position: inline !important;
+			height: 36vh !important;
+			width: 18vh !important;
+			transform: translateY(-20px) rotate(-5deg) !important;
+			margin-bottom: 40px;
+		}
+
+		#form{
+			width: 88vw;
+			margin: auto;
 		}
 
 		#mast h1{
+			font-size: 38px !important;
+			font-weight: 500;
 			text-align: center;
 		}
 

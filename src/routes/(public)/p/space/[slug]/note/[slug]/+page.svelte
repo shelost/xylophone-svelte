@@ -341,8 +341,6 @@
       </div>
   </div>
 
-
-
   <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
     <div id = 'scrollable'  style='background: {space.color}'>
 
@@ -393,7 +391,6 @@
 <div id = 'bar'>
   <div id = 'progress'></div>
 </div>
-
 
 
 <style>

@@ -8,12 +8,16 @@
 	$: isRegister = $page.url.searchParams.get('register') === ''
 
 	const handleSubmit: SubmitFunction = () => {
+
 		loading = true;
 		return async ({ result }) => {
 			await applyAction(result);
 			loading = false;
 		};
+
 	};
+
+
 </script>
 
 <section class="columns max-w-xl mx-auto">

@@ -12,25 +12,18 @@
     let site = writable([])
 
     onMount(() => {
-        /*
-        adjustTextareaHeight(document.getElementById('note-title'))
-        adjustTextareaHeight(document.getElementById('note-body'))
-        */
+       setTimeout(() => {
+          const s = Id('scrollable')
 
-        console.log('s')
+          let scroll = Id('app')
+          let progress = Id('progress')
 
-        const s = Id('scrollable')
-
-        let scroll = Id('scrollable')
-        let progress = Id('progress')
-
-        let loop = () => {
-
-            console.log(scroll.scrollTop)
-            progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
-            window.requestAnimationFrame(loop)
-        }
-        window.requestAnimationFrame(loop)
+          let loop = () => {
+              progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
+              window.requestAnimationFrame(loop)
+          }
+          window.requestAnimationFrame(loop)
+       }, 2000);
     })
 
     async function updateNote() {
@@ -42,6 +35,8 @@
           body: updatedBody,
         })
         .eq('id', data.id);
+
+        console.log('hey')
 
       if (!error) {
         console.log('Note updated successfully:', updatedData);

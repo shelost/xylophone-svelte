@@ -1,7 +1,15 @@
 <script>
+	import { scale } from "svelte/transition";
+    import { createEventDispatcher } from 'svelte';
     export let space;
-
     export let page = false;
+
+    const dispatch = createEventDispatcher();
+
+    function triggerDelete() {
+        dispatch('deleteSpace', space.id); // emit the delete event with the space id.
+    }
+
 </script>
 
 
@@ -10,31 +18,72 @@
 
 <a class = 'space_a' href='p/space/{space.slug}'>
     <div class = 'container'>
-        <div class = 'background' style='background-image: url({space.cover})'></div>
+        <div class = 'background' style='background-image: url({space.icon})'></div>
         <div class='space' >
+        </div>
 
+        <div class = 'expo'>
+            <h1> {space.title} </h1>
+            <h2> {space.subtitle} </h2>
         </div>
     </div>
 </a>
 
 {:else}
+<section>
 <a class = 'space_a' href='dashboard/space/{space.slug}'>
     <div class = 'container'>
-        <div class = 'background' style='background-image: url({space.cover})'></div>
+        <div class = 'background' style='background-image: url({space.icon})'></div>
         <div class='space' >
 
         </div>
+        <div class = 'expo'>
+            <h1> {space.title} </h1>
+            <h2> {space.subtitle} </h2>
+        </div>
     </div>
 </a>
+<button on:click={triggerDelete}>Delete</button>
+</section>
 {/if}
 
 
 <style>
 
+
+section{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+button{
+    background: rgba(255,255,255,0.1);
+    color: white;
+    margin-top: 10px;
+}
+
+
+.expo{
+    text-align: left;
+    margin: 15px 0;
+    color: white;
+}
+    .expo h1{
+
+        font-size: 18px;
+    }
+
+    .expo h2{
+        font-size: 16px;
+        font-weight: 200;
+        color: rgba(255,255,255,0.6);
+    }
+
     .background{
         display: block;
-        width: 250px;
-        height: 400px;
+        width: 200px;
+        height: 200px;
         background-size: cover;
         background-position: center center;
         transition: 0.2s ease;
@@ -44,12 +93,13 @@
     }
 
     .container{
-        width: 250px;
-        height: 400px;
+        width: 200px;
+        height: 200px;
         background: white;
         border-radius: 20px;
         position: relative;
         transition: 0.2s ease;
+        margin-bottom: 100px;
     }
 
     .space{
@@ -57,8 +107,9 @@
         top: 0;
         left: 0;
         border-radius: 20px;
-        width: 250px;
-        height: 400px;
+        width: 200px;
+        height: 200px;
+
         z-index: 2;
         display: flex;
         flex-direction: column;
@@ -68,11 +119,11 @@
         transition: 0.2s ease;
         text-align: center;
         opacity: 0;
-        margin-bottom: -100px !important;
+
     }
 
-    .container:hover{
-        transform: translate(-5px, -5px) rotate(-2deg);
+    .container:hover .background{
+        transform: translate(-5px, -5px);
     }
 
     .space_expo h1{

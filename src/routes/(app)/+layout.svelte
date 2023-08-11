@@ -8,7 +8,6 @@
 
 
   {#key data.pathname}
-  <Navbar />
 	<div id = 'app'
 	  in:fade={{ easing: cubicOut, duration: 300, delay: 400 }}
 	  out:fade={{ easing: cubicIn, duration: 300 }}

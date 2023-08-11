@@ -224,7 +224,9 @@ for (let i=0; i<Class('wave').length; i++){
             on:input|preventDefault={adjustTextareaHeightEvent}></textarea>
       </div>
 
+      <!--
       <button id = 'start'> Begin Reading </button>
+      -->
 
     </div>
 

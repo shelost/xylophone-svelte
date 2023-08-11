@@ -101,10 +101,11 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 20px 30px;
-		background: rgba(0,0,0,0);
+		background: black;
+		color: white;
 		width: 100vw;
 		backdrop-filter: blur(15px);
-		border-radius: 10px;
+		border-radius: 0;
 		z-index: 6 !important;
 	}
 
@@ -145,7 +146,7 @@
 	}
 
 	.text-btn{
-		color: black;
+		color: white;
 		text-decoration: none;
 	}
 

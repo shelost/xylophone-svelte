@@ -1,31 +1,19 @@
 import { supabaseClient } from "$lib/db";
+import { page } from '$app/stores';
 
-export async function load({ params }) {
+
+export async function load({ page, params }) {
 
 	try {
 
-        const { data: space, error } = await supabaseClient
-                .from('spaces')
+        const { data: note, error } = await supabaseClient
+                .from('notes')
                 .select('*')
-                .eq('slug', params.slug)
+                .eq('id', params.slug)
                 .single();
 
 
-                if (!error) {
-                        const { data: note, error } = await supabaseClient
-                        .from('notes')
-                        .select('*')
-                        .eq('id', space.id)
-                                .single();
-                return note
-
-                } else {
-                        console.error('could not find space')
-        }
-
-
-
-
+        return note
 
 	} catch (error) {
 		throw Error(`Could not find space with id ${params.slug}`)
