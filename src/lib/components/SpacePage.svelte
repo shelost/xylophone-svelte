@@ -62,6 +62,10 @@
     }
 
     async function updateSpace() {
+
+      if (data.title != null){
+        data.slug = data.title.toLowerCase().join('-')
+      }
       const { data: updatedData, error } = await supabaseClient
         .from('spaces')
         .update({
@@ -213,8 +217,6 @@ function togglePlay() {
 
 
 
-
-
             <!-- Icon -->
             <div id="icon-container" class = 'container'>
 
@@ -236,8 +238,6 @@ function togglePlay() {
 
                 </div>
             </div>
-
-
 
 
           <!-- Banner -->

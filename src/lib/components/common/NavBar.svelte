@@ -36,7 +36,7 @@
 
 	<div class = 'text-btns'>
 
-		{#if !$page.url.pathname.startsWith('/dashboard')}
+		{#if !$page.url.pathname.startsWith('/home')}
 
 			<a href="/">
 				<h2 class = 'text-btn'>
@@ -51,17 +51,17 @@
 
 
 		{:else}
-				<a href="/dashboard">
+				<a href="/home">
 					<h2 class = 'text-btn'>
-						Dashboard
+						Home
 					</h2>
 				</a>
-				<a href="/dashboard/settings">
+				<a href="/settings">
 					<h2 class = 'text-btn'>
 						Settings
 					</h2>
 				</a>
-				<a href="/dashboard/subscriptions">
+				<a href="/subscriptions">
 					<h2 class = 'text-btn'>
 						Subscriptions
 					</h2>
@@ -71,7 +71,7 @@
 	</div>
 
 	<!-- Button -->
-		{#if $page.data.session?.user && $page.url.pathname.startsWith('/dashboard')}
+		{#if $page.data.session?.user && $page.url.pathname.startsWith('/home')}
 			{#if $page.data.session}
 				<form action="/logout" method="post" use:enhance={handleLogout}>
 					<button>
@@ -81,7 +81,7 @@
 			{/if}
 		{:else}
 
-			<a class="button" href="/dashboard">
+			<a class="button" href="/home">
 				<button>
 					<h1> Log In </h1>
 				</button>
