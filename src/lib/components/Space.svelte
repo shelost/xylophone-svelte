@@ -222,7 +222,6 @@ button{
         background-size: cover;
         background-position: center center;
         transition: 0.2s ease;
-        box-shadow: 0px 20px 50px rgba(0,0,0, 0.1);
         border-radius: 15px;
         border: 2px solid rgba(255,255,255, 0.05);
     }

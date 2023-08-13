@@ -3,6 +3,10 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
+	import IconHome from '$lib/img/icon_home.svg'
+	import IconCreate from '$lib/img/icon_create.svg'
+	import IconFeed from '$lib/img/icon_feed.svg'
+	import IconShop from '$lib/img/icon_shop.svg'
 	export let data
 </script>
 
@@ -18,7 +22,7 @@
 
 		<a href = '/home'>
 			<div class = 'text-btn' id = 'home'>
-				<div class = 'icon'>
+				<div class = 'icon' style = 'background-image: url({IconHome}'>
 				</div>
 				<h2> Home </h2>
 			</div>
@@ -26,7 +30,7 @@
 
 		<a href = '/shop' id = 'shop'>
 			<div class = 'text-btn'>
-				<div class = 'icon'>
+				<div class = 'icon' style = 'background-image: url({IconShop})'>
 				</div>
 				<h2> Shop </h2>
 			</div>
@@ -34,11 +38,20 @@
 
 		<a href = '/create' id = 'create'>
 			<div class = 'text-btn'>
-				<div class = 'icon'>
+				<div class = 'icon' style = 'background-image: url({IconCreate})'>
 				</div>
 				<h2> Create </h2>
 			</div>
 		</a>
+
+		<a href = '/subscriptions' id = 'create'>
+			<div class = 'text-btn'>
+				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				</div>
+				<h2> Payment </h2>
+			</div>
+		</a>
+
 
 		<h1 class = 'title'> Reading </h1>
 
@@ -77,17 +90,26 @@
 	}
 
 	.text-btn{
-		background: white;
+
 		margin: 5px;
 		padding: 10px 15px;
 		border-radius: 5px;
 		font-size: 14px;
 		letter-spacing: -0.3px;
 		transition: 0.2s ease;
+		display: flex;
+		align-items: center;
+		gap: 12px;
 	}
 
 	.text-btn:hover{
 		background: rgba(255,255,255,0.7);
+	}
+
+	.icon{
+		width: 24px;
+		height: 24px;
+		background-size: cover;
 	}
 
 

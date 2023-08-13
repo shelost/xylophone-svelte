@@ -8,7 +8,9 @@ const config = {
 	preprocess: [
 		preprocess({
 			postcss: true,
-			preprocess: preprocess()
+			scss: {
+				includePaths: ['src'],
+			  },
 		})
 	],
 

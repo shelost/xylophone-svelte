@@ -93,6 +93,7 @@
         bind:value={updatedTitle}
         placeholder="Untitled Article"
         on:input={updateNote}
+        on:input={adjustTextareaHeightEvent}
     ></textarea>
 
     <textarea
@@ -114,8 +115,6 @@
 <style>
 
     #app{
-        height: 100vh !important;
-        padding-top: 120px;
         overflow: visible;
         background: white;
     }
@@ -227,11 +226,9 @@
       resize: none; /* Disable resizing for better control over textarea height */
       overflow-y: scroll;
       flex-shrink: 0;
-
-        flex: 1;
-
+      flex: 1;
       padding: 40px;
-      box-shadow: 0px 20px 50px rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.03);
     }
 
     textarea:focus {

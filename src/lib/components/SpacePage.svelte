@@ -63,9 +63,8 @@
 
     async function updateSpace() {
 
-      if (data.title != null){
-        data.slug = data.title.toLowerCase().join('-')
-      }
+      console.log('york')
+
       const { data: updatedData, error } = await supabaseClient
         .from('spaces')
         .update({
@@ -83,6 +82,8 @@
         })
         .eq('id', data.id);
 
+        console.log('yo')
+
 
       if (!error) {
         console.log('Space updated successfully:', updatedData);
@@ -98,7 +99,6 @@
         if (div){
           textarea.style.height = '0px'
           textarea.style.height = Math.ceil(textarea.scrollHeight) + 'px'; // Adjust rows based on content
-
         }
 
       }
