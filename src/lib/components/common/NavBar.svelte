@@ -101,7 +101,6 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 20px 30px;
-		background: black;
 		color: white;
 		width: 100vw;
 		backdrop-filter: blur(15px);

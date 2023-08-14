@@ -419,6 +419,7 @@ function togglePlay() {
           align-items: flex-start;
           justify-content: flex-start;
           gap: 10px;
+          margin-top: 30px;
           margin-bottom: 50px;
           width: 540px;
           position: relative;
@@ -619,7 +620,7 @@ function togglePlay() {
       }
 
       .scroll{
-        margin-top: -70px !important;
+        margin-top: 0px !important;
         flex: 1 !important;
       }
 

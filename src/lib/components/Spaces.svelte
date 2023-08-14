@@ -90,7 +90,7 @@
         flex-wrap: wrap;
         gap: 30px 30px;
         justify-content: flex-start;
-        align-items: center;
+        align-items: flex-start;
         padding-top: 30px;
         padding-bottom: 100px !important;
     }
@@ -100,8 +100,7 @@
       color: white;
       width: 160px;
       height: 160px;
-      border-radius: 20px;
-      margin-top: -100px;
+      border-radius: 10px;
       text-align: center;
 
       display: flex;

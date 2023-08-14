@@ -10,7 +10,7 @@
 
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Gradient from '$lib/img/gradient.png'
-	import Hero from '$lib/img/Hero.png'
+	import Hero from '$lib/img/herox.png'
 	import Feature from '$lib/img/feature.png'
 	import Collection from '$lib/img/collection.png'
 
@@ -162,7 +162,7 @@
 		<div id = 'mast'>
 
 			<h1>
-				Read On the Go, Delightfully.
+				Your Ultimate Reading App.
 			</h1>
 
 			<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
@@ -187,7 +187,7 @@
 	<div class = 'section'  in:fly="{{ y: 200, duration: 500, delay: 200 }}">
 		<div id = 'spaces'>
 			{#each $spaces as space}
-				<Space {space} page={true} />
+				<Space {space} page={true} text={false}/>
 			{/each}
 		</div>
 	</div>
@@ -479,7 +479,7 @@
 		align-items: center;
 		justify-content: center;
 		flex-wrap: wrap;
-		gap: 30px 30px;
+		gap: 30px;
 		padding: 30px;
 	}
 
@@ -542,23 +542,24 @@
 	#splash {
 		margin: 0;
 		width: 100vw;
-		height: 100vh;
+		height: calc(100vh - 60px);
 
 		background-size: cover;
 		background-position: center center;
 
 		display: flex;
-		justify-content: space-between;
-		align-items: flex-end;
+		justify-content: center;
+		align-items: center;
 
 		background: #151515;
 		padding: 60px;
 	}
 
-	#splash img{
-		width: 28vw !important;
-		height: 56vw !important;
-		animation: slide 0.4s ease-in-out forwards;
+	#hero{
+		width: 60vw !important;
+		height: 36vw !important;
+		margin-right: -30px;
+		aspect-ratio: 1.7 !important;
 	}
 
 	@keyframes slide{
@@ -589,7 +590,7 @@
 	}
 
 	#mast h1{
-		font-size: 100px !important;
+		font-size: 80px !important;
 		line-height: 100%;
 		letter-spacing: -2px;
 		margin-bottom: 50px;

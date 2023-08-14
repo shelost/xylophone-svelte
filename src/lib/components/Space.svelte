@@ -3,19 +3,25 @@
 	import { scale } from "svelte/transition";
     import { createEventDispatcher, onMount } from 'svelte';
     import type { PageData, Task } from '../../routes/$types';
+    //import { loadStripe } from '@stripe/stripe-js'
+  import { Elements } from 'svelte-stripe'
+  import { env } from '$env/dynamic/public'
+
+    import Stripe from 'stripe';
     export let space;
     export let page = false;
     export let shop = false
-    export let data : PageData
+    export let text = true
     let user = {}
     let userData = {}
     let added = false
+    let stripe = null
+
 
     const dispatch = createEventDispatcher();
 
     function triggerDelete() {
         dispatch('deleteSpace', space.id); // emit the delete event with the space id.
-
     }
 
     function addBook() {
@@ -73,12 +79,33 @@
       }
     }
 
+    async function handlePayment() {
+
+        console.log('yo')
+        console.log('hello')
+        const {token, error} = await stripe.createToken(card);
+
+        if(error) {
+            console.error(error);
+            return;
+        }
+
+        // Now you'd send this token to your server to handle the actual charge.
+        // For simplicity, we're just logging it. In a real-world scenario, you'd make an API call.
+        console.log(token);
+    }
 
     // Fetch the user data from 'profiles' onMount
-    onMount(async () => {
+    onMount(
+
+    async () => {
         // Fetch the user_data from the database for the logged-in user's ID
 
-        console.log(data)
+
+      //  stripe = await loadStripe('pk_live_51N5gB1EMsqVSwv70Khc3qDJ1AGzEuEnpmWRtQ0CF10L3ia4Vjw9njVvvMrEViJvaR20IXUuRAS3qTE0yLPbxDRem00MBNvL33e')
+
+
+
         const { data : d, error} = await supabaseClient
             .from('profiles') // Update the table name to 'profiles'
             .select('*') // Fetch all columns for the active user
@@ -116,77 +143,104 @@
 
 {#if page}
 
-{#if shop}
+    {#if shop}
 
-<section>
-<a class = 'space_a' href='p/space/{space.slug}'>
-    <div class = 'container'>
-        <div class = 'background' style='background-image: url({space.icon})'></div>
-        <div class='space' >
-        </div>
+        <section>
+        <a class = 'space_a' href='p/space/{space.slug}'>
+            <div class = 'container'>
+                <div class = 'background' style='background-image: url({space.icon})'></div>
+                <div class='space' ></div>
+            </div>
+        </a>
 
-        <div class = 'expo'>
-            <h1> {space.title} </h1>
-            <h2> {space.subtitle} </h2>
-        </div>
-    </div>
-</a>
+            {#if text}
+                <div class = 'expo'>
+                    <h1> {space.title} </h1>
+                    <h2> {space.subtitle} </h2>
+                    <div id="card-element"></div>
 
-{#if added}
-<button id = 'remove' on:click={removeBook}> Remove </button>
+
+                    {#if stripe}
+                    <Elements {stripe}>
+                    <!-- this is where your Stripe components go -->
+                    </Elements>
+                    {/if}
+
+
+
+                    <button id = 'pay' on:click={handlePayment} on:click = {()=> {console.log('yo')}}> Pay ${space.price}</button>
+
+
+                    <!--
+                    {#if added}
+                    <button id = 'remove' class = 'corner' on:click={removeBook}> Remove </button>
+                {:else}
+                    <button id = 'add' class = 'corner' on:click={addBook}> + Add  </button>
+                {/if}
+                -->
+
+                </div>
+            {/if}
+
+
+
+        </section>
+
+
+    {:else}
+
+    <section>
+
+        <a class = 'space_a' href='p/space/{space.slug}'>
+            <div class = 'container'>
+                <div class = 'background' style='background-image: url({space.icon})'></div>
+                <div class='space' ></div>
+            </div>
+        </a>
+
+            {#if text}
+                <div class = 'expo'>
+                    <h1> {space.title} </h1>
+                    <h2> {space.subtitle} </h2>
+                </div>
+            {/if}
+        </section>
+
+
+    {/if}
+
 {:else}
-<button id = 'add' on:click={addBook}> Add </button>
-{/if}
-</section>
-
-
-{:else}
-
-<a class = 'space_a' href='p/space/{space.slug}'>
-    <div class = 'container'>
-        <div class = 'background' style='background-image: url({space.icon})'></div>
-        <div class='space' >
+    <section>
+    <a class = 'space_a' href='home/space/{space.slug}'>
+        <div class = 'container'>
+            <div class = 'background' style='background-image: url({space.icon})'></div>
+            <div class='space' >
+            </div>
         </div>
+    </a>
 
-        <div class = 'expo'>
-            <h1> {space.title} </h1>
-            <h2> {space.subtitle} </h2>
-        </div>
-    </div>
-</a>
+        {#if text}
+            <div class = 'expo'>
+                <h1> {space.title} </h1>
+                <h2> {space.subtitle} </h2>
+            </div>
+        {/if}
 
-{/if}
-
-{:else}
-<section>
-<a class = 'space_a' href='home/space/{space.slug}'>
-    <div class = 'container'>
-        <div class = 'background' style='background-image: url({space.icon})'></div>
-        <div class='space' >
-
-        </div>
-        <div class = 'expo'>
-            <h1> {space.title} </h1>
-            <h2> {space.subtitle} </h2>
-        </div>
-    </div>
-</a>
-<button on:click={triggerDelete}> Delete </button>
-</section>
+    <button on:click={triggerDelete}> Delete </button>
+    </section>
 {/if}
 
 
-<style>
+<style lang="scss">
 
 
-#remove{
-    background: red;
-}
 
 section{
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
     align-items: flex-start;
+    justify-content: flex-start !important;
+    color: black;
 }
 
 button{
@@ -200,47 +254,81 @@ button{
     text-align: left;
     margin: 15px 0;
     color: black;
-}
-    .expo h1{
+    height: fit-content;
+    width: 160px;
+
+    h1{
         font-size: 16px;
         line-height: 120%;
         font-weight: 600;
         margin-bottom: 5px;
     }
 
-    .expo h2{
+    h2{
         font-size: 14px;
         letter-spacing: -0.2px;
         font-weight: 400;
         color: rgba(0,0,0,0.3);
     }
 
+    h3{
+        color: #FF003D;
+        font-size: 14px;
+        font-weight: 500;
+        margin: 5px 0;
+    }
+
+    #pay{
+        width: 100%;
+        &:hover{
+            opacity: 0.7;
+        }
+    }
+}
+
+
     .background{
         display: block;
         width: 160px;
         height: 160px;
         background-size: cover;
+        background-repeat: no-repeat !important;
         background-position: center center;
         transition: 0.2s ease;
-        border-radius: 15px;
         border: 2px solid rgba(255,255,255, 0.05);
+        border-radius: 15px;
     }
+
 
     .container{
         width: 160px;
         height: 160px;
-        background: white;
-        border-radius: 20px;
+
         position: relative;
         transition: 0.2s ease;
-        margin-bottom: 100px;
+    }
+
+    .corner{
+        border-radius: 50px;
+        box-shadow: none;
+        &#add{
+            background: #0074ff;
+            &:hover{
+                background: #0040ff;
+            }
+        }
+        &#remove{
+            background: red;
+            &:hover{
+                background: #d40000;
+            }
+        }
     }
 
     .space{
         position: absolute;
         top: 0;
         left: 0;
-        border-radius: 10px;
         width: 200px;
         height: 200px;
 
@@ -304,21 +392,31 @@ button{
 
     @media screen and (max-width: 800px){
 
+        section{
+            flex-direction: row;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .expo{
+            margin-top: 5px;
+        }
+
         .background{
-            width: 80vw;
-            height: 140vw;
+            width: 40vw;
+            height: 40vw;
         }
 
 
         .space{
-            width: 80vw;
-            height: 140vw;
+            width: 40vw;
+            height: 40vw;
         }
 
 
         .container{
-            width: 80vw;
-            height: 140vw;
+            width: 40vw;
+            height: 40vw;
         }
 
     }

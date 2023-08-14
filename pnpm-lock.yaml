@@ -181,6 +181,9 @@ devDependencies:
   svelte-sortablejs:
     specifier: ^0.2.0
     version: 0.2.0
+  svelte-stripe:
+    specifier: ^0.0.22
+    version: 0.0.22
   tailwindcss:
     specifier: ^3.1.5
     version: 3.2.1(postcss@8.4.18)
@@ -707,6 +710,10 @@ packages:
 
   /@polka/url@1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
+
+  /@stripe/stripe-js@1.54.2:
+    resolution: {integrity: sha512-R1PwtDvUfs99cAjfuQ/WpwJ3c92+DAMy9xGApjqlWQMj0FKQabUAys2swfTRNzuYAYJh7NqK2dzcYVNkKLEKUg==}
+    dev: true
 
   /@supabase/auth-helpers-shared@0.2.1(@supabase/supabase-js@2.27.0):
     resolution: {integrity: sha512-L54gCCD8xCV6mHta0vE7CLxJ7pisSlsd9KIWB1ENyfZ0baeU9H39AqNVyYcAoHBPrUaZYx877J4WYYoqwuyi+w==}
@@ -6822,6 +6829,12 @@ packages:
     dependencies:
       sirv-cli: 0.4.6
       sortablejs: 1.15.0
+    dev: true
+
+  /svelte-stripe@0.0.22:
+    resolution: {integrity: sha512-ZLt55XNWrytsMfaMUUxEknLjphYWqhRkRNcHmmkp7gbENKSB8rp6o6hZP5zWEoUGwYNiPGqpM/DgbXy27BdVIQ==}
+    dependencies:
+      '@stripe/stripe-js': 1.54.2
     dev: true
 
   /svelte@3.52.0:
