@@ -1,0 +1,7 @@
+{
+  "name": "svelte-saas-kit",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

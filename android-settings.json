@@ -1,0 +1,48 @@
+{
+  "appVersion": "1.0.0.0",
+  "appVersionCode": 1,
+  "backgroundColor": "#FFFFFF",
+  "display": "standalone",
+  "enableNotifications": true,
+  "enableSiteSettingsShortcut": true,
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": true
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "host": "https://scrollable.app",
+  "iconUrl": "https://scrollable.app/icon.png",
+  "maskableIconUrl": "https://scrollable.app/maskable-icon.png",
+  "monochromeIconUrl": "https://scrollable.app/monochrome-icon.png",
+  "includeSourceCode": false,
+  "isChromeOSOnly": false,
+  "launcherName": "Scrollable",
+  "name": "Scrollable",
+  "navigationColor": "#FFFFFF",
+  "navigationColorDark": "#FFFFFF",
+  "navigationDividerColor": "#FFFFFF",
+  "navigationDividerColorDark": "#FFFFFF",
+  "orientation": "any",
+  "packageId": "com.scrollable",
+  "shortcuts": [],
+  "signing": {
+    "file": null,
+    "alias": "my-key-alias",
+    "fullName": "Admin",
+    "organization": "PWABuilder",
+    "organizationalUnit": "Engineering",
+    "countryCode": "US",
+    "keyPassword": "",
+    "storePassword": ""
+  },
+  "signingMode": "new",
+  "splashScreenFadeOutDuration": 300,
+  "startUrl": "/",
+  "themeColor": "#FFFFFF",
+  "shareTarget": [],
+  "webManifestUrl": "https://scrollable.app/manifest.json"
+}

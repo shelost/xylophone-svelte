@@ -1,0 +1,22 @@
+{
+    "dir": "ltr",
+    "lang": "en",
+    "name": "Scrollable: Your Ultimate Reading App",
+    "short_name": "Scrollable: You",
+    "scope": "/",
+    "display": "browser",
+    "start_url": "https://scrollable.app/",
+    "background_color": "transparent",
+    "theme_color": "transparent",
+    "description": "Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!",
+    "orientation": "any",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/images/_app/immutable/assets/favicon.b955ad2d.png",
+            "type": "image/png",
+            "sizes": "328x328"
+        }
+    ]
+}

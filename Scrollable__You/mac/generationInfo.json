@@ -1,0 +1,9 @@
+{
+    "generationTool": "pwabuilder",
+    "generationToolVersion": "2.0.3-rc.1",
+    "platformId": "mac",
+    "platformPackage": "pwabuilder-macos",
+    "platformVersion": "0.3.11",
+    "generatedFrom": "CLI",
+    "generationDate": "2023-08-08 03:55:50 Z"
+}

@@ -1,0 +1,9 @@
+{
+    "generationTool": "pwabuilder",
+    "generationToolVersion": "2.0.3-rc.1",
+    "platformId": "android",
+    "platformPackage": "pwabuilder-android",
+    "platformVersion": "2.0.0-rc.3",
+    "generatedFrom": "CLI",
+    "generationDate": "2023-08-08 03:55:50 Z"
+}
