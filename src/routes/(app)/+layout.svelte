@@ -77,6 +77,18 @@
 		</div>
 
 	</div>
+
+
+	<div id = 'bottom'>
+		<a href = '/settings' id = 'create' >
+			<div class = 'text-btn' class:active={path === '/settings'}>
+				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				</div>
+				<h2> Settings </h2>
+			</div>
+		</a>
+
+	</div>
   </div>
 
 	<div id = 'app'

@@ -6,11 +6,14 @@
   import AnimatedElement from '$lib/components/AnimatedElement.svelte';
   import Jagged from '$lib/img/jagged.svg'
   import Wiki from '$lib/img/wiki.svg'
+	import Chapters from '$lib/components/Chapters.svelte';
 
   export let data;
 
   let updatedTitle = data.title;
   let updatedBody = data.body;
+
+  let scrolled = 0
 
   let OPTIONS = {
     justify: 'left',
@@ -18,6 +21,8 @@
     spacing: 50,
     speed: 2
   }
+
+  console.log(data)
 
   let summ = 1;
 
@@ -30,8 +35,6 @@
 
   let scrolling = false
 
-
-
   async function setElems(){
     let updatedElems = []
 
@@ -40,7 +43,42 @@
 
       $elems.push({ type: 'p', content: E });
     }
-}
+  }
+
+  async function updateScrolled(){
+
+    const { data: user, error } = await supabaseClient
+      .from('user_data')
+      .select('*')
+      .eq('id', data.user.id)
+      .single()
+
+    if (!error) {
+
+      let obj = {
+        chapter_id: data.id,
+        chapter_num: data.index+1,
+        chapter_title: data.title,
+        scroll: scrolled
+      }
+
+
+      if (user.progress[space.title][data.index+1]){
+        user.progress[space.title].progress
+      }else{
+        user.progress[space.title] = {progress: []}
+        user.progress[space.title][data.index+1] = obj
+      }
+
+
+      console.log(user.progress)
+      console.log(space.title)
+
+    } else {
+      console.error('Error fetching space', error);
+    }
+
+  }
 
 
 
@@ -154,6 +192,12 @@
       let clicked = false
       let speed = 1
 
+      let timer = 100
+
+      setInterval(() => {
+        updateScrolled()
+      }, 1000);
+
   onMount(() => {
     getSpace()
     getAdjacentNotes()
@@ -167,10 +211,6 @@
 
       $elems.push({ type: 'p', content: E });
     }
-
-
-
-
 
     let scrolldelay
 
@@ -190,6 +230,11 @@
       const s = Id('scrollable')
       let scroll = Id('scroll')
       let progress = Id('progress')
+
+      scroll.onscroll = () => {
+          scrolled = scroll.scrollTop / scroll.scrollHeight
+
+      }
 
 
       Id('fab').onclick = () => {
@@ -227,7 +272,6 @@
           }
         }
 
-
         for (let i=0; i<Class('prev').length; i++){
           let btn = Class('prev')[i]
           if (data.index > 0){
@@ -242,13 +286,23 @@
           }
         }
 
-        progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * window.innerWidth) + 'px'
+        progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth - 465)) + 'px'
+
+
+
         window.requestAnimationFrame(loop)
       }
       window.requestAnimationFrame(loop)
 
     }, 2000);
+
+
   })
+
+
+  console.log('yoski')
+
+
 
 
   async function updateNote() {
@@ -389,7 +443,7 @@
         <div class = 'option'>
           <p> Speed </p>
           <div class="slide_container">
-            <input type="range" min="1" max="10" bind:value={OPTIONS.speed} class="slider" id="speed">
+            <input type="range" min="0.5" max="5" bind:value={OPTIONS.speed} class="slider" id="speed">
           </div>
         </div>
 
@@ -403,6 +457,7 @@
 
     <div id = 'scrollable'  style='background: {space.color}'>
 
+      <img id = 'head' src = {space.mast} alt = 'mast'>
 
       <h2 id = 'chapter_num'> CHAPTER {data.index+ 1} </h2>
       <h1 id = 'chapter_title'> {data.title} </h1>
@@ -480,7 +535,6 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
 
-
   ::-webkit-scrollbar{
     width: 5px;
   }
@@ -489,6 +543,7 @@
     width: 5px;
     background: black;
   }
+
 
   #chapter_num{
     color: black;
@@ -973,17 +1028,24 @@
       background: rgba(0,0,0,0.1);
   }
 
+
+  #head{
+    width: calc(100vw - 500px);
+    }
+
+
   #scroll{
     display: flex;
     flex-direction: column;
     align-items: center;
     width: calc(100vw - 500px);
 
-    height: 100vh;
+    height: calc(100vh - 60px);
     position: fixed;
     top: -20px;
     left: 240px;
     border-radius: 0;
+
 
   }
 
@@ -1012,20 +1074,20 @@
 
   #bar{
       position: fixed;
-      bottom: 0;
-      left: 0;
-      height: 1px;
-      width: 100vw;
-      background: rgba(0,0,0,0.4);
+      top: 0;
+      left: 240px;
+      height: 10px;
+      width: calc(100vw - 500px);
+      background: black;
   }
 
   #progress{
       position: fixed;
-      bottom: 0;
-      left: 0;
-      height: 1px;
+      top: 0;
+      left: 240px;
+      height: 10px;
       width: 10px;
-      background:white;
+      background: #f30833;
   }
 
 
@@ -1054,9 +1116,9 @@
     overflow-y: hidden; /* Hide vertical scrollbar */
     min-height: 300px;
     flex-shrink: 0;
-
-
   }
+
+
 
   textarea:focus {
     @apply ring-0;
@@ -1064,6 +1126,13 @@
 
   @media screen and (max-width: 800px){
 
+    :global(#navbar){
+      display: none !important;
+    }
+
+    #head{
+      width: 100vw !important;
+    }
 
     #col{
       display: none;
@@ -1072,8 +1141,13 @@
     #scroll{
       width: 100vw !important;
       left: 0 !important;
+      overflow-x: hidden;
     }
 
+    #scrollable{
+      width: 100vw !important;
+      padding: 0;
+    }
 
     #chapter{
       display: none;
@@ -1082,13 +1156,13 @@
     #buttons{
       width: 100vw;
       left: 0;
-      bottom: 80px;
+      bottom: 0;
     }
 
     #fab{
 
       right: 20px !important;
-      bottom: 160px;
+      bottom: 80px;
     }
 
 
@@ -1101,8 +1175,10 @@
       margin-top: 60px;
     }
 
-    .elem{
-      width: 80vw !important;
+    :global(.elem){
+      width: 90vw !important;
+      margin: auto;
+      background: yellow;
     }
 
     .elem p{
@@ -1115,7 +1191,8 @@
     }
 
     #app{
-      margin-top: -20px;
+      width: 100vw !important;
+      overflow-x: hidden;
       border-radius: 0;
     }
 

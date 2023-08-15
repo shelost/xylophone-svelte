@@ -364,7 +364,6 @@ button{
     .space_icon{
         height: 100px;
         border-radius: 10px;
-        box-shadow: 0px 15px 40px rgba(0,0,0,0.1);
         background: none;
         transition: 0.2s ease;
     }
