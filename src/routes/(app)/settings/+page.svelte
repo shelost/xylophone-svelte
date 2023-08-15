@@ -32,7 +32,11 @@
     });
 </script>
 
-<div class="card max-w-3xl mx-auto">
+<section>
+
+    <h1 id = 'page_title'> Settings </h1>
+
+
     <form on:submit|preventDefault="{updateProfile}" class="flex flex-col gap-2">
         <!-- Full Name field -->
         <div class="field">
@@ -69,4 +73,39 @@
             <button type="submit" class="btn btn-filled-primary">Save</button>
         </div>
     </form>
-</div>
+</section>
+
+
+<style lang="scss">
+
+    section{
+        padding: 50px;
+    }
+
+
+	section h1{
+        font-family: 'Newsreader', sans-serif;
+		color: black;
+        font-size: 24px !important;
+		font-weight: 600 !important;
+		text-align: left;
+		margin: 0;
+		margin-bottom: 30px;
+	}
+
+
+
+    .field{
+        margin: 10px 0;
+    }
+
+    input{
+        background: rgba(black, 0.05) !important;
+    }
+
+    button{
+        background: black;
+    }
+
+
+</style>

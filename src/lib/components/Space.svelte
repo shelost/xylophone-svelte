@@ -168,16 +168,17 @@
 
 
 
-                    <button id = 'pay' on:click={handlePayment} on:click = {()=> {console.log('yo')}}> Pay ${space.price}</button>
-
-
                     <!--
+                    <button id = 'pay' on:click={handlePayment} on:click = {()=> {console.log('yo')}}> Pay ${space.price}</button>
+-->
+
+
                     {#if added}
                     <button id = 'remove' class = 'corner' on:click={removeBook}> Remove </button>
                 {:else}
                     <button id = 'add' class = 'corner' on:click={addBook}> + Add  </button>
                 {/if}
-                -->
+
 
                 </div>
             {/if}

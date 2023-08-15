@@ -39,4 +39,21 @@ input {
 input:focus {
   border: none !important;
   outline: none !important;
+}
+
+.mobile {
+  display: none;
+}
+
+.desktop {
+  display: block;
+}
+
+@media screen and (max-width: 800px) {
+  .mobile {
+    display: block;
+  }
+  .desktop {
+    display: none;
+  }
 }/*# sourceMappingURL=app.css.map */

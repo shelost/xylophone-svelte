@@ -43,7 +43,7 @@
 	<section in:fly={{ x: -200, duration: 300, delay: 300 }}
 	out:fly={{ x: 200, duration: 300 }}>
 
-		<h1> Spaces </h1>
+		<h1> Create </h1>
 		<Spaces {data} page = {false}/>
 
 	</section>

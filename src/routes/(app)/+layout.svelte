@@ -54,6 +54,7 @@
 			</div>
 		</a>
 
+		<!--
 		<a href = '/subscriptions' id = 'create' >
 			<div class = 'text-btn' class:active={path === '/subscriptions'}>
 				<div class = 'icon' style = 'background-image: url({IconFeed})'>
@@ -61,8 +62,10 @@
 				<h2> Payment </h2>
 			</div>
 		</a>
+		-->
 
 
+		<!--
 		<h1 class = 'title'> Reading </h1>
 
 		<div id = 'books'>
@@ -75,6 +78,7 @@
 				</div>
 			</a>
 		</div>
+		-->
 
 	</div>
 
@@ -167,6 +171,7 @@
 
 @media screen and (max-width: 800px){
 
+	/*
 	#navbar{
 		position: fixed;
 		bottom: 0px !important;
@@ -178,17 +183,31 @@
 		flex-direction: row !important;
 		background: none;
 	}
+	*/
+
+	#navbar{
+		display: flex !important;
+		flex-wrap: nowrap;
+		flex-direction: row !important;
+		justify-content: center;
+		position: fixed !important;
+		padding: 0 !important;
+		top: calc(100vh - 80px);
+		width: 100vw !important;
+		height: 80px !important;
+		background: #f0f0f0;
+	}
 
 	#top{
 		display: flex;
-		flex-direction: row !important;
-		justify-content: center;
-		position: fixed;
-		bottom: 0px !important;
-		width: 100vw;
-		height: 80px;
-		background: #f0f0f0;
+		gap: 10px;
 	}
+	#bottom{
+		display: flex;
+		margin-left: 0px;
+	}
+
+
 
 	#logo{
 		display: none;

@@ -457,16 +457,19 @@
 
     <div id = 'scrollable'  style='background: {space.color}'>
 
-      <img id = 'head' src = {space.mast} alt = 'mast'>
+      <img id = 'mastx' class = 'mobile' src = {space.mast} alt = 'Mast Image'>
+
+      <img id = 'coverx' class = 'desktop' src = {space.cover} alt = 'Cover Image'>
+
 
       <h2 id = 'chapter_num'> CHAPTER {data.index+ 1} </h2>
       <h1 id = 'chapter_title'> {data.title} </h1>
 
       {#each $elems as elem}
         <div class = 'elem' style='margin-top:{OPTIONS.spacing}px'>
-          <p> </p>
-        </div>
+
         <AnimatedElement options= {OPTIONS} text={elem.content} color={space.secondary}></AnimatedElement>
+      </div>
       {/each}
 
       <div id = 'footer'>
@@ -1045,13 +1048,11 @@
     top: -20px;
     left: 240px;
     border-radius: 0;
-
-
   }
 
   #scrollable{
     border-radius: 0;
-    padding: 0 100px;
+
     height: 100vw;
 
   }
@@ -1118,6 +1119,10 @@
     flex-shrink: 0;
   }
 
+  .elem{
+    padding: 0 50px;
+  }
+
 
 
   textarea:focus {
@@ -1128,6 +1133,7 @@
 
     :global(#navbar){
       display: none !important;
+      opacity: 0 !important;
     }
 
     #head{
@@ -1173,12 +1179,6 @@
       line-height: 120%;
       width: 80%;
       margin-top: 60px;
-    }
-
-    :global(.elem){
-      width: 90vw !important;
-      margin: auto;
-      background: yellow;
     }
 
     .elem p{

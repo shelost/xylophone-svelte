@@ -165,8 +165,11 @@
 />
 
     {/each}
+
+    {#if !shop}
     <div on:click={newSpace} id = 'add_space'>
       <h2> + </h2>
       <h1> Add Scrollable </h1>
     </div>
+    {/if}
   </div>
