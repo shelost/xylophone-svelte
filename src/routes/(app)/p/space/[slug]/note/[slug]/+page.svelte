@@ -286,7 +286,12 @@
           }
         }
 
-        progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth - 465)) + 'px'
+        if (window.innerWidth > 800){
+          progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth - 465)) + 'px'
+        }else{
+          progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth)) + 'px'
+        }
+
 
 
 
@@ -1134,6 +1139,15 @@
     :global(#navbar){
       display: none !important;
       opacity: 0 !important;
+    }
+
+    #bar{
+      left: 0;
+      width: 100vw;
+    }
+
+    #progress{
+      left: 0;
     }
 
     #head{
