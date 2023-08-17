@@ -16,10 +16,10 @@
   let scrolled = 0
 
   let OPTIONS = {
-    justify: 'left',
-    font_size: 14,
-    spacing: 50,
-    speed: 2
+    justify: 'center',
+    font_size: 16,
+    spacing: 100,
+    speed: 1
   }
 
   console.log(data)
@@ -55,6 +55,7 @@
 
     if (!error) {
 
+
       let obj = {
         chapter_id: data.id,
         chapter_num: data.index+1,
@@ -63,13 +64,12 @@
       }
 
 
-      if (user.progress[space.title][data.index+1]){
-        user.progress[space.title].progress
+      if (user.progress[space.title]){
+        user.progress[space.title][data.index+1] = obj
       }else{
         user.progress[space.title] = {progress: []}
         user.progress[space.title][data.index+1] = obj
       }
-
 
       console.log(user.progress)
       console.log(space.title)
@@ -194,9 +194,14 @@
 
       let timer = 100
 
-      setInterval(() => {
-        updateScrolled()
-      }, 1000);
+      /*
+      setTimeout(() => {
+        setInterval(() => {
+          updateScrolled()
+        }, 1000);
+      }, 5000);
+
+      */
 
   onMount(() => {
     getSpace()
@@ -205,6 +210,15 @@
     adjustTextareaHeight(document.getElementById('note-body'))
 
     const ELEMS = data.body.split('\n');
+
+    document.getElementById('menu').onclick = () => {
+
+      let bottom =  document.getElementById('col').style.bottom
+
+      console.log('yo')
+
+      document.getElementById('col').style.bottom = '0px'
+    }
 
   for (let i=0; i<ELEMS.length; i++){
       let E = ELEMS[i]
@@ -217,8 +231,6 @@
     setTimeout(() => {
 
       let audio = document.getElementById("audio")
-
-     // audio.load()
 
       audio.onplaying = function() {
         isPlaying = true;
@@ -235,7 +247,6 @@
           scrolled = scroll.scrollTop / scroll.scrollHeight
 
       }
-
 
       Id('fab').onclick = () => {
         scrolling = !scrolling
@@ -276,7 +287,6 @@
           let btn = Class('prev')[i]
           if (data.index > 0){
               btn.onclick = () => {
-              console.log(prev.id)
               if (prev.id){
                 window.location.href = prev.id
               }
@@ -291,10 +301,6 @@
         }else{
           progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth)) + 'px'
         }
-
-
-
-
         window.requestAnimationFrame(loop)
       }
       window.requestAnimationFrame(loop)
@@ -303,11 +309,6 @@
 
 
   })
-
-
-  console.log('yoski')
-
-
 
 
   async function updateNote() {
@@ -368,7 +369,7 @@
 
 
 
-
+<div id = 'app' style='background: {space.color}'>
 
 {#if data}
   {#await space}
@@ -382,10 +383,10 @@
   {:then space}
 
 
-  <div id = 'app' style='background: {space.color}'>
 
 
-    <div id = 'col'>
+
+    <div id = 'col' class = 'col'>
 
       <div id = 'mast'>
         <div id = 'hero'>
@@ -485,6 +486,16 @@
     </div>
   </section>
 
+  <div id = 'right'>
+
+
+
+    <h2> Chapters </h2>
+    <div id = 'chapters'>
+
+    </div>
+  </div>
+
   <div id = 'fab'>
 
     {#if scrolling}
@@ -504,7 +515,7 @@
 
   </div>
 
-</div>
+
 
   {/await}
 
@@ -512,6 +523,10 @@
 
 
   <div id = 'buttons'>
+
+    <div id = 'menu'>
+      O
+    </div>
 
     <div id = 'nav' class = 'flex'>
       <button class = 'nav prev'>
@@ -537,6 +552,8 @@
   <div id = 'progress'></div>
 </div>
 
+</div>
+
 
 <style lang="scss">
 
@@ -545,6 +562,7 @@
 
   ::-webkit-scrollbar{
     width: 5px;
+    height: 0;
   }
 
   ::-webkit-scrollbar-thumb{
@@ -579,7 +597,7 @@
       width: 240px !important;
       height: 10px;
       border-radius: 100px;
-      background: rgba(black, 0.3) !important;
+      background: white;
       opacity: 1;
     }
 
@@ -655,8 +673,8 @@
     justify-content: center;
     align-items: center;
     position: fixed;
-    right: 300px;
-    bottom: 100px;
+    right: 275px;
+    bottom: 50px;
     background: #FF003D;
     width: 70px;
     height: 70px;
@@ -881,8 +899,10 @@
 
   #chapter_title{
     font-size: 36px;
+
+    line-height: 100%;
     font-weight: 600;
-    margin: 20px 0;
+    margin: 40px auto;
     letter-spacing: -0.4px;
     color: black !important;
     text-align: center;
@@ -930,15 +950,27 @@
     opacity: 0.5;
   }
 
+  #app{
+    background: red !important;
+  }
 
-  #col{
+
+  #right{
     position: fixed;
-    top: 0;
+    top: 48px;
     right: 0;
-    height: 100vw;
-    width: 260px;
+    height: calc(100vh - 50px);
+    width: 240px;
+  }
+
+
+  .col{
     position: fixed;
-    background: #f0f0f0;
+    top: 48px;
+    left: 0;
+    height: calc(100vh - 50px);
+    width: 240px;
+    position: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -953,6 +985,7 @@
       width: 200px;
       background-size: cover;
       background-position: center center;
+      margin: 0;
       margin-top: 20px;
       margin-bottom: 20px;
 
@@ -992,16 +1025,15 @@
 
   #buttons{
     display: flex;
-    background: black;
+    background: rgb(21, 21, 21);
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-    height: 60px;
-    width: calc(100vw - 500px);
+    height: 48px;
+    width: 100vw;
     position: fixed;
-    left: 240px;
-    bottom: 0;
-    border-radius: 0;
+    left: 0;
+    top: 0;
   }
 
   #options{
@@ -1039,30 +1071,33 @@
 
   #head{
     width: calc(100vw - 500px);
-    }
-
+  }
 
   #scroll{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: calc(100vw - 500px);
-
-    height: calc(100vh - 60px);
+    width: calc(100vw - 480px);
+    height: calc(100vh - 80px);
     position: fixed;
-    top: -20px;
+    top: 40px;
     left: 240px;
-    border-radius: 0;
+    border-radius: 10px;
+    overflow-x: hidden;
+    box-shadow: 0px 30px 100px rgba(black, 0.15);
+    padding: 0;
+
+    #coverx{
+      width: calc(100vw - 480px);
+    }
   }
 
   #scrollable{
     border-radius: 0;
-
     height: 100vw;
-
+    width: calc(100vw - 480px);
+    overflow-x: hidden;
   }
-
-
 
   section {
     width: 800px;
@@ -1081,17 +1116,17 @@
   #bar{
       position: fixed;
       top: 0;
-      left: 240px;
-      height: 10px;
-      width: calc(100vw - 500px);
+      left: 0;
+      height: 2px;
+      width: 100vw;
       background: black;
   }
 
   #progress{
       position: fixed;
       top: 0;
-      left: 240px;
-      height: 10px;
+      left: 0;
+      height: 2px;
       width: 10px;
       background: #f30833;
   }
@@ -1126,6 +1161,7 @@
 
   .elem{
     padding: 0 50px;
+    width: 100%;
   }
 
 
@@ -1134,12 +1170,25 @@
     @apply ring-0;
   }
 
+  :global(#navbar){
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
   @media screen and (max-width: 800px){
 
     :global(#navbar){
       display: none !important;
       opacity: 0 !important;
+      pointer-events: none !important;
     }
+
+
+    #menu{
+      color: white;
+    }
+
 
     #bar{
       left: 0;
@@ -1154,9 +1203,26 @@
       width: 100vw !important;
     }
 
-    #col{
-      display: none;
+    .col{
+      z-index: 8 !important;
+      position: fixed;
+      left: 5vw;
+      width: 90vw !important;
+      height: 80vh !important;
+      border-radius: 15px;
+      border: 5px solid #d0d0d0;
+      transition: 0.2s ease;
     }
+
+
+
+    #music{
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: block;
+    }
+
 
     #scroll{
       width: 100vw !important;
@@ -1195,15 +1261,16 @@
       margin-top: 60px;
     }
 
-    .elem p{
-      width: 100% !important;
+    .elem{
+      width: 100vw;
+      transform: translateX(-5px);
     }
 
     .elem p{
+      width: 100% !important;
       font-weight: 100;
       border-radius: 0;
     }
-
     #app{
       width: 100vw !important;
       overflow-x: hidden;
