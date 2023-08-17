@@ -32,6 +32,7 @@
 
   let next = {}
   let prev = {}
+  let notes = writable([])
 
   let scrolling = false
 
@@ -125,6 +126,30 @@
       console.error('Error fetching space', error);
     }
   }
+
+  async function fetchNotes(){
+
+    try {
+      const { data: n, error: e1 } = await supabaseClient
+        .from('notes')
+        .select('*')
+        .eq('space_id', data.space_id)
+
+
+      if (!e1) {
+        notes.set(n.sort((a,b) => {return a.index - b.index}))
+        console.log($notes)
+      }else{
+      }
+
+    }catch{
+
+    }
+  }
+
+  console.log($notes)
+
+  fetchNotes()
 
   async function getAdjacentNotes(){
 
@@ -245,7 +270,6 @@
 
       scroll.onscroll = () => {
           scrolled = scroll.scrollTop / scroll.scrollHeight
-
       }
 
       Id('fab').onclick = () => {
@@ -263,8 +287,6 @@
 
       function pageScroll() {
         if (scrolling){
-
-
           scroll.scrollBy(0,OPTIONS.speed);
           scrolldelay = setTimeout(pageScroll,10);
         }
@@ -459,7 +481,7 @@
 
     </div>
 
-  <section id = 'scroll' in:fly="{{ y: 200, duration: 500, delay: 200 }}" style="overflow-y: auto;">
+  <section id = 'scroll' style="overflow-y: auto;">
 
     <div id = 'scrollable'  style='background: {space.color}'>
 
@@ -488,11 +510,23 @@
 
   <div id = 'right'>
 
-
-
     <h2> Chapters </h2>
     <div id = 'chapters'>
+      {#each $notes as note}
+        <a href = '{note.id}'>
 
+          {#if note.id == data.id}
+          <div class = 'chapter active'>
+            <h1> {note.title}  </h1>
+          </div>
+          {:else}
+          <div class = 'chapter'>
+            <h1> {note.title} </h1>
+          </div>
+          {/if}
+        </a>
+
+      {/each}
     </div>
   </div>
 
@@ -527,6 +561,15 @@
     <div id = 'menu'>
       O
     </div>
+
+    <a href = '../'>
+      <div id = 'back'>
+        <h3>
+
+        Back
+        </h3>
+      </div>
+    </a>
 
     <div id = 'nav' class = 'flex'>
       <button class = 'nav prev'>
@@ -568,6 +611,26 @@
   ::-webkit-scrollbar-thumb{
     width: 5px;
     background: black;
+  }
+
+
+  .chapter{
+    color: rgba(black, 0.4);
+    padding: 15px;
+    font-size: 14px;
+    margin: -5px 10px;
+    border-radius: 5px;
+    transition: 0.2s ease;
+
+    &:hover{
+      color: black;
+    }
+
+    &.active{
+      color: black;
+      background: white;
+     box-shadow: 0px 20px 30px rgba(black, 0.05);
+    }
   }
 
 
@@ -636,11 +699,6 @@
   .tab{
     padding: 10px 15px;
     border-radius: 5px;
-  }
-
-  .active{
-    background: white;
-    box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
   }
 
   #play{
@@ -1084,6 +1142,7 @@
     left: 240px;
     border-radius: 10px;
     overflow-x: hidden;
+    overflow-y: scroll;
     box-shadow: 0px 30px 100px rgba(black, 0.15);
     padding: 0;
 
@@ -1112,6 +1171,7 @@
     margin: auto;
     margin-top: 20px;
   }
+
 
   #bar{
       position: fixed;
@@ -1243,6 +1303,11 @@
       width: 100vw;
       left: 0;
       bottom: 0;
+      #back{
+        h3{
+          color: white !important;
+        }
+      }
     }
 
     #fab{
