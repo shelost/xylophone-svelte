@@ -215,6 +215,7 @@ let added = false
                 on:change={updateSpace}
                 on:input|preventDefault={adjustTextareaHeightEvent} disabled></textarea>
 
+                <!--
 
 
               {#if added}
@@ -222,6 +223,7 @@ let added = false
             {:else}
                 <button id = 'add' class = 'corner'> + Add  </button>
             {/if}
+            -->
 
     </div>
 
@@ -302,7 +304,6 @@ let added = false
   font-size: 22px;
   font-weight: 500;
   margin-bottom: 30px;
-  margin-top: 40px;
 }
 
 .sec{
@@ -322,7 +323,6 @@ let added = false
 .flex{
   display: flex;
   gap: 60px;
-  margin-top: 130px;
 }
 
 .pill{
@@ -367,6 +367,7 @@ let added = false
       font-size: 14px;
       font-weight: 300;
       color: white;
+      display: none;
     }
 
 
@@ -424,10 +425,13 @@ let added = false
       width: 100vw;
       height: 250px;
       transition: 0.2s ease;
+      display: none;
     }
 
     #icon{
-      width: 160px;
+      width: 200px;
+      border-radius: 15px;
+
     }
 
     .expo{
@@ -478,9 +482,9 @@ let added = false
     }
 
     #title{
-        font-family: 'Libre Baskerville', 'Manrope', 'Inter', sans-serif;
+        font-family: 'Manrope', 'Inter', sans-serif;
         font-size: 60px;
-        font-weight: 800;
+        font-weight: 900;
         margin-bottom: 20px;
         margin-top: 30px;
         letter-spacing: -2.5px;
@@ -508,7 +512,6 @@ let added = false
     }
 
     .scroll{
-      margin-top: 100px;
       flex: 1 !important;
     }
 

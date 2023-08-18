@@ -38,6 +38,7 @@
 			</div>
 		</a>
 
+		<!--
 		<a href = '/shop' id = 'shop' >
 			<div class = 'text-btn' class:active={path === '/shop'}>
 				<div class = 'icon' style = 'background-image: url({IconShop})'>
@@ -45,6 +46,7 @@
 				<h2> Shop </h2>
 			</div>
 		</a>
+		-->
 
 		<a href = '/create' id = 'create' >
 			<div class = 'text-btn' class:active={path === '/create'}>

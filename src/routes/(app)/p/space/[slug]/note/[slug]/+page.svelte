@@ -18,11 +18,9 @@
   let OPTIONS = {
     justify: 'center',
     font_size: 16,
-    spacing: 100,
+    spacing: 20,
     speed: 1
   }
-
-  console.log(data)
 
   let summ = 1;
 
@@ -46,6 +44,10 @@
     }
   }
 
+  async function updateOptions(){
+
+  }
+
   async function updateScrolled(){
 
     const { data: user, error } = await supabaseClient
@@ -56,14 +58,12 @@
 
     if (!error) {
 
-
       let obj = {
         chapter_id: data.id,
         chapter_num: data.index+1,
         chapter_title: data.title,
         scroll: scrolled
       }
-
 
       if (user.progress[space.title]){
         user.progress[space.title][data.index+1] = obj
@@ -72,42 +72,11 @@
         user.progress[space.title][data.index+1] = obj
       }
 
-      console.log(user.progress)
-      console.log(space.title)
-
     } else {
       console.error('Error fetching space', error);
     }
 
   }
-
-
-
-
- // setElems()
-
-
-  async function getSummarizedContent(text, degree) {
-    const API_ENDPOINT = "https://api.openai.com/v1/engines/davinci/completions";
-    const headers = {
-        "Authorization": "Bearer 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",
-        "Content-Type": "application/json",
-    };
-
-    const prompt = `Provide a summary that is ${degree}0% shorter than the original text: ${text}`;
-
-    const response = await fetch(API_ENDPOINT, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({ prompt: prompt, max_tokens: 10000 }),
-    });
-
-    const data = await response.json();
-
-    console.log(data)
-
-    return data.choices && data.choices[0] && data.choices[0].text.trim();
-}
 
 
   async function getSpace(){
@@ -138,7 +107,7 @@
 
       if (!e1) {
         notes.set(n.sort((a,b) => {return a.index - b.index}))
-        console.log($notes)
+
       }else{
       }
 
@@ -147,54 +116,22 @@
     }
   }
 
-  console.log($notes)
-
   fetchNotes()
 
   async function getAdjacentNotes(){
 
-    try {
+    for (let i=0; i<$notes.length; i++){
 
-      const { data: n, error: e1 } = await supabaseClient
-        .from('notes')
-        .select('*')
-        .match({ index: data.index+1, space_id: data.space_id })
-        .single()
+      let note = $notes[i]
 
-      if (!e1) {
-        next = n
+      console.log(note)
 
-        console.log(n, data.index+1)
-      }else{
-        for (let i=0; i<Class('next').length; i++){
-          let btn = Class('next')[i]
-          btn.disabled = true
-        }
+      if (note.index == data.index+1){
+        next = note
       }
 
-    }catch{
-
-    }
-
-    if (data.index > 0){
-      try {
-        const { data: p, error: e2 } = await supabaseClient
-          .from('notes')
-          .select('*')
-          .match({ index: data.index-1, space_id: data.space_id })
-          .single()
-
-        if (!e2) {
-          prev = p
-          console.log(p, data.index-1)
-        }else{
-          for (let i=0; i<Class('prev').length; i++){
-            let btn = Class('prev')[i]
-            btn.disabled = true
-          }
-        }
-      }catch{
-
+      if (note.index == data.index-1){
+        prev = note
       }
     }
   }
@@ -229,21 +166,17 @@
       */
 
   onMount(() => {
-    getSpace()
-    getAdjacentNotes()
+    try{
+      getAdjacentNotes()
+    }catch{
+      console.log('oops')
+    }
+
     adjustTextareaHeight(document.getElementById('note-title'))
     adjustTextareaHeight(document.getElementById('note-body'))
 
     const ELEMS = data.body.split('\n');
 
-    document.getElementById('menu').onclick = () => {
-
-      let bottom =  document.getElementById('col').style.bottom
-
-      console.log('yo')
-
-      document.getElementById('col').style.bottom = '0px'
-    }
 
   for (let i=0; i<ELEMS.length; i++){
       let E = ELEMS[i]
@@ -265,7 +198,7 @@
       };
 
       const s = Id('scrollable')
-      let scroll = Id('scroll')
+      let scroll = Id('scrollable')
       let progress = Id('progress')
 
       scroll.onscroll = () => {
@@ -287,8 +220,11 @@
 
       function pageScroll() {
         if (scrolling){
+
           scroll.scrollBy(0,OPTIONS.speed);
           scrolldelay = setTimeout(pageScroll,10);
+
+
         }
       }
 
@@ -327,11 +263,20 @@
       }
       window.requestAnimationFrame(loop)
 
-    }, 2000);
+    }, 1500);
 
 
   })
 
+
+  $: for (let i=0; i<Class('elem').length; i++){
+    let elem = Class('elem')[i]
+
+    elem.onclick = () => {
+      console.log(elem)
+    }
+
+  }
 
   async function updateNote() {
     const { data: updatedData, error } = await supabaseClient
@@ -358,8 +303,6 @@
           const textarea = div
           textarea.style.height = '0px'
           textarea.style.height = Math.ceil(textarea.scrollHeight) + 'px'; // Adjust rows based on content
-          console.log(textarea)
-          console.log(textarea.style.height)
       }
 
   }
@@ -554,13 +497,7 @@
   {/await}
 
 
-
-
   <div id = 'buttons'>
-
-    <div id = 'menu'>
-      O
-    </div>
 
     <a href = '../'>
       <div id = 'back'>
@@ -1019,6 +956,14 @@
     right: 0;
     height: calc(100vh - 50px);
     width: 240px;
+
+    overflow-y: scroll;
+
+    h2{
+      font-size: 18px;
+      font-weight: 600;
+      padding: 20px;
+    }
   }
 
 
@@ -1092,6 +1037,14 @@
     position: fixed;
     left: 0;
     top: 0;
+    #back{
+        padding-left: 12px;
+        h3{
+          font-size: 13px;
+          font-weight: 300;
+          color: white !important;
+        }
+      }
   }
 
   #options{
@@ -1108,7 +1061,7 @@
       input{
         width: 180px;
         margin: 0;
-        background: white !important;
+        background: #f0f0f0 !important;
       }
 
       select{
@@ -1118,6 +1071,7 @@
         margin: 10px 0 20px 0;
         padding: 5px 10px;
         font-size: 12px;
+        background: #f0f0f0;
       }
     }
   }
@@ -1131,15 +1085,19 @@
     width: calc(100vw - 500px);
   }
 
+  #coverx{
+    display: none;
+  }
+
   #scroll{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: calc(100vw - 480px);
-    height: calc(100vh - 80px);
+    width: calc(100vw - 500px);
+    height: calc(100vh - 90px);
     position: fixed;
-    top: 40px;
-    left: 240px;
+    top: 48px;
+    left: 250px;
     border-radius: 10px;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -1154,7 +1112,7 @@
   #scrollable{
     border-radius: 0;
     height: 100vw;
-    width: calc(100vw - 480px);
+    width: calc(100vw - 500px);
     overflow-x: hidden;
   }
 
@@ -1222,6 +1180,10 @@
   .elem{
     padding: 0 50px;
     width: 100%;
+
+    &.highlight{
+      background: #ffce00;
+    }
   }
 
 
@@ -1303,6 +1265,7 @@
       width: 100vw;
       left: 0;
       bottom: 0;
+
       #back{
         h3{
           color: white !important;

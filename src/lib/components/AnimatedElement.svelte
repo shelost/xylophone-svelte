@@ -15,14 +15,21 @@
 
       document.getElementById('wrapper').onclick = highlight
 
-
       function highlight() {
-        console.log('yo')
         document.getElementById('wrapper').classList.toggle('highlight')
         dispatch('highlight', text); // emit the delete event with the space id.
       }
     })
 
+    $: for (let i=0; i<document.getElementsByClassName('wrapper').length; i++){
+
+      let wrapper = document.getElementsByClassName('wrapper')[i]
+
+      wrapper.onclick = () => {
+        wrapper.classList.toggle('highlight')
+      }
+
+    }
 
   </script>
 
@@ -44,11 +51,19 @@
   </div>
 
   <style lang="scss">
-    #wrapper {
+
+    .wrapper {
         margin-top: 30px;
+        padding: 30px;
+        border-radius: 5px;
+        transition: 0.2s ease;
+        cursor: pointer;
         &.highlight{
-          background: yellow;
         }
+    }
+
+    :global(.highlight){
+      background: rgb(255, 255, 221) !important;
     }
 
     .box{

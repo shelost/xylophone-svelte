@@ -29,7 +29,8 @@
 					.select('*') // Fetch all columns for the active user
 				if (!e) {
 					spaces.set(r)
-					spaces.set($spaces.filter(space => userData.books.includes(space.id)))
+					//spaces.set($spaces.filter(space => userData.books.includes(space.id)))
+
 					loading = false
 				} else {
 					console.error('Error fetching user data:', e);

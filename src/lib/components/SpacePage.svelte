@@ -576,7 +576,7 @@ function togglePlay() {
       }
 
       #title{
-          font-family: 'Libre Baskerville', 'Manrope', 'Inter', sans-serif;
+          font-family: 'Manrope', 'Inter', sans-serif;
           font-size: 60px;
           font-weight: 800;
           margin-bottom: 20px;

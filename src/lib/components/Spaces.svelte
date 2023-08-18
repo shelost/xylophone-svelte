@@ -88,7 +88,7 @@
     #spaces{
         display: flex;
         flex-wrap: wrap;
-        gap: 30px 30px;
+        gap: 25px 25px;
         justify-content: flex-start;
         align-items: flex-start;
         padding-top: 30px;

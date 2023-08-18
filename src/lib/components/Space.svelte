@@ -227,7 +227,7 @@
             </div>
         {/if}
 
-    <button on:click={triggerDelete}> Delete </button>
+    <button id = 'delete' on:click={triggerDelete}> Delete </button>
     </section>
 {/if}
 
@@ -235,6 +235,18 @@
 <style lang="scss">
 
 
+
+#delete{
+    box-shadow: none;
+    background: rgba(black, 0.05);
+    color: black;
+    font-weight: 500;
+    border-radius: 50px;
+
+    &:hover{
+        background: rgba(black, 0.1);
+    }
+}
 
 section{
     display: flex;
@@ -256,20 +268,22 @@ button{
     margin: 15px 0;
     color: black;
     height: fit-content;
-    width: 160px;
+    width: 200px;
 
     h1{
-        font-size: 16px;
+        font-size: 20px;
         line-height: 120%;
-        font-weight: 600;
-        margin-bottom: 5px;
+        letter-spacing: -0.2px;
+        font-weight: 700;
+        margin-bottom: 10px;
     }
 
     h2{
         font-size: 14px;
+        line-height: 120%;
         letter-spacing: -0.2px;
         font-weight: 400;
-        color: rgba(0,0,0,0.3);
+        color: rgba(black, 0.3);
     }
 
     h3{
@@ -290,21 +304,20 @@ button{
 
     .background{
         display: block;
-        width: 160px;
-        height: 160px;
-        background-size: cover;
+        width: 200px;
+        height: 200px;
+        background-size: 102% 102%;
         background-repeat: no-repeat !important;
         background-position: center center;
         transition: 0.2s ease;
         border: 2px solid rgba(255,255,255, 0.05);
-        border-radius: 15px;
+        border-radius: 12px;
     }
 
 
     .container{
-        width: 160px;
-        height: 160px;
-
+        width: 200px;
+        height: 200px;
         position: relative;
         transition: 0.2s ease;
     }
@@ -333,6 +346,7 @@ button{
         width: 200px;
         height: 200px;
 
+
         z-index: 2;
         display: flex;
         flex-direction: column;
@@ -352,6 +366,7 @@ button{
         height: 120px;
         text-align: center;
         border-radius: 70px;
+
 
         background: rgba(255,255,255,0.2);
         border: 2px solid rgba(255,255,255,0.3);
@@ -374,7 +389,7 @@ button{
         font-size: 18px;
         line-height: 110%;
         width: 95%;
-        font-weight: 800;
+        font-weight: 900;
         margin: auto;
         margin-top: 20px;
         margin-bottom: 10px;
