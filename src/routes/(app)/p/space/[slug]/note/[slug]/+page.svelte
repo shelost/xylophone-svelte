@@ -10,6 +10,9 @@
 
   export let data;
 
+
+  console.log(data)
+
   let updatedTitle = data.title;
   let updatedBody = data.body;
 
@@ -19,7 +22,8 @@
     justify: 'center',
     font_size: 16,
     spacing: 20,
-    speed: 1
+    speed: 1,
+    simplify: 0
   }
 
   let summ = 1;
@@ -88,7 +92,6 @@
 
     if (!error) {
 
-
       return s
 
     } else {
@@ -113,6 +116,7 @@
 
     }catch{
 
+      console.error('error')
     }
   }
 
@@ -172,8 +176,8 @@
       console.log('oops')
     }
 
-    adjustTextareaHeight(document.getElementById('note-title'))
-    adjustTextareaHeight(document.getElementById('note-body'))
+
+
 
     const ELEMS = data.body.split('\n');
 
@@ -188,7 +192,7 @@
 
     setTimeout(() => {
 
-      let audio = document.getElementById("audio")
+      let audio = Id("audio")
 
       audio.onplaying = function() {
         isPlaying = true;
@@ -201,6 +205,11 @@
       let scroll = Id('scrollable')
       let progress = Id('progress')
 
+      Id('canvas').height = Id('scrollable').scrollHeight
+
+      let canvas = Id('canvas')
+      let ctx = canvas.getContext('2d')
+
       scroll.onscroll = () => {
           scrolled = scroll.scrollTop / scroll.scrollHeight
       }
@@ -211,7 +220,6 @@
       }
 
       window.onkeyup = e => {
-
         if (e.code == 'Space'){
           scrolling = !scrolling
           pageScroll()
@@ -220,11 +228,8 @@
 
       function pageScroll() {
         if (scrolling){
-
           scroll.scrollBy(0,OPTIONS.speed);
           scrolldelay = setTimeout(pageScroll,10);
-
-
         }
       }
 
@@ -255,28 +260,24 @@
         }
 
         if (window.innerWidth > 800){
-          progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth - 465)) + 'px'
+          progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth)) + 'px'
         }else{
           progress.style.width = Math.ceil((scroll.scrollTop / scroll.scrollHeight) * (window.innerWidth)) + 'px'
         }
         window.requestAnimationFrame(loop)
       }
       window.requestAnimationFrame(loop)
-
     }, 1500);
-
-
   })
 
 
   $: for (let i=0; i<Class('elem').length; i++){
     let elem = Class('elem')[i]
-
     elem.onclick = () => {
       console.log(elem)
     }
-
   }
+
 
   async function updateNote() {
     const { data: updatedData, error } = await supabaseClient
@@ -325,6 +326,9 @@
   }
 
   function Class(id){
+    if (typeof window === 'undefined') {
+        return []; // Return an empty array in non-browser environments
+    }
       return document.getElementsByClassName(id)
   }
 
@@ -334,7 +338,9 @@
 
 
 
-<div id = 'app' style='background: {space.color}'>
+<section  style='background: {space.color}'>
+
+<div class = 'app' style='background: {space.color}'>
 
 {#if data}
   {#await space}
@@ -348,14 +354,25 @@
   {:then space}
 
 
+    <div id = 'col' class = 'col'  style='background: {space.color} !important;'>
 
 
 
-    <div id = 'col' class = 'col'>
+      <a href = '../'>
+        <div id = 'back'>
+          <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 10.5L16 21L16 0L0 10.5Z" fill="white"/>
+          </svg>
+          <h3>
+          Back
+          </h3>
+        </div>
+      </a>
+
 
       <div id = 'mast'>
         <div id = 'hero'>
-          <img src = {space.icon} alt = 'Scrollable Icon'>
+          <img id = 'icon' src = {space.icon} alt = 'Scrollable Icon'>
           <h1> {space.title} </h1>
           <h2> {space.subtitle} </h2>
         </div>
@@ -367,7 +384,7 @@
         <div class = 'option'>
           <p> Music </p>
         <div id = 'music' on:click={togglePlay}>
-          <audio id="audio" controls>
+          <audio id="audio" controls autoplay>
             <source src="{space.music}" id="src" />
           </audio>
           <div class = 'flex'>
@@ -410,48 +427,64 @@
         </div>
 
 
-
         <div class = 'option'>
           <p> Speed </p>
           <div class="slide_container">
-            <input type="range" min="0.5" max="5" bind:value={OPTIONS.speed} class="slider" id="speed">
+            <input type="range" min="0.5" max="5" step ='0.1' bind:value={OPTIONS.speed} class="slider" id="speed">
           </div>
         </div>
 
 
-      </div>
+        <!--
+        <div class = 'option'>
+          <p> Simplify </p>
+          <div class="slide_container">
+            <input type="range" min="0" max="3"  bind:value={OPTIONS.simplify} class="slider" id="simplify">
+          </div>
+        </div>
+        -->
 
+      </div>
+    </div>
+
+
+    <div id = 'center'  style='background: {space.color} !important;'>
+
+      <section id = 'scroll' style="overflow-y: auto;">
+
+
+
+        <div id = 'scrollable'>
+
+          <canvas id = 'canvas'></canvas>
+
+
+          <img id = 'mastx' class = 'mobile' src = {space.mast} alt = 'Mast Image'>
+
+          <img id = 'coverx' class = 'desktop' src = {space.cover} alt = 'Cover Image'>
+
+
+          <h2 id = 'chapter_num'> CHAPTER {data.index+ 1} </h2>
+          <h1 id = 'chapter_title'> {data.title} </h1>
+
+          {#each $elems as elem}
+            <div class = 'elem' style='margin-top:{OPTIONS.spacing}px'>
+
+            <AnimatedElement options= {OPTIONS} text={elem.content} color={space.secondary}></AnimatedElement>
+          </div>
+          {/each}
+
+          <div id = 'footer'>
+            <button class = 'cta next'> Next </button>
+          </div>
+
+        </div>
+      </section>
 
     </div>
 
-  <section id = 'scroll' style="overflow-y: auto;">
 
-    <div id = 'scrollable'  style='background: {space.color}'>
-
-      <img id = 'mastx' class = 'mobile' src = {space.mast} alt = 'Mast Image'>
-
-      <img id = 'coverx' class = 'desktop' src = {space.cover} alt = 'Cover Image'>
-
-
-      <h2 id = 'chapter_num'> CHAPTER {data.index+ 1} </h2>
-      <h1 id = 'chapter_title'> {data.title} </h1>
-
-      {#each $elems as elem}
-        <div class = 'elem' style='margin-top:{OPTIONS.spacing}px'>
-
-        <AnimatedElement options= {OPTIONS} text={elem.content} color={space.secondary}></AnimatedElement>
-      </div>
-      {/each}
-
-      <div id = 'footer'>
-        <button class = 'cta next'> Next </button>
-      </div>
-
-
-    </div>
-  </section>
-
-  <div id = 'right'>
+  <div id = 'right'  style='background: {space.color} !important;'>
 
     <h2> Chapters </h2>
     <div id = 'chapters'>
@@ -502,7 +535,6 @@
     <a href = '../'>
       <div id = 'back'>
         <h3>
-
         Back
         </h3>
       </div>
@@ -514,7 +546,7 @@
           <path d="M0 10.5L16 21L16 0L0 10.5Z" fill="white"/>
         </svg>
       </button>
-      <h3 id = 'chapter'> {data.title} </h3>
+      <h3 id = 'chapter'> Chapter {data.index+1} </h3>
       <button class = 'nav next'>
         <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M16 10.5L0 0V21L16 10.5Z" fill="white"/>
@@ -534,10 +566,13 @@
 
 </div>
 
+</section>
+
 
 <style lang="scss">
 
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
 
 
   ::-webkit-scrollbar{
@@ -571,6 +606,7 @@
   }
 
 
+
   #chapter_num{
     color: black;
     text-align: center;
@@ -591,13 +627,15 @@
     letter-spacing: -0.2px;
     font-weight: 500;
     padding: 20px 0;
+    background: white;
+
 
     .slider {
-      -webkit-appearance: none;
+     // -webkit-appearance: none;
       width: 240px !important;
       height: 10px;
       border-radius: 100px;
-      background: white;
+      background: rgba(white, 0.8) !important;
       opacity: 1;
     }
 
@@ -608,7 +646,7 @@
       height: 20px;
       border-radius: 30px;
       border: 2px solid white;
-      background: #d0d0d0;
+      background: rgba(white, 0.5);
       cursor: pointer;
     }
 
@@ -869,6 +907,7 @@
   padding-bottom: 50px;
 
 }
+
 .cta{
   width: 100%;
   background: black;
@@ -890,17 +929,20 @@
     display: flex;
     align-items: center;
     gap: 0px;
+
+
   }
 
   #chapter_title{
     font-size: 36px;
-
     line-height: 100%;
-    font-weight: 600;
+    font-weight: 800;
     margin: 40px auto;
+    margin-bottom: 100px;
     letter-spacing: -0.4px;
     color: black !important;
     text-align: center;
+    width: 80%;
   }
 
   #chapter{
@@ -931,7 +973,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: calc(100vw - 240px);
+    width: 100vw;
     height: 100vh;
     background: white;
     color: black;
@@ -945,16 +987,12 @@
     opacity: 0.5;
   }
 
-  #app{
-    background: red !important;
-  }
-
 
   #right{
     position: fixed;
-    top: 48px;
+    top: 0px;
     right: 0;
-    height: calc(100vh - 50px);
+    height: 100vh;
     width: 240px;
 
     overflow-y: scroll;
@@ -969,20 +1007,22 @@
 
   .col{
     position: fixed;
-    top: 48px;
+    top: 0px;
     left: 0;
-    height: calc(100vh - 50px);
+    height: 100vh;
     width: 240px;
     position: fixed;
     display: flex;
     flex-direction: column;
     align-items: center;
 
+    background: yellow;
+
 
     #hero{
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       text-align: center;
       text-justify: center;
       width: 200px;
@@ -993,18 +1033,18 @@
       margin-bottom: 20px;
 
       img{
-        width: 200px;
+        width: 120px;
         max-width: 100vw;
         aspect-ratio: 1;
         border-radius: 10px;
       }
 
       h1{
-        font-size: 24px !important;
+        font-size: 22px !important;
         line-height: 95% !important;
         font-weight: 600;
         letter-spacing: -0.6px;
-        font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
+        font-family: 'Inter', sans-serif;
         white-space: pre-wrap;
         text-align: left;
         color: black;
@@ -1026,8 +1066,34 @@
   }
 
 
-  #buttons{
+  #back{
+    width: 200px;
+    margin-top: 25px;
+
     display: flex;
+    align-items: center;
+    gap: 4px;
+
+    svg{
+      height: 10px;
+      path{
+        fill: black !important;
+      }
+    }
+
+    h3{
+      font-size: 14px;
+      text-align: left;
+      font-weight: 500;
+      color: black;
+    }
+  }
+
+
+
+
+  #buttons{
+    display: none;
     background: rgb(21, 21, 21);
     justify-content: space-between;
     align-items: center;
@@ -1037,14 +1103,7 @@
     position: fixed;
     left: 0;
     top: 0;
-    #back{
-        padding-left: 12px;
-        h3{
-          font-size: 13px;
-          font-weight: 300;
-          color: white !important;
-        }
-      }
+
   }
 
   #options{
@@ -1061,7 +1120,7 @@
       input{
         width: 180px;
         margin: 0;
-        background: #f0f0f0 !important;
+        background: rgba(white, 0.5) !important;
       }
 
       select{
@@ -1071,7 +1130,7 @@
         margin: 10px 0 20px 0;
         padding: 5px 10px;
         font-size: 12px;
-        background: #f0f0f0;
+        background: rgba(white, 0.5) !important;
       }
     }
   }
@@ -1089,32 +1148,58 @@
     display: none;
   }
 
-  #scroll{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: calc(100vw - 500px);
-    height: calc(100vh - 90px);
-    position: fixed;
-    top: 48px;
-    left: 250px;
-    border-radius: 10px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    box-shadow: 0px 30px 100px rgba(black, 0.15);
-    padding: 0;
 
-    #coverx{
+  #center{
       width: calc(100vw - 480px);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 240px;
+      overflow: visible;
+      z-index: 3;
+
+    #scroll{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: calc(100vw - 500px);
+      height: calc(100vh - 35px);
+      position: fixed;
+      top: 0px;
+      left: 250px;
+      border-radius: 10px;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      box-shadow: 0px 30px 100px rgba(black, 0.2);
+      padding: 0;
+
+      #scrollable{
+        position: relative;
+        border-radius: 0;
+        height: 100vw;
+        width: calc(100vw - 500px);
+        overflow-x: hidden;
+        background: white;
+
+        #coverx{
+          width: calc(100vw - 480px);
+        }
+
+        #canvas{
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: calc(100vw - 500px);
+        }
+      }
     }
   }
 
-  #scrollable{
-    border-radius: 0;
-    height: 100vw;
-    width: calc(100vw - 500px);
-    overflow-x: hidden;
-  }
+
+
+
+
+
 
   section {
     width: 800px;
@@ -1135,16 +1220,17 @@
       position: fixed;
       top: 0;
       left: 0;
-      height: 2px;
+      height: 5px;
       width: 100vw;
       background: black;
+      z-index: 5;
   }
 
   #progress{
       position: fixed;
       top: 0;
       left: 0;
-      height: 2px;
+      height: 5px;
       width: 10px;
       background: #f30833;
   }

@@ -1,4 +1,3 @@
-
 <script lang="ts">
   import { supabaseClient } from '$lib/db';
   import { onMount, onDestroy } from 'svelte';
@@ -93,24 +92,19 @@
   }
      // Function to adjust the height of textarea elements
     function adjustTextareaHeight(div) {
-
       const textarea = div
-
       if (div){
         textarea.style.height = '0px'
         textarea.style.height = Math.ceil(textarea.scrollHeight) + 'px'; // Adjust rows based on content
 
       }
-
     }
 
     function adjustTextareaHeightEvent(event) {
-
       if (data.title != null){
         data.slug = data.title.toLowerCase().split(' ').join('-')
         updateSpace()
       }
-
       const textarea = event.target
       textarea.style.height = '0px'
       textarea.style.height = Math.ceil(textarea.scrollHeight) + 'px'; // Adjust rows based on content

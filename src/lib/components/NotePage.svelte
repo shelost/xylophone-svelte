@@ -8,10 +8,14 @@
 
     let updatedTitle = data.title;
     let updatedBody = data.body;
+    let simplified = data.simplified
 
     let site = writable([])
 
     onMount(() => {
+      adjustTextareaHeight(document.getElementById('note-title'))
+        adjustTextareaHeight(document.getElementById('note-body'))
+
        setTimeout(() => {
           const s = Id('scrollable')
 
@@ -33,6 +37,7 @@
         .update({
           title: updatedTitle,
           body: updatedBody,
+          simplified: simplified
         })
         .eq('id', data.id);
 
@@ -60,13 +65,14 @@
     }
 
     function adjustTextareaHeightEvent(event) {
+
+      console.log(event)
         const textarea = event.target
         textarea.style.height = '0px'
         textarea.style.height = Math.ceil(textarea.scrollHeight) + 'px'; // Adjust rows based on content
         console.log(textarea)
         console.log(textarea.style.height)
     }
-
 
     function Id(id){
         return document.getElementById(id)
@@ -78,7 +84,6 @@
 
 
 </script>
-
 
 
 
@@ -96,12 +101,26 @@
         on:input={adjustTextareaHeightEvent}
     ></textarea>
 
-    <textarea
+
+    <div id = 'areas'>
+
+      <textarea
         id="note-body"
         bind:value={updatedBody}
-        placeholder="Untitled Article"
+        placeholder="Start typing here..."
         on:input={updateNote}
-    ></textarea>
+        on:input={adjustTextareaHeightEvent}
+      ></textarea>
+
+      <textarea
+        id="note-body"
+        bind:value={simplified}
+        placeholder="Start typing here..."
+        on:input={updateNote}
+        on:input={adjustTextareaHeightEvent}
+      ></textarea>
+
+    </div>
 
 
 </section>
@@ -113,6 +132,7 @@
 </div>
 
 <style>
+
 
     #app{
         overflow: visible;
@@ -145,7 +165,6 @@
     }
 
     #app{
-        height: calc(100vh - 60px);
         padding-bottom: 100px;
         overflow-y: hidden;
     }
@@ -157,22 +176,20 @@
 
 
     section {
-      width: 800px;
-      max-width: 90vw;
-
-      height: calc(100vh - 150px);
-      border-radius: 20px;
-
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       overflow: visible;
       margin: auto;
-
-
     }
 
+
+
+  #areas{
+    display: flex;
+    width: 100%;
+  }
 
     #bar{
         position: fixed;
@@ -210,25 +227,21 @@
       border: none;
       outline: none;
       padding: 10px;
-      margin: 30px 0;
+      margin: 30px 0 0 0;
       letter-spacing: -0.4px;
       line-height: 105%;
       resize: none; /* Disable resizing for better control over textarea height */
       overflow-y: hidden; /* Hide vertical scrollbar */
       flex-shrink: 0;
+
     }
 
     #note-body {
-      width: 800px;
-      max-width: 90%;
+      flex: 1;
       border: none;
       padding: none;
       resize: none; /* Disable resizing for better control over textarea height */
-      overflow-y: scroll;
-      flex-shrink: 0;
-      flex: 1;
-      padding: 40px;
-      background: rgba(0,0,0,0.03);
+      overflow-y: hidden;
     }
 
     textarea:focus {

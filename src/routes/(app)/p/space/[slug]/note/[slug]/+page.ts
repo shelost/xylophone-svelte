@@ -10,7 +10,6 @@ export async function load({ params }) {
         .single();
 
 
-
         return note
 
 	} catch (e) {

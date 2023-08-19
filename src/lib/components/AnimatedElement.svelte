@@ -13,12 +13,18 @@
 
     onMount(() => {
 
-      document.getElementById('wrapper').onclick = highlight
+      setTimeout(() => {
+        document.getElementById('wrapper').onclick = highlight
 
-      function highlight() {
-        document.getElementById('wrapper').classList.toggle('highlight')
-        dispatch('highlight', text); // emit the delete event with the space id.
-      }
+        function highlight() {
+          document.getElementById('wrapper').classList.toggle('highlight')
+          dispatch('highlight', text); // emit the delete event with the space id.
+
+
+          console.log('yo')
+        }
+      }, 1000);
+
     })
 
     $: for (let i=0; i<document.getElementsByClassName('wrapper').length; i++){
