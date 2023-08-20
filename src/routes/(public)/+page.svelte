@@ -107,7 +107,7 @@
 </script>
 
 <svelte:head>
-	<title> Scrollable: Your Ultimate Reading App </title>
+	<title> Scrollable | Your Ultimate Reading App </title>
 	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
 	<link rel="icon" href={icon} />
 </svelte:head>

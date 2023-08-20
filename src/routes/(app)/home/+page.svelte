@@ -91,12 +91,26 @@
 		<h1> Home </h1>
 
 
+
+{#await $spaces}
+
+	<div id = 'loading'>
+		<div class="lds-ripple"><div></div><div></div></div>
+		<h1> Loading... </h1>
+	</div>
+
+{:then}
+
+
 		<div id = 'top'>
 
+			<!--
 			<div id = 'mast'>
 				<h2> Today is </h2>
 				<h1 id = 'date'> August 23, 2023 </h1>
 			</div>
+			-->
+
 		</div>
 		<div id='spaces'>
 			{#each $spaces as space}
@@ -115,13 +129,40 @@
 			}}/>
 			{/each}
 		</div>
+
+	{/await}
 	</section>
 </div>
+
+
+
+
 
 <style>
 
 	h1{
 		color: black;
+	}
+
+	#loading{
+		background: red;
+	}
+
+	.lds-ripple {
+		display: inline-block;
+		position: relative;
+		width: 80px;
+		height: 80px;
+	}
+	.lds-ripple div {
+		position: absolute;
+		border: 4px solid black;
+		opacity: 1;
+		border-radius: 50%;
+		animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+	}
+	.lds-ripple div:nth-child(2) {
+		animation-delay: -0.5s;
 	}
 
     #spaces{

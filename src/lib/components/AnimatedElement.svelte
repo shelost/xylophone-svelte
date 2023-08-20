@@ -85,6 +85,7 @@
     }
 
     p{
+
         font-size: 14px;
         line-height: 250%;
         margin: auto;
@@ -104,6 +105,7 @@
             font-size: 13px !important;
             width: 80vw;
             text-align: center;
+            transform: translateX(-25px);
         }
     }
 

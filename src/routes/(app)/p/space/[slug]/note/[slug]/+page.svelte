@@ -1,17 +1,10 @@
 <script lang="ts">
   import { supabaseClient } from '$lib/db';
-  import { fly } from 'svelte/transition';
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
+
   import AnimatedElement from '$lib/components/AnimatedElement.svelte';
-  import Jagged from '$lib/img/jagged.svg'
-  import Wiki from '$lib/img/wiki.svg'
-	import Chapters from '$lib/components/Chapters.svelte';
-
   export let data;
-
-
-  console.log(data)
 
   let updatedTitle = data.title;
   let updatedBody = data.body;
@@ -79,9 +72,7 @@
     } else {
       console.error('Error fetching space', error);
     }
-
   }
-
 
   async function getSpace(){
     const { data: s, error } = await supabaseClient
@@ -176,11 +167,7 @@
       console.log('oops')
     }
 
-
-
-
     const ELEMS = data.body.split('\n');
-
 
   for (let i=0; i<ELEMS.length; i++){
       let E = ELEMS[i]
@@ -190,7 +177,16 @@
 
     let scrolldelay
 
+
+
+    function toggleChapters(){
+      Id('right').classList.toggle('active')
+
+    }
+
     setTimeout(() => {
+
+      Id('menu').onclick = toggleChapters
 
       let audio = Id("audio")
 
@@ -205,7 +201,9 @@
       let scroll = Id('scrollable')
       let progress = Id('progress')
 
-      Id('canvas').height = Id('scrollable').scrollHeight
+      Id('canvas').height = Id('scrollable').scrollHeight -10000
+
+      console.log( Id('scrollable').scrollHeight)
 
       let canvas = Id('canvas')
       let ctx = canvas.getContext('2d')
@@ -453,7 +451,6 @@
       <section id = 'scroll' style="overflow-y: auto;">
 
 
-
         <div id = 'scrollable'>
 
           <canvas id = 'canvas'></canvas>
@@ -474,9 +471,11 @@
           </div>
           {/each}
 
+          <!--
           <div id = 'footer'>
             <button class = 'cta next'> Next </button>
           </div>
+          -->
 
         </div>
       </section>
@@ -525,8 +524,6 @@
 
   </div>
 
-
-
   {/await}
 
 
@@ -534,6 +531,9 @@
 
     <a href = '../'>
       <div id = 'back'>
+        <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 10.5L16 21L16 0L0 10.5Z" fill="white"/>
+        </svg>
         <h3>
         Back
         </h3>
@@ -546,14 +546,17 @@
           <path d="M0 10.5L16 21L16 0L0 10.5Z" fill="white"/>
         </svg>
       </button>
-      <h3 id = 'chapter'> Chapter {data.index+1} </h3>
+      <button id = 'menu'>
+        <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 10.5L0 0V21L16 10.5Z" fill="white"/>
+        </svg>
+      </button>
       <button class = 'nav next'>
         <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M16 10.5L0 0V21L16 10.5Z" fill="white"/>
         </svg>
       </button>
     </div>
-
   </div>
 
 
@@ -572,8 +575,6 @@
 <style lang="scss">
 
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
-
-
 
   ::-webkit-scrollbar{
     width: 5px;
@@ -605,8 +606,6 @@
     }
   }
 
-
-
   #chapter_num{
     color: black;
     text-align: center;
@@ -627,7 +626,6 @@
     letter-spacing: -0.2px;
     font-weight: 500;
     padding: 20px 0;
-    background: white;
 
 
     .slider {
@@ -994,8 +992,9 @@
     right: 0;
     height: 100vh;
     width: 240px;
-
+    border-radius: 15px;
     overflow-y: scroll;
+    box-shadow: 0px -20px 20px rgba(black, 0.1);
 
     h2{
       font-size: 18px;
@@ -1015,8 +1014,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    background: yellow;
 
 
     #hero{
@@ -1279,9 +1276,7 @@
   }
 
   :global(#navbar){
-      display: none !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
+    display: none !important;
     }
 
   @media screen and (max-width: 800px){
@@ -1292,11 +1287,66 @@
       pointer-events: none !important;
     }
 
+    #right{
+      position: fixed;
+      height: 90vh;
+      width: 100vw;
+      top: 95vh;
+      left: 0;
+      background: yellow;
+      z-index: 4 !important;
+      transition: 0.2s ease;
+    }
+
+    .active{
+        background: red;
+        top: 10vh !important;
+      }
+
+
+    #mastx{
+      width: 100vw;
+    }
+
+    #buttons{
+      display: flex !important;
+      justify-content: space-between;
+      align-items: center !important;
+      gap: 20px;
+      height: 50px;
+      width: 100vw !important;
+      position: fixed !important;
+      left: 0 !important;
+      top: calc(100vh - 50px);
+      z-index: 5 !important;
+
+      #back{
+        margin-bottom: 25px;
+        margin-left: 15px;
+        gap: 6px;
+        svg{
+          path{
+            fill: white !important;
+          }
+        }
+        h3{
+          color: white !important;
+          font-weight: 400;
+        }
+      }
+
+      .flex{
+        gap: 0px !important;
+      }
+    }
+
+    .elem{
+      width: 100%;
+    }
 
     #menu{
       color: white;
     }
-
 
     #bar{
       left: 0;
@@ -1311,18 +1361,6 @@
       width: 100vw !important;
     }
 
-    .col{
-      z-index: 8 !important;
-      position: fixed;
-      left: 5vw;
-      width: 90vw !important;
-      height: 80vh !important;
-      border-radius: 15px;
-      border: 5px solid #d0d0d0;
-      transition: 0.2s ease;
-    }
-
-
 
     #music{
       position: fixed;
@@ -1331,38 +1369,32 @@
       display: block;
     }
 
-
     #scroll{
       width: 100vw !important;
+      height: calc(100vh - 50px) !important;
+      top: -20px !important;
       left: 0 !important;
       overflow-x: hidden;
+      border-radius: 0 !important;
     }
 
     #scrollable{
       width: 100vw !important;
+      height: calc(100vh - 40px) !important;
+      top: 0px !important;
+      left: 0 !important;
       padding: 0;
+      border-radius: 0 !important;
     }
 
     #chapter{
       display: none;
     }
 
-    #buttons{
-      width: 100vw;
-      left: 0;
-      bottom: 0;
-
-      #back{
-        h3{
-          color: white !important;
-        }
-      }
-    }
 
     #fab{
-
-      right: 20px !important;
-      bottom: 80px;
+      right: 30px !important;
+      bottom: 70px;
     }
 
 
@@ -1377,7 +1409,7 @@
 
     .elem{
       width: 100vw;
-      transform: translateX(-5px);
+      transform: translateX(-12px);
     }
 
     .elem p{

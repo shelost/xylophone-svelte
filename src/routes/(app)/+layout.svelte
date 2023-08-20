@@ -3,11 +3,12 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
-	import IconHome from '$lib/img/icon_home.svg'
-	import IconCreate from '$lib/img/icon_create.svg'
-	import IconFeed from '$lib/img/icon_feed.svg'
+	import IconHome from '$lib/img/iconx_home.svg'
+	import IconCreate from '$lib/img/iconx_create.svg'
+	import IconFeed from '$lib/img/iconx_settings.svg'
 	import IconShop from '$lib/img/icon_shop.svg'
 	import { page } from '$app/stores';
+	import { fly } from 'svelte/transition';
 	export let data
 
 	let path;
@@ -115,6 +116,7 @@
 	#logo{
 		width: 100px;
 		margin: 20px 10px;
+		filter: invert(100%);
 	}
 
 	.title{
@@ -134,12 +136,12 @@
 		gap: 12px;
 
 		&.active{
-			background: white;
+			background: rgba(white, 0.1);
 		}
 	}
 
 	.text-btn:hover{
-		background: rgba(255,255,255,0.7);
+		background: rgba(white, 0.1);
 	}
 
 	.icon{
@@ -155,8 +157,10 @@
 	left: 0;
 	width: 240px;
 	height: 100vh;
-	z-index: 5 !important;
-	background: #f0f0f0;
+	background: #1e1e1e;
+      display: block;
+      opacity: 1;
+	  color: white;
 }
 
 

@@ -271,6 +271,11 @@ let added = false
 }
 
 
+
+
+
+
+
 #start{
   background: #ffce00;
   color: black;
@@ -511,6 +516,10 @@ let added = false
 
     .secs{
       margin-top: 30px;
+    }
+
+    :global(#navbar){
+    display: block !important;
     }
 
 
