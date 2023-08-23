@@ -10,9 +10,16 @@
 
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Gradient from '$lib/img/gradient.png'
-	import Hero from '$lib/img/herox.png'
+	import Hero1 from '$lib/img/herox.svg'
+	import Hero2 from '$lib/img/herox-1.svg'
 	import Feature from '$lib/img/feature.png'
 	import Collection from '$lib/img/collection.png'
+	import Jagged from '$lib/img/jagged.svg'
+
+
+
+	import Frame1 from '$lib/img/frame.svg'
+	import Frame2 from '$lib/img/frame-1.svg'
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
@@ -91,15 +98,23 @@
 
 		fetchNotes()
 
-		/*
-		document.getElementById('down').onclick = () => {
-			document.getElementById('app').scrollTo({
-				top: window.innerHeight,
-				left: 0,
-				behavior: 'smooth'
-			})
+
+		let ratio = 0
+
+		let app = document.getElementById('app')
+
+		let loop = () => {
+
+			ratio = app.scrollTop / document.body.scrollHeight
+
+
+			app.style.setProperty('--parallax-1', ratio * 0.6 * -160 + 'px')
+			app.style.setProperty('--parallax-2', ratio * 1 * -160 + 'px')
+			app.style.setProperty('--parallax-3', ratio * 1.6 * -160 + 150 + 'px')
+
+			window.requestAnimationFrame(loop)
 		}
-		*/
+		window.requestAnimationFrame(loop)
 	})
 
 
@@ -113,51 +128,11 @@
 </svelte:head>
 
 
-<div id = 'app'>
+<div id = 'app' >
 
 	<Navbar />
 
-	<!--
-	<div id = 'splash' style ='background-image: url({bg});'>
-
-		<div class = 'split white'>
-		  <h1> Why read like this... </h1>
-		  <img src = 'phone.svg' alt = 'phone'>
-		</div>
-
-		<div class = 'center'>
-			<a href="https://www.producthunt.com/posts/scrollable?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-scrollable" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=408082&theme=light" alt="Scrollable - Your&#0032;Ultimate&#0032;Reading&#0032;App&#0046; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
-			<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
-
-				<h2> Reserve My Spot </h2>
-
-				<label for='Email'> My Email </label>
-				<input id = 'email' name = 'Email' type = 'email' placeholder = 'your@email.com' required>
-
-				<label for='Task'> I would like to read... </label>
-				<input id = 'task' name = 'Task' type = 'text' placeholder = 'Thinking Fast and Slow' required>
-
-				<button id = 'submit' type = 'submit'> Let's Go! </button>
-			</form>
-		</div>
-
-		<div class = 'split'>
-		  <h1> ... when you can read like this? </h1>
-		  <img src = 'phone-1.svg' alt = 'phone'>
-		</div>
-
-
-		<div id = 'down'>
-			<h2>
-				👇 Scroll Down to Read
-			</h2>
-		</div>
-
-	</div>
-
-	-->
-
-	<div id = 'splash'>
+	<div id = 'splash' style='background-image: url({Jagged})' in:fly={{duration: 500, y: 50}}>
 
 		<div id = 'mast'>
 
@@ -172,7 +147,8 @@
 
 		</div>
 
-		<img id = 'hero' src = '{Hero}' alt = 'Hero Image'>
+		<img id = 'laptop' src = '{Hero1}' alt = 'Hero Image'>
+		<img id = 'phone' src = '{Hero2}' alt = 'Hero Image'>
 	</div>
 
 
@@ -220,11 +196,14 @@
 
 </div>
 
-<style>
+<style lang="scss">
 
 	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
 	#app{
+		--parallax-1: 0;
+		--parallax-2: 0;
+		--parallax-3: 0;
 	}
 
 	#banner{
@@ -492,7 +471,6 @@
 		overflow-y: scroll;
 		overflow-x: hidden;
 		padding-bottom: 200px;
-		background: #121212;
 	}
 
 	html{
@@ -542,16 +520,47 @@
 		margin: 0;
 		width: 100vw;
 		height: calc(100vh - 60px);
-
 		background-size: cover;
 		background-position: center center;
-
 		display: flex;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
-
-		background: #151515;
 		padding: 60px;
+
+		#laptop{
+			position: absolute;
+			top: 70px;
+			right: 100px;
+			width: 50vw;
+
+			transform: translateY(var(--parallax-1));
+		}
+
+		#phone{
+			position: absolute;
+			top: 120px;
+			right: 50px;
+			width: 16vw;
+			z-index: 3 !important;
+			transform: translateY(var(--parallax-2));
+		}
+
+		#mast{
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			margin-bottom: 50px;
+			width: 40vw;
+			h1{
+				font-size: 80px !important;
+				line-height: 100%;
+				letter-spacing: -2px;
+				margin-bottom: 50px;
+				text-align: flex-start;
+				font-family: 'Newsreader', sans-serif;
+			}
+		}
+
 	}
 
 	#hero{
@@ -581,21 +590,6 @@
 		gap: 20px;
 	}
 
-	#mast{
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		margin-bottom: 50px;
-	}
-
-	#mast h1{
-		font-size: 80px !important;
-		line-height: 100%;
-		letter-spacing: -2px;
-		margin-bottom: 50px;
-		text-align: flex-start;
-		font-family: 'Newsreader', sans-serif;
-	}
 
 	#splash img{
 		height: 80vh;

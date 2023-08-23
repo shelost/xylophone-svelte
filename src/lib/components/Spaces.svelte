@@ -5,6 +5,7 @@
     import Space from './Space.svelte'
     import type { PageData, Task } from '../../routes/$types';
     import { createEventDispatcher } from 'svelte';
+    import { fly } from 'svelte/transition'
     export let data: PageData;
     $: ({ user } = data);
 
@@ -83,7 +84,7 @@
 </script>
 
 
-<style>
+<style lang="scss">
 
     #spaces{
         display: flex;
@@ -96,26 +97,22 @@
     }
 
     #add_space{
-      border: 1px solid rgba(255,255,255,0.4);
-      color: white;
-      width: 160px;
-      height: 160px;
+      border: 2px solid rgba(black, 0.4);
+      color: black;
+      width: 200px;
+      height: 200px;
       border-radius: 10px;
       text-align: center;
-
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-
       transition: 0.2s ease;
       cursor: pointer;
-
-      background: rgba(0,0,0,0.2);
     }
 
     #add_space:hover{
-      background: rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.05);
     }
 
     .modal {
@@ -130,6 +127,18 @@
       z-index: 10;
     }
 
+
+    @media screen and (max-width: 800px){
+
+      #spaces{
+        padding: 0;
+      }
+
+      .space{
+        width: calc(50vw - 50px);
+      }
+
+    }
 
 </style>
 
@@ -147,7 +156,10 @@
 
 
 <div id='spaces'>
-    {#each $spaces as space}
+    {#each $spaces as space, index}
+    <div class = 'space' in:fly={{duration:500, y: 50, delay: index * 50}}>
+
+
     <Space
     {space}
     page={page}
@@ -162,11 +174,12 @@
     on:removeBook={(e) => {
       dispatch('removeBook', e.detail)
     }}
-/>
+    />
+  </div>
 
     {/each}
 
-    {#if !shop}
+    {#if !page}
     <div on:click={newSpace} id = 'add_space'>
       <h2> + </h2>
       <h1> Add Scrollable </h1>

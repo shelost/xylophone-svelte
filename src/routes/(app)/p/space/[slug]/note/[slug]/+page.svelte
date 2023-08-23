@@ -134,17 +134,6 @@
 
   var isPlaying = false;
 
-      function togglePlay() {
-        isPlaying ? audio.pause() : audio.play();
-
-
-        for (let i=0; i<Class('wave').length; i++){
-          let wave = Class('wave')[i]
-
-          isPlaying ? wave.classList.add('paused') : wave.classList.remove('paused')
-        }
-
-      };
 
       let clicked = false
       let speed = 1
@@ -169,6 +158,24 @@
 
     const ELEMS = data.body.split('\n');
 
+
+
+
+    function togglePlay() {
+
+
+        isPlaying ? audio.pause() : audio.play();
+
+        for (let i=0; i<Class('wave').length; i++){
+          let wave = Class('wave')[i]
+          wave.classList.toggle('paused')
+
+          console.log(wave.classList)
+        }
+
+      };
+
+
   for (let i=0; i<ELEMS.length; i++){
       let E = ELEMS[i]
 
@@ -177,14 +184,14 @@
 
     let scrolldelay
 
-
-
     function toggleChapters(){
       Id('right').classList.toggle('active')
 
     }
 
     setTimeout(() => {
+
+      Id('music').onclick = togglePlay
 
       Id('menu').onclick = toggleChapters
 
@@ -381,7 +388,7 @@
 
         <div class = 'option'>
           <p> Music </p>
-        <div id = 'music' on:click={togglePlay}>
+        <div id = 'music'>
           <audio id="audio" controls autoplay>
             <source src="{space.music}" id="src" />
           </audio>
@@ -547,9 +554,12 @@
         </svg>
       </button>
       <button id = 'menu'>
-        <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 10.5L0 0V21L16 10.5Z" fill="white"/>
-        </svg>
+        <svg width="412" height="412" viewBox="0 0 412 412" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="58" y="84" width="297" height="34" rx="10" fill="white"/>
+          <rect x="58" y="184" width="297" height="34" rx="10" fill="white"/>
+          <rect x="58" y="284" width="297" height="34" rx="10" fill="white"/>
+          </svg>
+
       </button>
       <button class = 'nav next'>
         <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -719,17 +729,11 @@
       width: 40px;
       height: 40px;
     }
-  }
 
-  #fab:hover{
-    background: #e3002a;
+    &:hover{
+      background: #e3002a;
+    }
   }
-
-  #fab svg{
-    height: 36px;
-    width: 36px;
-  }
-
 
 
   :root {
@@ -745,7 +749,7 @@
     width: fit-content;
     border-radius: 5px;
     gap: 20px;
-    padding: 10px 15px;
+    padding: 15px 18px;
     width: 200px;
     box-shadow: 0px 20px 40px rgba(0,0,0,0.1);
     z-index: 5;
@@ -769,6 +773,7 @@
 
   #music_title{
     font-size: 11px;
+    line-height: 120%;
   }
 
   .flex{
@@ -800,39 +805,41 @@
   }
 
   #waveform {
-    display: flex;
-    gap: 5px;
+  display: flex;
+  gap: 5px;
 
-    .wave{
-      animation: waveform var(--wavefreq)
-                ease-in-out infinite
-                forwards;
-      background-color: white;
-      border-radius: 15px;
-      width: 5px;
-      height: 8px;
-      background: #0074ff;
+  .wave {
+    animation: waveform var(--wavefreq) ease-in-out infinite forwards;
+    background-color: white;
+    border-radius: 15px;
+    width: 3px;
+    height: 8px;
+    background-image: linear-gradient(to bottom, #0095ff, #00ff73);
+  }
 
-      &.paused{
-        animation: none !important;
-        transform: none !important;
-        background: yellow !important;
-        border: 5px solid green;
-      }
-    }
-    .wave1 {
-      --wavefreq: calc(200ms * var(--m));
-      &.paused{
-        --wavefreq: 0 !important;
-      }
-    }
-    .wave2 {
-      --wavefreq: calc(300ms * var(--m));
-    }
-    .wave3 {
-      --wavefreq: calc(400ms * var(--m));
+  .wave1 {
+    --wavefreq: calc(200ms * var(--m));
+
+    &.paused {
+      --wavefreq: 0 !important;
+      animation: none !important;
+      transform: none !important;
+      background: yellow !important;
+      border: 5px solid green !important;
     }
   }
+
+  .wave2 {
+    --wavefreq: calc(300ms * var(--m));
+  }
+
+  .wave3 {
+    --wavefreq: calc(400ms * var(--m));
+  }
+}
+
+
+
 
 
 
@@ -847,8 +854,6 @@
     transform: scaleY(.5);
   }
 }
-
-
 
 
   /* Loader */
@@ -992,7 +997,6 @@
     right: 0;
     height: 100vh;
     width: 240px;
-    border-radius: 15px;
     overflow-y: scroll;
     box-shadow: 0px -20px 20px rgba(black, 0.1);
 
@@ -1308,6 +1312,20 @@
       width: 100vw;
     }
 
+    #col{
+      display: flex !important;
+      justify-content: space-between;
+      align-items: center !important;
+      gap: 20px;
+      height: 50px;
+      width: 100vw !important;
+      position: fixed !important;
+      left: 0 !important;
+      top: 0;
+      z-index: 5 !important;
+
+    }
+
     #buttons{
       display: flex !important;
       justify-content: space-between;
@@ -1346,6 +1364,10 @@
 
     #menu{
       color: white;
+      svg{
+        height: 24px;
+        width: 24px;
+      }
     }
 
     #bar{

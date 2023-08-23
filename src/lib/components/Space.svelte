@@ -409,29 +409,37 @@ button{
 
         section{
             flex-direction: row;
-            gap: 20px;
+            gap: 10px;
             align-items: flex-start;
         }
 
         .expo{
             margin-top: 5px;
+            width: 100%;
+
+            h1{
+                font-size: 18px;
+            }
         }
 
         .background{
-            width: 40vw;
-            height: 40vw;
+            margin: 0;
+            width: calc(50vw - 50px);
+            height: calc(50vw - 50px);
         }
 
 
         .space{
-            width: 40vw;
-            height: 40vw;
+            margin: 0;
+            width: calc(50vw - 50px);
+            height: calc(50vw - 50px);
         }
 
 
         .container{
-            width: 40vw;
-            height: 40vw;
+            margin: 0;
+            width: calc(50vw - 50px);
+            height: calc(50vw - 50px);
         }
 
     }

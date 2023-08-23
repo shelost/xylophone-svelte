@@ -102,8 +102,6 @@
       }, 1000)
 
       }
-
-
     });
 
     // Function to save a note (either new or edited)
@@ -289,7 +287,7 @@
             {#if !page}
               <div class="handle" data-sortable-handle> ☰ </div>
             {/if}
-            <div class="note_icon" style='background-image:url({data.cover})'></div>
+            <div class="note_icon" style='background-image:url({data.icon})'></div>
             <h1 class="note_title">{note.title}</h1>
           </div>
         </a>

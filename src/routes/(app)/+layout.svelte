@@ -57,6 +57,16 @@
 			</div>
 		</a>
 
+		<a href = '/profile' id = 'settings' >
+			<div class = 'text-btn' class:active={path === '/profile'}>
+				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				</div>
+				<h2> Profile </h2>
+			</div>
+		</a>
+
+
+
 		<!--
 		<a href = '/subscriptions' id = 'create' >
 			<div class = 'text-btn' class:active={path === '/subscriptions'}>
@@ -87,13 +97,15 @@
 
 
 	<div id = 'bottom'>
-		<a href = '/settings' id = 'create' >
+		<!--
+		<a href = '/settings' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/settings'}>
 				<div class = 'icon' style = 'background-image: url({IconFeed})'>
 				</div>
 				<h2> Settings </h2>
 			</div>
 		</a>
+		-->
 
 	</div>
   </div>
@@ -115,8 +127,17 @@
 
 	#logo{
 		width: 100px;
-		margin: 20px 10px;
+		margin: 25px 15px;
 		filter: invert(100%);
+	}
+
+
+	#settings{
+		z-index: 5 !important;
+	}
+
+	#app{
+		background: rgb(234, 234, 234) !important;
 	}
 
 	.title{
@@ -201,7 +222,6 @@
 		top: calc(100vh - 80px);
 		width: 100vw !important;
 		height: 80px !important;
-		background: #f0f0f0;
 	}
 
 	#top{

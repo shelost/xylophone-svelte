@@ -43,7 +43,7 @@
 	<section in:fly={{ x: -200, duration: 300, delay: 300 }}
 	out:fly={{ x: 200, duration: 300 }}>
 
-		<h1> Create </h1>
+		<h1 id = 'title'> Create </h1>
 		<Spaces {data} page = {false}/>
 
 	</section>
@@ -51,12 +51,20 @@
 </div>
 
 
-
 <style>
+
+	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
 	h1{
 		color: black;
 	}
+
+	#title{
+		font-family: 'Newsreader', sans-serif;
+		letter-spacing: -0.7px;
+		font-size: 32px;
+	}
+
 
 	section{
 		margin: 30px 30px;

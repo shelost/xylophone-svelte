@@ -12,6 +12,15 @@
         adjustTextareaHeight(document.getElementById('subtitle'))
         adjustTextareaHeight(document.getElementById('description'))
 
+
+        setTimeout(() => {
+
+          adjustTextareaHeight(document.getElementById('title'))
+        adjustTextareaHeight(document.getElementById('subtitle'))
+        adjustTextareaHeight(document.getElementById('description'))
+
+        }, 100);
+
         window.onresize = () => {
           adjustTextareaHeight(document.getElementById('title'))
           adjustTextareaHeight(document.getElementById('subtitle'))

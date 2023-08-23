@@ -14,10 +14,10 @@
     onMount(() => {
 
       setTimeout(() => {
-        document.getElementById('wrapper').onclick = highlight
+        document.getElementsByClassName('wrapper')[0].onclick = highlight
 
         function highlight() {
-          document.getElementById('wrapper').classList.toggle('highlight')
+          document.getElementsByClassName('wrapper')[0].classList.toggle('highlight')
           dispatch('highlight', text); // emit the delete event with the space id.
 
 
@@ -25,7 +25,6 @@
         }
       }, 1000);
 
-    })
 
     $: for (let i=0; i<document.getElementsByClassName('wrapper').length; i++){
 
@@ -37,10 +36,12 @@
 
     }
 
+    })
+
+
   </script>
 
   <div
-    id = 'wrapper'
     class="wrapper"
     use:inview={{ unobserveOnEnter: true, rootMargin: '-20%' }}
     on:change={({ detail }) => {
