@@ -599,10 +599,10 @@
 
   .chapter{
     color: rgba(black, 0.4);
-    padding: 15px;
+    padding: 12px 15px;
     font-size: 14px;
-    margin: -5px 10px;
-    border-radius: 5px;
+    margin: 0px 10px;
+    border-radius: 10px;
     transition: 0.2s ease;
 
     &:hover{
@@ -1004,6 +1004,7 @@
       font-size: 18px;
       font-weight: 600;
       padding: 20px;
+      padding-top: 30px;
     }
   }
 

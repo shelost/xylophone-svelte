@@ -7,19 +7,31 @@
 	import bg from '$lib/img/background.svg'
 	import icon from '$lib/img/favicon.png'
 
-
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Gradient from '$lib/img/gradient.png'
+	import Hero from '$lib/img/Hero.png'
 	import Hero1 from '$lib/img/herox.svg'
 	import Hero2 from '$lib/img/herox-1.svg'
 	import Feature from '$lib/img/feature.png'
 	import Collection from '$lib/img/collection.png'
 	import Jagged from '$lib/img/jagged.svg'
 
+	import Phone1 from '$lib/img/phone-1.svg'
+	import Phone2 from '$lib/img/phone-2.svg'
 
+	import Bubble1 from '$lib/img/bubble.svg'
+	import Bubble2 from '$lib/img/bubble-1.svg'
+	import Bubble3 from '$lib/img/bubble-2.svg'
+	import Bubble4 from '$lib/img/bubble-3.svg'
+	import Bubble5 from '$lib/img/bubble-4.svg'
+	import Bubble6 from '$lib/img/bubble-5.svg'
 
-	import Frame1 from '$lib/img/frame.svg'
-	import Frame2 from '$lib/img/frame-1.svg'
+	import Sherlock from '$lib/img/sherlock-x.png'
+	import Pride from '$lib/img/pride-x.png'
+	import Republic from '$lib/img/republic-x.png'
+	import Montecristo from '$lib/img/montecristo-x.png'
+	import Mobydick from '$lib/img/mobydick-x.png'
+
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
@@ -109,7 +121,7 @@
 
 
 			app.style.setProperty('--parallax-1', ratio * 0.6 * -160 + 'px')
-			app.style.setProperty('--parallax-2', ratio * 1 * -160 + 'px')
+			app.style.setProperty('--parallax-2', ratio * 3 * -160 + 'px')
 			app.style.setProperty('--parallax-3', ratio * 1.6 * -160 + 150 + 'px')
 
 			window.requestAnimationFrame(loop)
@@ -147,16 +159,78 @@
 
 		</div>
 
-		<img id = 'laptop' src = '{Hero1}' alt = 'Hero Image'>
-		<img id = 'phone' src = '{Hero2}' alt = 'Hero Image'>
+		<img id = 'hero' src = '{Hero}' alt = 'Hero Image'>
 	</div>
 
 
-	<div class = 'section white' style='background-image: url({Feature})'></div>
-	<div class = 'section black' style='background-image: url({Collection})'>
+	<div id = 'phones' class = 'section white'>
 
+		<div class = 'section_expo'>
+			<h1> A Better Way to Read. </h1>
+			<h2> Reading should be delightful, wherever you go. </h2>
+		</div>
 
+		<div class = 'flex'>
+
+			<img id = 'phone1' class = 'phone' src = '{Phone1}' alt = 'Phone Image'>
+
+			<div id = 'bubbles'>
+				<img id = 'bubble1' class = 'bubble' src = '{Bubble1}' alt = 'Bubble Image'>
+				<img id = 'bubble2' class = 'bubble' src = '{Bubble2}' alt = 'Bubble Image'>
+				<img id = 'bubble3' class = 'bubble' src = '{Bubble3}' alt = 'Bubble Image'>
+				<img id = 'bubble4' class = 'bubble' src = '{Bubble4}' alt = 'Bubble Image'>
+				<img id = 'bubble5' class = 'bubble' src = '{Bubble5}' alt = 'Bubble Image'>
+				<img id = 'bubble6' class = 'bubble' src = '{Bubble6}' alt = 'Bubble Image'>
+
+				<img id = 'phone2' class = 'phone' src = '{Phone2}' alt = 'Phone Image'>
+			</div>
+		</div>
 	</div>
+
+
+
+
+
+	<div class = 'section_expo single'>
+	</div>
+
+
+	<div id = 'sherlock' class = 'section scene' style='background-image: url({Sherlock})'>
+		<div class = 'text'>
+			<h1> You know my methods, Watson. </h1>
+			<h2> The Adventures of Sherlock Holmes </h2>
+		</div>
+	</div>
+
+	<div id = 'pride' class = 'section scene' style='background-image: url({Pride})'>
+		<div class = 'text'>
+			<h1> It is a truth universally acknowledged... </h1>
+			<h2> Pride & Prejudice </h2>
+		</div>
+	</div>
+
+	<div id = 'republic' class = 'section scene' style='background-image: url({Republic})'>
+		<div class = 'text'>
+			<h1> I am the wisest man alive, for I know one thing, and that is that I know nothing.  </h1>
+			<h2> The Republic </h2>
+		</div>
+	</div>
+
+	<div id = 'montecristo' class = 'section scene' style='background-image: url({Montecristo})'>
+		<div class = 'text'>
+			<h1> How did I escape? With difficulty. How did I plan this moment? With pleasure. </h1>
+			<h2> The Count of Monte Cristo </h2>
+		</div>
+	</div>
+
+	<div id = 'mobydick' class = 'section scene' style='background-image: url({Mobydick})'>
+		<div class = 'text'>
+			<h1> Call me Ishmael.  </h1>
+			<h2> Moby Dick </h2>
+		</div>
+	</div>
+
+
 
 	<h3 class = 'header'  in:fly="{{ y: 200, duration: 500, delay: 200 }}"> Recent Releases <h3>
 
@@ -190,8 +264,6 @@
 			</a>
 
 		</div>
-
-
 	</div>
 
 </div>
@@ -217,12 +289,101 @@
 		background-position: center center;
 	}
 
+	.section_expo{
+		text-align: center;
+		padding: 80px 0 50px 0;
+		h1{
+			font-family: 'Newsreader', sans-serif;
+			color: black !important;
+			font-size: 44px;
+			font-weight: 700;
+			text-align: left;;
+			letter-spacing: -2px;
+			margin-bottom: 20px;
+			margin-left: 40px;
+			text-align: center;
+		}
+		h2{
+			font-family: 'Inter', sans-serif;
+			color: rgba(black, 0.5) !important;
+			font-size: 18px;
+			font-weight: 300;
+			text-align: left;
+			letter-spacing: -0.5px;
+			margin-left: 40px;
+			color: rgba(255,255,255,0.3);
+			text-align: center;
+		}
+
+		&.single{
+			padding: 200px 0 100px 0;
+		}
+	}
+
 	.header{
 		font-size: 24px;
 		font-weight: 500;
 		color: white;
 		margin: 40px;
 		text-align: center;
+	}
+
+	#phones{
+		padding-bottom: 100px;
+		.flex{
+			display: flex;
+			justify-content: center;
+			.phone{
+				height: 100vh;
+				flex-shrink: 0 !important;
+			}
+
+			#bubbles{
+				position: relative;
+				flex-shrink: 0 !important;
+			}
+
+			.bubble{
+				position: absolute;
+				height: 6vh;
+				z-index: 3 !important;
+				box-shadow: 0px 40px 50px rgba(#00106D, 0.1);
+				border-radius: 100px;
+				transform: translateY(--parallax-2);
+			}
+
+			#bubble1{
+				top: 10vh;
+				left: 2vh;
+				transform: translateY(--parallax-1) !important;
+			}
+
+			#bubble2{
+				top: 20vh;
+				left: 40vh;
+			}
+
+			#bubble3{
+				top: 56vh;
+				left: 42vh;
+				transform: scale(2);
+			}
+
+			#bubble4{
+				top: 40vh;
+				left: 0vh;
+			}
+
+			#bubble5{
+				top: 60vh;
+				left: 5vh;
+			}
+
+			#bubble6{
+				top: 36vh;
+				left: 38vh;
+			}
+		}
 	}
 
 	#banner h1{
@@ -245,7 +406,6 @@
 	}
 
 	.center{
-
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -258,24 +418,43 @@
 		background-size: contain;
 		background-position: center center;
 		background-repeat: no-repeat;
+
+		&.white{
+			background-color: white;
+		}
+
+		&.black{
+			background-color: #202020;
+		}
+
+		&.scene{
+			height: 96vh;
+			width: 90vw;
+			margin: auto;
+			margin-bottom: 80px;
+			padding: 0 50px;
+			background-size: cover !important;
+			background-attachment: fixed !important;
+			background-position: center center !important;
+			border-radius: 20px;
+
+			.text{
+				width: 80vw;
+				margin: auto;
+				padding-top: 100px;
+				text-align: center;
+				h1{
+					font-family: 'Newsreader', sans-serif;
+					font-size: 48px;
+					letter-spacing: -1.2px;
+					line-height: 120%;
+					font-weight: 700;
+					margin-bottom: 20px;
+				}
+			}
+		}
 	}
 
-	.section.white{
-		background-color: white;
-	}
-
-	.section.black{
-		background-color: #202020;
-	}
-
-	.section_expo{
-		color: white;
-	}
-
-	.section_expo h1{
-		font-size: 38px;
-		letter-spacing: -0.3px;
-	}
 
 	#down{
 		background: #ffce00;
@@ -366,34 +545,6 @@
 		border-radius: 5px;
 	}
 
-
-	/**/
-	.section_expo h1{
-		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
-		font-size: 50px;
-		font-weight: 600;
-		text-align: left;;
-		letter-spacing: -2px;
-		margin-bottom: 20px;
-		margin-left: 40px;
-		text-align: center;
-	}
-
-	.section_expo h2{
-		font-family: 'Libre Baskerville', sans-serif;
-		font-size: 18px;
-		font-weight: 300;
-		text-align: left;
-		letter-spacing: -0.5px;
-		margin-left: 40px;
-		color: rgba(255,255,255,0.3);
-		text-align: center;
-	}
-
-	.section_expo{
-		text-align: center;
-		padding: 80px 0 50px 0;
-	}
 
 	.title{
 		font-weight: 900;
@@ -523,26 +674,18 @@
 		background-size: cover;
 		background-position: center center;
 		display: flex;
-		justify-content: flex-start;
+		justify-content: center;
 		align-items: center;
 		padding: 60px;
 
-		#laptop{
-			position: absolute;
-			top: 70px;
-			right: 100px;
-			width: 50vw;
+		#hero{
+			width: 68vw !important;
+			height: 44vw !important;
+			transform: translate(-230px, var(--parallax-1));
+			margin-right: -28vw;
+			margin-top: 60px;
 
-			transform: translateY(var(--parallax-1));
-		}
-
-		#phone{
-			position: absolute;
-			top: 120px;
-			right: 50px;
-			width: 16vw;
-			z-index: 3 !important;
-			transform: translateY(var(--parallax-2));
+			animation: slide 0.6s ease;
 		}
 
 		#mast{
@@ -552,7 +695,7 @@
 			margin-bottom: 50px;
 			width: 40vw;
 			h1{
-				font-size: 80px !important;
+				font-size: 6vw !important;
 				line-height: 100%;
 				letter-spacing: -2px;
 				margin-bottom: 50px;
@@ -563,21 +706,14 @@
 
 	}
 
-	#hero{
-		width: 60vw !important;
-		height: 36vw !important;
-		margin-right: -30px;
-		aspect-ratio: 1.7 !important;
-	}
-
 	@keyframes slide{
 		from{
 			opacity: 0;
-			transform: translate(100px, 120px);
+			transform: translate(-200px, 200px) scale(0.7);
 		}
 		to{
 			opacity: 1;
-			transform: rotate(-10deg) translate(30px, 150px);
+			transform: translate(-200px, var(--parallax-1));
 		}
 	}
 
@@ -782,12 +918,32 @@
 			justify-content: center !important;
 		}
 
-		#splash img{
-			position: inline !important;
-			height: 36vh !important;
-			width: 18vh !important;
-			transform: translateY(-20px) rotate(-5deg) !important;
-			margin-bottom: 40px;
+		.section{
+			.section_expo{
+				width: 80vw;
+				margin: auto;
+				h1{
+					font-size: 36px;
+					margin: 0;
+					margin-bottom: 24px;
+					letter-spacing: -1.2px;
+				}
+				h2{
+					font-size: 16px;
+					margin: 0;
+				}
+			}
+			&.scene{
+				margin-bottom: 20px;
+				.text{
+					width: 100%;
+					padding-top: 60px;
+					line-height: 110%;
+					h1{
+						font-size: 32px;
+					}
+				}
+			}
 		}
 
 		#form{

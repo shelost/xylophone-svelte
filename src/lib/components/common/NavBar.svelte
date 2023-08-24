@@ -102,17 +102,17 @@
 
 	#navbar{
 		height: 64px;
-		top: 10px;
-		left: 20px;
-		position: fixed;
+		top: 0px;
+		left: 0px;
+		/*position: fixed;*/
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 20px 20px;
 		color: white;
-		width: calc(100vw - 40px);
+		width: 100vw;
 		backdrop-filter: blur(15px);
-		border-radius: 10px;
+
 		background: #171717;
 		box-shadow: 0px 20px 50px rgba(black, 0.9) !important;
 		z-index: 6 !important;

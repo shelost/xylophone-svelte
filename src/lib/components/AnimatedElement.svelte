@@ -10,6 +10,7 @@
     export let text;
     export let color;
     export let options;
+    export let image;
 
     onMount(() => {
 
@@ -50,6 +51,7 @@
   >
     {#if isInView}
       <div in:fade class="box">
+        <img src = '{image}' alt = 'Animated Image'>
         <p style='color: {color}; font-size: {options.font_size}px; text-align: {options.justify}'>
           {text}
         </p>
