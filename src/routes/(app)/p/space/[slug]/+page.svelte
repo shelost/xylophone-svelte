@@ -517,12 +517,21 @@ let added = false
     height: 200px;
   }
 
+  #app{
+     text-align: center;
+  }
+
   #banner{
     height: 200px;
   }
 
+
+  :global(.note){
+    width: 100%;
+  }
+
   .scroll{
-    margin-top: -100px;
+    margin-top: -100px !important;
   }
 
   #app{
@@ -541,10 +550,18 @@ let added = false
     width: 90vw;
     font-size: 40px;
     line-height: 120%;
+    text-align: center !important;
+    margin-bottom: -50px !important;
+  }
+
+  #subtitle{
+    text-align: center;
   }
 
   .mast{
+    width: 100%;
     margin-top: -40px;
+    align-items: center;
   }
 
   .secs{
@@ -553,6 +570,7 @@ let added = false
 
   #description{
     width: 85vw;
+    text-align: center;
   }
 
   #banner{
