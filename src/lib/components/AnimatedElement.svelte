@@ -14,18 +14,6 @@
 
     onMount(() => {
 
-      setTimeout(() => {
-        document.getElementsByClassName('wrapper')[0].onclick = highlight
-
-        function highlight() {
-          document.getElementsByClassName('wrapper')[0].classList.toggle('highlight')
-          dispatch('highlight', text); // emit the delete event with the space id.
-
-
-          console.log('yo')
-        }
-      }, 1000);
-
 
     $: for (let i=0; i<document.getElementsByClassName('wrapper').length; i++){
 
@@ -33,8 +21,8 @@
 
       wrapper.onclick = () => {
         wrapper.classList.toggle('highlight')
+        dispatch('highlight', text);
       }
-
     }
 
     })
@@ -51,7 +39,9 @@
   >
     {#if isInView}
       <div in:fade class="box">
+        {#if image}
         <img src = '{image}' alt = 'Animated Image'>
+        {/if}
         <p style='color: {color}; font-size: {options.font_size}px; text-align: {options.justify}'>
           {text}
         </p>
@@ -63,9 +53,9 @@
 
     .wrapper {
         margin-top: 30px;
-        padding: 30px;
-        border-radius: 5px;
-        transition: 0.2s ease;
+        padding: 20px;
+        border-radius: 15px;
+        transition: 0.1s ease;
         cursor: pointer;
         &.highlight{
         }

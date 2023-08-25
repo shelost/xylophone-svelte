@@ -30,6 +30,7 @@
   let notes = writable([])
 
   let scrolling = false
+  let full = false
 
   async function setElems(){
     let updatedElems = []
@@ -361,8 +362,6 @@
 
     <div id = 'col' class = 'col'  style='background: {space.color} !important;'>
 
-
-
       <a href = '../'>
         <div id = 'back'>
           <svg width="16" height="21" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -423,14 +422,12 @@
           </div>
         </div>
 
-
         <div class = 'option'>
           <p> Spacing </p>
           <div class="slide_container">
             <input type="range" min="0" max="100" bind:value={OPTIONS.spacing} class="slider" id="spacing">
           </div>
         </div>
-
 
         <div class = 'option'>
           <p> Speed </p>
@@ -439,23 +436,13 @@
           </div>
         </div>
 
-
-        <!--
-        <div class = 'option'>
-          <p> Simplify </p>
-          <div class="slide_container">
-            <input type="range" min="0" max="3"  bind:value={OPTIONS.simplify} class="slider" id="simplify">
-          </div>
-        </div>
-        -->
-
       </div>
     </div>
 
 
     <div id = 'center'  style='background: {space.color} !important;'>
 
-      <section id = 'scroll' style="overflow-y: auto;">
+      <section id = 'scroll' style="overflow-y: auto;" class:full={scrolling}>
 
 
         <div id = 'scrollable'>
@@ -474,7 +461,16 @@
           {#each $elems as elem}
             <div class = 'elem' style='margin-top:{OPTIONS.spacing}px'>
 
-            <AnimatedElement options= {OPTIONS} text={elem.content} color={space.secondary}></AnimatedElement>
+            <AnimatedElement
+              options= {OPTIONS}
+              text={elem.content}
+              color={space.secondary}
+              on:highlight={(e) => {
+                console.log(e)
+                console.log(e.detail)
+              }
+              }
+            ></AnimatedElement>
           </div>
           {/each}
 
@@ -587,7 +583,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
   ::-webkit-scrollbar{
-    width: 5px;
+    width: 0;
     height: 0;
   }
 
@@ -726,8 +722,8 @@
     cursor: pointer;
 
     svg{
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
     }
 
     &:hover{
@@ -1172,8 +1168,19 @@
       border-radius: 10px;
       overflow-x: hidden;
       overflow-y: scroll;
+      background: white;
       box-shadow: 0px 30px 100px rgba(black, 0.2);
       padding: 0;
+      transition: 0.3s ease;
+
+      &.full{
+        width: 100vw !important;
+        left: 0vw !important;
+        top: 0vw !important;
+        transform: translateY(-15px) !important;
+        height: 100vh;
+
+      }
 
       #scrollable{
         position: relative;
@@ -1182,6 +1189,7 @@
         width: calc(100vw - 500px);
         overflow-x: hidden;
         background: white;
+         transition: 0.3s ease;
 
         #coverx{
           width: calc(100vw - 480px);
@@ -1196,6 +1204,9 @@
       }
     }
   }
+
+
+
 
 
 

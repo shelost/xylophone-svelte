@@ -287,7 +287,9 @@
             {#if !page}
               <div class="handle" data-sortable-handle> ☰ </div>
             {/if}
+
             <div class="note_icon" style='background-image:url({data.icon})'></div>
+            <h3 class = 'note_index'> {note.index + 1} </h3>
             <h1 class="note_title">{note.title}</h1>
           </div>
         </a>
@@ -301,13 +303,9 @@
 
 
 
-<style>
+<style lang="scss">
       /* Note */
 
-
-      .note_index{
-        width: 10px;
-      }
 
 
       button{
@@ -343,16 +341,22 @@
         padding-bottom: 50px;
       }
 
+      .note_index{
+        color: rgba(black, 0.4);
+        margin-right: 2px;
+        text-align: center;
+      }
+
       .note{
         width: 100%;
-        background: rgba(0,0,0,0.05);
-        border-radius: 8px;
+        background: rgba(0,0,0,0.04);
+        border-radius: 5px;
         color: black !important;
-        padding: 20px;
-        padding-left: 25px;
+        padding: 15px;
+        padding-left: 20px;
         transform: none;
         transition: 0.2s ease;
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         gap: 25px;
         display: flex;
         align-items: center;
@@ -361,12 +365,12 @@
       }
 
       .note_icon{
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         flex-shrink: 0;
         background-size: cover;
         background-position: center center;
-        border-radius: 5px;
+        border-radius: 3px;
         margin-right: 5px;
       }
 
@@ -381,7 +385,7 @@
 
       .note_title{
           font-size: 16px;
-          font-weight: 400;
+          font-weight: 500;
           width: 300px;
           line-height: 130%;
           letter-spacing: -0px;

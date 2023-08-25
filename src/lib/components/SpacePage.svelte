@@ -265,6 +265,32 @@ function togglePlay() {
           </div>
 
 
+          <!-- Banner -->
+
+          <div id="banner-container" class = 'container'>
+
+            <h1 class = 'section_title'> Banner </h1>
+
+            <div class = 'box'>
+
+              <img id="banner" class = 'file' src={data.banner} alt="Banner Image" />
+
+              <label id = 'banner-upload-container' class = 'upload-container'>
+                <input
+                  type="file"
+                  id="banner-upload"
+                  accept="image/*"
+                  on:change={(event) => handleFileUploadThrottled(event, 'banner')}
+                />
+                Upload File
+                </label>
+
+              </div>
+
+          </div>
+
+
+
 
           <!-- Mast -->
 
@@ -452,6 +478,10 @@ function togglePlay() {
         height: 150px;
       }
       #cover-upload{
+        display: none;
+      }
+
+      #banner-upload{
         display: none;
       }
 

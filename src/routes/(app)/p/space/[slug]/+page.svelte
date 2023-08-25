@@ -16,10 +16,10 @@
         setTimeout(() => {
 
           adjustTextareaHeight(document.getElementById('title'))
-        adjustTextareaHeight(document.getElementById('subtitle'))
-        adjustTextareaHeight(document.getElementById('description'))
+          adjustTextareaHeight(document.getElementById('subtitle'))
+          adjustTextareaHeight(document.getElementById('description'))
 
-        }, 100);
+        }, 500);
 
         window.onresize = () => {
           adjustTextareaHeight(document.getElementById('title'))
@@ -104,7 +104,7 @@
       const textarea = div
       if (div){
         textarea.style.height = '0px'
-        textarea.style.height = Math.ceil(textarea.scrollHeight) + 'px'; // Adjust rows based on content
+        textarea.style.height = Math.ceil(textarea.scrollHeight) + 30 + 'px'; // Adjust rows based on content
 
       }
     }
@@ -196,17 +196,18 @@ let added = false
     </div>
   </div>
 
-  <img id="banner" src={data.banner} alt="Space Banner" />
-
   <div class = 'flex'>
+
+    <div id = 'banner' style='background-image: url({data.banner})'> </div>
 
   <!-- Mast -->
   <div class="mast">
 
-     <!-- Banner -->
+    <!-- Banner -->
 
-     <img id="icon" src={data.icon} alt="Scrollable Icon" />
 
+
+    <img id="icon" src={data.icon} alt="Scrollable Icon" />
 
     <div class="expo">
       <textarea id="title" bind:value={data.title}
@@ -218,21 +219,10 @@ let added = false
                 on:change={updateSpace}
                 on:input|preventDefault={adjustTextareaHeightEvent} disabled></textarea>
 
-                <!--
-
-
-              {#if added}
-                <button id = 'remove' class = 'corner'> Remove </button>
-            {:else}
-                <button id = 'add' class = 'corner'> + Add  </button>
-            {/if}
-            -->
-
     </div>
 
 
     <div class = 'secs'>
-
 
       <div class = 'sec'>
         <h1> Description </h1>
@@ -243,10 +233,6 @@ let added = false
             on:input|preventDefault={adjustTextareaHeightEvent} disabled></textarea>
       </div>
 
-      <!--
-      <button id = 'start'> Begin Reading </button>
-      -->
-
     </div>
 
   </div>
@@ -256,9 +242,6 @@ let added = false
     <h1 class="header"> Chapters </h1>
     <Notes {data} page = {true} icon={data.icon} />
   </div>
-
-
-
 
 </div>
 </div>
@@ -331,6 +314,7 @@ let added = false
 .flex{
   display: flex;
   gap: 60px;
+  margin-top: 100px;
 }
 
 .pill{
@@ -342,7 +326,6 @@ let added = false
 .c{
   width: 20px;
   height: 20px;
-  border-radius: 5px;
   border: 1px solid rgba(255,255,255,0.3);
 }
 
@@ -379,13 +362,6 @@ let added = false
     }
 
 
-    #banner-container .upload-container{
-      bottom: 20px;
-      right: 100px;
-      z-index: 9 !important;
-    }
-
-
     /* Cover */
 
     #cover-container{
@@ -419,7 +395,6 @@ let added = false
 
     #cover{
       height: 150px;
-      border-radius: 10px;
     }
 
     #cover-container:hover .upload-container{
@@ -428,18 +403,19 @@ let added = false
 
     #banner {
       position: absolute;
-      top: 40px;
+      top: 0px;
       left: 0px;
-      width: 100vw;
-      height: 250px;
+      width: calc(100vw - 240px);
+      height: 300px;
       transition: 0.2s ease;
-      display: none;
+      background-size: cover !important;
+      border-radius: 0;
     }
 
     #icon{
       width: 200px;
-      border-radius: 15px;
-
+      border-radius: 10px;
+      box-shadow: 0px -10px 40px rgba(black, 0.3);
     }
 
     .expo{
@@ -462,7 +438,6 @@ let added = false
       cursor: pointer;
       opacity: 0;
       z-index: 10 !important;
-      border-radius: 5px;
       text-align: center;
       transition: 0.2s ease;
       font-weight: 500;
@@ -490,15 +465,18 @@ let added = false
     }
 
     #title{
-        font-family: 'Manrope', 'Inter', sans-serif;
+        font-family: 'Newsreader', 'Manrope', 'Inter', sans-serif;
         font-size: 60px;
-        font-weight: 900;
-        margin-bottom: 20px;
+        font-weight: 700;
+        margin-bottom: -20px;
         margin-top: 30px;
-        letter-spacing: -2.5px;
-        line-height: 100%;
+        letter-spacing: -2px;
+        line-height: 90%;
         height: 54px;
+        padding: 10px 0;
         width: 100%;
+        transition: 0.2s ease;
+        overflow: visible !important;
     }
 
     #description{
@@ -521,6 +499,7 @@ let added = false
 
     .scroll{
       flex: 1 !important;
+      margin-top: 180px !important;
     }
 
     .secs{

@@ -84,7 +84,6 @@
 
 </script>
 
-
 <div id = 'app'>
 	<section in:fly={{ x: -200, duration: 300, delay: 300 }}
 	out:fly={{ x: 200, duration: 300 }}>

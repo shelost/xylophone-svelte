@@ -107,19 +107,14 @@
 
 	onMount(()=>{
 		fetchSpaces()
-
 		fetchNotes()
 
-
 		let ratio = 0
-
 		let app = document.getElementById('app')
 
 		let loop = () => {
 
 			ratio = app.scrollTop / document.body.scrollHeight
-
-
 			app.style.setProperty('--parallax-1', ratio * 0.6 * -160 + 'px')
 			app.style.setProperty('--parallax-2', ratio * 3 * -160 + 'px')
 			app.style.setProperty('--parallax-3', ratio * 1.6 * -160 + 150 + 'px')
@@ -128,7 +123,6 @@
 		}
 		window.requestAnimationFrame(loop)
 	})
-
 
 
 </script>
@@ -681,7 +675,7 @@
 		#hero{
 			width: 68vw !important;
 			height: 44vw !important;
-			transform: translate(-230px, var(--parallax-1));
+			transform: translate(-200px, var(--parallax-1));
 			margin-right: -28vw;
 			margin-top: 60px;
 
@@ -709,7 +703,7 @@
 	@keyframes slide{
 		from{
 			opacity: 0;
-			transform: translate(-200px, 200px) scale(0.7);
+			transform: translate(-150px, 200px) scale(0.7);
 		}
 		to{
 			opacity: 1;
