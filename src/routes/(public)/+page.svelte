@@ -143,8 +143,12 @@
 		<div id = 'mast'>
 
 			<h1>
-				Your Ultimate Reading App.
+				Your Web Studio.
 			</h1>
+
+			<p>
+				Create sites, games, and experiences seamlessly.
+			</p>
 
 			<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
 				<input id = 'email' name = 'Email' type = 'email' placeholder = 'your@email.com' required>
@@ -226,9 +230,15 @@
 
 
 
-	<h3 class = 'header'  in:fly="{{ y: 200, duration: 500, delay: 200 }}"> Recent Releases <h3>
-
 	<div class = 'section'  in:fly="{{ y: 200, duration: 500, delay: 200 }}">
+
+
+		<div class = 'section_expo'>
+			<h1> Recent Releases  </h1>
+			<h2> Revisit the classics. </h2>
+		</div>
+
+
 		<div id = 'spaces'>
 			{#each $spaces as space}
 				<Space {space} page={true} text={false}/>
@@ -449,7 +459,6 @@
 		}
 	}
 
-
 	#down{
 		background: #ffce00;
 		position: absolute;
@@ -599,11 +608,11 @@
 
 	#spaces{
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
 		flex-wrap: wrap;
 		gap: 30px;
-		padding: 30px;
+		padding-bottom: 50px;
 	}
 
 	#app{
@@ -892,6 +901,12 @@
 			background-image: linear-gradient(to bottom left, #A1EEFF, #A1FFE9) !important;
 		}
 
+
+	:global(section){
+		width: 38vw;
+	}
+
+
 		#banner h1{
 			width: 100vw;
 			font-size: 50px;
@@ -929,6 +944,7 @@
 			}
 			&.scene{
 				margin-bottom: 20px;
+				background-attachment: local !important;
 				.text{
 					width: 100%;
 					padding-top: 60px;

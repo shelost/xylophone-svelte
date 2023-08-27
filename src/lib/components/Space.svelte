@@ -1,11 +1,12 @@
 <script lang="ts">
     import { supabaseClient } from '$lib/db';
 	import { scale } from "svelte/transition";
-    import { createEventDispatcher, onMount } from 'svelte';
+    import { createEventDispatcher, onMount, } from 'svelte';
+    import { writable } from 'svelte/store'
     import type { PageData, Task } from '../../routes/$types';
     //import { loadStripe } from '@stripe/stripe-js'
-  import { Elements } from 'svelte-stripe'
-  import { env } from '$env/dynamic/public'
+    import { Elements } from 'svelte-stripe'
+    import { env } from '$env/dynamic/public'
 
     import Stripe from 'stripe';
     export let space;
@@ -14,6 +15,7 @@
     export let text = true
     let user = {}
     let userData = {}
+    let notes = writable([])
     let added = false
     let stripe = null
 
@@ -63,7 +65,6 @@
 
     async function updateUser(){
 
-        console.log(data)
         const { data: updatedData, error } = await supabaseClient
         .from('user_data')
         .update({
@@ -78,6 +79,23 @@
         console.error('Error updating user', error);
       }
     }
+
+    async function fetchNotes(){
+
+        const { data : k, error: e} = await supabaseClient
+            .from('notes') // Update the table name to 'profiles'
+            .select('*') // Fetch all columns for the active user
+            .eq('space_id', space.id) // Use the user.id to fetch data for the active user
+        if (!e) {
+            notes.set(k)
+            console.log($notes)
+        } else {
+            console.error('Error fetching user data:', e);
+        }
+    }
+
+
+    fetchNotes()
 
     async function handlePayment() {
 
@@ -140,7 +158,6 @@
 </script>
 
 
-
 {#if page}
 
     {#if shop}
@@ -157,8 +174,8 @@
                 <div class = 'expo'>
                     <h1> {space.title} </h1>
                     <h2> {space.subtitle} </h2>
-                    <div id="card-element"></div>
 
+                    <div id="card-element"></div>
 
                     {#if stripe}
                     <Elements {stripe}>
@@ -166,27 +183,16 @@
                     </Elements>
                     {/if}
 
-
-
-                    <!--
-                    <button id = 'pay' on:click={handlePayment} on:click = {()=> {console.log('yo')}}> Pay ${space.price}</button>
--->
-
-
                     {#if added}
                     <button id = 'remove' class = 'corner' on:click={removeBook}> Remove </button>
                 {:else}
                     <button id = 'add' class = 'corner' on:click={addBook}> + Add  </button>
                 {/if}
 
-
                 </div>
             {/if}
 
-
-
         </section>
-
 
     {:else}
 
@@ -199,14 +205,13 @@
             </div>
         </a>
 
-            {#if text}
-                <div class = 'expo'>
-                    <h1> {space.title} </h1>
-                    <h2> {space.subtitle} </h2>
-                </div>
-            {/if}
-        </section>
+        <div class = 'expo'>
+            <h1> {space.title} </h1>
+            <h2> {space.subtitle} </h2>
+            <h3> {$notes.length} Chapters </h3>
+        </div>
 
+    </section>
 
     {/if}
 
@@ -224,6 +229,7 @@
             <div class = 'expo'>
                 <h1> {space.title} </h1>
                 <h2> {space.subtitle} </h2>
+
             </div>
         {/if}
 

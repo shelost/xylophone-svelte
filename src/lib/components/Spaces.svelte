@@ -91,7 +91,7 @@
         flex-wrap: wrap;
         gap: 25px 25px;
         justify-content: flex-start;
-        align-items: flex-start;
+        align-items: flex-start !important;
         padding-top: 30px;
         padding-bottom: 100px !important;
     }

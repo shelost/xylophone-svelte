@@ -49,7 +49,7 @@
 		</a>
 		-->
 
-		<a href = '/create' id = 'create' >
+		<a href = '/studio' id = 'create' >
 			<div class = 'text-btn' class:active={path === '/create'}>
 				<div class = 'icon' style = 'background-image: url({IconCreate})'>
 				</div>

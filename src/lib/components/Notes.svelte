@@ -359,8 +359,8 @@
         margin-bottom: 15px;
         gap: 25px;
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: flex-start !important;
         cursor: pointer;
       }
 
@@ -390,6 +390,8 @@
           line-height: 130%;
           letter-spacing: -0px;
           color: black;
+          text-align: left;
+
       }
 
       .note p{

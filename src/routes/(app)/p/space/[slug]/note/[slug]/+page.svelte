@@ -114,6 +114,19 @@
 
   fetchNotes()
 
+  function formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  }
+
+
+
   async function getAdjacentNotes(){
 
     for (let i=0; i<$notes.length; i++){
@@ -160,8 +173,6 @@
     const ELEMS = data.body.split('\n');
 
 
-
-
     function togglePlay() {
 
 
@@ -190,11 +201,19 @@
 
     }
 
+
     setTimeout(() => {
 
       Id('music').onclick = togglePlay
 
       Id('menu').onclick = toggleChapters
+
+
+      Id('time').innerHTML = formatAMPM(new Date)
+    setInterval(()=> {
+      Id('time').innerHTML = formatAMPM(new Date)
+    }, 60000)
+
 
       let audio = Id("audio")
 
@@ -445,6 +464,9 @@
       <section id = 'scroll' style="overflow-y: auto;" class:full={scrolling}>
 
 
+
+        <h3 id = 'time'> 9:47 AM </h3>
+
         <div id = 'scrollable'>
 
           <canvas id = 'canvas'></canvas>
@@ -454,6 +476,8 @@
 
           <img id = 'coverx' class = 'desktop' src = {space.cover} alt = 'Cover Image'>
 
+
+          <img id = 'head' src = {space.icon} alt = 'Scrollable Icon'>
 
           <h2 id = 'chapter_num'> CHAPTER {data.index+ 1} </h2>
           <h1 id = 'chapter_title'> {data.title} </h1>
@@ -933,12 +957,13 @@
   }
 
   #chapter_title{
+    font-family: 'Newsreader', sans-serif;
     font-size: 36px;
     line-height: 100%;
-    font-weight: 800;
+    font-weight: 700;
     margin: 40px auto;
     margin-bottom: 100px;
-    letter-spacing: -0.4px;
+    letter-spacing: -1px;
     color: black !important;
     text-align: center;
     width: 80%;
@@ -952,6 +977,14 @@
   button{
     background: black;
     color: white;
+  }
+
+  #head{
+    width: 250px !important;
+    margin: auto;
+    margin-top: 50px;
+    border-radius: 10px;
+    box-shadow: 0px 15px 50px rgba(black, 0.2);
   }
 
   #header{
@@ -1158,7 +1191,6 @@
 
     #scroll{
       display: flex;
-      flex-direction: column;
       align-items: center;
       width: calc(100vw - 500px);
       height: calc(100vh - 35px);
@@ -1180,6 +1212,18 @@
         transform: translateY(-15px) !important;
         height: 100vh;
 
+      }
+
+      h3{
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -0.4px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(black, 0.05);
+        padding: 10px 20px;
+        border-radius: 50px;
       }
 
       #scrollable{
@@ -1285,15 +1329,13 @@
     }
   }
 
-
-
   textarea:focus {
     @apply ring-0;
   }
 
   :global(#navbar){
-    display: none !important;
-    }
+    display: none;
+  }
 
   @media screen and (max-width: 800px){
 
@@ -1313,7 +1355,6 @@
       z-index: 4 !important;
       transition: 0.2s ease;
     }
-
     .active{
         background: red;
         top: 10vh !important;
@@ -1325,17 +1366,14 @@
     }
 
     #col{
-      display: flex !important;
-      justify-content: space-between;
-      align-items: center !important;
-      gap: 20px;
-      height: 50px;
-      width: 100vw !important;
-      position: fixed !important;
-      left: 0 !important;
-      top: 0;
-      z-index: 5 !important;
-
+      position: fixed;
+      height: 90vh;
+      width: 100vw;
+      top: 95vh;
+      left: 0;
+      background: yellow;
+      z-index: 4 !important;
+      transition: 0.2s ease;
     }
 
     #buttons{
@@ -1398,8 +1436,9 @@
 
     #music{
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 1vw;
+      left: 2.5vw;
+      width: 95vw;
       display: block;
     }
 

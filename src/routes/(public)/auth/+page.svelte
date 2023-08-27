@@ -20,6 +20,10 @@
 
 </script>
 
+
+<div id = 'app'>
+
+
 <section class="columns max-w-xl mx-auto">
 	<div class="column is-half is-offset-one-quarter card">
 		<h1>{isRegister ? 'Sign up' : 'Log In'}</h1>
@@ -90,8 +94,9 @@
 	</div>
 </section>
 
+</div>
 
-<style>
+<style lang="scss">
 
 	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
@@ -122,9 +127,10 @@
 	}
 
 	h1{
-		font-family: 'Libre Baskerville', sans-serif;
-		font-size: 24px;
-		font-weight: 400;
+		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
+		font-size: 32px;
+		font-weight: 600;
+		letter-spacing: -0.5px;
 		margin-bottom: 50px;
 	}
 
@@ -132,18 +138,23 @@
 		width: 300px;
 	}
 
-	section{
-		margin-top: 200px;
-		padding: 50px;
-		border-radius: 20px;
-		background: white;
-		box-shadow: 0px 20px 50px rgba(0,0,0,0.05);
-
+	#app{
+		width: 100vw !important;
+		height: 100vh;
+		color: white;
+		background: #151515;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		text-align: center;
+	}
+
+	section{
+		background: #151515;
+		box-shadow: 0px 50px 100px rgba(black, 0.6);
+		padding: 50px;
+		border-radius: 30px;
 	}
 
 

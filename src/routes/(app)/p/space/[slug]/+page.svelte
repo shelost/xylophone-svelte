@@ -517,6 +517,10 @@ let added = false
     height: 200px;
   }
 
+  :global(#navbar){
+    display: block !important;
+    }
+
   #app{
      text-align: center;
   }
