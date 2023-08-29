@@ -9,8 +9,6 @@ export async function load({ params }) {
         .eq('id', params.slug)
         .single();
 
-
-
         return note
 
 	} catch (e) {

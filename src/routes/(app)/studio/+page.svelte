@@ -20,6 +20,7 @@
             <button id="addImage">Add Image</button>
             <button id="addVideo">Add Video</button>
             <button id="downloadJSON">Download </button>
+             <button id="upload"> Upload </button>
         </div>
 
 
@@ -57,6 +58,7 @@
         height: 100vh;
         width: calc(100vw - 480px);
         background: white;
+        flex-shrink: 0;
     }
 
     #floatingOptions{
@@ -112,13 +114,20 @@
         overflow-x: hidden;
 
         overflow-y: scroll;
-
-
     }
 
-    #canvas {
-        flex-shrink: 0;
+
+    @media screen and (max-width: 800px){
+
+        #container{
+            width: calc(100vw - 240px) !important;
+        }
+
+        #canvas{
+            width: calc(100vw - 240px) !important;
+        }
     }
+
 
 </style>
 
@@ -129,62 +138,52 @@
 
 import {onMount} from 'svelte'
 import {fabric} from 'fabric'
+import {supabaseClient} from '$lib/db'
 
 
 onMount(()=> {
     // Initialize fabric.js canvas
 
     let initialCanvasWidth = window.innerWidth - 480;  // Initial canvas width, 250 is the panel width
-let initialCanvasHeight = window.innerHeight;  // Initial canvas height
+    let initialCanvasHeight = window.innerHeight;  // Initial canvas height
 
-
-
-const canvas = new fabric.Canvas('canvas', {
-  width: initialCanvasWidth,
-  height: initialCanvasHeight,
-  // ...other options
-});
-
-
+    const canvas = new fabric.Canvas('canvas', {
+        width: initialCanvasWidth,
+        height: initialCanvasHeight,
+    });
 
     canvas.renderAll()
     canvas.calcOffset();
 
-
     window.onresize = debounce(() => {
-    const panelWidth = 250;
-    const newWidth = window.innerWidth - panelWidth;
-    const scaleX = newWidth / initialCanvasWidth;
+        const panelWidth = 250;
+        let newWidth = window.innerWidth - panelWidth;
 
-    // Scale each object
-    canvas.forEachObject((object) => {
-        object.left *= scaleX;
-        object.scaleX *= scaleX;
-        object.top *= scaleX;
-        object.scaleY *= scaleX;
-        object.setCoords();
-    });
-
-    // Update canvas dimensions
-    canvas.setWidth(newWidth);
-    canvas.setHeight(initialCanvasHeight * scaleX);
-    canvas.renderAll();
-
-    // Update the bottom position to extend canvas if required
-    let bottomMost = 0;
-    canvas.forEachObject((object) => {
-        const bottom = object.top + object.height * object.scaleY;
-        if (bottom > bottomMost) {
-            bottomMost = bottom;
+        if (window.innerWidth < 800){
+            newWidth = window.innerWidth
+            console.log(newWidth)
         }
-    });
+        const scaleX = newWidth / initialCanvasWidth;
+
+        // Scale each object
+        canvas.forEachObject((object) => {
+            object.left *= scaleX;
+            object.scaleX *= scaleX;
+            object.top *= scaleX;
+            object.scaleY *= scaleX;
+            object.setCoords();
+        });
+
+        // Update canvas dimensions
+        canvas.setWidth(newWidth);
+        canvas.setHeight(initialCanvasHeight * scaleX);
+        canvas.renderAll();
+
 
     calculateGrid()
     drawGrid()
 
-    if (bottomMost > canvas.getHeight()) {
-        canvas.setHeight(bottomMost);
-    }
+
 
     // Update initial dimensions
     initialCanvasWidth = newWidth;
@@ -400,7 +399,7 @@ function drawGrid(){
     }
 }
 
-
+calculateGrid()
 drawGrid()
 
 
@@ -561,25 +560,15 @@ canvas.on('object:moving', function(event) {
   const obj = event.target;
   const canvasWidth = canvas.getWidth();
   const canvasHeight = canvas.getHeight();
-  const buffer = 200; // distance from edge to start expanding canvas
-
-  /*
-  // Extend Canvas Width
-  if ((obj.left + obj.width) > (canvasWidth - buffer)) {
-    canvas.setWidth(canvasWidth + buffer);
-  }
-  */
+  const buffer = 50; // distance from edge to start expanding canvas
 
   // Extend Canvas Height
   if ((obj.top + obj.height) > (canvasHeight - buffer)) {
     canvas.setHeight(canvasHeight + buffer);
   }
 
-  // Redraw the grid, if you need to
-  // ... (your grid drawing code here)
-
-
-
+  calculateGrid()
+  drawGrid()
 
 });
 
@@ -601,9 +590,25 @@ document.addEventListener('wheel', function(event) {
 
 
 
-
-
 ////////
+
+async function saveCanvasToSupabase() {
+    // Serialize the current canvas state
+    const canvasState = JSON.stringify(canvas);
+
+    // Save to Supabase
+    const { data, error } = await supabaseClient
+        .from('pages')
+        .insert([
+            { content: canvasState }
+        ]);
+
+    if (error) {
+        console.error('Error saving canvas: ', error);
+    } else {
+        console.log('Canvas saved successfully: ', data);
+    }
+}
 
 
 function downloadCanvasAsJSON() {
@@ -613,9 +618,14 @@ function downloadCanvasAsJSON() {
   // Create a Blob from the JSON string
   const blob = new Blob([json], { type: 'application/json' });
 
+  let url = URL.createObjectURL(blob);
+
+  console.log(url)
+  console.log(blob)
+
   // Create an anchor element and set its attributes
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  a.href = url
   a.download = 'canvas.json';
 
   // Append the anchor to the DOM and simulate a click to start the download
@@ -629,6 +639,7 @@ function downloadCanvasAsJSON() {
 
 // You can bind this function to a button click or some other event
 document.getElementById('downloadJSON').addEventListener('click', downloadCanvasAsJSON);
+document.getElementById('upload').addEventListener('click', saveCanvasToSupabase);
 
 })
 

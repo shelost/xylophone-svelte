@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { writable } from 'svelte/store'
 	import { fade } from 'svelte/transition'
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
@@ -9,11 +10,52 @@
 	import IconShop from '$lib/img/icon_shop.svg'
 	import { page } from '$app/stores';
 	import { fly } from 'svelte/transition';
+	import { supabaseClient } from '$lib/db'
 	export let data
 
 	let path;
 
-	$:  path = $page.route.id.substring(6)
+
+	let newID = crypto.randomUUID()
+
+	$: if ($page && $page.route && $page.route.id) {
+		path = $page.url.pathname
+		console.log(path)
+	}
+
+	console.log($page.url.pathname)
+
+	let pages = writable([])
+
+
+	async function fetchPages(){
+
+		const {data: d, error} = await supabaseClient.from('pages').select('*')
+
+		if (!error){
+			pages.set(d)
+			console.log(d)
+		}else{
+			console.log('Error fetching pages:' + error)
+		}
+	}
+
+
+	async function addPage(){
+
+		const {data: d, error} = await supabaseClient.from('pages').insert({
+			id: newID
+		})
+		newID = crypto.randomUUID()
+
+		if (!error){
+
+		}else{
+			console.log('Error creating page:' + JSON.stringify(error))
+		}
+	}
+
+	fetchPages()
 
 </script>
 
@@ -67,6 +109,8 @@
 
 
 
+
+
 		<!--
 		<a href = '/subscriptions' id = 'create' >
 			<div class = 'text-btn' class:active={path === '/subscriptions'}>
@@ -78,10 +122,26 @@
 		-->
 
 
-		<!--
-		<h1 class = 'title'> Reading </h1>
 
-		<div id = 'books'>
+		<h1 class = 'title'> Pages </h1>
+
+		<div id = 'pages'>
+
+			{#each $pages as page}
+
+
+			<a href = '/x/{page.id}'>
+
+				<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
+					<img class = 'icon' src = {IconShop}>
+					<h2> {page.id} </h2>
+				</div>
+			</a>
+
+			{/each}
+
+
+			<button id = 'add' on:click={addPage}> Add Page </button>
 
 			<a href = '/p/space/meditations'>
 				<div class = 'text-btn'>
@@ -91,7 +151,7 @@
 				</div>
 			</a>
 		</div>
-		-->
+
 
 	</div>
 
@@ -182,6 +242,7 @@
       display: block;
       opacity: 1;
 	  color: white;
+	  overflow-y: scroll;
 }
 
 
