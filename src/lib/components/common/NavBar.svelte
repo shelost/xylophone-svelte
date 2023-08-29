@@ -5,6 +5,7 @@
 	import QuickLinks from '../private/QuickLinks.svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import logo from '$lib/img/scrollable.svg';
+	import X from '$lib/img/x.svg'
 
 
 	import { invalidate } from '$app/navigation';
@@ -29,7 +30,7 @@
 	<!-- Branding -->
 
 		<a href="/">
-			<img id = 'logo' src = {logo} alt = 'Scrollable Logo'>
+			<img id = 'logo' src = {X} alt = 'Scrollable Logo'>
 		</a>
 
 	<!-- Middle Section -->
@@ -109,37 +110,34 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 20px 20px;
-		color: white;
+		color: black;
 		width: 100vw;
 		backdrop-filter: blur(15px);
-
-		background: #171717;
 		box-shadow: 0px 20px 50px rgba(black, 0.9) !important;
 		z-index: 6 !important;
 	}
 
 	#logo{
-		height: 28px;
-		filter: invert(100%);
+		height: 26px;
 	}
 
 	button{
-		background:white;
-		color: black;
+		background: #FF004D;
+		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 5px;
-		padding: 6px 15px;
-		border-radius: 5px;
+		padding: 10px 20px;
+		border-radius: 30px;
 		font-size: 14px;
 		font-weight: 600;
-		box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
+		box-shadow: none;
 		transition: 0.2s ease;
 	}
 
 	button:hover{
-		background: #202020;
+		background: #ea0008;
 	}
 
 	button h1{
@@ -155,11 +153,12 @@
 	}
 
 	.text-btn{
-		color: white;
+		color: black;
 		text-decoration: none;
 		font-family: 'Inter', sans-serif;
-		font-weight: 300;
-		font-size: 14px;
+		font-weight: 500;
+		letter-spacing: -0.5px;
+		font-size: 16px;
 	}
 
 	@media screen and (max-width: 800px){

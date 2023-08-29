@@ -16,6 +16,9 @@
 	import Collection from '$lib/img/collection.png'
 	import Jagged from '$lib/img/jagged.svg'
 
+
+
+
 	import Phone1 from '$lib/img/phone-1.svg'
 	import Phone2 from '$lib/img/phone-2.svg'
 
@@ -32,11 +35,12 @@
 	import Montecristo from '$lib/img/montecristo-x.png'
 	import Mobydick from '$lib/img/mobydick-x.png'
 
+	import Paine from '$lib/img/paine.png'
+
 
 	// Create a Svelte store to hold the spaces data
 	let spaces = writable([]);
 	let notes = writable([]);
-
 
     // Fetch
 	async function fetchNotes(){
@@ -138,16 +142,18 @@
 
 	<Navbar />
 
-	<div id = 'splash' style='background-image: url({Jagged})' in:fly={{duration: 500, y: 50}}>
+	<div id = 'splash' in:fly={{duration: 500, y: 50}}>
 
 		<div id = 'mast'>
 
+			<img id = 'hero' src = '{Paine}' alt = 'Thomas Paine'>
+
 			<h1>
-				Your Web Studio.
+				Your Infinite Web Canvas.
 			</h1>
 
 			<p>
-				Create sites, games, and experiences seamlessly.
+				No more borders or boxes — create pages the way <i> you </i> want them to!
 			</p>
 
 			<form id ='form' method='POST' action='https://script.google.com/macros/s/AKfycbwjjIXz1y8mAeGv0CTSawvyctFqITZ1nXTQjo318v8_Tp1Hjf4lq3RmqbOQmUAhKi7Q/exec'>
@@ -156,8 +162,6 @@
 			</form>
 
 		</div>
-
-		<img id = 'hero' src = '{Hero}' alt = 'Hero Image'>
 	</div>
 
 
@@ -185,66 +189,6 @@
 		</div>
 	</div>
 
-
-
-
-
-	<div class = 'section_expo single'>
-	</div>
-
-
-	<div id = 'sherlock' class = 'section scene' style='background-image: url({Sherlock})'>
-		<div class = 'text'>
-			<h1> You know my methods, Watson. </h1>
-			<h2> The Adventures of Sherlock Holmes </h2>
-		</div>
-	</div>
-
-	<div id = 'pride' class = 'section scene' style='background-image: url({Pride})'>
-		<div class = 'text'>
-			<h1> It is a truth universally acknowledged... </h1>
-			<h2> Pride & Prejudice </h2>
-		</div>
-	</div>
-
-	<div id = 'republic' class = 'section scene' style='background-image: url({Republic})'>
-		<div class = 'text'>
-			<h1> I am the wisest man alive, for I know one thing, and that is that I know nothing.  </h1>
-			<h2> The Republic </h2>
-		</div>
-	</div>
-
-	<div id = 'montecristo' class = 'section scene' style='background-image: url({Montecristo})'>
-		<div class = 'text'>
-			<h1> How did I escape? With difficulty. How did I plan this moment? With pleasure. </h1>
-			<h2> The Count of Monte Cristo </h2>
-		</div>
-	</div>
-
-	<div id = 'mobydick' class = 'section scene' style='background-image: url({Mobydick})'>
-		<div class = 'text'>
-			<h1> Call me Ishmael.  </h1>
-			<h2> Moby Dick </h2>
-		</div>
-	</div>
-
-
-
-	<div class = 'section'  in:fly="{{ y: 200, duration: 500, delay: 200 }}">
-
-
-		<div class = 'section_expo'>
-			<h1> Recent Releases  </h1>
-			<h2> Revisit the classics. </h2>
-		</div>
-
-
-		<div id = 'spaces'>
-			{#each $spaces as space}
-				<Space {space} page={true} text={false}/>
-			{/each}
-		</div>
-	</div>
 
 
 	<div id = 'footer'>
@@ -280,6 +224,7 @@
 		--parallax-1: 0;
 		--parallax-2: 0;
 		--parallax-3: 0;
+		color: black !important;
 	}
 
 	#banner{
@@ -297,7 +242,7 @@
 		text-align: center;
 		padding: 80px 0 50px 0;
 		h1{
-			font-family: 'Newsreader', sans-serif;
+			font-family: 'Inter', sans-serif;
 			color: black !important;
 			font-size: 44px;
 			font-weight: 700;
@@ -327,7 +272,6 @@
 	.header{
 		font-size: 24px;
 		font-weight: 500;
-		color: white;
 		margin: 40px;
 		text-align: center;
 	}
@@ -407,6 +351,10 @@
 		align-items: center;
 		justify-content: center;
 		background-size: cover;
+
+		p{
+			font-size: 12px;
+		}
 	}
 
 	.center{
@@ -448,7 +396,7 @@
 				padding-top: 100px;
 				text-align: center;
 				h1{
-					font-family: 'Newsreader', sans-serif;
+					font-family: 'Inter', sans-serif;
 					font-size: 48px;
 					letter-spacing: -1.2px;
 					line-height: 120%;
@@ -499,9 +447,34 @@
 		align-items: center;
 		background: white;
 		transition: 0.2s ease;
-		padding: 10px;
-		border-radius: 10px;
+		padding: 5px;
+		padding-left: 15px;
+		border-radius: 100px;
 		margin: 0;
+
+		input{
+			width: 300px;
+			font-size: 15px;
+			border-radius: 5px;
+			outline: none;
+			border: none;
+			&:focus{
+				outline: none;
+				border: none;
+			}
+		}
+
+		button{
+			background: #FF004D;
+			padding: 15px 25px;
+			font-family: 'Inter', sans-serif;
+			font-size: 14px;
+			border-radius: 100px;
+
+			&:hover{
+				background: #f0003c;
+			}
+		}
 	}
 
 	#mast h1{
@@ -513,22 +486,10 @@
 	}
 
 	#submit{
-		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
+		font-family: 'Inter', 'Libre Baskerville', sans-serif;
 		font-size: 18px;
 		font-weight: 600;
 		padding: 12px 0;
-	}
-
-
-	#form button{
-		background: black;
-		padding: 10px 20px;
-		font-family: 'Inter', sans-serif;
-		font-size: 14px;
-	}
-
-	#form button:hover{
-		background: #202020;
 	}
 
 	.form_title{
@@ -542,11 +503,7 @@
 		margin-bottom: 5px;
 	}
 
-	input{
-		width: 300px;
-		font-size: 14px;
-		border-radius: 5px;
-	}
+
 
 
 	.title{
@@ -682,28 +639,42 @@
 		padding: 60px;
 
 		#hero{
-			width: 68vw !important;
-			height: 44vw !important;
-			transform: translate(-200px, var(--parallax-1));
-			margin-right: -28vw;
+			width: 220px;
+			height: 220px;
+			transform: translate(0, var(--parallax-1));
 			margin-top: 60px;
-
+			margin-bottom: 40px;
+			border-radius: 15px;
 			animation: slide 0.6s ease;
 		}
 
 		#mast{
 			display: flex;
 			flex-direction: column;
-			align-items: flex-start;
+			align-items: center;
 			margin-bottom: 50px;
-			width: 40vw;
+
 			h1{
-				font-size: 6vw !important;
+				font-size: 70px;
+				color: black;
 				line-height: 100%;
-				letter-spacing: -2px;
-				margin-bottom: 50px;
+				letter-spacing: -3px;
+				margin-bottom: 30px;
+				font-weight: 900;
 				text-align: flex-start;
-				font-family: 'Newsreader', sans-serif;
+				font-family: 'Inter', sans-serif;
+				text-align: center;
+			}
+
+			p{
+				font-size: 20px;
+				margin: auto;
+				text-align: center;
+				margin-bottom: 50px;
+			}
+
+			form{
+				background: rgba(black, 0.05);
 			}
 		}
 
@@ -712,11 +683,11 @@
 	@keyframes slide{
 		from{
 			opacity: 0;
-			transform: translate(-150px, 200px) scale(0.7);
+			transform: translate(0, 200px) scale(0.7);
 		}
 		to{
 			opacity: 1;
-			transform: translate(-200px, var(--parallax-1));
+			transform: translate(0, var(--parallax-1));
 		}
 	}
 
