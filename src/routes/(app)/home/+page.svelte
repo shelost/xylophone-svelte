@@ -142,9 +142,9 @@
 	}
 
 	#title{
-		font-family: 'Newsreader', sans-serif;
+		font-family: 'Inter', 'Newsreader', sans-serif;
 		letter-spacing: -0.7px;
-		font-size: 32px;
+		font-size: 28px;
 	}
 
 	.lds-ripple {

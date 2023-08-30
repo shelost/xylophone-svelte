@@ -4,6 +4,7 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
+	import X from '$lib/img/x.svg'
 	import IconHome from '$lib/img/iconx_home.svg'
 	import IconCreate from '$lib/img/iconx_create.svg'
 	import IconFeed from '$lib/img/iconx_settings.svg'
@@ -70,7 +71,7 @@
 	<div id = 'top'>
 
 		<a href = '/home'>
-			<img src = '{Scrollable}' alt = 'Scrollable Logo' id = 'logo'>
+			<img src = '{X}' alt = 'Scrollable Logo' id = 'logo'>
 		</a>
 
 		<a href = '/home'>
@@ -107,7 +108,7 @@
 			</div>
 		</a>
 
-
+	</div>
 
 
 
@@ -122,9 +123,6 @@
 		-->
 
 
-
-		<h1 class = 'title'> Pages </h1>
-
 		<div id = 'pages'>
 
 			{#each $pages as page}
@@ -133,7 +131,7 @@
 			<a href = '/x/{page.id}'>
 
 				<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
-					<img class = 'icon' src = {IconShop}>
+
 					<h2> {page.id} </h2>
 				</div>
 			</a>
@@ -168,7 +166,7 @@
 		-->
 
 	</div>
-  </div>
+
 
 	<div id = 'app'
 	  in:fade={{ easing: cubicOut, duration: 300, delay: 400 }}
@@ -186,9 +184,9 @@
 <style lang="scss">
 
 	#logo{
-		width: 100px;
-		margin: 25px 15px;
-		filter: invert(100%);
+		height: 20px;
+		margin: 25px 20px;
+		filter: brightness(1000%);
 	}
 
 
@@ -204,6 +202,8 @@
 		font-weight: 600;
 		margin: 15px;
 	}
+
+
 
 	.text-btn{
 		margin: 5px;
@@ -228,6 +228,7 @@
 	.icon{
 		width: 24px;
 		height: 24px;
+		border-radius: 5px;
 		background-size: cover;
 	}
 
@@ -238,11 +239,24 @@
 	left: 0;
 	width: 240px;
 	height: 100vh;
-	background: #1e1e1e;
-      display: block;
-      opacity: 1;
-	  color: white;
-	  overflow-y: scroll;
+	overflow: hidden;
+	background: #FF006B;
+    display: flex;
+	flex-direction: column;
+
+    opacity: 1;
+	color: white;
+
+	#top{
+		border-radius: 5px;
+	}
+
+	#pages{
+		flex: 1;
+		height: calc(100vh - 280px);
+		overflow-y: scroll;
+		background: #e9004a;
+	}
 }
 
 
