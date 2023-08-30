@@ -5,7 +5,7 @@
 	import QuickLinks from '../private/QuickLinks.svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import logo from '$lib/img/scrollable.svg';
-	import X from '$lib/img/x.svg'
+	import X from '$lib/img/xylophone.svg'
 
 
 	import { invalidate } from '$app/navigation';
@@ -39,6 +39,7 @@
 
 		{#if !$page.url.pathname.startsWith('/home')}
 
+		<!--
 			<a href="/">
 				<h2 class = 'text-btn'>
 					Home
@@ -54,6 +55,7 @@
 					Contact
 				</h2>
 			</a>
+			-->
 
 
 		{:else}
@@ -87,11 +89,22 @@
 			{/if}
 		{:else}
 
+		<div id = 'buttons'>
+			<a class="button" href="/home">
+				<h2>
+					Sign Up
+				</h2>
+
+			</a>
+
 			<a class="button" href="/home">
 				<button>
 					<h1> Log In </h1>
 				</button>
 			</a>
+		</div>
+
+
 		{/if}
 
 
@@ -99,7 +112,19 @@
 </div>
 
 
-<style>
+<style lang="scss">
+
+	#buttons{
+		display: flex;
+		align-items: center;
+		gap: 20px;
+
+		h2{
+			font-size: 14px;
+			font-weight: 600;
+			letter-spacing: -0.2px;
+		}
+	}
 
 	#navbar{
 		height: 64px;
@@ -113,7 +138,6 @@
 		color: black;
 		width: 100vw;
 		backdrop-filter: blur(15px);
-		box-shadow: 0px 20px 50px rgba(black, 0.9) !important;
 		z-index: 6 !important;
 	}
 
@@ -158,7 +182,7 @@
 		font-family: 'Inter', sans-serif;
 		font-weight: 500;
 		letter-spacing: -0.5px;
-		font-size: 16px;
+		font-size: 15px;
 	}
 
 	@media screen and (max-width: 800px){

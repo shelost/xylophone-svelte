@@ -120,8 +120,8 @@
 
 			ratio = app.scrollTop / document.body.scrollHeight
 			app.style.setProperty('--parallax-1', ratio * 0.6 * -160 + 'px')
-			app.style.setProperty('--parallax-2', ratio * 3 * -160 + 'px')
-			app.style.setProperty('--parallax-3', ratio * 1.6 * -160 + 150 + 'px')
+			app.style.setProperty('--parallax-2', ratio * 1.4 * -160 + 'px')
+			app.style.setProperty('--parallax-3', ratio * 1 * -160 + 'px')
 
 			window.requestAnimationFrame(loop)
 		}
@@ -132,7 +132,7 @@
 </script>
 
 <svelte:head>
-	<title> Scrollable | Your Ultimate Reading App </title>
+	<title> Xylophone | Build Freely </title>
 	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
 	<link rel="icon" href={icon} />
 </svelte:head>
@@ -146,7 +146,12 @@
 
 		<div id = 'mast'>
 
-			<img id = 'hero' src = '{Paine}' alt = 'Thomas Paine'>
+			<div class = 'flex'>
+				<img id = 'hero2' class = 'hero' src = '{Paine}' alt = 'Thomas Paine'>
+				<img id = 'hero1' class = 'hero' src = '{Paine}' alt = 'Thomas Paine'>
+				<img id = 'hero3' class = 'hero' src = '{Paine}' alt = 'Thomas Paine'>
+			</div>
+
 
 			<h1>
 				Your Infinite Web Canvas.
@@ -163,32 +168,6 @@
 
 		</div>
 	</div>
-
-
-	<div id = 'phones' class = 'section white'>
-
-		<div class = 'section_expo'>
-			<h1> A Better Way to Read. </h1>
-			<h2> Reading should be delightful, wherever you go. </h2>
-		</div>
-
-		<div class = 'flex'>
-
-			<img id = 'phone1' class = 'phone' src = '{Phone1}' alt = 'Phone Image'>
-
-			<div id = 'bubbles'>
-				<img id = 'bubble1' class = 'bubble' src = '{Bubble1}' alt = 'Bubble Image'>
-				<img id = 'bubble2' class = 'bubble' src = '{Bubble2}' alt = 'Bubble Image'>
-				<img id = 'bubble3' class = 'bubble' src = '{Bubble3}' alt = 'Bubble Image'>
-				<img id = 'bubble4' class = 'bubble' src = '{Bubble4}' alt = 'Bubble Image'>
-				<img id = 'bubble5' class = 'bubble' src = '{Bubble5}' alt = 'Bubble Image'>
-				<img id = 'bubble6' class = 'bubble' src = '{Bubble6}' alt = 'Bubble Image'>
-
-				<img id = 'phone2' class = 'phone' src = '{Phone2}' alt = 'Phone Image'>
-			</div>
-		</div>
-	</div>
-
 
 
 	<div id = 'footer'>
@@ -630,7 +609,7 @@
 	#splash {
 		margin: 0;
 		width: 100vw;
-		height: calc(100vh - 60px);
+		height: 100vh;
 		background-size: cover;
 		background-position: center center;
 		display: flex;
@@ -638,14 +617,34 @@
 		align-items: center;
 		padding: 60px;
 
-		#hero{
-			width: 220px;
-			height: 220px;
-			transform: translate(0, var(--parallax-1));
-			margin-top: 60px;
-			margin-bottom: 40px;
-			border-radius: 15px;
-			animation: slide 0.6s ease;
+		.flex{
+			gap: 30px;
+			padding-bottom: 40px;
+			.hero{
+				border-radius: 15px;
+				animation: slide 0.6s ease;
+				box-shadow: 0px 30px 60px rgba(rgb(255, 0, 55), 0.1);
+			}
+
+			#hero1{
+				width: 220px;
+				height: 220px;
+				margin-top: -30px;
+				transform: translate(0, var(--parallax-2));
+			}
+
+			#hero2{
+				width: 160px;
+				height: 160px;
+				transform: translate(0, var(--parallax-3));
+			}
+
+			#hero3{
+				width: 150px;
+				height: 150px;
+				margin-top: -10px;
+				transform: translate(0, var(--parallax-1));
+			}
 		}
 
 		#mast{

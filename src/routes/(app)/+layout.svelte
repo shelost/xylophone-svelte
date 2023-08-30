@@ -4,7 +4,7 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
-	import X from '$lib/img/x.svg'
+	import X from '$lib/img/xylophone-white.svg'
 	import IconHome from '$lib/img/iconx_home.svg'
 	import IconCreate from '$lib/img/iconx_create.svg'
 	import IconFeed from '$lib/img/iconx_settings.svg'
@@ -132,7 +132,7 @@
 
 				<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
 
-					<h2> {page.id} </h2>
+					<h2> {page.title} </h2>
 				</div>
 			</a>
 
@@ -184,7 +184,7 @@
 <style lang="scss">
 
 	#logo{
-		height: 20px;
+		height: 28px;
 		margin: 25px 20px;
 		filter: brightness(1000%);
 	}

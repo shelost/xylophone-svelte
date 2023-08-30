@@ -14,9 +14,7 @@
 			await applyAction(result);
 			loading = false;
 		};
-
 	};
-
 
 </script>
 
