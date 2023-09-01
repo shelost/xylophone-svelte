@@ -5,7 +5,7 @@
 	import { fly } from 'svelte/transition'
 	import Space from '$lib/components/Space.svelte'
 	import bg from '$lib/img/background.svg'
-	import icon from '$lib/img/favicon.png'
+	import icon from '$lib/img/x.svg'
 
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Gradient from '$lib/img/gradient.png'

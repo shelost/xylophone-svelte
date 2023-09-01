@@ -140,14 +140,6 @@
 
 
 			<button id = 'add' on:click={addPage}> Add Page </button>
-
-			<a href = '/p/space/meditations'>
-				<div class = 'text-btn'>
-					<div class = 'icon'>
-					</div>
-					<h2> Meditations </h2>
-				</div>
-			</a>
 		</div>
 
 
@@ -184,7 +176,7 @@
 <style lang="scss">
 
 	#logo{
-		height: 28px;
+		height: 24px;
 		margin: 25px 20px;
 		filter: brightness(1000%);
 	}
