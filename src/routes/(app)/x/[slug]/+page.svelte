@@ -7,14 +7,15 @@
   </div>
 
 
-  <div id = 'controls'></div>
+  <div id = 'controls'>
+    <h1> Controls </h1>
+  </div>
 
   <div id = 'container'>
       <div id = 'bar'>
         <input id = 'title' bind:value = {title} placeholder = 'Untitled Page'>
 
         <div id = 'buttons'>
-          <h3 id = 'saved'> Saving... </h3>
           <button id = 'url'> Copy Link </button>
         </div>
 
@@ -26,17 +27,19 @@
   <div id = 'panel'>
 
       <div id = 'buttons'>
-          <button id="addText"> T </button>
-          <button id="addImage"> I </button>
-          <button id="addVideo"> V </button>
-          <button id="addButton"> B </button>
-          <button id="downloadJSON"> Download </button>
-           <button id="upload"> Upload </button>
-            <button id="delete" class = 'red'> Delete </button>
+          <button class = 'add' id="addText" class:active = { MODE == 'text' } > T </button>
+          <button class = 'add' id="addImage" class:active = { MODE == 'image' }> I </button>
+          <button class = 'add' id="addVideo" class:active = { MODE == 'video' }> V </button>
+          <button class = 'add' id="addButton" class:active = { MODE == 'button' }> B </button>
+          <button class = 'add' id="addRect" class:active = { MODE == 'rect' }> [] </button>
+          <button class = 'add' id="addCircle" class:active = { MODE == 'circle' }> O </button>
+
+          <button id="downloadJSON"> D </button>
+          <button id="delete" class = 'red'> X </button>
       </div>
 
 
-      <div id = 'headers'> Text </div>
+      <div id = 'headers'> {MODE} </div>
 
       <!-- Control panel UI elements -->
 
@@ -57,7 +60,7 @@
 <style lang='scss'>
 
   ::-webkit-scrollbar{
-      width: 3px;
+      width: 0px;
       height: 0;
       background: white;
   }
@@ -75,15 +78,16 @@
 
   #url{
     box-shadow: none;
-    padding: 10px 20px;
+    padding: 8px 15px;
     border-radius: 40px;
     font-weight: 500;
+    font-size: 12px;
+    letter-spacing: -0.2px;
   }
 
   #canvas{
       height: 100vh;
-      width: calc(100vw - 400px);
-      background: white;
+      width: 100vw;
       flex-shrink: 0;
   }
 
@@ -100,6 +104,19 @@
     background: red;
   }
 
+
+  .add{
+    background: rgba(black, 0.1);
+    color: black;
+    box-shadow: none;
+    &.active{
+      background: rgba(black, 0.2);
+    }
+    &:hover{
+      background: rgba(black, 0.2);
+    }
+  }
+
   #panel{
       display: flex;
       flex-direction: column;
@@ -110,7 +127,6 @@
       height: calc(100vh - 20px);
       border-radius: 10px;
       width: 60px;
-      background: rgba(rgb(255, 0, 102), 0.1);
       background: #f0f0f0;
 
       #buttons{
@@ -137,7 +153,9 @@
         left: 0;
         background: #f0f0f0;
         transition: opacity 0.3s ease;
+        opacity: 0;
         z-index: 4;
+        display: none;
       }
 
 
@@ -159,6 +177,7 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
       overflow-y: scroll;
 
       #bar{
@@ -209,6 +228,7 @@ import {writable} from 'svelte/store'
 import icon from '$lib/img/x.svg'
 export let data
 
+let MODE = 'text'
 let title = data.title
 const selectedType = writable(null);
 
@@ -247,7 +267,7 @@ onMount(()=> {
 
   const CONTROLS = Id('controls')
 
-  let initialCanvasWidth = window.innerWidth - 320;  // Initial canvas width, 250 is the panel width
+  let initialCanvasWidth = window.innerWidth - 300;  // Initial canvas width, 250 is the panel width
   let initialCanvasHeight = window.innerHeight;  // Initial canvas height
 
   let canvas = new fabric.Canvas('canvas', {
@@ -256,20 +276,192 @@ onMount(()=> {
       renderOnAddRemove: false
   });
 
-  canvas.loadFromJSON(data.content, () => {
-      resizeCanvas();
-      calculateGrid();
-      drawGrid();
+  /*
+  console.log(localStorage.getItem('reloaded'))
+  if (localStorage.getItem('reloaded') == 1){
+    localStorage.setItem('reloaded', 0)
+  }else{
+    localStorage.setItem('reloaded', 1)
+    location.reload()
+  }
+  */
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+  console.log('yo')
+});
+
+
+setTimeout(() => {
+
+  if (data && data.content && Id('canvas') && canvas && document && document.readyState === 'complete') {
+    try {
+      const parsedContent = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
+      console.log('Parsed content:', parsedContent);
+
+      canvas.loadFromJSON(parsedContent, () => {
+        try {
+          resizeCanvas();
+          calculateGrid();
+          drawGrid();
+          canvas.getContext('2d').resetTransform();
+          resize();
+           resizeCanvas();
+          canvas.renderAll();  // Choose either renderAll or requestRenderAll, not both
+          canvas.calcOffset();
+          console.log('drawed');
+        } catch (error) {
+          console.error('Error in canvas callback:', error);
+        }
+      });
+    } catch (error) {
+      console.error('Error loading canvas:', error);
+    }
+  }
+
+}, 500)
+
+
+
+
+
+
+var rect, isDown, origX, origY;
+
+
+// Create Rect
+
+let isObjectBeingModified = false; // Track if an object is being edited, resized, or dragged
+
+// Listen for object modification events
+canvas.on('object:modified', function() {
+    isObjectBeingModified = true;
+});
+canvas.on('object:moving', function() {
+    isObjectBeingModified = true;
+});
+canvas.on('object:scaling', function() {
+    isObjectBeingModified = true;
+});
+canvas.on('object:rotating', function() {
+    isObjectBeingModified = true;
+});
+
+canvas.on('mouse:down', function(o){
+    if (isObjectBeingModified) {
+        // Reset and exit early if an object is being modified
+        isObjectBeingModified = false;
+        return;
+    }
+
+    isDown = true;
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x;
+    origY = pointer.y;
+
+    switch (MODE){
+        case 'rect':
+            rect = new fabric.Rect({
+                left: origX,
+                top: origY,
+                originX: 'left',
+                originY: 'top',
+                width: pointer.x-origX,
+                height: pointer.y-origY,
+                angle: 0,
+                fill: 'rgba(255,0,0,1)',
+                transparentCorners: false
+            });
+            canvas.add(rect);
+            break;
+        default:
+            rect = ''
+            break;
+    }
+});
+
+canvas.on('mouse:move', function(o){
+    if (!isDown || isObjectBeingModified) return;  // Also check isObjectBeingModified here
+    var pointer = canvas.getPointer(o.e);
+
+
+
+    switch (MODE){
+        case 'rect':
+            if(origX > pointer.x){
+                rect.set({ left: Math.abs(pointer.x) });
+            }
+            if(origY > pointer.y){
+                rect.set({ top: Math.abs(pointer.y) });
+            }
+
+            rect.set({ width: Math.abs(origX - pointer.x) });
+            rect.set({ height: Math.abs(origY - pointer.y) });
+            break;
+        default:
+            rect = ''
+            break;
+    }
+
+    canvas.renderAll();
+});
+
+
+
+
+
+
+canvas.on('mouse:up', function(o){
+  isDown = false;
+});
+
+
+  window.addEventListener('load', function () {
+    console.log('loaded')
+  });
+
+
+  window.addEventListener('resize', () => {
+      const panelWidth = 300;
+      let newWidth = window.innerWidth - panelWidth;
+
+      if (window.innerWidth < 800){
+          newWidth = window.innerWidth
+          console.log(newWidth)
+      }
+      const scaleX = newWidth / initialCanvasWidth;
+
+      // Scale each object
+      canvas.forEachObject((object) => {
+          object.left *= scaleX;
+          object.scaleX *= scaleX;
+          object.top *= scaleX;
+          object.scaleY *= scaleX;
+          object.setCoords();
+      });
+
+      // Update canvas dimensions
+      canvas.setWidth(newWidth);
+      canvas.setHeight(initialCanvasHeight * scaleX);
       canvas.renderAll();
-      canvas.calcOffset();
-
-    },function(o,object){
-    })
+      canvas.calcOffset()
 
 
+      /*
+    calculateGrid()
+    drawGrid()
+    */
 
-  window.addEventListener('resize', debounce(() => {
-      const panelWidth = 250;
+
+    // Update initial dimensions
+    initialCanvasWidth = newWidth;
+    initialCanvasHeight = canvas.getHeight();
+  })
+
+
+  function resize(){
+
+    const panelWidth = 300;
       let newWidth = window.innerWidth - panelWidth;
 
       if (window.innerWidth < 800){
@@ -297,10 +489,12 @@ onMount(()=> {
     calculateGrid()
     drawGrid()
 
+
     // Update initial dimensions
     initialCanvasWidth = newWidth;
     initialCanvasHeight = canvas.getHeight();
-  }))
+
+  }
 
 
 let initialX, initialY;
@@ -464,6 +658,8 @@ function addText(x,y) {
   canvas.add(text);
 }
 
+
+
 function resizeCanvas() {
   let maxHeight = 0;
 
@@ -592,6 +788,7 @@ function addButton(x, y) {
 
 
 
+/*
   // Get the floating options div
   const floatingOptions = document.getElementById('floatingOptions');
 
@@ -610,6 +807,7 @@ function addButton(x, y) {
       CONTROLS.style.top = `${activeObject.top - Id('container').scrollTop - 20}px`;
     }
   }
+  */
 
 
 
@@ -631,22 +829,41 @@ function addButton(x, y) {
 
   // Add text on button click
   document.getElementById('addText').addEventListener('click', ()=> {
-    addText(10,10);
+    //addText(10,10);
+
+    MODE = 'text'
+  });
+
+   // Add text on button click
+   document.getElementById('addRect').addEventListener('click', ()=> {
+
+    MODE = 'rect'
+  });
+
+  document.getElementById('addCircle').addEventListener('click', ()=> {
+
+    MODE = 'circle'
   });
 
   // Add image on button click
   document.getElementById('addImage').addEventListener('click', () => {
-    addImage(10,10);
+    //addImage(10,10);
+
+    MODE = 'image'
   });
 
   // Add video on button click
   document.getElementById('addVideo').addEventListener('click', () => {
-    addText(10,10);
+    //addText(10,10);
+
+     MODE = 'video'
   });
 
   // Add video on button click
   document.getElementById('addButton').addEventListener('click', () => {
-    addButton(10,10);
+    //addButton(10,10);
+
+    MODE = 'button'
   });
 
   canvas.on('text:editing:entered', (textObject) => {
@@ -715,8 +932,9 @@ function addButton(x, y) {
         gridLines.push(line); // Populate gridLines array
     });
 
-    /*
 
+
+    /*
     // Snapping function when object is moving
     canvas.on('object:moving', function(event) {
     const obj = event.target;
@@ -735,6 +953,7 @@ function addButton(x, y) {
         );
     }
     */
+
   }
 
 
@@ -809,6 +1028,11 @@ function addButton(x, y) {
   }
 
 
+   canvas.on('selection:cleared', function() {
+    saveCanvasToSupabase()
+  });
+
+
 
 ////////////////////////////// LISTENERS //////////////////////////////
 
@@ -869,7 +1093,7 @@ function addButton(x, y) {
     removeGrid()
     const canvasState = JSON.stringify(canvas);
     calculateGrid()
-    drawGrid()
+   // drawGrid()
 
     // Save to Supabase
     const { data: d, error } = await supabaseClient
@@ -918,7 +1142,7 @@ function addButton(x, y) {
 
   // You can bind this function to a button click or some other event
   document.getElementById('downloadJSON').addEventListener('click', downloadCanvasAsJSON);
-  document.getElementById('upload').addEventListener('click', saveCanvasToSupabase);
+ // document.getElementById('upload').addEventListener('click', saveCanvasToSupabase);
   document.getElementById('delete').addEventListener('click', deleteObject);
   document.getElementById('title').addEventListener('input', saveCanvasToSupabase);
 

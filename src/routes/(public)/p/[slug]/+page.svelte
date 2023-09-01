@@ -129,7 +129,6 @@
 
         #canvas{
             width: 80vw;
-            border: 1px solid red;
         }
     }
 
@@ -157,7 +156,7 @@ onMount(()=> {
     let yArr = Array.from({length: 40}, (_, i) => i * 40);
     let gridLines = [];
 
-    let initialCanvasWidth = window.innerWidth - 240;  // Initial canvas width, 250 is the panel width
+    let initialCanvasWidth = window.innerWidth - 300;  // Initial canvas width, 250 is the panel width
     let initialCanvasHeight = window.innerHeight;  // Initial canvas height
 
     let canvas = new fabric.Canvas('canvas', {
@@ -188,7 +187,42 @@ onMount(()=> {
 
         resizeCanvas()
     },function(o,object){
+
+      if (object.type === 'i-text') {
+        object.set({
+            lockMovementX: true,
+            lockMovementY: true,
+            hasControls: false,
+            hasBorders: false,
+            selectable: true,
+            editable: true
+        });
+    } else {
+        object.set({
+            lockMovementX: true,
+            lockMovementY: true,
+            hasControls: false,
+            hasBorders: false,
+            selectable: true
+        });
+    }
+
     })
+
+
+
+    canvas.on('selection:created', function(event) {
+    const activeObject = event.target;
+    if (activeObject && activeObject.type === 'i-text') {
+        activeObject.set({
+            lockMovementX: true,
+            lockMovementY: true,
+            editable: true  // Allow editing/highlighting
+        });
+    }
+});
+
+
 
 
     window.addEventListener('scroll', () => {

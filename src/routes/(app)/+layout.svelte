@@ -21,7 +21,6 @@
 
 	$: if ($page && $page.route && $page.route.id) {
 		path = $page.url.pathname
-		console.log(path)
 	}
 
 	console.log($page.url.pathname)
@@ -208,17 +207,15 @@
 
 
 	#add{
-		width: calc(100% - 40px);
-		margin: 20px;
+		width: calc(100% - 30px);
+		margin: 15px;
 		box-shadow: none;
 		background: rgba(black, 0.05);
 		color: black;
 		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
-		&.active{
-			background: rgba(black, 0.1);
-		}
+
 		&:hover{
 			background: rgba(black, 0.1);
 		}
@@ -233,22 +230,28 @@
 
 
 	.text-btn{
-		margin: 5px;
-		padding: 10px 15px;
+		margin: 0 5px;
+		padding: 8px 12px;
 		border-radius: 5px;
 		font-size: 12px;
 		letter-spacing: -0.4px;
-		font-weight: 400;
+		font-weight: 500;
+		color: rgba(black, 0.5);
 		transition: 0.2s ease;
 		display: flex;
 		align-items: center;
-		gap: 10px;
+		gap: 8px;
 
 		.icon{
-			width: 20px;
-			height: 20px;
+			width: 18px;
+			height: 18px;
 			background-size: cover;
 			filter: invert(100%);
+		}
+
+		&.active{
+			background: rgba(black, 0.05);
+			color: rgba(black, 1);
 		}
 
 		&:hover{
@@ -265,7 +268,7 @@
 	width: 230px;
 	height: calc(100vh - 20px);
 	border-radius: 10px !important;
-	border: 1px solid #eeeeee;
+	border: 2px solid #f4f4f4;
 	overflow: hidden;
 
 	background: #f0f0f0;
@@ -285,6 +288,7 @@
 		height: calc(100vh - 280px);
 		overflow-y: scroll;
 		//background: #e9004a;
+		margin-top: 10px;
 		background: #f9f9f9;
 	}
 }
