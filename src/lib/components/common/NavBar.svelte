@@ -5,7 +5,7 @@
 	import QuickLinks from '../private/QuickLinks.svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import logo from '$lib/img/scrollable.svg';
-	import X from '$lib/img/xylophone.svg'
+	import X from '$lib/img/x.svg'
 
 
 	import { invalidate } from '$app/navigation';

@@ -4,7 +4,7 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
-	import X from '$lib/img/xylophone-white.svg'
+	import X from '$lib/img/xylophone.svg'
 	import IconHome from '$lib/img/iconx_home.svg'
 	import IconCreate from '$lib/img/iconx_create.svg'
 	import IconFeed from '$lib/img/iconx_settings.svg'
@@ -12,10 +12,10 @@
 	import { page } from '$app/stores';
 	import { fly } from 'svelte/transition';
 	import { supabaseClient } from '$lib/db'
+
 	export let data
 
 	let path;
-
 
 	let newID = crypto.randomUUID()
 
@@ -125,23 +125,21 @@
 
 		<div id = 'pages'>
 
+			<button id = 'add' on:click={addPage}> + Add Page </button>
+
 			{#each $pages as page}
 
+				<a href = '/x/{page.id}'>
 
-			<a href = '/x/{page.id}'>
+					<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
 
-				<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
-
-					<h2> {page.title} </h2>
-				</div>
-			</a>
+						<h2> {page.title} </h2>
+					</div>
+				</a>
 
 			{/each}
 
-
-			<button id = 'add' on:click={addPage}> Add Page </button>
 		</div>
-
 
 	</div>
 
@@ -172,8 +170,26 @@
 {/key}
 
 
+<svelte:head>
+	<title> Xylophone | Build Freely </title>
+	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
+	<link rel="icon" href={X} />
+</svelte:head>
+
+
 
 <style lang="scss">
+
+
+::-webkit-scrollbar{
+      width: 3px;
+      height: 0;
+      background: white;
+  }
+
+  ::-webkit-scrollbar-thumb{
+      background: rgba(black, 0.4);
+  }
 
 	#logo{
 		height: 24px;
@@ -190,6 +206,25 @@
 		background: rgb(234, 234, 234) !important;
 	}
 
+
+	#add{
+		width: calc(100% - 40px);
+		margin: 20px;
+		box-shadow: none;
+		background: rgba(black, 0.05);
+		color: black;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: -0.2px;
+		&.active{
+			background: rgba(black, 0.1);
+		}
+		&:hover{
+			background: rgba(black, 0.1);
+		}
+	}
+
+
 	.title{
 		font-weight: 600;
 		margin: 15px;
@@ -202,52 +237,55 @@
 		padding: 10px 15px;
 		border-radius: 5px;
 		font-size: 12px;
-		letter-spacing: -0.3px;
+		letter-spacing: -0.4px;
+		font-weight: 400;
 		transition: 0.2s ease;
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: 10px;
 
-		&.active{
-			background: rgba(white, 0.1);
+		.icon{
+			width: 20px;
+			height: 20px;
+			background-size: cover;
+			filter: invert(100%);
+		}
+
+		&:hover{
+			background: rgba(black, 0.05);
 		}
 	}
 
-	.text-btn:hover{
-		background: rgba(white, 0.1);
-	}
-
-	.icon{
-		width: 24px;
-		height: 24px;
-		border-radius: 5px;
-		background-size: cover;
-	}
 
 
 #navbar{
 	position: fixed !important;
-	top: 0;
-	left: 0;
-	width: 240px;
-	height: 100vh;
+	top: 10px;
+	left: 10px;
+	width: 230px;
+	height: calc(100vh - 20px);
+	border-radius: 10px !important;
+	border: 1px solid #eeeeee;
 	overflow: hidden;
-	background: #FF006B;
+
+	background: #f0f0f0;
     display: flex;
 	flex-direction: column;
 
     opacity: 1;
-	color: white;
+	color: black;
 
 	#top{
 		border-radius: 5px;
 	}
 
 	#pages{
+		width: 230px;
 		flex: 1;
 		height: calc(100vh - 280px);
 		overflow-y: scroll;
-		background: #e9004a;
+		//background: #e9004a;
+		background: #f9f9f9;
 	}
 }
 
