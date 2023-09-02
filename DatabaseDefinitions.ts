@@ -9,7 +9,7 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      user_data: {
+      users: {
         Row: {
           id: string;
           email: string;
@@ -58,7 +58,7 @@ export interface Database {
           updated_at?: string;
         };
       };
-      spaces: {
+      pages: {
         Row: {
           id: string;
           user_id: string;

@@ -24,7 +24,7 @@ serve(async (req) => {
 	});
 
 	const { data, error } = await supabase
-		.from('user_data')
+		.from('users')
 		.update({
 			stripe_customer_id: customer.id
 		})

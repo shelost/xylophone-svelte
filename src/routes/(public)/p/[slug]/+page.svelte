@@ -2,6 +2,10 @@
 
   <canvas id = 'canvas'></canvas>
 
+  <div id = 'banner'>
+    <h1> Made with Xylophone </h1>
+  </div>
+
 </div>
 
 
@@ -54,6 +58,34 @@
     #floatingOptions{
         position: absolute;
         opacity: 0;
+    }
+
+    #banner{
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 12px 20px;
+      background: rgb(14, 10, 51);
+      color: white;
+      border-radius: 30px;
+      letter-spacing: -0.3px;
+      font-size: 13px;
+      font-weight: 600;
+      transform: translateY(30px);
+      opacity: 0;
+
+      animation: float 0.8s ease-in-out 0.5s forwards;
+    }
+
+    @keyframes float{
+      from{
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to{
+        opacity: 1;
+        transform: translateY(0px);
+      }
     }
 
 

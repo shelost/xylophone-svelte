@@ -1,15 +1,10 @@
 <div id = 'app'>
 
-  <div id="floatingOptions">
-      <button id="addTextOption">Add Text</button>
-      <button id="addImageOption">Add Image</button>
-      <button id="addVideoOption">Add Video</button>
-  </div>
-
-
-  <div id = 'controls'>
+  <!--
+  <div id = 'panel'>
     <h1> Controls </h1>
   </div>
+  -->
 
   <div id = 'container'>
       <div id = 'bar'>
@@ -20,32 +15,46 @@
         </div>
 
       </div>
+      <!--
       <canvas id = 'canvas'></canvas>
-  </div>
+      -->
+
+      <div id = 'controls'>
 
 
-  <div id = 'panel'>
+        <div id = 'buttons'>
+            <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
+              <img src = {Text} class = 'icon'  alt = 'icon'>
+            </div>
+            <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
+              <img src = {Image} class = 'icon'  alt = 'icon'>
+            </div>
+            <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
+              <img src = {Triangle} class = 'icon'  alt = 'icon'>
+            </div>
+            <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
+              <img src = {Button} class = 'icon'  alt = 'icon'>
+            </div>
+            <div class = 'add' id="addRect" class:active = { MODE == 'rect' }>
+              <img src = {Rect} class = 'icon'  alt = 'icon'>
+            </div>
+            <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
+              <img src = {Ellipse} class = 'icon'  alt = 'icon'>
+            </div>
 
-      <div id = 'buttons'>
-          <button class = 'add' id="addText" class:active = { MODE == 'text' } > T </button>
-          <button class = 'add' id="addImage" class:active = { MODE == 'image' }> I </button>
-          <button class = 'add' id="addVideo" class:active = { MODE == 'video' }> V </button>
-          <button class = 'add' id="addButton" class:active = { MODE == 'button' }> B </button>
-          <button class = 'add' id="addRect" class:active = { MODE == 'rect' }> [] </button>
-          <button class = 'add' id="addCircle" class:active = { MODE == 'circle' }> O </button>
+            <button id="downloadJSON"> D </button>
+            <button id="delete" class = 'red'> X </button>
+        </div>
 
-          <button id="downloadJSON"> D </button>
-          <button id="delete" class = 'red'> X </button>
-      </div>
+        <!-- Control panel UI elements -->
 
-
-      <div id = 'headers'> {MODE} </div>
-
-      <!-- Control panel UI elements -->
-
-  </div>
+    </div>
 
 </div>
+  </div>
+
+
+
 
 
 <svelte:head>
@@ -70,7 +79,7 @@
   }
 
   :global(#app){
-      width: calc(100vw - 240px);
+      width: calc(100vw - 0px);
       height: 100vh;
       overflow: hidden !important;
       background: white;
@@ -83,6 +92,7 @@
     font-weight: 500;
     font-size: 12px;
     letter-spacing: -0.2px;
+    background: #FF006B;
   }
 
   #canvas{
@@ -106,32 +116,47 @@
 
 
   .add{
-    background: rgba(black, 0.1);
+    //background: rgba(black, 0.1);
     color: black;
     box-shadow: none;
+
+    width: 36px;
+    height: 36px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
     &.active{
-      background: rgba(black, 0.2);
+      background: rgba(black, 0.1);
     }
     &:hover{
-      background: rgba(black, 0.2);
+      background: rgba(black, 0.1);
+    }
+
+    .icon{
+      width: 16px;
+      height: 16px;
     }
   }
 
-  #panel{
+  #controls{
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      height: calc(100vh - 20px);
-      border-radius: 10px;
-      width: 60px;
+      height: 60px;
+      border-radius: 0px;
+      margin: 0;
+      width: calc(100vw - 220px) !important;
       background: #f0f0f0;
 
       #buttons{
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           gap: 10px;
           margin: 30px;
 
@@ -142,28 +167,12 @@
 
   }
 
-  #controls{
-        display: flex;
-        gap: 15px;
-        padding: 15px;
-        font-size: 12px;
-        position: absolute;
-        border-radius: 10px;
-        top: 0;
-        left: 0;
-        background: #f0f0f0;
-        transition: opacity 0.3s ease;
-        opacity: 0;
-        z-index: 4;
-        display: none;
-      }
-
 
   :global(.option){
-          font-size: 12px;
-          display: flex;
-          flex-direction: column;
-        }
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+    }
 
 
 
@@ -173,8 +182,9 @@
 
   #container {
       flex-grow: 1;
-      width: calc(100vw - 320px);
+      width: calc(100vw - 240px);
       height: 100vh;
+
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
@@ -195,8 +205,6 @@
           display: flex;
           align-items: center;
           gap: 20px;
-
-
         }
       }
   }
@@ -226,6 +234,18 @@ import {fabric} from 'fabric'
 import {supabaseClient} from '$lib/db'
 import {writable} from 'svelte/store'
 import icon from '$lib/img/x.svg'
+
+
+
+import Text from '$lib/img/i-text.svg'
+import Button from '$lib/img/i-button.svg'
+import Image from '$lib/img/i-img.svg'
+import Triangle from '$lib/img/i-triangle.svg'
+import Rect from '$lib/img/i-rect.svg'
+import Ellipse from '$lib/img/i-ellipse.svg'
+
+
+
 export let data
 
 let MODE = 'text'
@@ -270,10 +290,14 @@ onMount(()=> {
   let initialCanvasWidth = window.innerWidth - 300;  // Initial canvas width, 250 is the panel width
   let initialCanvasHeight = window.innerHeight;  // Initial canvas height
 
+  let c = document.createElement('canvas')
+  c.id = 'canvas'
+  Id('container').appendChild(c)
+
   let canvas = new fabric.Canvas('canvas', {
       width: initialCanvasWidth,
       height: initialCanvasHeight,
-      renderOnAddRemove: false
+      renderOnAddRemove: false,
   });
 
   /*
@@ -292,31 +316,62 @@ onMount(()=> {
 });
 
 
-setTimeout(() => {
 
-  if (data && data.content && Id('canvas') && canvas && document && document.readyState === 'complete') {
+
+
+$:  if (data && data.content && Id('canvas') && canvas && document && Id('title').value == data.title && document.readyState === 'complete') {
     try {
       const parsedContent = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
-      console.log('Parsed content:', parsedContent);
+
+      canvas.loadFromJSON(parsedContent, () => {
+
+          try {
+            resizeCanvas();
+            resize();
+            canvas.renderAll();
+            canvas.requestRenderAll()
+            canvas.calcOffset();
+            console.log('drawed');
+          } catch (error) {
+            console.error('Error in canvas callback:', error);
+          }
+        }
+
+        , function (o, object){
+          object.set({
+            borderColor: 'red',
+            cornerColor: 'green',
+            cornerSize: 6,
+            transparentCorners: false
+          });
+        });
+      } catch (error) {
+        console.error('Error loading canvas:', error);
+      }
+  }
+
+
+setTimeout(() => {
+
+  if (data && data.content && Id('canvas') && canvas && document && Id('title').value == data.title && document.readyState === 'complete') {
+    try {
+      const parsedContent = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
 
       canvas.loadFromJSON(parsedContent, () => {
         try {
           resizeCanvas();
-          calculateGrid();
-          drawGrid();
-          canvas.getContext('2d').resetTransform();
           resize();
-           resizeCanvas();
-          canvas.renderAll();  // Choose either renderAll or requestRenderAll, not both
+          canvas.renderAll();
+          canvas.requestRenderAll()
           canvas.calcOffset();
           console.log('drawed');
         } catch (error) {
           console.error('Error in canvas callback:', error);
         }
-      });
-    } catch (error) {
-      console.error('Error loading canvas:', error);
-    }
+        });
+      } catch (error) {
+        console.error('Error loading canvas:', error);
+      }
   }
 
 }, 500)
@@ -325,8 +380,40 @@ setTimeout(() => {
 
 
 
+setTimeout(() => {
 
-var rect, isDown, origX, origY;
+if (data && data.content && Id('canvas') && canvas && document && document.readyState === 'complete') {
+  try {
+    const parsedContent = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
+    console.log('Parsed content:', parsedContent);
+
+    canvas.loadFromJSON(parsedContent, () => {
+      try {
+        resizeCanvas();
+        calculateGrid();
+        drawGrid();
+        canvas.getContext('2d').resetTransform();
+        resize();
+         resizeCanvas();
+        canvas.renderAll();  // Choose either renderAll or requestRenderAll, not both
+        canvas.calcOffset();
+        console.log('drawed');
+      } catch (error) {
+        console.error('Error in canvas callback:', error);
+      }
+    });
+  } catch (error) {
+    console.error('Error loading canvas:', error);
+  }
+}
+
+}, 1000)
+
+
+
+
+
+var elem, isDown, origX, origY;
 
 
 // Create Rect
@@ -335,6 +422,12 @@ let isObjectBeingModified = false; // Track if an object is being edited, resize
 
 // Listen for object modification events
 canvas.on('object:modified', function() {
+    isObjectBeingModified = true;
+});
+canvas.on('selection:created', function() {
+    isObjectBeingModified = true;
+});
+canvas.on('selection:cleared', function() {
     isObjectBeingModified = true;
 });
 canvas.on('object:moving', function() {
@@ -347,8 +440,9 @@ canvas.on('object:rotating', function() {
     isObjectBeingModified = true;
 });
 
+
 canvas.on('mouse:down', function(o){
-    if (isObjectBeingModified) {
+    if (isObjectBeingModified || canvas.getActiveObject()) {
         // Reset and exit early if an object is being modified
         isObjectBeingModified = false;
         return;
@@ -361,7 +455,7 @@ canvas.on('mouse:down', function(o){
 
     switch (MODE){
         case 'rect':
-            rect = new fabric.Rect({
+            elem = new fabric.Rect({
                 left: origX,
                 top: origY,
                 originX: 'left',
@@ -372,13 +466,109 @@ canvas.on('mouse:down', function(o){
                 fill: 'rgba(255,0,0,1)',
                 transparentCorners: false
             });
-            canvas.add(rect);
+            canvas.add(elem);
+            canvas.setActiveObject(elem)
             break;
+        case 'text':
+          elem= new fabric.Textbox('Hello World!', {
+              left: origX,
+              top: origY,
+              fontFamily: 'Arial',
+              fill: '#000',
+              charSpacing: -20,
+              fontSize: 18,
+              fontWeight: 'normal',
+              textAlign: 'left',
+              originX: 'left',
+              originY: 'top',
+              width: 100,
+              editable: true,
+            });
+            canvas.add(elem);
+            canvas.setActiveObject(elem)
+          break;
         default:
-            rect = ''
             break;
     }
+
+
+    canvas.renderAll()
+    saveCanvasToSupabase()
+
+
 });
+
+
+
+canvas.on('object:scaling', function(e) {
+  var obj = e.target;
+  if (obj.type === 'i-text') {
+    // Reset scaling, we will adjust the font size instead
+    obj.set({
+      'scalingX': 1,
+      'scalingY': 1,
+    });
+
+    // Calculate new width based on the scaling factor
+    var newWidth = obj.width * obj.scaleX;
+
+    // Set the new width and let the text layout engine take care of everything
+    obj.set({
+      'width': newWidth,
+    });
+    obj.initDimensions();
+  }
+});
+
+
+
+
+// Function to reflow text inside a bounding box
+function reflowText(obj, newWidth) {
+  var words = obj.text.split(' ');
+  var tempLine = '';
+  var newLines = [];
+
+  for (var i = 0; i < words.length; i++) {
+    var testLine = `${tempLine}${words[i]} `;
+    var testLineWidth = obj.getLineWidth(0, testLine);
+
+    if (testLineWidth > newWidth) {
+      newLines.push(tempLine);
+      tempLine = `${words[i]} `;
+    } else {
+      tempLine = testLine;
+    }
+  }
+  newLines.push(tempLine);
+  obj.set({
+    text: newLines.join('\n'),
+    width: newWidth,
+    scaleX: 1
+  });
+}
+
+canvas.on('object:scaling', function(event) {
+  var obj = event.target;
+
+  if (obj.type === 'i-text') {
+    // Determine the new width based on the object's scaling factor
+    var newWidth = obj.width * obj.scaleX;
+
+    // Reset the scaling and width
+    obj.set({
+      scaleX: 1,
+      scaleY: 1,
+      width: newWidth
+    });
+
+    // Force Fabric.js to reflow the text
+    obj.setCoords();
+    obj.dirty = true;
+    canvas.renderAll();
+  }
+});
+
 
 canvas.on('mouse:move', function(o){
     if (!isDown || isObjectBeingModified) return;  // Also check isObjectBeingModified here
@@ -389,17 +579,16 @@ canvas.on('mouse:move', function(o){
     switch (MODE){
         case 'rect':
             if(origX > pointer.x){
-                rect.set({ left: Math.abs(pointer.x) });
+                elem.set({ left: Math.abs(pointer.x) });
             }
             if(origY > pointer.y){
-                rect.set({ top: Math.abs(pointer.y) });
+                elem.set({ top: Math.abs(pointer.y) });
             }
 
-            rect.set({ width: Math.abs(origX - pointer.x) });
-            rect.set({ height: Math.abs(origY - pointer.y) });
+            elem.set({ width: Math.abs(origX - pointer.x) });
+            elem.set({ height: Math.abs(origY - pointer.y) });
             break;
         default:
-            rect = ''
             break;
     }
 
@@ -555,7 +744,7 @@ function handleSelection(event) {
     div += opt;
   }
 
-  CONTROLS.innerHTML = div;
+  //CONTROLS.innerHTML = div;
 }
 
 canvas.on('selection:created', handleSelection);
@@ -782,7 +971,6 @@ function addButton(x, y) {
     });
     canvas.renderAll();
   });
-
   canvas.add(group);
 }
 
@@ -1023,9 +1211,31 @@ function addButton(x, y) {
   }
 
 
-  function deleteObject(){
-    canvas.remove(canvas.getActiveObject());
+  function deleteObject() {
+  var active = canvas.getActiveObject()
+  if (active) {
+    canvas.remove(active)
+    if (active.type == "activeSelection") {
+      active.getObjects().forEach(x => canvas.remove(x))
+      canvas.discardActiveObject().renderAll()
+    }
   }
+  canvas.renderAll()
+  canvas.calcOffset()
+}
+
+
+window.addEventListener('keyup', e => {
+  switch (e.code){
+    case 'Backspace':
+
+
+      //deleteObject()
+      break;
+    default:
+      break;
+  }
+})
 
 
    canvas.on('selection:cleared', function() {
@@ -1093,7 +1303,7 @@ function addButton(x, y) {
     removeGrid()
     const canvasState = JSON.stringify(canvas);
     calculateGrid()
-   // drawGrid()
+    drawGrid()
 
     // Save to Supabase
     const { data: d, error } = await supabaseClient

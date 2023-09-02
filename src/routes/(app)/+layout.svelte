@@ -4,18 +4,40 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
-	import X from '$lib/img/xylophone.svg'
+	import X from '$lib/img/x.svg'
+	import Xylophone from '$lib/img/xylophone.svg'
 	import IconHome from '$lib/img/iconx_home.svg'
 	import IconCreate from '$lib/img/iconx_create.svg'
 	import IconFeed from '$lib/img/iconx_settings.svg'
 	import IconShop from '$lib/img/icon_shop.svg'
 	import { page } from '$app/stores';
 	import { fly } from 'svelte/transition';
+	import Sidebar from '$lib/components/Sidebar.svelte'
 	import { supabaseClient } from '$lib/db'
+
+	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
+
+
+
+	const handleLogout: SubmitFunction = () => {
+		//loading.set(true);
+		return async ({ result }) => {
+			if (result.type === 'redirect') {
+				await invalidate('supabase:auth');
+			} else {
+				await applyAction(result);
+			}
+			//loading.set(false);
+		};
+	};
+
+
 
 	export let data
 
 	let path;
+
+	console.log(data)
 
 	let newID = crypto.randomUUID()
 
@@ -25,7 +47,9 @@
 
 	console.log($page.url.pathname)
 
-	let pages = writable([])
+	let pages = writable(localStorage.getItem('pages') || [])
+
+	pages.subscribe(val => localStorage.setItem("store", val));
 
 
 	async function fetchPages(){
@@ -55,7 +79,10 @@
 		}
 	}
 
-	fetchPages()
+	if (!localStorage.getItem('pages')){
+		fetchPages()
+	}
+
 
 </script>
 
@@ -65,102 +92,9 @@
 
 <section>
 
-<div id = 'navbar'>
+	<Sidebar />
 
-	<div id = 'top'>
-
-		<a href = '/home'>
-			<img src = '{X}' alt = 'Scrollable Logo' id = 'logo'>
-		</a>
-
-		<a href = '/home'>
-			<div class = 'text-btn' id = 'home' class:active={path === '/home'}>
-				<div class = 'icon' style = 'background-image: url({IconHome}'>
-				</div>
-				<h2> Home </h2>
-			</div>
-		</a>
-
-		<!--
-		<a href = '/shop' id = 'shop' >
-			<div class = 'text-btn' class:active={path === '/shop'}>
-				<div class = 'icon' style = 'background-image: url({IconShop})'>
-				</div>
-				<h2> Shop </h2>
-			</div>
-		</a>
-		-->
-
-		<a href = '/studio' id = 'create' >
-			<div class = 'text-btn' class:active={path === '/create'}>
-				<div class = 'icon' style = 'background-image: url({IconCreate})'>
-				</div>
-				<h2> Create </h2>
-			</div>
-		</a>
-
-		<a href = '/profile' id = 'settings' >
-			<div class = 'text-btn' class:active={path === '/profile'}>
-				<div class = 'icon' style = 'background-image: url({IconFeed})'>
-				</div>
-				<h2> Profile </h2>
-			</div>
-		</a>
-
-	</div>
-
-
-
-		<!--
-		<a href = '/subscriptions' id = 'create' >
-			<div class = 'text-btn' class:active={path === '/subscriptions'}>
-				<div class = 'icon' style = 'background-image: url({IconFeed})'>
-				</div>
-				<h2> Payment </h2>
-			</div>
-		</a>
-		-->
-
-
-		<div id = 'pages'>
-
-			<button id = 'add' on:click={addPage}> + Add Page </button>
-
-			{#each $pages as page}
-
-				<a href = '/x/{page.id}'>
-
-					<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
-
-						<h2> {page.title} </h2>
-					</div>
-				</a>
-
-			{/each}
-
-		</div>
-
-	</div>
-
-
-	<div id = 'bottom'>
-		<!--
-		<a href = '/settings' id = 'settings' >
-			<div class = 'text-btn' class:active={path === '/settings'}>
-				<div class = 'icon' style = 'background-image: url({IconFeed})'>
-				</div>
-				<h2> Settings </h2>
-			</div>
-		</a>
-		-->
-
-	</div>
-
-
-	<div id = 'app'
-	  in:fade={{ easing: cubicOut, duration: 300, delay: 400 }}
-	  out:fade={{ easing: cubicIn, duration: 300 }}
-	>
+	<div id = 'app'>
 	  <slot />
 	</div>
 
@@ -190,11 +124,6 @@
       background: rgba(black, 0.4);
   }
 
-	#logo{
-		height: 24px;
-		margin: 25px 20px;
-		filter: brightness(1000%);
-	}
 
 
 	#settings{
@@ -206,21 +135,6 @@
 	}
 
 
-	#add{
-		width: calc(100% - 30px);
-		margin: 15px;
-		box-shadow: none;
-		background: rgba(black, 0.05);
-		color: black;
-		font-size: 12px;
-		font-weight: 500;
-		letter-spacing: -0.2px;
-
-		&:hover{
-			background: rgba(black, 0.1);
-		}
-	}
-
 
 	.title{
 		font-weight: 600;
@@ -229,69 +143,7 @@
 
 
 
-	.text-btn{
-		margin: 0 5px;
-		padding: 8px 12px;
-		border-radius: 5px;
-		font-size: 12px;
-		letter-spacing: -0.4px;
-		font-weight: 500;
-		color: rgba(black, 0.5);
-		transition: 0.2s ease;
-		display: flex;
-		align-items: center;
-		gap: 8px;
 
-		.icon{
-			width: 18px;
-			height: 18px;
-			background-size: cover;
-			filter: invert(100%);
-		}
-
-		&.active{
-			background: rgba(black, 0.05);
-			color: rgba(black, 1);
-		}
-
-		&:hover{
-			background: rgba(black, 0.05);
-		}
-	}
-
-
-
-#navbar{
-	position: fixed !important;
-	top: 10px;
-	left: 10px;
-	width: 230px;
-	height: calc(100vh - 20px);
-	border-radius: 10px !important;
-	border: 2px solid #f4f4f4;
-	overflow: hidden;
-
-	background: #f0f0f0;
-    display: flex;
-	flex-direction: column;
-
-    opacity: 1;
-	color: black;
-
-	#top{
-		border-radius: 5px;
-	}
-
-	#pages{
-		width: 230px;
-		flex: 1;
-		height: calc(100vh - 280px);
-		overflow-y: scroll;
-		//background: #e9004a;
-		margin-top: 10px;
-		background: #f9f9f9;
-	}
-}
 
 
 #app{
