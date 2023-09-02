@@ -1,10 +1,8 @@
 <div id = 'app'>
 
-  <!--
-  <div id = 'panel'>
-    <h1> Controls </h1>
-  </div>
-  -->
+
+
+
 
   <div id = 'container'>
       <div id = 'bar'>
@@ -20,7 +18,6 @@
       -->
 
       <div id = 'controls'>
-
 
         <div id = 'buttons'>
             <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
@@ -51,7 +48,14 @@
     </div>
 
 </div>
-  </div>
+
+
+<div id = 'panel'>
+  <h1> Controls </h1>
+</div>
+
+
+</div>
 
 
 
@@ -151,8 +155,8 @@
       height: 60px;
       border-radius: 0px;
       margin: 0;
-      width: calc(100vw - 220px) !important;
-      background: #f0f0f0;
+      width: calc(100vw - 240px) !important;
+      background: rgba(black, 0.1);
 
       #buttons{
           display: flex;
@@ -208,6 +212,35 @@
         }
       }
   }
+
+  #panel{
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 200px;
+    padding: 20px;
+    height: 100vh;
+    background: #f0f0f0;
+    box-shadow: -20px 0px 50px rgba(black, 0.05);
+    transition: 0.3s ease-in-out;
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    letter-spacing: -0.4px;
+
+    .option{
+      margin-top: 40px !important;
+    }
+
+    &.active{
+      right: 0 !important;
+    }
+  }
+
+  .active{
+      right: 0 !important;
+    }
 
 
   @media screen and (max-width: 800px){
@@ -285,7 +318,7 @@ let fonts = ['Arial', 'Times New Roman', 'Courier New'];
 onMount(()=> {
   // Initialize fabric.js canvas
 
-  const CONTROLS = Id('controls')
+  const PANEL = Id('panel')
 
   let initialCanvasWidth = window.innerWidth - 300;  // Initial canvas width, 250 is the panel width
   let initialCanvasHeight = window.innerHeight;  // Initial canvas height
@@ -477,6 +510,7 @@ canvas.on('mouse:down', function(o){
               fill: '#000',
               charSpacing: -20,
               fontSize: 18,
+              lineHeight: 1,
               fontWeight: 'normal',
               textAlign: 'left',
               originX: 'left',
@@ -497,30 +531,6 @@ canvas.on('mouse:down', function(o){
 
 
 });
-
-
-
-canvas.on('object:scaling', function(e) {
-  var obj = e.target;
-  if (obj.type === 'i-text') {
-    // Reset scaling, we will adjust the font size instead
-    obj.set({
-      'scalingX': 1,
-      'scalingY': 1,
-    });
-
-    // Calculate new width based on the scaling factor
-    var newWidth = obj.width * obj.scaleX;
-
-    // Set the new width and let the text layout engine take care of everything
-    obj.set({
-      'width': newWidth,
-    });
-    obj.initDimensions();
-  }
-});
-
-
 
 
 // Function to reflow text inside a bounding box
@@ -548,27 +558,36 @@ function reflowText(obj, newWidth) {
   });
 }
 
-canvas.on('object:scaling', function(event) {
-  var obj = event.target;
 
-  if (obj.type === 'i-text') {
-    // Determine the new width based on the object's scaling factor
-    var newWidth = obj.width * obj.scaleX;
+// Listen for the "scaling" event on the canvas
+canvas.on('object:scaling', function (event) {
+  const obj = event.target;
 
-    // Reset the scaling and width
-    obj.set({
-      scaleX: 1,
-      scaleY: 1,
-      width: newWidth
-    });
+  // Check if the object being scaled is an IText object
+  if (obj.type === 'textbox') {
+    // Get the current scaling factors
+    const scaleX = obj.scaleX;
+    const scaleY = obj.scaleY;
 
-    // Force Fabric.js to reflow the text
-    obj.setCoords();
-    obj.dirty = true;
+    // Reset the scaling factors to 1
+    obj.set('scaleX', 1);
+    obj.set('scaleY', 1);
+
+    // Calculate the new font size based on the scaling factor
+    const newFontSize = Math.floor(obj.fontSize * scaleX);
+
+    // Set the new font size
+    obj.set('fontSize', newFontSize);
+
+    console.log(newFontSize)
+
+    // Update the dimensions of the text box to fit the new font size
+    obj.initDimensions();
+
+    // Rerender the canvas to reflect the changes
     canvas.renderAll();
   }
 });
-
 
 canvas.on('mouse:move', function(o){
     if (!isDown || isObjectBeingModified) return;  // Also check isObjectBeingModified here
@@ -697,8 +716,10 @@ function handleSelection(event) {
 
   let options = {};
 
+  console.log(activeObject.type)
+
   switch (activeObject.type) {
-    case 'i-text':
+    case 'textbox':
       options = textTemplate(activeObject);
       break;
     case 'image':
@@ -721,17 +742,19 @@ function handleSelection(event) {
 
     switch (option.type) {
       case 'range':
+
+        console.log(activeObject)
         opt = `
-        <div class="option option-range">
+        <div id = 'option-${option.prop}' class="option option-${option.type}}">
           <label> ${option.label} </label>
-          <input class = 'range' bind:value=${option.value} type="range" min="${option.min}" max="${option.max}" value="${option.value}" on:input="applyStyles(canvas)">
+          <input id = 'input-${option.prop}' class = 'range' value='${activeObject[option.prop]}' type="range" min="${option.min}" max="${option.max}" on:input="applyStyles(canvas)">
         </div>
         `;
         break;
 
       case 'number':
         opt = `
-        <div class="option option-number">
+        <div id = 'option-${option.prop}' class="option option-${option.type} option-${option.prop}">
           <label> ${option.label} </label>
         </div>
         `;
@@ -744,11 +767,37 @@ function handleSelection(event) {
     div += opt;
   }
 
-  //CONTROLS.innerHTML = div;
+
+  console.log(PANEL)
+  PANEL.innerHTML = div;
+
+
+  for (let i=0; i<options.length; i++) {
+    let option = options[i]
+    activeObject[option.prop] = Id(`input-${option.prop}`).value
+  }
+
 }
+
+
+canvas.on('selection:created', () => {
+
+  console.log(canvas.getActiveObject().fontSize)
+
+  Id('panel').classList.add('active')
+
+});
+
+canvas.on('selection:cleared', () => {
+
+  Id('panel').classList.remove('active')
+
+});
+
 
 canvas.on('selection:created', handleSelection);
 canvas.on('selection:updated', handleSelection);
+
 
 
 
@@ -1150,16 +1199,16 @@ function addButton(x, y) {
 
   function textTemplate(activeObject) {
     const options = [
-      { label: 'Font', id: 'fontFamily', type: 'select', value: activeObject.fontFamily, options: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New'] },
-      { label: 'Color', id: 'fill', type: 'color', value: activeObject.fill },
-      { label: 'Letter Spacing', id: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -20, max: 10 },
-      { label: 'Font Size', id: 'fontSize', type: 'range', value: activeObject.fontSize || 20, min: 5, max: 100 },
-      { label: 'Text Align', id: 'textAlign', type: 'dropdown', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
-      { label: 'Font Weight', id: 'fontWeight', type: 'range', value: activeObject.fontWeight || 500, min: 100, max: 900 },
-      { label: 'Bold', id: 'fontWeight', type: 'checkbox', value: activeObject.fontWeight === 'bold' },
-      { label: 'Italic', id: 'fontStyle', type: 'checkbox', value: activeObject.fontStyle === 'italic' },
-      { label: 'Underline', id: 'underline', type: 'checkbox', value: activeObject.underline },
-      { label: 'Strikethrough', id: 'linethrough', type: 'checkbox', value: activeObject.linethrough },
+      { label: 'Font', id: 'fontFamily', type: 'select', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New'] },
+      { label: 'Color', id: 'fill', type: 'color', prop: 'fill', value: activeObject.fill },
+      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -20, max: 10 },
+      { label: 'Font Size', id: 'fontSize', type: 'range', prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
+      { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
+      { label: 'Font Weight', id: 'fontWeight', type: 'range', prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
+      { label: 'Bold', id: 'fontWeight', type: 'checkbox', prop: 'fontWeight', value: activeObject.fontWeight === 'bold' },
+      { label: 'Italic', id: 'fontStyle', type: 'checkbox', prop: 'fontStyle', value: activeObject.fontStyle === 'italic' },
+      { label: 'Underline', id: 'underline', type: 'checkbox', prop: 'underline', value: activeObject.underline },
+      { label: 'Strikethrough', id: 'linethrough', type: 'checkbox', prop: 'linethrough', value: activeObject.linethrough },
     ];
 
     return options;
