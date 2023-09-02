@@ -47,10 +47,7 @@
 
 	console.log($page.url.pathname)
 
-	let pages = writable(localStorage.getItem('pages') || [])
-
-	pages.subscribe(val => localStorage.setItem("store", val));
-
+	let pages = writable([])
 
 	async function fetchPages(){
 
@@ -79,9 +76,7 @@
 		}
 	}
 
-	if (!localStorage.getItem('pages')){
-		fetchPages()
-	}
+	fetchPages()
 
 
 </script>

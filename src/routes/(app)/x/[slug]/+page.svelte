@@ -229,6 +229,11 @@
     gap: 24px;
     letter-spacing: -0.4px;
 
+    :global(input[type=text]){
+      font-size: 12px !important;
+      padding: 5px;
+    }
+
     .option{
       margin-top: 40px !important;
     }
@@ -293,19 +298,6 @@ let fonts = ['Arial', 'Times New Roman', 'Courier New'];
   let fontWeight = 'normal'; // Default
 
 
-  function applyStyles(canvas) {
-    const activeObject = canvas.getActiveObject();
-    if (activeObject && activeObject.type === 'text') {
-      activeObject.set({
-        'fontFamily': selectedFont,
-        'fontSize': fontSize,
-        'letterSpacing': letterSpacing,
-        'textAlign': justification,
-        'fontWeight': fontWeight
-      });
-      canvas.renderAll();
-    }
-  }
 
 
 
@@ -333,15 +325,24 @@ onMount(()=> {
       renderOnAddRemove: false,
   });
 
-  /*
-  console.log(localStorage.getItem('reloaded'))
-  if (localStorage.getItem('reloaded') == 1){
-    localStorage.setItem('reloaded', 0)
-  }else{
-    localStorage.setItem('reloaded', 1)
-    location.reload()
+  window.applyStyles = function() {
+    const activeObject = canvas.getActiveObject();
+
+
+    if (activeObject) {
+
+        for (let i=0; i< Class('input').length; i++){
+          let input = Class('input')[i];
+          let prop = input.id.substring(6)
+          activeObject[prop] = input.value
+        }
+    }
+
+      canvas.renderAll();
+      saveCanvasToSupabase()
   }
-  */
+
+
 
 
   document.addEventListener("DOMContentLoaded", function() {
@@ -349,6 +350,10 @@ onMount(()=> {
 });
 
 
+
+let xArr = Array.from({length: 40}, (_, i) => i * 40);
+  let yArr = Array.from({length: 40}, (_, i) => i * 40);
+  let gridLines = [];
 
 
 
@@ -579,8 +584,6 @@ canvas.on('object:scaling', function (event) {
     // Set the new font size
     obj.set('fontSize', newFontSize);
 
-    console.log(newFontSize)
-
     // Update the dimensions of the text box to fit the new font size
     obj.initDimensions();
 
@@ -592,8 +595,6 @@ canvas.on('object:scaling', function (event) {
 canvas.on('mouse:move', function(o){
     if (!isDown || isObjectBeingModified) return;  // Also check isObjectBeingModified here
     var pointer = canvas.getPointer(o.e);
-
-
 
     switch (MODE){
         case 'rect':
@@ -613,9 +614,6 @@ canvas.on('mouse:move', function(o){
 
     canvas.renderAll();
 });
-
-
-
 
 
 
@@ -747,7 +745,7 @@ function handleSelection(event) {
         opt = `
         <div id = 'option-${option.prop}' class="option option-${option.type}}">
           <label> ${option.label} </label>
-          <input id = 'input-${option.prop}' class = 'range' value='${activeObject[option.prop]}' type="range" min="${option.min}" max="${option.max}" on:input="applyStyles(canvas)">
+          <input id = 'input-${option.prop}' class = 'input range' value='${activeObject[option.prop]}' type="range" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
         </div>
         `;
         break;
@@ -768,16 +766,27 @@ function handleSelection(event) {
   }
 
 
+  div +=
+  `
+  <div id = 'option-link' class="option option-link">
+    <label> Link </label>
+    <input id = 'input-link' class = 'input range' placeholder='Enter URL here...' type="text" oninput="applyStyles(canvas)">
+  </div>
+  `
+
+
   console.log(PANEL)
   PANEL.innerHTML = div;
 
-
-  for (let i=0; i<options.length; i++) {
-    let option = options[i]
-    activeObject[option.prop] = Id(`input-${option.prop}`).value
-  }
-
 }
+
+
+
+function Class(id){
+  return document.getElementsByClassName(id)
+}
+
+
 
 
 canvas.on('selection:created', () => {
@@ -1055,8 +1064,8 @@ function addButton(x, y) {
   })
 
 
-  for (let i=0; i<document.getElementsByClassName('option').innerHTML; i++){
-    let option = document.getElementsByClassName('option')
+  $: for (let i=0; i<document.getElementsByClassName('input').innerHTML; i++){
+    let option = document.getElementsByClassName('input')[i]
 
     option.addEventListener('change', function(e){
       applyStyles(canvas)
@@ -1111,9 +1120,6 @@ function addButton(x, y) {
   /////
 
 
-  let xArr = Array.from({length: 40}, (_, i) => i * 40);
-  let yArr = Array.from({length: 40}, (_, i) => i * 40);
-  let gridLines = [];
 
 
   function removeGrid() {
