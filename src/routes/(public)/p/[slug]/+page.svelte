@@ -2,9 +2,14 @@
 
   <canvas id = 'canvas'></canvas>
 
-  <div id = 'banner'>
-    <h1> Made with Xylophone </h1>
-  </div>
+
+  <a href = 'https://capsule.pw'>
+    <div id = 'banner'>
+        <img src = {Capsule} >
+        <h1> Made with Capsule </h1>
+      </div>
+    </a>
+
 
 </div>
 
@@ -64,7 +69,7 @@
       position: fixed;
       bottom: 20px;
       left: 20px;
-      padding: 12px 20px;
+      padding: 13px 18px;
       background: rgb(14, 10, 51);
       color: white;
       border-radius: 30px;
@@ -73,6 +78,13 @@
       font-weight: 600;
       transform: translateY(30px);
       opacity: 0;
+
+      display: flex;
+      gap: 12px;
+
+      img{
+        width: 13px;
+      }
 
       animation: float 0.8s ease-in-out 0.5s forwards;
     }
@@ -168,7 +180,7 @@
 
 
 <svelte:head>
-	<title> Xylophone | Build Freely </title>
+	<title> {data.title} </title>
 	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
 	<link rel="icon" href={X} />
 </svelte:head>
@@ -181,6 +193,8 @@ import {fabric} from 'fabric'
 import {supabaseClient} from '$lib/db'
 import X from '$lib/img/x.svg'
 export let data;
+
+import Capsule from '$lib/img/capsulex.svg'
 
 onMount(()=> {
     // Initialize fabric.js canvas
@@ -296,6 +310,20 @@ onMount(()=> {
 
 
 
+canvas.on('mouse:up', function (options) {
+  if (options.target) {
+    // Check if the clicked object has an externalLink attribute
+
+    console.log(options.target)
+    if (options.target.link) {
+      // Open the external link
+      window.open(options.target.link);
+    }
+  }
+});
+
+
+
 let initialX, initialY;
 
 function resizeCanvas() {
@@ -330,7 +358,6 @@ function debounce(func, wait) {
 
 
 canvas.on('mouse:over', function(e) {
-    console.log(e)
     e.target.set('opacity', '0.85');
     canvas.renderAll();
 });

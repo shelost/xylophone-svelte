@@ -109,47 +109,31 @@
 <style lang="scss">
 
 
-::-webkit-scrollbar{
+	::-webkit-scrollbar{
       width: 3px;
       height: 0;
       background: white;
-  }
+ 	}
 
-  ::-webkit-scrollbar-thumb{
-      background: rgba(black, 0.4);
-  }
-
-
+	::-webkit-scrollbar-thumb{
+		background: rgba(black, 0.4);
+	}
 
 	#settings{
 		z-index: 5 !important;
 	}
 
+
 	#app{
-		background: rgb(234, 234, 234) !important;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw !important;
+		height: 100vh;
+		overflow-x: visible !important;
+		overflow-y: scroll;
+		background: #f4f4f4;
 	}
-
-
-
-	.title{
-		font-weight: 600;
-		margin: 15px;
-	}
-
-
-
-
-
-
-#app{
-	position: fixed;
-	top: 0;
-	left: 240px;
-	width: calc(100vw - 240px) !important;
-	height: 100vh;
-	overflow-y: scroll;
-	background: white;
-}
 
 
 @media screen and (max-width: 800px){

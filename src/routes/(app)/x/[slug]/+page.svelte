@@ -2,8 +2,6 @@
 
 
 
-
-
   <div id = 'container'>
       <div id = 'bar'>
         <input id = 'title' bind:value = {title} placeholder = 'Untitled Page'>
@@ -13,39 +11,37 @@
         </div>
 
       </div>
-      <!--
+
       <canvas id = 'canvas'></canvas>
-      -->
 
-      <div id = 'controls'>
+  </div>
 
-        <div id = 'buttons'>
-            <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
-              <img src = {Text} class = 'icon'  alt = 'icon'>
-            </div>
-            <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
-              <img src = {Image} class = 'icon'  alt = 'icon'>
-            </div>
-            <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
-              <img src = {Triangle} class = 'icon'  alt = 'icon'>
-            </div>
-            <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
-              <img src = {Button} class = 'icon'  alt = 'icon'>
-            </div>
-            <div class = 'add' id="addRect" class:active = { MODE == 'rect' }>
-              <img src = {Rect} class = 'icon'  alt = 'icon'>
-            </div>
-            <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
-              <img src = {Ellipse} class = 'icon'  alt = 'icon'>
-            </div>
 
-            <button id="downloadJSON"> D </button>
-            <button id="delete" class = 'red'> X </button>
+  <div id = 'controls'>
+
+    <div id = 'buttons'>
+        <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
+          <img src = {Text} class = 'icon'  alt = 'icon'>
         </div>
-
-        <!-- Control panel UI elements -->
-
+        <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
+          <img src = {Image} class = 'icon'  alt = 'icon'>
+        </div>
+        <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
+          <img src = {Triangle} class = 'icon'  alt = 'icon'>
+        </div>
+        <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
+          <img src = {Button} class = 'icon'  alt = 'icon'>
+        </div>
+        <div class = 'add' id="addRect" class:active = { MODE == 'rect' }>
+          <img src = {Rect} class = 'icon'  alt = 'icon'>
+        </div>
+        <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
+          <img src = {Ellipse} class = 'icon'  alt = 'icon'>
+        </div>
     </div>
+
+    <!-- Control panel UI elements -->
+
 
 </div>
 
@@ -82,11 +78,22 @@
       background: rgba(black, 0.4);
   }
 
-  :global(#app){
-      width: calc(100vw - 0px);
-      height: 100vh;
-      overflow: hidden !important;
-      background: white;
+  #app{
+
+      width: calc(100vw - 305px) !important;
+      height: calc(100vh - 10px);
+      margin-left: 245px;
+      margin-top: 5px;
+
+
+      border-radius: 10px;
+      //background: white;
+      overflow-x: visible !important;
+      //border: 1px solid rgba(black, 0.1);
+
+
+
+
   }
 
   #url{
@@ -100,9 +107,18 @@
   }
 
   #canvas{
-      height: 100vh;
-      width: 100vw;
       flex-shrink: 0;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0px 30px 50px rgba(black, 0.1);
+
+      width: calc(100vw - 310px);
+      height: 100vh;
+      margin-top: 70px;
+      margin-bottom: 50px;
+
+      z-index: 3;
+
   }
 
   #floatingOptions{
@@ -112,9 +128,10 @@
 
   #title{
     letter-spacing: -0.4px;
+
   }
 
-  #delete{
+:global(#delete){
     background: red;
   }
 
@@ -149,18 +166,23 @@
   }
 
   #controls{
+    position: fixed;
+    top: 0;
+    right: 0;
+
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 60px;
+      height: 100vh;
       border-radius: 0px;
+      width: 70px;
       margin: 0;
-      width: calc(100vw - 240px) !important;
-      background: rgba(black, 0.1);
-
       #buttons{
           display: flex;
           flex-direction: row;
+          flex-direction: column;
+          align-items: center;
           gap: 10px;
           margin: 30px;
 
@@ -194,15 +216,22 @@
       overflow-x: hidden;
       overflow-y: scroll;
 
+      padding-bottom: 40px !important;
+
       #bar{
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px;
+        padding: 15px 70px 15px 0;
+        position: fixed;
+        z-index: 2;
+        width: calc(100vw - 250px);
+
 
         input{
           font-size: 20px;
           font-weight: 700;
+          padding: 0;
         }
 
         #buttons{
@@ -213,6 +242,20 @@
       }
   }
 
+  :global(.input){
+      font-size: 12px !important;
+      padding: 5px;
+      background: white !important;
+      transition: 0.2s ease;
+  }
+
+  :global(input:checked) {
+    border: none;
+  background: blue !important;
+  }
+
+
+
   #panel{
     position: fixed;
     top: 0;
@@ -221,18 +264,16 @@
     padding: 20px;
     height: 100vh;
     background: #f0f0f0;
-    box-shadow: -20px 0px 50px rgba(black, 0.05);
+    box-shadow: -20px 0px 70px rgba(black, 0.2);
     transition: 0.3s ease-in-out;
+
 
     display: flex;
     flex-direction: column;
     gap: 24px;
     letter-spacing: -0.4px;
 
-    :global(input[type=text]){
-      font-size: 12px !important;
-      padding: 5px;
-    }
+
 
     .option{
       margin-top: 40px !important;
@@ -306,18 +347,18 @@ let fonts = ['Arial', 'Times New Roman', 'Courier New'];
   }
 
 
+  const panelWidth = 310
+
+
 
 onMount(()=> {
   // Initialize fabric.js canvas
 
   const PANEL = Id('panel')
 
-  let initialCanvasWidth = window.innerWidth - 300;  // Initial canvas width, 250 is the panel width
+  let initialCanvasWidth = window.innerWidth - panelWidth;  // Initial canvas width, 250 is the panel width
   let initialCanvasHeight = window.innerHeight;  // Initial canvas height
 
-  let c = document.createElement('canvas')
-  c.id = 'canvas'
-  Id('container').appendChild(c)
 
   let canvas = new fabric.Canvas('canvas', {
       width: initialCanvasWidth,
@@ -328,18 +369,25 @@ onMount(()=> {
   window.applyStyles = function() {
     const activeObject = canvas.getActiveObject();
 
-
     if (activeObject) {
 
         for (let i=0; i< Class('input').length; i++){
           let input = Class('input')[i];
           let prop = input.id.substring(6)
+
           activeObject[prop] = input.value
+
+          console.log(prop, activeObject[prop])
+
+          console.log(activeObject)
         }
+
+        canvas.renderAll();
+        canvas.calcOffset()
+        saveCanvasToSupabase()
     }
 
-      canvas.renderAll();
-      saveCanvasToSupabase()
+
   }
 
 
@@ -498,11 +546,12 @@ canvas.on('mouse:down', function(o){
                 top: origY,
                 originX: 'left',
                 originY: 'top',
-                width: pointer.x-origX,
-                height: pointer.y-origY,
+                width: 50,
+                height: 50,
                 angle: 0,
                 fill: 'rgba(255,0,0,1)',
-                transparentCorners: false
+                transparentCorners: false,
+                link: 'https://capsule.pw'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -522,6 +571,7 @@ canvas.on('mouse:down', function(o){
               originY: 'top',
               width: 100,
               editable: true,
+              link: 'https://capsule.pw'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -536,6 +586,23 @@ canvas.on('mouse:down', function(o){
 
 
 });
+
+
+
+
+window.deleteObject = function(){
+  var active = canvas.getActiveObject()
+  if (active) {
+    canvas.remove(active)
+    if (active.type == "activeSelection") {
+      active.getObjects().forEach(x => canvas.remove(x))
+      canvas.discardActiveObject().renderAll()
+    }
+  }
+  canvas.renderAll()
+  canvas.calcOffset()
+}
+
 
 
 // Function to reflow text inside a bounding box
@@ -598,6 +665,8 @@ canvas.on('mouse:move', function(o){
 
     switch (MODE){
         case 'rect':
+          let pointer = canvas.getPointer(o.e);
+
             if(origX > pointer.x){
                 elem.set({ left: Math.abs(pointer.x) });
             }
@@ -607,6 +676,7 @@ canvas.on('mouse:move', function(o){
 
             elem.set({ width: Math.abs(origX - pointer.x) });
             elem.set({ height: Math.abs(origY - pointer.y) });
+
             break;
         default:
             break;
@@ -628,7 +698,6 @@ canvas.on('mouse:up', function(o){
 
 
   window.addEventListener('resize', () => {
-      const panelWidth = 300;
       let newWidth = window.innerWidth - panelWidth;
 
       if (window.innerWidth < 800){
@@ -666,8 +735,6 @@ canvas.on('mouse:up', function(o){
 
 
   function resize(){
-
-    const panelWidth = 300;
       let newWidth = window.innerWidth - panelWidth;
 
       if (window.innerWidth < 800){
@@ -754,6 +821,46 @@ function handleSelection(event) {
         opt = `
         <div id = 'option-${option.prop}' class="option option-${option.type} option-${option.prop}">
           <label> ${option.label} </label>
+          <input id = 'input-${option.prop}' class = 'input number' value='${activeObject[option.prop]}' type="number" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
+        </div>
+        `;
+        break;
+
+      case 'dropdown':
+        opt = `
+        <div id = 'option-${option.prop}' class="option option-${option.type} option-${option.prop}">
+          <label> ${option.label} </label>
+          <select id = 'input-${option.prop}' class = 'input dropdown' onchange="applyStyles(canvas)">
+        `
+
+        for (let i=0; i<option.options.length; i++) {
+          let o = option.options[i];
+
+          console.log(o)
+
+          if (activeObject[option.prop] == o) {
+            opt += `<option value = '${o}' selected> ${o} </option> `
+          }else{
+            opt += `<option value = '${o}'> ${o} </option> `
+          }
+
+        }
+        opt +=
+        `
+        </select>
+        </div>
+
+        `;
+
+        break;
+
+      case 'checkbox':
+        console.log(activeObject[option.prop])
+        const isChecked = activeObject[option.prop] ? 'checked' : '';
+        opt = `
+        <div id="option-${option.prop}" class="option option-${option.type} option-${option.prop}">
+            <label>${option.label}</label>
+            <input id="input-${option.prop}" class="input ${option.type}" type="${option.type}" oninput="applyStyles(canvas)" ${isChecked} />
         </div>
         `;
         break;
@@ -765,13 +872,37 @@ function handleSelection(event) {
     div += opt;
   }
 
+  /*
+
+    function textTemplate(activeObject) {
+    const options = [
+      { label: 'Font', id: 'fontFamily', type: 'select', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New'] },
+      { label: 'Color', id: 'fill', type: 'color', prop: 'fill', value: activeObject.fill },
+      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -20, max: 10 },
+      { label: 'Font Size', id: 'fontSize', type: 'range', prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
+      { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
+      { label: 'Font Weight', id: 'fontWeight', type: 'range', prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
+      { label: 'Bold', id: 'fontWeight', type: 'checkbox', prop: 'fontWeight', value: activeObject.fontWeight === 'bold' },
+      { label: 'Italic', id: 'fontStyle', type: 'checkbox', prop: 'fontStyle', value: activeObject.fontStyle === 'italic' },
+      { label: 'Underline', id: 'underline', type: 'checkbox', prop: 'underline', value: activeObject.underline },
+      { label: 'Strikethrough', id: 'linethrough', type: 'checkbox', prop: 'linethrough', value: activeObject.linethrough },
+    ];
+
+    return options;
+  }
+
+
+  */
+
 
   div +=
   `
   <div id = 'option-link' class="option option-link">
     <label> Link </label>
-    <input id = 'input-link' class = 'input range' placeholder='Enter URL here...' type="text" oninput="applyStyles(canvas)">
+    <input id = 'input-link' class = 'input range' value = '${activeObject.link}' placeholder='Enter URL here...' type="text" oninput="applyStyles(canvas)">
   </div>
+
+  <button id="delete" class = 'red' onclick = "deleteObject()"> Delete </button>
   `
 
 
@@ -1207,14 +1338,15 @@ function addButton(x, y) {
     const options = [
       { label: 'Font', id: 'fontFamily', type: 'select', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New'] },
       { label: 'Color', id: 'fill', type: 'color', prop: 'fill', value: activeObject.fill },
-      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -20, max: 10 },
+      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -50, max: 50 },
       { label: 'Font Size', id: 'fontSize', type: 'range', prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
       { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
       { label: 'Font Weight', id: 'fontWeight', type: 'range', prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
-      { label: 'Bold', id: 'fontWeight', type: 'checkbox', prop: 'fontWeight', value: activeObject.fontWeight === 'bold' },
-      { label: 'Italic', id: 'fontStyle', type: 'checkbox', prop: 'fontStyle', value: activeObject.fontStyle === 'italic' },
+      { label: 'Font Style', id: 'fontStyle', type: 'dropdown', prop: 'textAlign', value: activeObject.fonStyle, options: ['normal', 'italic', 'oblique'] },
+     /*
       { label: 'Underline', id: 'underline', type: 'checkbox', prop: 'underline', value: activeObject.underline },
       { label: 'Strikethrough', id: 'linethrough', type: 'checkbox', prop: 'linethrough', value: activeObject.linethrough },
+      */
     ];
 
     return options;
@@ -1223,7 +1355,6 @@ function addButton(x, y) {
   function buttonTemplate(activeObject) {
     const options = [
       { label: 'Border Radius', id: 'borderRadius', type: 'range', value: activeObject.borderRadius || 0, min: 0, max: 50 },
-      { label: 'URL', id: 'buttonUrl', type: 'text', value: activeObject.url || '' },
       { label: 'Color', id: 'buttonColor', type: 'color', value: activeObject.backgroundColor || '#FFFFFF' },
       // Add padding if needed
       { label: 'Padding', id: 'buttonPadding', type: 'number', value: activeObject.padding || 10 }
@@ -1266,18 +1397,6 @@ function addButton(x, y) {
   }
 
 
-  function deleteObject() {
-  var active = canvas.getActiveObject()
-  if (active) {
-    canvas.remove(active)
-    if (active.type == "activeSelection") {
-      active.getObjects().forEach(x => canvas.remove(x))
-      canvas.discardActiveObject().renderAll()
-    }
-  }
-  canvas.renderAll()
-  canvas.calcOffset()
-}
 
 
 window.addEventListener('keyup', e => {
@@ -1381,7 +1500,9 @@ window.addEventListener('keyup', e => {
 
   function downloadCanvasAsJSON() {
     // Serialize the canvas to JSON
-    const json = JSON.stringify(canvas.toJSON());
+
+    const canv = canvas.toJSON(['link']);
+    const json = JSON.stringify(canv);
 
     // Create a Blob from the JSON string
     const blob = new Blob([json], { type: 'application/json' });
@@ -1406,9 +1527,9 @@ window.addEventListener('keyup', e => {
   }
 
   // You can bind this function to a button click or some other event
-  document.getElementById('downloadJSON').addEventListener('click', downloadCanvasAsJSON);
+  // document.getElementById('downloadJSON').addEventListener('click', downloadCanvasAsJSON);
  // document.getElementById('upload').addEventListener('click', saveCanvasToSupabase);
-  document.getElementById('delete').addEventListener('click', deleteObject);
+  // document.getElementById('delete').addEventListener('click', deleteObject);
   document.getElementById('title').addEventListener('input', saveCanvasToSupabase);
 
   document.getElementById('url').addEventListener('click', () => {

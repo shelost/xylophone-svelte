@@ -16,9 +16,6 @@
 	import Collection from '$lib/img/collection.png'
 	import Jagged from '$lib/img/jagged.svg'
 
-
-
-
 	import Phone1 from '$lib/img/phone-1.svg'
 	import Phone2 from '$lib/img/phone-2.svg'
 
@@ -38,80 +35,7 @@
 	import Paine from '$lib/img/paine.png'
 
 
-	// Create a Svelte store to hold the spaces data
-	let spaces = writable([]);
-	let notes = writable([]);
-
-    // Fetch
-	async function fetchNotes(){
-
-		// Get notes
-		const { data: n, error } = await supabaseClient
-			.from('notes')
-			.select('*')
-
-		if (!error) {
-			notes.set(n.reverse());
-
-			// Get author
-			for (let i=0; i<$notes.length; i++){
-				let note = $notes[i]
-
-				const {data : d, error: e} = await supabaseClient
-						.from('profiles')
-						.select('*')
-						.eq('id', note.user_id)
-
-				if (!error) {
-
-				} else {
-					console.error('Error fetching user_data:', error);
-				}
-			}
-
-			// Get space
-			for (let i=0; i<$notes.length; i++){
-				let note = $notes[i]
-				const {data : d, error: e} = await supabaseClient
-						.from('spaces')
-						.select('*')
-						.eq('id', note.space_id)
-
-
-				if (!e) {
-
-					$notes[i].space = d[0].title;
-					$notes[i].space_icon = d[0].icon;
-				} else {
-					console.error('Error fetching user_data:', e);
-				}
-			}
-
-		} else {
-			console.error('Error fetching user_data:', error);
-		}
-    }
-
-
-	async function fetchSpaces(){
-		const { data: fetchedSpaces, error } = await supabaseClient
-											.from('spaces')
-											.select('*')
-
-		if (error) {
-			console.error('Error fetching spaces:', error);
-			return;
-		}
-
-		if (fetchedSpaces) {
-			// Update the spaces store with the fetched data
-			spaces.set(fetchedSpaces);
-		}
-	}
-
 	onMount(()=>{
-		fetchSpaces()
-		fetchNotes()
 
 		let ratio = 0
 		let app = document.getElementById('app')

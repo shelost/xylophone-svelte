@@ -7,89 +7,180 @@
 	import Space from '../../../lib/components/Space.svelte'
     import type { PageData, Task } from '../../routes/$types';
 	import {fly} from 'svelte/transition'
+	import {fabric} from 'fabric'
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
     let userData = {};
-	let spaces = writable([])
+	let pages = writable([])
 	let books = []
 	let loading = true
 
-	async function fetchBooks(){
+
+	function Class(id){
+		return document.getElementsByClassName(id)
+	}
+
+	function Id(id){
+		return document.getElementById(id)
+	}
+
+	let initialCanvasWidth = window.innerWidth - 300
+	let initialCanvasHeight = window.innerHeight
+
+	onMount(()=> {
+
+
+		async function fetchPages(){
 		// Fetch the user_data from the database for the logged-in user's ID
 		const { data : k, error: e} = await supabaseClient
-            .from('user_data') // Update the table name to 'profiles'
+            .from('pages') // Update the table name to 'profiles'
             .select('*') // Fetch all columns for the active user
-            .eq('id', data.user.id) // Use the user.id to fetch data for the active user
-			.single()
         if (!e) {
-            userData = k || {}; // Store the fetched user data into the 'user' variable
-				// Fetch the user_data from the database for the logged-in user's ID
-				const { data : r, error: j} = await supabaseClient
-					.from('spaces') // Update the table name to 'profiles'
-					.select('*') // Fetch all columns for the active user
-				if (!e) {
-					spaces.set(r)
-					//spaces.set($spaces.filter(space => userData.books.includes(space.id)))
+            pages.set(k)
 
-					loading = false
-				} else {
-					console.error('Error fetching user data:', e);
-				}
+			for (let i=0; i<$pages.length; i++){
+				let page = $pages[i]
+
+				setTimeout(()=> {
+
+					let canvas = new fabric.Canvas(`canvas-${page.id}`, {
+						width: 300,
+						height: 200,
+						renderOnAddRemove: false,
+					});
+
+
+					setTimeout(() => {
+
+						canvas.loadFromJSON(page.content, () => {
+
+						try {
+							let newWidth = 400;
+
+							if (window.innerWidth < 800){
+								newWidth = window.innerWidth
+								console.log(newWidth)
+							}
+							const scaleX = newWidth / initialCanvasWidth;
+
+							// Scale each object
+							canvas.forEachObject((object) => {
+								object.left *= scaleX;
+								object.scaleX *= scaleX;
+								object.top *= scaleX;
+								object.scaleY *= scaleX;
+								object.setCoords();
+							});
+
+							// Update canvas dimensions
+							canvas.setWidth(newWidth);
+							canvas.setHeight(initialCanvasHeight * scaleX);
+							canvas.renderAll();
+							canvas.calcOffset()
+
+						} catch (error) {
+							console.error('Error in canvas callback:', error);
+						}
+
+						}, function (o, object){
+							object.set({
+							borderColor: 'red',
+							cornerColor: 'green',
+							cornerSize: 6,
+							transparentCorners: false
+							});
+						});
+
+					}, 1000);
+				},3000)
+			}
         } else {
-            console.error('Error fetching user data:', e);
+            console.error('Error fetching pages:', e);
         }
 	}
 
+	fetchPages()
 
-    async function updateUser(){
-        const { data: updatedData, error } = await supabaseClient
-        .from('user_data')
-        .update({
-          books: userData.books
-        })
-        .eq('id', data.user.id);
+		function resize(){
+			let newWidth = 300;
 
-      if (!error) {
-        console.log('Space updated successfully:', updatedData);
+			if (window.innerWidth < 800){
+				newWidth = window.innerWidth
+				console.log(newWidth)
+			}
+			const scaleX = newWidth / initialCanvasWidth;
 
-        console.log(userData.books)
-      } else {
-        console.error('Error updating user', error);
-      }
-    }
+			// Scale each object
+			canvas.forEachObject((object) => {
+				object.left *= scaleX;
+				object.scaleX *= scaleX;
+				object.top *= scaleX;
+				object.scaleY *= scaleX;
+				object.setCoords();
+			});
+
+			// Update canvas dimensions
+			canvas.setWidth(newWidth);
+			canvas.setHeight(initialCanvasHeight * scaleX);
+			canvas.renderAll();
+			canvas.calcOffset()
+
+			// Update initial dimensions
+			initialCanvasWidth = newWidth;
+			initialCanvasHeight = canvas.getHeight();
+		}
 
 
-    // Fetch the user data from 'profiles' onMount
-    onMount(
+		setTimeout(() => {
 
-		async () => {
-        // Fetch the user_data from the database for the logged-in user's ID
-        const { data : d, error} = await supabaseClient
-            .from('profiles') // Update the table name to 'profiles'
-            .select('*') // Fetch all columns for the active user
-            .eq('id', data.user.id) // Use the user.id to fetch data for the active user
-			.single()
+			$: for (let i=0; i<$pages.length; i++){
+				let page = $pages[i]
 
-			console.log(d)
-        if (!error) {
-            user = d || {}; // Store the fetched user data into the 'user' variable
-            console.log(user); // Log the user data for testing
-        } else {
-            console.error('Error fetching user data:', error);
-        }
+				console.log('yo')
 
-		fetchBooks()
+				let canvas = new fabric.Canvas(`canvas-${page.id}`, {
+					width: 400,
+					height: 300,
+					renderOnAddRemove: false,
+				});
 
-    });
+				canvas.loadFromJSON(page.content, () => {
+
+
+					console.log(page.content)
+
+					try {
+						//resize();
+
+						canvas.renderAll();
+						canvas.requestRenderAll()
+						canvas.calcOffset();
+						console.log('drawed');
+					} catch (error) {
+						console.error('Error in canvas callback:', error);
+					}
+
+					}, function (o, object){
+
+				});
+			}
+
+		}, 500);
+
+	}
+	)
+
 
 </script>
 
+
+
 <div id = 'app'>
-	<section in:fly={{ x: -200, duration: 300, delay: 300 }}
-	out:fly={{ x: 200, duration: 300 }}>
+
+	<section>
 	<h1 id = 'title'> Home </h1>
 
-{#await $spaces}
+{#await $pages}
 
 	<div id = 'loading'>
 		<div class="lds-ripple"><div></div><div></div></div>
@@ -98,33 +189,24 @@
 
 {:then}
 
-		<div id='spaces'>
+	<div id = 'pages'>
 
-			<Spaces {data} page = {true}/>
+		{#each $pages as page, i}
 
-			<!--
-			{#each $spaces as space, index}
-			<div class = 'space' in:fly={{duration:500, y: 50, delay: index * 50}}>
-				<Space
-				{space}
-				page={true}
-				on:addBook={(e) => {
-				}}
-				on:removeBook={(e) => {
-					let index = userData.books.indexOf(e.detail)
-				if (index != -1) {
-					userData.books.splice(index, 1)
-				}
-				updateUser()
-				fetchBooks()
-				}}/>
+			<div class = 'page' id = '{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }}
+			out:fly={{ x: 200, duration: 300 }}>
+				<canvas id = 'canvas-{page.id}' class = 'canvas'></canvas>
+				<h1> {page.title} </h1>
 			</div>
-			{/each}
-			-->
-		</div>
 
-	{/await}
-	</section>
+		{/each}
+
+	</div>
+
+{/await}
+
+</section>
+
 </div>
 
 
@@ -135,6 +217,24 @@
 
 	h1{
 		color: black;
+	}
+
+	:global(canvas){
+		border: 1px solid rgba(black, 0.2);
+		width: 400px;
+		height: 250px;
+		background: white;
+	}
+
+
+	#pages{
+		display: flex;
+		flex-wrap: wrap;
+		gap: 30px;
+	}
+
+	#app{
+		margin-left: 240px;
 	}
 
 	#loading{

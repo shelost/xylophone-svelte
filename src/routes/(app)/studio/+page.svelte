@@ -638,7 +638,7 @@ function downloadCanvasAsJSON() {
 }
 
 // You can bind this function to a button click or some other event
-document.getElementById('downloadJSON').addEventListener('click', downloadCanvasAsJSON);
+//ocument.getElementById('downloadJSON').addEventListener('click', downloadCanvasAsJSON);
 document.getElementById('upload').addEventListener('click', saveCanvasToSupabase);
 
 })
