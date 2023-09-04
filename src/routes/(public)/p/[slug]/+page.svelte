@@ -11,11 +11,28 @@
     </a>
 
 
+    <h1 id = 'link'> Hello </h1>
+
 </div>
 
 
 
 <style lang='scss'>
+
+    #link{
+        color: white;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        transition: 0.2s ease;
+        background: rgba(black, 0.8);
+        padding: 10px 15px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 500;
+        opacity: 0;
+    }
+
 
     ::-webkit-scrollbar{
         width: 0px;
@@ -38,6 +55,7 @@
     }
 
 
+
     .canvas-container{
         height: 100vh;
         width: calc(100vw - 480px) !important;
@@ -50,12 +68,10 @@
     #canvas{
         height: 100vh;
         width: 100vw;
-        //margin-top: 30px;
 
         border-radius: 10px;
         flex-shrink: 0;
 
-        padding-bottom: 30px !important;
 
         //box-shadow: 0 30px 90px rgba(black, 0.1);
     }
@@ -231,27 +247,22 @@ onMount(()=> {
             object.setCoords();
         });
 
+        canvas.renderAll();
+        canvas.calcOffset();
+
+
         resizeCanvas()
     },function(o,object){
 
-      if (object.type === 'i-text') {
         object.set({
             lockMovementX: true,
             lockMovementY: true,
             hasControls: false,
             hasBorders: false,
             selectable: true,
-            editable: true
+            editable: false,
+            easing: fabric.util.ease.easeInOut
         });
-    } else {
-        object.set({
-            lockMovementX: true,
-            lockMovementY: true,
-            hasControls: false,
-            hasBorders: false,
-            selectable: true
-        });
-    }
 
     })
 
@@ -314,7 +325,6 @@ canvas.on('mouse:up', function (options) {
   if (options.target) {
     // Check if the clicked object has an externalLink attribute
 
-    console.log(options.target)
     if (options.target.link) {
       // Open the external link
       window.open(options.target.link);
@@ -356,20 +366,79 @@ function debounce(func, wait) {
   };
 }
 
+let originalTops = {};
+let originalScales = {};
+
+
 
 canvas.on('mouse:over', function(e) {
-    e.target.set('opacity', '0.85');
-    canvas.renderAll();
+
+    let target = e.target;
+
+    if (e.target){
+        // Store the original top position and scale
+        originalTops[target] = target.top;
+        originalScales[target] = { x: target.scaleX, y: target.scaleY };
+
+        target.animate('opacity', 0.8, {
+            duration: 100,
+            onChange: canvas.renderAll.bind(canvas)
+        });
+
+    }
+
+
+   if (e.target.link){
+        document.getElementById('link').innerHTML = e.target.link
+        document.getElementById('link').style.left = e.e.screenX + 'px'
+
+        console.log( e.e.pageX + 'px')
+        document.getElementById('link').style.top = e.e.screenY - 120 + 'px'
+        document.getElementById('link').style.opacity = 1
+   }
+
+
+   /*
+    // Animate the scale
+    target.animate('scaleX', originalScales[target].x * 1.02, {
+        duration: 100,
+        onChange: canvas.renderAll.bind(canvas)
+    });
+    target.animate('scaleY', originalScales[target].y * 1.02, {
+        duration: 100,
+        onChange: canvas.renderAll.bind(canvas)
+    });
+    */
 });
-
-
 
 canvas.on('mouse:out', function(e) {
-    console.log(e)
-    e.target.set('opacity', '1');
-    canvas.renderAll();
-});
+    let target = e.target;
 
+
+    // Return to the original top position
+    if (originalTops[target]) {
+        target.animate('opacity', 1, {
+            duration: 100,
+            onChange: canvas.renderAll.bind(canvas)
+        });
+    }
+
+    document.getElementById('link').style.opacity = 0
+
+    /*
+    // Return to the original scale
+    if (originalScales[target]) {
+        target.animate('scaleX', originalScales[target].x, {
+            duration: 100,
+            onChange: canvas.renderAll.bind(canvas)
+        });
+        target.animate('scaleY', originalScales[target].y, {
+            duration: 100,
+            onChange: canvas.renderAll.bind(canvas)
+        });
+    }
+    */
+});
 
 
 

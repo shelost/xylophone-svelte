@@ -24,10 +24,13 @@
 		return document.getElementById(id)
 	}
 
-	let initialCanvasWidth = window.innerWidth - 300
-	let initialCanvasHeight = window.innerHeight
 
 	onMount(()=> {
+
+
+
+		let initialCanvasWidth = window.innerWidth - 300
+		let initialCanvasHeight = window.innerHeight
 
 
 		async function fetchPages(){
@@ -193,11 +196,13 @@
 
 		{#each $pages as page, i}
 
-			<div class = 'page' id = '{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }}
-			out:fly={{ x: 200, duration: 300 }}>
-				<canvas id = 'canvas-{page.id}' class = 'canvas'></canvas>
-				<h1> {page.title} </h1>
-			</div>
+			<a href = '/p/{page.id}'>
+				<div class = 'page' id = '{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }}
+				out:fly={{ x: 200, duration: 300 }}>
+					<canvas id = 'canvas-{page.id}' class = 'canvas'></canvas>
+					<h1> {page.title} </h1>
+				</div>
+			</a>
 
 		{/each}
 

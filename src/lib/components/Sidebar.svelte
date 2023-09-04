@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import { writable } from 'svelte/store'
+	import { writable } from 'svelte/store'
 	import { fade } from 'svelte/transition'
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
@@ -21,6 +21,7 @@ import { writable } from 'svelte/store'
 
 
 	let newID = crypto.randomUUID()
+
 
 
 	const handleLogout: SubmitFunction = () => {
@@ -56,6 +57,8 @@ import { writable } from 'svelte/store'
 		}
 	}
 
+
+
 	async function addPage(){
 
 		const {data: d, error} = await supabaseClient.from('pages').insert({
@@ -71,6 +74,28 @@ import { writable } from 'svelte/store'
 	}
 
 	fetchPages()
+
+
+	/*
+	async function saveCanvasToSupabase() {
+		// Serialize the current canvas state
+		const canvasState = JSON.stringify(canvas);
+
+		// Save to Supabase
+		const { data, error } = await supabaseClient
+			.from('pages')
+			.insert([
+				{ title: title }
+			]);
+
+		if (error) {
+			console.error('Error saving canvas: ', error);
+		} else {
+			console.log('Canvas saved successfully: ', data);
+		}
+	}
+	*/
+
 </script>
 
 
@@ -145,6 +170,7 @@ import { writable } from 'svelte/store'
 					<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
 
 						<h2> {page.title} </h2>
+
 					</div>
 				</a>
 

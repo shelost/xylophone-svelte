@@ -11,7 +11,7 @@
     async function updateProfile() {
         try {
             const { error } = await supabaseClient
-                .from('profiles')
+                .from('users')
                 .update({
                     full_name: profile.full_name,
                     username: profile.username
@@ -21,12 +21,12 @@
             if (imageFile) {
                 const filePath = `profiles/${profile.id}/${imageFile.name}`;
                 let { error: uploadError } = await supabaseClient.storage
-                    .from('profile-images')
+                    .from('images')
                     .upload(filePath, imageFile);
 
                 if (!uploadError) {
                     const { error: updateImageError } = await supabaseClient
-                        .from('profiles')
+                        .from('users')
                         .update({ pfp: filePath })
                         .eq('id', profile.id);
 

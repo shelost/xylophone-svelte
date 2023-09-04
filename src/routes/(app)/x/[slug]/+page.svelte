@@ -1,7 +1,5 @@
 <div id = 'app'>
 
-
-
   <div id = 'container'>
       <div id = 'bar'>
         <input id = 'title' bind:value = {title} placeholder = 'Untitled Page'>
@@ -12,7 +10,11 @@
 
       </div>
 
-      <canvas id = 'canvas'></canvas>
+      <div id = 'canvas-container'>
+        <canvas id = 'canvas'></canvas>
+      </div>
+
+
 
   </div>
 
@@ -38,10 +40,12 @@
         <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
           <img src = {Ellipse} class = 'icon'  alt = 'icon'>
         </div>
-    </div>
+
+        <div id = 'align'>
+        </div>
 
     <!-- Control panel UI elements -->
-
+    </div>
 
 </div>
 
@@ -50,10 +54,7 @@
   <h1> Controls </h1>
 </div>
 
-
 </div>
-
-
 
 
 
@@ -62,7 +63,6 @@
 	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
 	<link rel="icon" href={icon} />
 </svelte:head>
-
 
 
 
@@ -106,6 +106,10 @@
     background: #FF006B;
   }
 
+  #canvas-container{
+    margin-top: 70px;
+  }
+
   #canvas{
       flex-shrink: 0;
       border-radius: 10px;
@@ -114,11 +118,10 @@
 
       width: calc(100vw - 310px);
       height: 100vh;
-      margin-top: 70px;
+
       margin-bottom: 50px;
 
-      z-index: 3;
-
+     // z-index: 3;
   }
 
   #floatingOptions{
@@ -216,6 +219,8 @@
       overflow-x: hidden;
       overflow-y: scroll;
 
+
+
       padding-bottom: 40px !important;
 
       #bar{
@@ -224,7 +229,7 @@
         align-items: center;
         padding: 15px 70px 15px 0;
         position: fixed;
-        z-index: 2;
+        //z-index: 2;
         width: calc(100vw - 250px);
 
 
@@ -274,6 +279,10 @@
     letter-spacing: -0.4px;
 
 
+
+    :global(#controls-title){
+      font-weight: 600;
+    }
 
     .option{
       margin-top: 40px !important;
@@ -342,9 +351,9 @@ let fonts = ['Arial', 'Times New Roman', 'Courier New'];
 
 
 
-  function Id(e){
-    return document.getElementById(e)
-  }
+function Id(e){
+  return document.getElementById(e)
+}
 
 
   const panelWidth = 310
@@ -366,29 +375,35 @@ onMount(()=> {
       renderOnAddRemove: false,
   });
 
+
+
   window.applyStyles = function() {
     const activeObject = canvas.getActiveObject();
 
     if (activeObject) {
+        for (let i = 0; i < Class('input').length; i++) {
+            let input = Class('input')[i];
+            let prop = input.id.substring(6);
 
-        for (let i=0; i< Class('input').length; i++){
-          let input = Class('input')[i];
-          let prop = input.id.substring(6)
+            if (prop === "width" && activeObject.type === "image") {
+                const newWidth = parseFloat(input.value);
+                activeObject.scaleX = newWidth / activeObject.width;
+            } else if (prop === "height" && activeObject.type === "image") {
+                const newHeight = parseFloat(input.value);
+                activeObject.scaleY = newHeight / activeObject.height;
+            } else {
+                activeObject[prop] = input.value;
+            }
 
-          activeObject[prop] = input.value
-
-          console.log(prop, activeObject[prop])
-
-          console.log(activeObject)
+            console.log(prop, activeObject[prop]);
         }
 
         canvas.renderAll();
-        canvas.calcOffset()
-        saveCanvasToSupabase()
+        canvas.calcOffset();
+        saveCanvasToSupabase();
     }
+};
 
-
-  }
 
 
 
@@ -402,6 +417,8 @@ onMount(()=> {
 let xArr = Array.from({length: 40}, (_, i) => i * 40);
   let yArr = Array.from({length: 40}, (_, i) => i * 40);
   let gridLines = [];
+
+
 
 
 
@@ -426,8 +443,8 @@ $:  if (data && data.content && Id('canvas') && canvas && document && Id('title'
         , function (o, object){
           object.set({
             borderColor: 'red',
-            cornerColor: 'green',
-            cornerSize: 6,
+            cornerColor: '#FF005C',
+            cornerSize: 5,
             transparentCorners: false
           });
         });
@@ -454,10 +471,19 @@ setTimeout(() => {
         } catch (error) {
           console.error('Error in canvas callback:', error);
         }
+        }
+        , function (o, object){
+          object.set({
+            borderColor: 'red',
+            cornerColor: '#FF005C',
+            cornerSize: 5,
+            transparentCorners: false
+          });
         });
       } catch (error) {
         console.error('Error loading canvas:', error);
       }
+
   }
 
 }, 500)
@@ -465,6 +491,7 @@ setTimeout(() => {
 
 
 
+/*
 
 setTimeout(() => {
 
@@ -495,6 +522,7 @@ if (data && data.content && Id('canvas') && canvas && document && document.ready
 
 }, 1000)
 
+*/
 
 
 
@@ -551,7 +579,8 @@ canvas.on('mouse:down', function(o){
                 angle: 0,
                 fill: 'rgba(255,0,0,1)',
                 transparentCorners: false,
-                link: 'https://capsule.pw'
+                link: 'https://capsule.pw',
+                depth: 2,
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -565,13 +594,14 @@ canvas.on('mouse:down', function(o){
               charSpacing: -20,
               fontSize: 18,
               lineHeight: 1,
-              fontWeight: 'normal',
-              textAlign: 'left',
+              fontWeight: '500',
+
               originX: 'left',
               originY: 'top',
               width: 100,
               editable: true,
-              link: 'https://capsule.pw'
+              link: 'https://capsule.pw',
+              depth: 1,
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -601,7 +631,13 @@ window.deleteObject = function(){
   }
   canvas.renderAll()
   canvas.calcOffset()
+  saveCanvasToSupabase()
 }
+
+
+canvas.on('mouse:over', function(e) {
+    canvas.renderAll();
+});
 
 
 
@@ -631,33 +667,43 @@ function reflowText(obj, newWidth) {
 }
 
 
-// Listen for the "scaling" event on the canvas
-canvas.on('object:scaling', function (event) {
-  const obj = event.target;
 
-  // Check if the object being scaled is an IText object
-  if (obj.type === 'textbox') {
-    // Get the current scaling factors
-    const scaleX = obj.scaleX;
-    const scaleY = obj.scaleY;
+// Input Correspondence
 
-    // Reset the scaling factors to 1
-    obj.set('scaleX', 1);
-    obj.set('scaleY', 1);
+canvas.on('object:scaling', function(event) {
+    const obj = event.target;
 
-    // Calculate the new font size based on the scaling factor
-    const newFontSize = Math.floor(obj.fontSize * scaleX);
+    if (obj.type === 'textbox') {
+        const scaleX = obj.scaleX;
+        const newFontSize = Math.floor(obj.fontSize * scaleX);
+        obj.set('fontSize', newFontSize);
+        obj.set('scaleX', 1);
+        obj.set('scaleY', 1);
+        obj.initDimensions();
+    }else if (obj.type === 'image') {
+        // Update the width and height input values to the current scaled dimensions
+        Id('input-width').value = Math.round(obj.width * obj.scaleX)
+        Id('input-height').value = Math.round(obj.height * obj.scaleY)
+    }
 
-    // Set the new font size
-    obj.set('fontSize', newFontSize);
-
-    // Update the dimensions of the text box to fit the new font size
-    obj.initDimensions();
-
-    // Rerender the canvas to reflect the changes
     canvas.renderAll();
-  }
 });
+
+canvas.on('object:rotating', function(event) {
+    const obj = event.target;
+
+    if (Id('input-angle')) {
+      Id('input-angle').value = Math.round(obj.angle)
+    }
+
+    canvas.renderAll();
+});
+
+
+
+
+
+
 
 canvas.on('mouse:move', function(o){
     if (!isDown || isObjectBeingModified) return;  // Also check isObjectBeingModified here
@@ -775,6 +821,10 @@ let initialX, initialY;
 // Function to add text
 
 
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 function handleSelection(event) {
   const activeObject = canvas.getActiveObject()
 
@@ -797,7 +847,10 @@ function handleSelection(event) {
       break;
   }
 
-  let div = ''
+  let div =
+  `
+  <h1 id = 'controls-title'> ${capitalize(activeObject.type)} </h1>
+  `
 
 
   for (let i = 0; i < options.length; i++) {
@@ -810,25 +863,25 @@ function handleSelection(event) {
 
         console.log(activeObject)
         opt = `
-        <div id = 'option-${option.prop}' class="option option-${option.type}}">
+        <div id = 'option-${option.id}' class="option option-${option.type}}">
           <label> ${option.label} </label>
-          <input id = 'input-${option.prop}' class = 'input range' value='${activeObject[option.prop]}' type="range" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
+          <input id = 'input-${option.id}' class = 'input range' value='${Math.round(activeObject[option.id])}' type="range" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
         </div>
         `;
         break;
 
       case 'number':
         opt = `
-        <div id = 'option-${option.prop}' class="option option-${option.type} option-${option.prop}">
+        <div id = 'option-${option.id}' class="option option-${option.type} option-${option.id}">
           <label> ${option.label} </label>
-          <input id = 'input-${option.prop}' class = 'input number' value='${activeObject[option.prop]}' type="number" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
+          <input id = 'input-${option.id}' step ='${option.step}' class = 'input number' value='${Math.round(activeObject[option.id])}' type="number" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
         </div>
         `;
         break;
 
       case 'dropdown':
         opt = `
-        <div id = 'option-${option.prop}' class="option option-${option.type} option-${option.prop}">
+        <div id = 'option-${option.id}' class="option option-${option.type} option-${option.id}">
           <label> ${option.label} </label>
           <select id = 'input-${option.prop}' class = 'input dropdown' onchange="applyStyles(canvas)">
         `
@@ -838,7 +891,7 @@ function handleSelection(event) {
 
           console.log(o)
 
-          if (activeObject[option.prop] == o) {
+          if (activeObject[option.id] == o) {
             opt += `<option value = '${o}' selected> ${o} </option> `
           }else{
             opt += `<option value = '${o}'> ${o} </option> `
@@ -855,12 +908,12 @@ function handleSelection(event) {
         break;
 
       case 'checkbox':
-        console.log(activeObject[option.prop])
-        const isChecked = activeObject[option.prop] ? 'checked' : '';
+        console.log(activeObject[option.id])
+        const isChecked = activeObject[option.id] ? 'checked' : '';
         opt = `
-        <div id="option-${option.prop}" class="option option-${option.type} option-${option.prop}">
+        <div id="option-${option.id}" class="option option-${option.type} option-${option.id}">
             <label>${option.label}</label>
-            <input id="input-${option.prop}" class="input ${option.type}" type="${option.type}" oninput="applyStyles(canvas)" ${isChecked} />
+            <input id="input-${option.id}" class="input ${option.type}" type="${option.type}" oninput="applyStyles(canvas)" ${isChecked} />
         </div>
         `;
         break;
@@ -872,27 +925,6 @@ function handleSelection(event) {
     div += opt;
   }
 
-  /*
-
-    function textTemplate(activeObject) {
-    const options = [
-      { label: 'Font', id: 'fontFamily', type: 'select', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New'] },
-      { label: 'Color', id: 'fill', type: 'color', prop: 'fill', value: activeObject.fill },
-      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -20, max: 10 },
-      { label: 'Font Size', id: 'fontSize', type: 'range', prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
-      { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
-      { label: 'Font Weight', id: 'fontWeight', type: 'range', prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
-      { label: 'Bold', id: 'fontWeight', type: 'checkbox', prop: 'fontWeight', value: activeObject.fontWeight === 'bold' },
-      { label: 'Italic', id: 'fontStyle', type: 'checkbox', prop: 'fontStyle', value: activeObject.fontStyle === 'italic' },
-      { label: 'Underline', id: 'underline', type: 'checkbox', prop: 'underline', value: activeObject.underline },
-      { label: 'Strikethrough', id: 'linethrough', type: 'checkbox', prop: 'linethrough', value: activeObject.linethrough },
-    ];
-
-    return options;
-  }
-
-
-  */
 
 
   div +=
@@ -908,6 +940,20 @@ function handleSelection(event) {
 
   console.log(PANEL)
   PANEL.innerHTML = div;
+
+
+  switch (activeObject.type) {
+    case 'textbox':
+      break;
+    case 'image':
+      Id('input-width').value = Math.round(activeObject.width * activeObject.scaleX)
+      Id('input-height').value = Math.round(activeObject.height * activeObject.scaleY)
+      break;
+    case 'video':
+      break;
+    default:
+      break;
+  }
 
 }
 
@@ -945,10 +991,12 @@ canvas.on('selection:updated', handleSelection);
 
 canvas.wrapperEl.addEventListener('dragover', function(e) {
   e.preventDefault();
+  Id('canvas').style.opacity = 0.3
 }, false);
 
 canvas.wrapperEl.addEventListener('drop', function(e) {
   e.preventDefault();
+  Id('canvas').style.opacity = 1
   var files = e.dataTransfer.files;
   for (var i = 0; i < files.length; i++) {
     var file = files[i];
@@ -1336,12 +1384,12 @@ function addButton(x, y) {
 
   function textTemplate(activeObject) {
     const options = [
-      { label: 'Font', id: 'fontFamily', type: 'select', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Helvetica', 'Times New Roman', 'Courier New'] },
+      { label: 'Font', id: 'fontFamily', type: 'dropdown', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Newsreader', 'Helvetica', 'Times New Roman', 'Courier New'] },
       { label: 'Color', id: 'fill', type: 'color', prop: 'fill', value: activeObject.fill },
       { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -50, max: 50 },
-      { label: 'Font Size', id: 'fontSize', type: 'range', prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
+      { label: 'Font Size', id: 'fontSize', type: 'number', step: 1, prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
       { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
-      { label: 'Font Weight', id: 'fontWeight', type: 'range', prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
+      { label: 'Font Weight', id: 'fontWeight', type: 'number', step: 100,prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
       { label: 'Font Style', id: 'fontStyle', type: 'dropdown', prop: 'textAlign', value: activeObject.fonStyle, options: ['normal', 'italic', 'oblique'] },
      /*
       { label: 'Underline', id: 'underline', type: 'checkbox', prop: 'underline', value: activeObject.underline },
@@ -1366,15 +1414,21 @@ function addButton(x, y) {
   return [
     {
       label: 'Width',
-      id: 'scaleX',
+      id: 'width',
       type: 'number',
       value: activeObject.width * activeObject.scaleX,
     },
     {
       label: 'Height',
-      id: 'scaleY',
+      id: 'height',
       type: 'number',
       value: activeObject.height * activeObject.scaleY,
+    },
+    {
+      label: 'Angle',
+      id: 'angle',
+      type: 'number',
+      value: activeObject.angle
     },
     {
       label: 'Filter',
@@ -1475,7 +1529,8 @@ window.addEventListener('keyup', e => {
   async function saveCanvasToSupabase() {
     // Serialize the current canvas state
     removeGrid()
-    const canvasState = JSON.stringify(canvas);
+    const canv = canvas.toJSON(['link', 'depth']);
+    const json = JSON.stringify(canv);
     calculateGrid()
     drawGrid()
 
@@ -1486,7 +1541,7 @@ window.addEventListener('keyup', e => {
             {
               id: data.id,
               title: title,
-              content: canvasState
+              content: json
             }
         ]);
 
@@ -1501,7 +1556,7 @@ window.addEventListener('keyup', e => {
   function downloadCanvasAsJSON() {
     // Serialize the canvas to JSON
 
-    const canv = canvas.toJSON(['link']);
+    const canv = canvas.toJSON(['link', 'depth']);
     const json = JSON.stringify(canv);
 
     // Create a Blob from the JSON string
