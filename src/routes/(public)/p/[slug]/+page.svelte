@@ -327,7 +327,7 @@ canvas.on('mouse:up', function (options) {
 
     if (options.target.link) {
       // Open the external link
-      window.open(options.target.link);
+      window.location = options.target.link
     }
   }
 });
@@ -388,7 +388,7 @@ canvas.on('mouse:over', function(e) {
     }
 
 
-   if (e.target.link){
+   if (e.target.link && e.target.link != 'undefined'){
         document.getElementById('link').innerHTML = e.target.link
         document.getElementById('link').style.left = e.e.screenX + 'px'
 
