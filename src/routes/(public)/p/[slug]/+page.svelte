@@ -72,6 +72,7 @@
         border-radius: 10px;
         flex-shrink: 0;
 
+        transition: 0.2s ease;
 
         //box-shadow: 0 30px 90px rgba(black, 0.1);
     }
@@ -94,6 +95,8 @@
       font-weight: 600;
       transform: translateY(30px);
       opacity: 0;
+      width: fit-content;
+      transition: 0.2s ease;
 
       display: flex;
       gap: 12px;
@@ -114,6 +117,8 @@
         opacity: 1;
         transform: translateY(0px);
       }
+
+
     }
 
 
@@ -190,6 +195,10 @@
         #canvas{
             width: 80vw;
         }
+
+        #banner{
+            width: calc(100vw - 40px);
+        }
     }
 
 </style>
@@ -237,6 +246,7 @@ onMount(()=> {
     resizeCanvas()
 
 
+
     canvas.loadFromJSON(data.content, function() {
         canvas.renderAll();
         canvas.calcOffset();
@@ -253,7 +263,42 @@ onMount(()=> {
         canvas.calcOffset();
 
 
-        resizeCanvas()
+
+
+
+    if (window.innerWidth < 800) {
+        canvas.setWidth(window.innerWidth);
+
+    }else{
+        canvas.setWidth(window.innerWidth - 300);
+    }
+    canvas.setHeight(window.innerHeight)
+
+
+
+
+
+    let maxHeight = 0;
+
+    canvas.forEachObject((object) => {
+    // Calculate the bottom edge position for each object.
+    const objBottomEdge = object.top + object.height * object.scaleY;
+
+    // Update maxHeight if this object is lower.
+    if (objBottomEdge > maxHeight) {
+        maxHeight = objBottomEdge;
+    }
+    });
+
+    // Add 30px to maxHeight and update canvas height.
+    canvas.setHeight(maxHeight + 30);
+
+    // Update canvas dimensions on the actual HTML element
+    canvas.calcOffset();
+
+
+
+        //resizeCanvas()
     },function(o,object){
 
         object.set({
@@ -269,32 +314,33 @@ onMount(()=> {
     })
 
 
-
     canvas.on('selection:created', function(event) {
-    const activeObject = event.target;
-    if (activeObject && activeObject.type === 'i-text') {
-        activeObject.set({
-            lockMovementX: true,
-            lockMovementY: true,
-            editable: true  // Allow editing/highlighting
-        });
-    }
-});
-
-
+        const activeObject = event.target;
+        if (activeObject && activeObject.type === 'i-text') {
+            activeObject.set({
+                lockMovementX: true,
+                lockMovementY: true,
+                editable: true  // Allow editing/highlighting
+            });
+        }
+    });
 
 
     window.addEventListener('scroll', () => {
       canvas.calcOffset()
     })
+
+
     window.addEventListener('resize', debounce(() => {
-        panelWidth = 250;
+        panelWidth = 300;
         newWidth = window.innerWidth - panelWidth;
 
         if (window.innerWidth < 800){
             newWidth = window.innerWidth
         }
-        scaleX = newWidth / initialCanvasWidth;
+        scaleX = newWidth / canvas.getWidth()
+
+        console.log(scaleX)
 
         // Scale each object
         canvas.forEachObject((object) => {
@@ -307,9 +353,11 @@ onMount(()=> {
 
         // Update canvas dimensions
         canvas.setWidth(newWidth);
-        canvas.setHeight(initialCanvasHeight * scaleX);
+        //canvas.setHeight(initialCanvasHeight * scaleX);
         canvas.renderAll();
         canvas.calcOffset()
+
+        resizeCanvas()
 
 
     // Update initial dimensions
@@ -333,7 +381,6 @@ canvas.on('mouse:up', function (options) {
     }
   }
 });
-
 
 
 let initialX, initialY;
