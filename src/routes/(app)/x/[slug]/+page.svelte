@@ -91,9 +91,6 @@
       overflow-x: visible !important;
       //border: 1px solid rgba(black, 0.1);
 
-
-
-
   }
 
   #url{
@@ -108,6 +105,7 @@
 
   #canvas-container{
     margin-top: 70px;
+    height: fit-content;
   }
 
   #canvas{
@@ -117,7 +115,7 @@
       box-shadow: 0px 30px 50px rgba(black, 0.1);
 
       width: calc(100vw - 310px);
-      height: 100vh;
+
 
       margin-bottom: 50px;
 
@@ -321,7 +319,7 @@ import {onMount} from 'svelte'
 import {fabric} from 'fabric'
 import {supabaseClient} from '$lib/db'
 import {writable} from 'svelte/store'
-import icon from '$lib/img/x.svg'
+import icon from '$lib/img/favicon.svg'
 
 
 
@@ -470,42 +468,69 @@ let xArr = Array.from({length: 40}, (_, i) => i * 40);
 
 
 
-
-
-setTimeout(() => {
-
-  if (data && data.content && Id('canvas') && canvas && document && Id('title').value == data.title && document.readyState === 'complete') {
+  setTimeout(() => {
+  if (
+    data &&
+    data.content &&
+    document.getElementById('canvas') &&
+    canvas &&
+    document &&
+    document.getElementById('title').value === data.title &&
+    document.readyState === 'complete'
+  ) {
     try {
-      const parsedContent = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
+      const parsedContent =
+        typeof data.content === 'string'
+          ? JSON.parse(data.content)
+          : data.content;
 
       canvas.loadFromJSON(parsedContent, () => {
         try {
           resizeCanvas();
           resize(0);
 
+
+
+          let maxHeight = window.innerHeight - 200
+
+          canvas.forEachObject((object) => {
+            const bottomEdge = object.top + object.height;
+            if (bottomEdge > maxHeight) {
+              maxHeight = bottomEdge;
+            }
+          });
+
+          // Add buffer and update canvas height
+          const buffer = 30;
+          canvas.setHeight(maxHeight + buffer); // additional 100px as per your requirement
           canvas.renderAll();
-          canvas.requestRenderAll()
           canvas.calcOffset();
+
+
+          calculateGrid()
+          drawGrid()
+
+
+
           console.log('drawed');
         } catch (error) {
           console.error('Error in canvas callback:', error);
         }
-        }
-        , function (o, object){
-          object.set({
-            borderColor: 'red',
-            cornerColor: '#FF005C',
-            cornerSize: 5,
-            transparentCorners: false
-          });
+      },
+      function (o, object) {
+        object.set({
+          borderColor: 'red',
+          cornerColor: '#FF005C',
+          cornerSize: 5,
+          transparentCorners: false,
         });
-      } catch (error) {
-        console.error('Error loading canvas:', error);
-      }
+      });
 
+    } catch (error) {
+      console.error('Error loading canvas:', error);
+    }
   }
-
-}, 500)
+}, 200);
 
 
 
@@ -668,6 +693,64 @@ canvas.on('mouse:down', function(o){
             canvas.add(elem);
             canvas.setActiveObject(elem)
           break;
+          case 'video':
+            elem = new fabric.Image.fromURL('path_to_thumbnail_image.jpg', function(img) {
+                img.set({
+                    left: origX,
+                    top: origY,
+                    originX: 'left',
+                    originY: 'top',
+                    link: 'https://path_to_video.com',
+                    depth: 3,
+                });
+                canvas.add(img);
+                canvas.setActiveObject(img);
+            });
+            break;
+        case 'button':
+            elem = new fabric.Rect({
+                left: origX,
+                top: origY,
+                originX: 'left',
+                originY: 'top',
+                width: 100,
+                height: 50,
+                fill: 'rgba(0,0,255,1)',
+                label: 'Click Me!',
+                link: 'https://capsule.pw',
+                depth: 4,
+            });
+            canvas.add(elem);
+            canvas.setActiveObject(elem);
+            break;
+        case 'triangle':
+            elem = new fabric.Triangle({
+                left: origX,
+                top: origY,
+                originX: 'left',
+                originY: 'top',
+                width: 100,
+                height: 100,
+                fill: 'rgba(0,255,0,1)',
+                depth: 5,
+            });
+            canvas.add(elem);
+            canvas.setActiveObject(elem);
+            break;
+        case 'ellipse':
+            elem = new fabric.Ellipse({
+                left: origX,
+                top: origY,
+                originX: 'left',
+                originY: 'top',
+                rx: 50,
+                ry: 25,
+                fill: 'rgba(0,0,255,1)',
+                depth: 6,
+            });
+            canvas.add(elem);
+            canvas.setActiveObject(elem);
+            break;
         default:
             break;
     }
@@ -742,7 +825,7 @@ canvas.on('object:scaling', function(event) {
         obj.set('scaleX', 1);
         obj.set('scaleY', 1);
         obj.initDimensions();
-    }else if (obj.type === 'image') {
+    }else if (obj.width) {
         // Update the width and height input values to the current scaled dimensions
         Id('input-width').value = Math.round(obj.width * obj.scaleX)
         Id('input-height').value = Math.round(obj.height * obj.scaleY)
@@ -1316,7 +1399,7 @@ function addButton(x, y) {
 
   document.getElementById('addCircle').addEventListener('click', ()=> {
 
-    MODE = 'circle'
+    MODE = 'ellipse'
   });
 
   // Add image on button click
@@ -1385,7 +1468,7 @@ function addButton(x, y) {
     // Draw new grid
     xArr.forEach(x => {
         const line = new fabric.Path(`M ${x}, 0 V ${canvas.height}`, {
-            stroke: '#fdfdfd',
+            stroke: '#f6f6f6',
             selectable: false
         });
         canvas.add(line);
@@ -1395,7 +1478,7 @@ function addButton(x, y) {
 
     yArr.forEach(y => {
         const line = new fabric.Path(`M 0, ${y} H ${canvas.width}`, {
-            stroke: '#fdfdfd',
+            stroke: '#f6f6f6',
             selectable: false
         });
         canvas.add(line);
@@ -1403,6 +1486,8 @@ function addButton(x, y) {
         gridLines.push(line); // Populate gridLines array
     });
 
+
+    console.log('yo')
 
 
     /*

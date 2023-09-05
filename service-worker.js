@@ -10,7 +10,7 @@
       Need an introduction to Service Workers? Check our docs here: https://docs.pwabuilder.com/#/home/sw-intro
       Want to learn more about how our Service Worker generation works? Check our docs here: https://docs.pwabuilder.com/#/studio/existing-app?id=add-a-service-worker
 
-      Did you know that Service Workers offer many more capabilities than just offline? 
+      Did you know that Service Workers offer many more capabilities than just offline?
         - Background Sync: https://microsoft.github.io/win-student-devs/#/30DaysOfPWA/advanced-capabilities/06
         - Periodic Background Sync: https://web.dev/periodic-background-sync/
         - Push Notifications: https://microsoft.github.io/win-student-devs/#/30DaysOfPWA/advanced-capabilities/07?id=push-notifications-on-the-web
@@ -27,7 +27,7 @@
     // The Util Function to hack URLs of intercepted requests
     const getFixedUrl = (req) => {
         var now = Date.now()
-        var url = new URL(req.url)
+        var url = new URL(req.url, 'https://xylophone.dev')
 
         // 1. fixed http URL
         // Just keep syncing with location.protocol

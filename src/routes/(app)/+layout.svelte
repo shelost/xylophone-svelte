@@ -4,7 +4,7 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
-	import X from '$lib/img/x.svg'
+	import X from '$lib/img/favicon.svg'
 	import Xylophone from '$lib/img/xylophone.svg'
 	import IconHome from '$lib/img/iconx_home.svg'
 	import IconCreate from '$lib/img/iconx_create.svg'

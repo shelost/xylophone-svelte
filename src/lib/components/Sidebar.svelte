@@ -130,6 +130,7 @@
 		</a>
 		-->
 
+		<!--
 		<a href = '/studio' id = 'create' >
 			<div class = 'text-btn' class:active={path === '/create'}>
 				<div class = 'icon' style = 'background-image: url({IconCreate})'>
@@ -137,6 +138,7 @@
 				<h2> Create </h2>
 			</div>
 		</a>
+		-->
 
 		<a href = '/profile' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/profile'}>
@@ -243,8 +245,8 @@
 	color: black;
 
     #logo{
-		height: 26px;
-		margin: 25px 20px;
+		height: 28px;
+		margin: 25px 15px;
 	}
 
 

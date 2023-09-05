@@ -216,7 +216,7 @@
 import {onMount} from 'svelte'
 import {fabric} from 'fabric'
 import {supabaseClient} from '$lib/db'
-import X from '$lib/img/x.svg'
+import X from '$lib/img/favicon.svg'
 export let data;
 
 import Capsule from '$lib/img/capsulex.svg'
