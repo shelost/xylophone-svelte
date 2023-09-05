@@ -227,12 +227,14 @@ onMount(()=> {
     });
 
 
-    let panelWidth = 240;
+    let panelWidth = 300;
     let newWidth = window.innerWidth - panelWidth;
     if (window.innerWidth < 800){
       newWidth = window.innerWidth
     }
-    let scaleX = newWidth / initialCanvasWidth;
+    let scaleX = newWidth / data.iwidth
+
+    resizeCanvas()
 
 
     canvas.loadFromJSON(data.content, function() {

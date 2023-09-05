@@ -7,6 +7,10 @@
 	import Scrollable from '$lib/img/scrollable.svg'
 	import X from '$lib/img/x.svg'
 	import Xylophone from '$lib/img/xylophone.svg'
+
+	import Webcraft from '$lib/img/webcraft.svg'
+
+
 	import IconHome from '$lib/img/iconx_home.svg'
 	import IconCreate from '$lib/img/iconx_create.svg'
 	import IconFeed from '$lib/img/iconx_settings.svg'
@@ -105,7 +109,7 @@
 	<div id = 'top'>
 
 		<a href = '/home'>
-			<img src = '{Xylophone}' alt = 'Scrollable Logo' id = 'logo'>
+			<img src = '{Webcraft}' alt = 'Scrollable Logo' id = 'logo'>
 		</a>
 
 		<a href = '/home'>
@@ -239,7 +243,7 @@
 	color: black;
 
     #logo{
-		height: 22px;
+		height: 26px;
 		margin: 25px 20px;
 	}
 

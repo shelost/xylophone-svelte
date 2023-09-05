@@ -1,5 +1,5 @@
 {
-  "name": "svelte-saas-kit",
+  "name": "xylophone-svelte",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -20,7 +20,7 @@
     "@playwright/test": "^1.25.0",
     "@supabase/auth-helpers-sveltekit": "^0.8.3",
     "@supabase/supabase-js": "^2.27.0",
-    "@sveltejs/adapter-auto": "next",
+    "@sveltejs/adapter-auto": "^1.0.0-next.91",
     "@sveltejs/kit": "^1.22.3",
     "@tailwindcss/forms": "^0.5.3",
     "@types/fabric": "^5.3.3",
@@ -55,7 +55,7 @@
     "typescript": "^4.9.5",
     "uuid": "^9.0.0"
   },
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@capacitor/android": "^5.2.2",
     "@capacitor/cli": "^5.2.2",

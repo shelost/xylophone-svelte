@@ -332,6 +332,8 @@ import Triangle from '$lib/img/i-triangle.svg'
 import Rect from '$lib/img/i-rect.svg'
 import Ellipse from '$lib/img/i-ellipse.svg'
 
+import Copy from '$lib/img/copy.svg'
+
 
 
 export let data
@@ -374,6 +376,52 @@ onMount(()=> {
       height: initialCanvasHeight,
       renderOnAddRemove: false,
   });
+
+
+
+  var cloneImg = document.createElement('img');
+  cloneImg.src = Copy
+
+
+  fabric.Object.prototype.controls.clone = new fabric.Control({
+    x: -0.5,
+    y: -0.5,
+    offsetY: 5,
+    offsetX: -16,
+    cursorStyle: 'pointer',
+    mouseUpHandler: cloneObject,
+    render: renderIcon(cloneImg),
+    cornerSize: 18
+  });
+
+
+  fabric.Textbox.prototype.controls.clone = fabric.Object.prototype.controls.clone;
+
+
+
+
+  function renderIcon(icon) {
+    return function renderIcon(ctx, left, top, styleOverride, fabricObject) {
+      var size = this.cornerSize;
+      ctx.save();
+      ctx.translate(left, top);
+      ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+      ctx.drawImage(icon, -size/2, -size/2, size, size);
+      ctx.restore();
+    }
+  }
+
+  function cloneObject(eventData, transform) {
+    var target = transform.target;
+    var canvas = target.canvas;
+    target.clone(function(cloned) {
+      cloned.left += 10;
+      cloned.top += 10;
+      canvas.add(cloned);
+    });
+  }
+
+
 
 
 
@@ -422,36 +470,6 @@ let xArr = Array.from({length: 40}, (_, i) => i * 40);
 
 
 
-$:  if (data && data.content && Id('canvas') && canvas && document && Id('title').value == data.title && document.readyState === 'complete') {
-    try {
-      const parsedContent = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
-
-      canvas.loadFromJSON(parsedContent, () => {
-
-          try {
-            resizeCanvas();
-            resize();
-            canvas.renderAll();
-            canvas.requestRenderAll()
-            canvas.calcOffset();
-            console.log('drawed');
-          } catch (error) {
-            console.error('Error in canvas callback:', error);
-          }
-        }
-
-        , function (o, object){
-          object.set({
-            borderColor: 'red',
-            cornerColor: '#FF005C',
-            cornerSize: 5,
-            transparentCorners: false
-          });
-        });
-      } catch (error) {
-        console.error('Error loading canvas:', error);
-      }
-  }
 
 
 setTimeout(() => {
@@ -463,7 +481,8 @@ setTimeout(() => {
       canvas.loadFromJSON(parsedContent, () => {
         try {
           resizeCanvas();
-          resize();
+          resize(0);
+
           canvas.renderAll();
           canvas.requestRenderAll()
           canvas.calcOffset();
@@ -553,6 +572,49 @@ canvas.on('object:scaling', function() {
 canvas.on('object:rotating', function() {
     isObjectBeingModified = true;
 });
+
+
+
+
+
+let isCloning = false;
+
+const handleObjectMoving = (e) => {
+    const activeObject = e.target;
+
+    if (!e.e.altKey || isCloning) return;
+
+    isCloning = true;
+
+    activeObject.clone((cloned) => {
+        cloned.set({
+            top: activeObject.top,
+            left: activeObject.left
+        });
+        canvas.add(cloned);
+        canvas.setActiveObject(cloned);
+        canvas.requestRenderAll();
+    });
+};
+
+const handleObjectMoved = () => {
+    isCloning = false;
+};
+
+canvas.on('object:moving', handleObjectMoving);
+canvas.on('object:moved', handleObjectMoved);
+
+canvas.on('object:added', (e) => {
+    const obj = e.target;
+
+    // Attach the moving and moved listeners to the newly added object
+    obj.on('moving', handleObjectMoving);
+    obj.on('moved', handleObjectMoved);
+});
+
+
+
+
 
 
 canvas.on('mouse:down', function(o){
@@ -733,6 +795,8 @@ canvas.on('mouse:move', function(o){
 
 
 
+
+
 canvas.on('mouse:up', function(o){
   isDown = false;
 });
@@ -743,54 +807,26 @@ canvas.on('mouse:up', function(o){
   });
 
 
-  window.addEventListener('resize', () => {
+  window.addEventListener('resize', resize)
+
+
+  function resize(initial = 1){
       let newWidth = window.innerWidth - panelWidth;
 
       if (window.innerWidth < 800){
           newWidth = window.innerWidth
-          console.log(newWidth)
       }
-      const scaleX = newWidth / initialCanvasWidth;
+
+
+      let scaleX = newWidth / initialCanvasWidth;
+      if (initial == 0){
+        scaleX = newWidth / data.iwidth
+      }
+
+
 
       // Scale each object
-      canvas.forEachObject((object) => {
-          object.left *= scaleX;
-          object.scaleX *= scaleX;
-          object.top *= scaleX;
-          object.scaleY *= scaleX;
-          object.setCoords();
-      });
-
-      // Update canvas dimensions
-      canvas.setWidth(newWidth);
-      canvas.setHeight(initialCanvasHeight * scaleX);
-      canvas.renderAll();
-      canvas.calcOffset()
-
-
-      /*
-    calculateGrid()
-    drawGrid()
-    */
-
-
-    // Update initial dimensions
-    initialCanvasWidth = newWidth;
-    initialCanvasHeight = canvas.getHeight();
-  })
-
-
-  function resize(){
-      let newWidth = window.innerWidth - panelWidth;
-
-      if (window.innerWidth < 800){
-          newWidth = window.innerWidth
-          console.log(newWidth)
-      }
-      const scaleX = newWidth / initialCanvasWidth;
-
-      // Scale each object
-      canvas.forEachObject((object) => {
+      canvas.getObjects().forEach((object) => {
           object.left *= scaleX;
           object.scaleX *= scaleX;
           object.top *= scaleX;
@@ -1086,25 +1122,38 @@ function addText(x,y) {
 
 
 
+
+
 function resizeCanvas() {
   let maxHeight = 0;
 
-  canvas.forEachObject((object) => {
+  canvas.getObjects().forEach((object) => {
     // Calculate the bottom edge position for each object.
-    const objBottomEdge = object.top + object.height * object.scaleY;
 
-    // Update maxHeight if this object is lower.
-    if (objBottomEdge > maxHeight) {
-      maxHeight = objBottomEdge;
+    const obj = object
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+    const buffer = 30; // distance from edge to start expanding canvas
+
+    // Extend Canvas Height
+    if ((obj.top + obj.height) > (canvasHeight - buffer)) {
+      canvas.setHeight(canvasHeight + buffer);
+      console.log(obj)
     }
   });
 
-  // Add 30px to maxHeight and update canvas height.
+  // Add 100px to maxHeight and update canvas height.
   canvas.setHeight(maxHeight + 100);
 
   // Update canvas dimensions on the actual HTML element
   canvas.calcOffset();
+
+  // Ensure canvas is re-rendered
+  canvas.renderAll();
 }
+
+
+
 
 // Function to add image
 function addImage(x,y) {
@@ -1390,8 +1439,14 @@ function addButton(x, y) {
       { label: 'Font Size', id: 'fontSize', type: 'number', step: 1, prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
       { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
       { label: 'Font Weight', id: 'fontWeight', type: 'number', step: 100,prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
-      { label: 'Font Style', id: 'fontStyle', type: 'dropdown', prop: 'textAlign', value: activeObject.fonStyle, options: ['normal', 'italic', 'oblique'] },
-     /*
+      { label: 'Font Style', id: 'fontStyle', type: 'dropdown', prop: 'fontStyle', value: activeObject.fontStyle, options: ['normal', 'italic', 'oblique'] },
+      {
+      label: 'Angle',
+      id: 'angle',
+      type: 'number',
+      value: activeObject.angle
+    },
+      /*
       { label: 'Underline', id: 'underline', type: 'checkbox', prop: 'underline', value: activeObject.underline },
       { label: 'Strikethrough', id: 'linethrough', type: 'checkbox', prop: 'linethrough', value: activeObject.linethrough },
       */
@@ -1515,13 +1570,38 @@ window.addEventListener('keyup', e => {
     const obj = event.target;
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
-    const buffer = 30; // distance from edge to start expanding canvas
+    const buffer = 30; // distance from edge to start expanding/retracting canvas
 
     // Extend Canvas Height
     if ((obj.top + obj.height) > (canvasHeight - buffer)) {
-      canvas.setHeight(canvasHeight + buffer);
+        canvas.setHeight(canvasHeight + buffer);
+        canvas.calcOffset();
     }
-  });
+
+
+    if ((canvasHeight - objectBottom) > buffer){
+        canvas.setHeight(objectBottom + buffer);
+        canvas.calcOffset();
+    }
+
+
+    /*
+    // Retract Canvas Height
+    let maxObjectBottom = 0;
+    canvas.getObjects().forEach(object => {
+        const objectBottom = object.top + object.height;
+        if (objectBottom > maxObjectBottom) {
+            maxObjectBottom = objectBottom;
+        }
+    });
+
+    if ((canvasHeight - maxObjectBottom) > buffer) {
+        canvas.setHeight(maxObjectBottom + buffer);
+        canvas.calcOffset();
+    }
+    */
+
+});
 
 
 ////////
@@ -1541,7 +1621,8 @@ window.addEventListener('keyup', e => {
             {
               id: data.id,
               title: title,
-              content: json
+              content: json,
+              iwidth: canvas.width
             }
         ]);
 

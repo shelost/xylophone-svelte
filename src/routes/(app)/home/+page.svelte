@@ -11,7 +11,7 @@
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
     let userData = {};
-	let pages = writable([])
+	let pages = writable([]);
 	let books = []
 	let loading = true
 
@@ -24,154 +24,73 @@
 		return document.getElementById(id)
 	}
 
-
-	onMount(()=> {
-
-
-
-		let initialCanvasWidth = window.innerWidth - 300
-		let initialCanvasHeight = window.innerHeight
+	let initialCanvasWidth = window.innerWidth
+	let initialCanvasHeight = window.innerHeight
 
 
-		async function fetchPages(){
-		// Fetch the user_data from the database for the logged-in user's ID
-		const { data : k, error: e} = await supabaseClient
-            .from('pages') // Update the table name to 'profiles'
-            .select('*') // Fetch all columns for the active user
-        if (!e) {
-            pages.set(k)
+	onMount(async () => {
+		const initialCanvasWidth = window.innerWidth - 300;
+		const initialCanvasHeight = window.innerHeight;
 
-			for (let i=0; i<$pages.length; i++){
-				let page = $pages[i]
+		const { data: pagesData, error } = await supabaseClient.from('pages').select('*');
 
-				setTimeout(()=> {
-
-					let canvas = new fabric.Canvas(`canvas-${page.id}`, {
-						width: 300,
-						height: 200,
-						renderOnAddRemove: false,
-					});
-
-
-					setTimeout(() => {
-
-						canvas.loadFromJSON(page.content, () => {
-
-						try {
-							let newWidth = 400;
-
-							if (window.innerWidth < 800){
-								newWidth = window.innerWidth
-								console.log(newWidth)
-							}
-							const scaleX = newWidth / initialCanvasWidth;
-
-							// Scale each object
-							canvas.forEachObject((object) => {
-								object.left *= scaleX;
-								object.scaleX *= scaleX;
-								object.top *= scaleX;
-								object.scaleY *= scaleX;
-								object.setCoords();
-							});
-
-							// Update canvas dimensions
-							canvas.setWidth(newWidth);
-							canvas.setHeight(initialCanvasHeight * scaleX);
-							canvas.renderAll();
-							canvas.calcOffset()
-
-						} catch (error) {
-							console.error('Error in canvas callback:', error);
-						}
-
-						}, function (o, object){
-							object.set({
-							borderColor: 'red',
-							cornerColor: 'green',
-							cornerSize: 6,
-							transparentCorners: false
-							});
-						});
-
-					}, 1000);
-				},3000)
-			}
-        } else {
-            console.error('Error fetching pages:', e);
-        }
-	}
-
-	fetchPages()
-
-		function resize(){
-			let newWidth = 300;
-
-			if (window.innerWidth < 800){
-				newWidth = window.innerWidth
-				console.log(newWidth)
-			}
-			const scaleX = newWidth / initialCanvasWidth;
-
-			// Scale each object
-			canvas.forEachObject((object) => {
-				object.left *= scaleX;
-				object.scaleX *= scaleX;
-				object.top *= scaleX;
-				object.scaleY *= scaleX;
-				object.setCoords();
-			});
-
-			// Update canvas dimensions
-			canvas.setWidth(newWidth);
-			canvas.setHeight(initialCanvasHeight * scaleX);
-			canvas.renderAll();
-			canvas.calcOffset()
-
-			// Update initial dimensions
-			initialCanvasWidth = newWidth;
-			initialCanvasHeight = canvas.getHeight();
+		if (error) {
+			console.error('Error fetching pages:', error);
+			return;
 		}
 
+		pages.set(pagesData);
 
 		setTimeout(() => {
 
-			$: for (let i=0; i<$pages.length; i++){
+			for (let i=0; i<$pages.length; i++) {
+
 				let page = $pages[i]
 
-				console.log('yo')
-
 				let canvas = new fabric.Canvas(`canvas-${page.id}`, {
-					width: 400,
-					height: 300,
+					width: 300,
+					height: 200,
 					renderOnAddRemove: false,
 				});
 
-				canvas.loadFromJSON(page.content, () => {
+				setTimeout(() => {
+					if (page.content){
+					canvas.loadFromJSON(JSON.parse(page.content), () => {
+						try {
+							//resize(canvas);
+							canvas.clear().renderAll();
+							canvas.requestRenderAll()
+							canvas.calcOffset();
+							console.log('drawn')
+						} catch (error) {
+							console.error('Error rendering canvas:', error);
+						}
+					});
+				}
+				}, 1000);
 
-
-					console.log(page.content)
-
-					try {
-						//resize();
-
-						canvas.renderAll();
-						canvas.requestRenderAll()
-						canvas.calcOffset();
-						console.log('drawed');
-					} catch (error) {
-						console.error('Error in canvas callback:', error);
-					}
-
-					}, function (o, object){
-
-				});
 			}
 
-		}, 500);
+		}, 1000);
 
-	}
-	)
+	});
+
+function resize(canvas) {
+    const newWidth = window.innerWidth < 800 ? window.innerWidth : 250;
+    const scaleX = newWidth / initialCanvasWidth;
+    canvas.forEachObject((object) => {
+        object.left *= scaleX;
+        object.scaleX *= scaleX;
+        object.top *= scaleX;
+        object.scaleY *= scaleX;
+        object.setCoords();
+    });
+
+    canvas.setWidth(newWidth);
+    canvas.setHeight(initialCanvasHeight * scaleX);
+    canvas.renderAll();
+    canvas.calcOffset();
+}
 
 
 </script>
@@ -216,17 +135,18 @@
 
 
 
-<style>
+<style lang="scss">
 
 	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
 	h1{
 		color: black;
+
 	}
 
 	:global(canvas){
-		border: 1px solid rgba(black, 0.2);
-		width: 400px;
+		border: 1px solid rgba(black, 0.1);
+		width: 350px;
 		height: 250px;
 		background: white;
 	}
@@ -236,6 +156,21 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 30px;
+		margin-top: 40px;
+
+		.page{
+
+			canvas{
+				border-radius: 10px;
+			}
+
+			h1{
+				margin-top: 10px;
+				font-size: 16px;
+				font-weight: 500;
+				letter-spacing: -0.2px;
+			}
+		}
 	}
 
 	#app{
@@ -288,41 +223,5 @@
 		padding: 15px;
 	}
 
-	.profile h1{
-		font-size: 16px;
-		font-weight: 700;
-		margin: 0;
-		text-align: left;
-	}
-
-	.profile h2{
-		font-size: 14px;
-		font-weight: 400;
-		margin: 0;
-		text-align: left;
-	}
-
-	section h1{
-		font-size: 24px;
-		font-weight: 600;
-		text-align: left;
-		margin: 0;
-		margin-bottom: 30px;
-	}
-
-	:global(#todo){
-		width: 300px;
-		height: 85vh;
-		margin-top: 20px;
-		margin-left: 30px;
-		overflow-y: scroll;
-		overflow-x: hidden;
-		border: 4px solid white;
-		box-shadow: 0px 20px 80px rgba(0,0,0,0.2);
-	}
-
-	:global(#spaces){
-
-	}
 
 </style>
