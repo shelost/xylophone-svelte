@@ -1,4 +1,4 @@
-import { STRIPE_SECRET_KEY } from '$env/static/private';
+
 import { redirect } from '@sveltejs/kit';
 import { Stripe } from 'stripe';
 import type { RequestEvent } from '@sveltejs/kit';
@@ -23,7 +23,7 @@ export const actions: Actions = {
 			.select('stripe_customer_id')
 			.eq('id', user.id)
 			.single();
-		const stripe = new Stripe(STRIPE_SECRET_KEY, {
+		const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
 			apiVersion: '2022-08-01'
 		});
 
