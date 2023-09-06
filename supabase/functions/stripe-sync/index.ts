@@ -9,9 +9,9 @@ const stripe = Stripe(Deno.env.get("STRIPE_API_KEY"), {
 	apiVersion: "2022-08-01",
   });
 const cryptoProvider = Stripe.createSubtleCryptoProvider();
-  
-const supabaseUrl = Deno.env.get("SUPABASE_URL");
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+const supabaseUrl = Deno.env.get("VITE_PUBLIC_SUPABASE_URL");
+const supabaseServiceKey = Deno.env.get("VITE_PUBLIC_SUPABASE_ANON_KEY");
 {
   invariant(typeof supabaseUrl === "string", "SUPABASE_URL is required");
   invariant(
@@ -36,4 +36,3 @@ const handler = createDenoHandler({
 });
 
 serve(handler);
-                                
