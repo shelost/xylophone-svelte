@@ -12,6 +12,7 @@
 
       <div id = 'canvas-container'>
         <canvas id = 'canvas'></canvas>
+
       </div>
 
 
@@ -321,16 +322,15 @@ import {supabaseClient} from '$lib/db'
 import {writable} from 'svelte/store'
 import icon from '$lib/img/favicon.svg'
 
-
-
 import Text from '$lib/img/i-text.svg'
 import Button from '$lib/img/i-button.svg'
 import Image from '$lib/img/i-img.svg'
 import Triangle from '$lib/img/i-triangle.svg'
 import Rect from '$lib/img/i-rect.svg'
 import Ellipse from '$lib/img/i-ellipse.svg'
-
 import Copy from '$lib/img/copy.svg'
+
+import Grid from '$lib/components/Grid.svelte'
 
 
 
@@ -440,8 +440,6 @@ onMount(()=> {
             } else {
                 activeObject[prop] = input.value;
             }
-
-            console.log(prop, activeObject[prop]);
         }
 
         canvas.renderAll();
@@ -472,10 +470,8 @@ let xArr = Array.from({length: 40}, (_, i) => i * 40);
   if (
     data &&
     data.content &&
-    document.getElementById('canvas') &&
     canvas &&
     document &&
-    document.getElementById('title').value === data.title &&
     document.readyState === 'complete'
   ) {
     try {
@@ -507,9 +503,11 @@ let xArr = Array.from({length: 40}, (_, i) => i * 40);
           canvas.calcOffset();
 
 
+          /*
           calculateGrid()
           drawGrid()
 
+          */
 
 
           console.log('drawed');
@@ -707,6 +705,26 @@ canvas.on('mouse:down', function(o){
                 canvas.setActiveObject(img);
             });
             break;
+          case 'image':
+            elem = new fabric.Image.fromURL('https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/sign/images/paine.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvcGFpbmUucG5nIiwiaWF0IjoxNjkzOTcxMTUxLCJleHAiOjE3MjU1MDcxNTF9.jjT84RALo8psjpZnMBFNTGjMmnd5jYmFpyqPi05ul9s&t=2023-09-06T03%3A32%3A31.209Z', function(img) {
+              const scaleFactorX = 250 / img.width;
+              const scaleFactorY = 250 / img.height;
+
+              img.set({
+                  left: origX,
+                  top: origY,
+                  scaleX: scaleFactorX,
+                  scaleY: scaleFactorY,
+                  originX: 'left',
+                  originY: 'top',
+                  link: 'https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/sign/images/paine.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvcGFpbmUucG5nIiwiaWF0IjoxNjkzOTcxMTUxLCJleHAiOjE3MjU1MDcxNTF9.jjT84RALo8psjpZnMBFNTGjMmnd5jYmFpyqPi05ul9s&t=2023-09-06T03%3A32%3A31.209Z',
+                  depth: 3,
+              });
+
+              canvas.add(img);
+              canvas.setActiveObject(img);
+            });
+            break;
         case 'button':
             elem = new fabric.Rect({
                 left: origX,
@@ -743,8 +761,8 @@ canvas.on('mouse:down', function(o){
                 top: origY,
                 originX: 'left',
                 originY: 'top',
-                rx: 50,
-                ry: 25,
+                rx: 40,
+                ry: 40,
                 fill: 'rgba(0,0,255,1)',
                 depth: 6,
             });
@@ -850,6 +868,7 @@ canvas.on('object:rotating', function(event) {
 
 
 
+/*
 canvas.on('mouse:move', function(o){
     if (!isDown || isObjectBeingModified) return;  // Also check isObjectBeingModified here
     var pointer = canvas.getPointer(o.e);
@@ -875,6 +894,7 @@ canvas.on('mouse:move', function(o){
 
     canvas.renderAll();
 });
+*/
 
 
 
@@ -924,8 +944,10 @@ canvas.on('mouse:up', function(o){
       canvas.calcOffset()
 
 
+      /*
     calculateGrid()
     drawGrid()
+    */
 
 
     // Update initial dimensions
@@ -1108,11 +1130,66 @@ canvas.on('selection:updated', handleSelection);
 
 /////
 
+
+// Assuming supabaseClient is initialized somewhere above
+// Assuming supabaseClient is initialized somewhere above
+
+async function uploadToSupabase(file) {
+    const filePath = `images/${file.name}`;
+    const { error } = await supabaseClient.storage.from('images').upload(filePath, file);
+    if (error) {
+        console.error('Error uploading file:', error);
+        return null;
+    }
+    return filePath;
+}
+
+// Assuming the 'Id' function is defined somewhere, something like:
+function Id(id) {
+    return document.getElementById(id);
+}
+
 canvas.wrapperEl.addEventListener('dragover', function(e) {
-  e.preventDefault();
-  Id('canvas').style.opacity = 0.3
+    e.preventDefault();
+    Id('canvas').style.opacity = 0.3;
 }, false);
 
+canvas.wrapperEl.addEventListener('drop', async function(e) {
+    e.preventDefault();
+    Id('canvas').style.opacity = 1;
+    var files = e.dataTransfer.files;
+
+    console.log('Files:', files); // Debug
+
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (file.type.includes("image")) {
+            const imagePath = await uploadToSupabase(file);
+
+            console.log('Image Path:', imagePath); // Debug
+
+            if (imagePath) {
+                const imageURL = `https://daiyycuunubdakrxtztl.supabase.co/${imagePath}`;
+
+                console.log('Image URL:', imageURL); // Debug
+
+                fabric.Image.fromURL(imageURL, function(img) {
+                    console.log('Inside Image Callback'); // Debug
+                    img.scaleToWidth(300);
+                    img.scaleToHeight(300);
+                    canvas.add(img);
+                    canvas.renderAll(); // Force a canvas render
+                });
+            }
+        }
+        // Handle videos similarly...
+    }
+
+    saveCanvasToSupabase(); // Assuming this function is defined elsewhere in your code
+}, false);
+
+
+/*
 canvas.wrapperEl.addEventListener('drop', function(e) {
   e.preventDefault();
   Id('canvas').style.opacity = 1
@@ -1178,10 +1255,10 @@ canvas.wrapperEl.addEventListener('drop', function(e) {
       }
     };
     reader.readAsDataURL(file);
-    saveCanvasToSupabase()
   }
   saveCanvasToSupabase()
 }, false);
+*/
 
 
 
@@ -1375,8 +1452,8 @@ function addButton(x, y) {
   })
 
 
-  $: for (let i=0; i<document.getElementsByClassName('input').innerHTML; i++){
-    let option = document.getElementsByClassName('input')[i]
+  $: for (let i=0; i<Class('input').innerHTML; i++){
+    let option = Class('input')[i]
 
     option.addEventListener('change', function(e){
       applyStyles(canvas)
@@ -1606,7 +1683,7 @@ window.addEventListener('keyup', e => {
 })
 
 
-   canvas.on('selection:cleared', function() {
+  canvas.on('selection:cleared', function() {
     saveCanvasToSupabase()
   });
 
@@ -1619,7 +1696,7 @@ window.addEventListener('keyup', e => {
   canvas.on('selection:cleared', function() {
     let panel = document.getElementById('controls');
     panel.innerHTML = '';
-    $selectedType = null;
+    $selectedType = nullI;
   });
 
   canvas.on('mouse:down', function(event) {
@@ -1658,46 +1735,41 @@ window.addEventListener('keyup', e => {
     const buffer = 30; // distance from edge to start expanding/retracting canvas
 
     // Extend Canvas Height
-    if ((obj.top + obj.height) > (canvasHeight - buffer)) {
+    const objectBottom = obj.top + obj.height; // Define object's bottom position
+    if (objectBottom > (canvasHeight - buffer)) {
         canvas.setHeight(canvasHeight + buffer);
         canvas.calcOffset();
     }
 
-
-    if ((canvasHeight - objectBottom) > buffer){
-        canvas.setHeight(objectBottom + buffer);
-        canvas.calcOffset();
-    }
-
-
-    /*
-    // Retract Canvas Height
+    // Retract Canvas Height (if needed)
+    // Find the object with the maximum bottom position
     let maxObjectBottom = 0;
     canvas.getObjects().forEach(object => {
-        const objectBottom = object.top + object.height;
-        if (objectBottom > maxObjectBottom) {
-            maxObjectBottom = objectBottom;
+        const currentObjectBottom = object.top + object.height;
+        if (currentObjectBottom > maxObjectBottom) {
+            maxObjectBottom = currentObjectBottom;
         }
     });
 
+    // If there's a lot of extra space below the bottom-most object, reduce canvas height
     if ((canvasHeight - maxObjectBottom) > buffer) {
         canvas.setHeight(maxObjectBottom + buffer);
         canvas.calcOffset();
     }
-    */
-
 });
 
 
 ////////
 
   async function saveCanvasToSupabase() {
+
     // Serialize the current canvas state
-    removeGrid()
+
+   // removeGrid()
     const canv = canvas.toJSON(['link', 'depth']);
     const json = JSON.stringify(canv);
-    calculateGrid()
-    drawGrid()
+   // calculateGrid()
+  //  drawGrid()
 
     // Save to Supabase
     const { data: d, error } = await supabaseClient
@@ -1729,9 +1801,6 @@ window.addEventListener('keyup', e => {
     const blob = new Blob([json], { type: 'application/json' });
 
     let url = URL.createObjectURL(blob);
-
-    console.log(url)
-    console.log(blob)
 
     // Create an anchor element and set its attributes
     const a = document.createElement('a');
