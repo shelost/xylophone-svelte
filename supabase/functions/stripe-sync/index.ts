@@ -20,8 +20,8 @@ const supabaseServiceKey = Deno.env.get("VITE_PUBLIC_SUPABASE_ANON_KEY");
   );
 }
 export const supabaseClient = createClient(
-	import.meta.env.VITE_PUBLIC_SUPABASE_URL,
-	import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY,
+	process.env.VITE_PUBLIC_SUPABASE_URL,
+	process.env.VITE_PUBLIC_SUPABASE_ANON_KEY,
 	{
 	db: {
 	  schema: "stripe",
@@ -34,8 +34,8 @@ const handler = createDenoHandler({
 	}),
 	stripe,
 	cryptoProvider,
-	stripeEndpointSecret: import.meta.env.STRIPE_WEBHOOK_SECRET,
-	stripeSecretKey: import.meta.env.STRIPE_SECRET_KEY
+	stripeEndpointSecret: process.env.STRIPE_WEBHOOK_SECRET,
+	stripeSecretKey: process.env.STRIPE_SECRET_KEY
 });
 
 serve(handler);
