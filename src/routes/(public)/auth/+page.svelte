@@ -81,11 +81,11 @@
 		</form>
 
 		<div class="mt-6">
-			<p class="has-text-centered">
+			<p class="login has-text-centered">
 				{#if isRegister}
 					Already have an account? <a href="/auth">Login</a>
 				{:else}
-					Don't have an account? <a href="/auth?register">Sign up</a>
+					Don't have an account? <a href="/auth?register">Sign Up</a>
 				{/if}
 			</p>
 		</div>
@@ -113,10 +113,11 @@
 
 	input{
 		width: 300px;
-		border-radius: 5px;
 		background: rgba(0,0,0,0.05) !important;
 		padding: 10px 15px;
 		margin-top: -10px;
+		border-radius: 10px;
+		font-size: 14px;
 	}
 
 	label{
@@ -125,8 +126,8 @@
 	}
 
 	h1{
-		font-family: 'Newsreader', 'Libre Baskerville', sans-serif;
-		font-size: 32px;
+		font-family: 'Inter', 'Newsreader', 'Libre Baskerville', sans-serif;
+		font-size: 24px;
 		font-weight: 600;
 		letter-spacing: -0.5px;
 		margin-bottom: 50px;
@@ -134,13 +135,17 @@
 
 	button{
 		width: 300px;
+		background: #FF004D;
+		padding: 12px 0;
+		border-radius: 10px;
+		font-weight: 500;
 	}
 
 	#app{
 		width: 100vw !important;
 		height: 100vh;
-		color: white;
-		background: #151515;
+		color: black;
+		background: white;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -148,11 +153,19 @@
 		text-align: center;
 	}
 
+	.login{
+		font-size: 14px;
+		letter-spacing: -0.15px;
+		a{
+			color: #FF004D;
+		}
+	}
+
 	section{
-		background: #151515;
-		box-shadow: 0px 50px 100px rgba(black, 0.6);
+		background: white;
+		//box-shadow: 0px 50px 150px rgba(black, 0.05);
 		padding: 50px;
-		border-radius: 30px;
+		border-radius: 20px;
 	}
 
 

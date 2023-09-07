@@ -367,6 +367,8 @@ let title = data.title
 let color = data.color
 
 
+console.log(data)
+
 
 function Id(e){
   return document.getElementById(e)
@@ -506,7 +508,7 @@ onMount(()=> {
           });
 
           // Add buffer and update canvas height
-          const buffer = 30;
+          const buffer = 100;
           canvas.setHeight(maxHeight + buffer); // additional 100px as per your requirement
           canvas.renderAll();
           canvas.calcOffset();
@@ -1316,7 +1318,7 @@ function resizeCanvas() {
     const obj = object
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
-    const buffer = 200; // distance from edge to start expanding canvas
+    const buffer = 100; // distance from edge to start expanding canvas
 
     // Extend Canvas Height
     if ((obj.top + obj.height) > (canvasHeight - buffer)) {
@@ -1326,7 +1328,7 @@ function resizeCanvas() {
   });
 
   // Add 100px to maxHeight and update canvas height.
-  canvas.setHeight(maxHeight + 300);
+  canvas.setHeight(maxHeight + 100);
 
   // Update canvas dimensions on the actual HTML element
   canvas.calcOffset();
@@ -1755,7 +1757,7 @@ window.addEventListener('keyup', e => {
     const obj = event.target;
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
-    const buffer = 200; // distance from edge to start expanding/retracting canvas
+    const buffer = 100; // distance from edge to start expanding/retracting canvas
 
     // Extend Canvas Height
     const objectBottom = obj.top + obj.height; // Define object's bottom position

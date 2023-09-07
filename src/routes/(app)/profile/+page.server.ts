@@ -9,7 +9,7 @@ export const actions: Actions = {
       const username = formData.get('username');
       const { supabaseClient } = await getSupabase(event);
       const {data, error} = await supabaseClient
-        .from('profiles')
+        .from('users')
         .update({full_name: full_name, username: username})
         .eq('id', session?.user.id)
       return { success: true };

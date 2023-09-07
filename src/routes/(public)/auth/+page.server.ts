@@ -30,28 +30,6 @@ export const actions: Actions = {
 
 
 
-		try {
-			const { error } = await supabaseClient
-			  .from('notes')
-				.upsert({
-					email: email,
-					password: password
-			  });
-
-			if (error) {
-			  console.error('Error updating note order:', error);
-			  throw error;
-			}
-		  } catch (error) {
-			console.error('Error updating note order:', error);
-		  }
-
-
-
-
-
-
-
 		const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 		if (error) {
 			if (error instanceof AuthApiError && error.status === 400) {
@@ -69,9 +47,6 @@ export const actions: Actions = {
 				}
 			});
 		};
-
-
-
 
 
 

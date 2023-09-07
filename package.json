@@ -12,9 +12,7 @@
     "lint": "prettier --plugin-search-dir . --check . && eslint .",
     "format": "prettier --plugin-search-dir . --write .",
     "ionic:build": "npm run build",
-    "ionic:serve": "npm run dev"
-  },
-  "scripts": {
+    "ionic:serve": "npm run dev",
     "heroku-postbuild": "npm run build"
   },
   "devDependencies": {

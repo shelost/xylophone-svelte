@@ -78,7 +78,7 @@
 
 
 			<h1>
-				Your Infinite Web Canvas.
+				Unlimited Webmaking.
 			</h1>
 
 			<p>
@@ -255,6 +255,10 @@
 		justify-content: center;
 		background-size: cover;
 
+		h1{
+			font-size: 100px;
+		}
+
 		p{
 			font-size: 12px;
 		}
@@ -361,6 +365,8 @@
 			border-radius: 5px;
 			outline: none;
 			border: none;
+
+
 			&:focus{
 				outline: none;
 				border: none;
@@ -369,23 +375,20 @@
 
 		button{
 			background: #FF004D;
+			background: white;
 			padding: 15px 25px;
 			font-family: 'Inter', sans-serif;
-			font-size: 14px;
+			font-size: 16px;
 			border-radius: 100px;
+			letter-spacing: -0.3px;
+			color: #FF004D;
+
+			box-shadow: 0;
 
 			&:hover{
-				background: #f0003c;
+				background: #fff3f6;
 			}
 		}
-	}
-
-	#mast h1{
-		font-weight: 600;
-		letter-spacing: -0.5px;
-		margin-bottom: 20px;
-		font-size: 100px;
-		color: white;
 	}
 
 	#submit{
@@ -529,6 +532,11 @@
 		transform: scale(1.05);
 	}
 
+	#app{
+		background: #ff004d;
+		color: white;
+	}
+
 	/* Splash */
 	#splash {
 		margin: 0;
@@ -540,6 +548,8 @@
 		justify-content: center;
 		align-items: center;
 		padding: 60px;
+
+
 
 		.flex{
 			gap: 30px;
@@ -576,28 +586,33 @@
 			flex-direction: column;
 			align-items: center;
 			margin-bottom: 50px;
+			color: white;
 
 			h1{
-				font-size: 70px;
-				color: black;
+				font-size: 90px;
 				line-height: 100%;
-				letter-spacing: -3px;
+				letter-spacing: -4px;
 				margin-bottom: 30px;
-				font-weight: 900;
+				font-weight: 700;
 				text-align: flex-start;
-				font-family: 'Inter', sans-serif;
+				font-family: 'Newsreader', 'Inter', sans-serif;
 				text-align: center;
 			}
 
 			p{
-				font-size: 20px;
+				font-size: 18px;
 				margin: auto;
 				text-align: center;
 				margin-bottom: 50px;
+				letter-spacing: 0.2px;
+				font-weight: 300;
 			}
 
 			form{
-				background: rgba(black, 0.05);
+				background: rgba(white, 0.2);
+				input{
+					color: white !important;
+				}
 			}
 		}
 
@@ -855,11 +870,6 @@
 			margin: auto;
 		}
 
-		#mast h1{
-			font-size: 38px !important;
-			font-weight: 500;
-			text-align: center;
-		}
 
 		#form{
 			padding: 10px;
