@@ -14,6 +14,9 @@
     "ionic:build": "npm run build",
     "ionic:serve": "npm run dev"
   },
+  "scripts": {
+    "heroku-postbuild": "npm run build"
+  },
   "devDependencies": {
     "@brainandbones/skeleton": "^0.67.5",
     "@jhubbardsf/svelte-sortablejs": "^1.1.0",

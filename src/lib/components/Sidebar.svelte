@@ -8,7 +8,7 @@
 	import X from '$lib/img/x.svg'
 	import Xylophone from '$lib/img/xylophone.svg'
 
-	import Webcraft from '$lib/img/webcraft.svg'
+	import Arachne from '$lib/img/arachne.svg'
 
 
 	import IconHome from '$lib/img/iconx_home.svg'
@@ -109,7 +109,7 @@
 	<div id = 'top'>
 
 		<a href = '/home'>
-			<img src = '{Webcraft}' alt = 'Scrollable Logo' id = 'logo'>
+			<img src = '{Arachne}' alt = 'Scrollable Logo' id = 'logo'>
 		</a>
 
 		<a href = '/home'>
@@ -200,9 +200,9 @@
 		padding: 8px 12px;
 		border-radius: 5px;
 		font-size: 12px;
-		letter-spacing: -0.4px;
-		font-weight: 500;
-		color: rgba(black, 0.5);
+		letter-spacing: -0.3px;
+		font-weight: 400;
+		color: rgba(white, 0.7);
 		transition: 0.2s ease;
 		display: flex;
 		align-items: center;
@@ -217,12 +217,12 @@
 		}
 
 		&.active{
-			background: rgba(black, 0.05);
-			color: rgba(black, 1);
+			background: rgba(white, 0.1);
+			color: white;
 		}
 
 		&:hover{
-			background: rgba(black, 0.05);
+			background: rgba(white, 0.1);
 		}
 	}
 
@@ -236,13 +236,13 @@
 	height: 100vh;
 	overflow: hidden;
 
-	background: rgba(black, 0);
+	background: #FF004D;
     display: flex;
 	flex-direction: column;
 	z-index: 3 !important;
 
     opacity: 1;
-	color: black;
+
 
     #logo{
 		height: 28px;
@@ -250,19 +250,18 @@
 	}
 
 
-
 	#add{
 		width: calc(100% - 30px);
 		margin: 15px;
 		box-shadow: none;
-		background: rgba(black, 0.05);
-		color: black;
+		background: rgba(white, 0.1);
+		color: white;
 		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
 
 		&:hover{
-			background: rgba(black, 0.1);
+			background: rgba(white, 0.2);
 		}
 	}
 
@@ -271,14 +270,26 @@
 		border-radius: 5px;
 	}
 
-	#pages{
-		width: 240px;
-		flex: 1;
-		height: calc(100vh - 300px);
-		overflow-y: scroll;
-		//background: #e9004a;
+	#top{
+		width: 230px;
+		border-radius: 10px;
+		background: #EE0044;
+		background: rgba(white, 0.1);
+		margin-left: 10px;
 		margin-top: 10px;
-		background: none;
+		padding-bottom: 15px;
+	}
+
+	#pages{
+		width: 230px;
+		flex: 1;
+		border-radius: 10px;
+
+		overflow-y: scroll;
+		background: #DD0044;
+		margin: 10px;
+
+		padding-bottom: 10px;
 	}
 }
 

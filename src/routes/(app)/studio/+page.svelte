@@ -91,14 +91,12 @@
             #fontFamily{
                 background: white;
             }
-            input{
-                background: white;
-                padding: 5px;
-            }
+
         }
 
 
     }
+
 
     .active{
         opacity: 1;

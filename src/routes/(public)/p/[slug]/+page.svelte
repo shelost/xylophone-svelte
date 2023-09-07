@@ -5,8 +5,8 @@
 
   <a href = 'https://capsule.pw'>
     <div id = 'banner'>
-        <img src = {Capsule} >
-        <h1> Made with Capsule </h1>
+        <img src = {Arachne} >
+        <h1> Made with Arachne </h1>
       </div>
     </a>
 
@@ -87,8 +87,8 @@
       bottom: 20px;
       left: 20px;
       padding: 13px 18px;
-      background: rgb(14, 10, 51);
-      color: white;
+      background: #f0f0f0;
+      color: black;
       border-radius: 30px;
       letter-spacing: -0.3px;
       font-size: 13px;
@@ -99,10 +99,10 @@
       transition: 0.2s ease;
 
       display: flex;
-      gap: 12px;
+      gap: 10px;
 
       img{
-        width: 13px;
+        width: 15px;
       }
 
       animation: float 0.8s ease-in-out 0.5s forwards;
@@ -219,7 +219,7 @@ import {supabaseClient} from '$lib/db'
 import X from '$lib/img/favicon.svg'
 export let data;
 
-import Capsule from '$lib/img/capsulex.svg'
+import Arachne from '$lib/img/octagon.svg'
 
 onMount(()=> {
     // Initialize fabric.js canvas
@@ -236,7 +236,7 @@ onMount(()=> {
     });
 
 
-    let panelWidth = 300;
+    let panelWidth = 240
     let newWidth = window.innerWidth - panelWidth;
     if (window.innerWidth < 800){
       newWidth = window.innerWidth
@@ -332,7 +332,7 @@ onMount(()=> {
 
 
     window.addEventListener('resize', debounce(() => {
-        panelWidth = 300;
+        panelWidth = 240
         newWidth = window.innerWidth - panelWidth;
 
         if (window.innerWidth < 800){

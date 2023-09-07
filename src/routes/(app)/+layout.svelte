@@ -110,7 +110,7 @@
 
 
 	::-webkit-scrollbar{
-      width: 3px;
+      width: 0;
       height: 0;
       background: white;
  	}
@@ -133,6 +133,7 @@
 		overflow-x: visible !important;
 		overflow-y: scroll;
 		background: #f4f4f4;
+		background: #FF004D;
 	}
 
 

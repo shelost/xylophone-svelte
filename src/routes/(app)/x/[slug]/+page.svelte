@@ -4,20 +4,11 @@
       <div id = 'bar'>
         <input id = 'title' bind:value = {title} placeholder = 'Untitled Page'>
 
-        <div id = 'buttons'>
+        <div>
           <button id = 'url'> Copy Link </button>
         </div>
 
       </div>
-
-      <div id = 'canvas-container'>
-        <canvas id = 'canvas'></canvas>
-
-      </div>
-
-
-
-  </div>
 
 
   <div id = 'controls'>
@@ -42,6 +33,11 @@
           <img src = {Ellipse} class = 'icon'  alt = 'icon'>
         </div>
 
+        <div>
+          <input type="color" id="color" name="head" bind:value={color} />
+        </div>
+
+
         <div id = 'align'>
         </div>
 
@@ -49,6 +45,18 @@
     </div>
 
 </div>
+
+
+
+
+      <div id = 'canvas-container'>
+        <canvas id = 'canvas'></canvas>
+
+      </div>
+
+
+  </div>
+
 
 
 <div id = 'panel'>
@@ -70,7 +78,7 @@
 <style lang='scss'>
 
   ::-webkit-scrollbar{
-      width: 0px;
+      width: 0 !important;
       height: 0;
       background: white;
   }
@@ -80,17 +88,18 @@
   }
 
   #app{
+      width: calc(100vw - 260px) !important;
+      margin-top: 10px;
+      height: calc(100vh - 20px);
 
-      width: calc(100vw - 305px) !important;
-      height: calc(100vh - 10px);
-      margin-left: 245px;
-      margin-top: 5px;
+      border-radius: 8px;
 
-
-      border-radius: 10px;
-      //background: white;
-      overflow-x: visible !important;
+      margin-left: 250px;
+      background: white;
+      overflow: hidden !important;
       //border: 1px solid rgba(black, 0.1);
+
+      box-shadow: 0px 10px 30px rgba(black, 0.3);
 
   }
 
@@ -105,22 +114,14 @@
   }
 
   #canvas-container{
-    margin-top: 70px;
     height: fit-content;
+    margin-top: 100px;
   }
 
   #canvas{
       flex-shrink: 0;
       border-radius: 10px;
-      background: white;
-      box-shadow: 0px 30px 50px rgba(black, 0.1);
-
-      width: calc(100vw - 310px);
-
-
-      margin-bottom: 50px;
-
-     // z-index: 3;
+      width: calc(100vw - 240px);
   }
 
   #floatingOptions{
@@ -143,8 +144,8 @@
     color: black;
     box-shadow: none;
 
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.2s ease;
@@ -162,34 +163,35 @@
     }
 
     .icon{
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
     }
   }
 
   #controls{
-    position: fixed;
-    top: 0;
-    right: 0;
 
+    position: fixed;
+
+    z-index: 3;
+    margin-top: 55px;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 45px;
       border-radius: 0px;
-      width: 70px;
-      margin: 0;
+      width: calc(100vw - 260px);
+      background: #f0f0f0;
+
       #buttons{
           display: flex;
-          flex-direction: row;
-          flex-direction: column;
           align-items: center;
           gap: 10px;
           margin: 30px;
 
           button{
-            width: 30px;
+            width: 20px;
+            height: 20px;
+            filter: invert(100%);
           }
       }
 
@@ -210,7 +212,7 @@
 
   #container {
       flex-grow: 1;
-      width: calc(100vw - 240px);
+      width: calc(100vw - 260px);
       height: 100vh;
 
       display: flex;
@@ -220,20 +222,26 @@
 
 
 
-      padding-bottom: 40px !important;
-
       #bar{
+
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 70px 15px 0;
+        padding: 10px 15px;
+        border-radius: 8px 8px 0 0;
+        //border-bottom: 1px solid rgba(black, 0.2);
+        //box-shadow: 0px 20px 60px rgba(black, 0.05);
+        width: calc(100vw - 260px);
+        background: white;
         position: fixed;
-        //z-index: 2;
-        width: calc(100vw - 250px);
+        background: white;
+        z-index: 3;
+
+        border-bottom: 1px solid rgba(black, 0.1);
 
 
         input{
-          font-size: 20px;
+          font-size: 18px;
           font-weight: 700;
           padding: 0;
         }
@@ -247,15 +255,30 @@
   }
 
   :global(.input){
-      font-size: 12px !important;
-      padding: 5px;
-      background: white !important;
+      font-size: 10px !important;
+      padding: 5px 8px;
+      border-radius: 5px !important;
+      border: none;
+      background: rgba(white, 0.15) !important;
       transition: 0.2s ease;
+      color: white;
+  }
+
+  :global(.input:hover){
+    background: rgba(white, 0.3) !important;
+  }
+
+  :global(label){
+      color: white;
+      font-size: 10px;
+      font-weight: 500;
+      color: rgba(white, 0.8);
+      margin-bottom: 5px;
   }
 
   :global(input:checked) {
     border: none;
-  background: blue !important;
+    background: blue !important;
   }
 
 
@@ -267,9 +290,10 @@
     width: 200px;
     padding: 20px;
     height: 100vh;
-    background: #f0f0f0;
-    box-shadow: -20px 0px 70px rgba(black, 0.2);
+    background: #FF004D;
+    box-shadow: -20px 0px 70px rgba(black, 0.1);
     transition: 0.3s ease-in-out;
+    overflow-y: scroll;
 
 
     display: flex;
@@ -277,10 +301,12 @@
     gap: 24px;
     letter-spacing: -0.4px;
 
+    z-index: 4;
 
 
     :global(#controls-title){
       font-weight: 600;
+      color: white;
     }
 
     .option{
@@ -338,16 +364,7 @@ export let data
 
 let MODE = 'text'
 let title = data.title
-const selectedType = writable(null);
-
-let fonts = ['Arial', 'Times New Roman', 'Courier New'];
-  let selectedFont = 'Arial'; // Default
-  let fontSize = 16; // Default
-  let letterSpacing = 0; // Default
-  let justification = 'left'; // Default
-  let fontWeight = 'normal'; // Default
-
-
+let color = data.color
 
 
 
@@ -356,8 +373,7 @@ function Id(e){
 }
 
 
-  const panelWidth = 310
-
+const panelWidth = 240
 
 
 onMount(()=> {
@@ -421,8 +437,6 @@ onMount(()=> {
 
 
 
-
-
   window.applyStyles = function() {
     const activeObject = canvas.getActiveObject();
 
@@ -449,20 +463,15 @@ onMount(()=> {
 };
 
 
-
-
-
   document.addEventListener("DOMContentLoaded", function() {
   console.log('yo')
 });
 
 
 
-let xArr = Array.from({length: 40}, (_, i) => i * 40);
+  let xArr = Array.from({length: 40}, (_, i) => i * 40);
   let yArr = Array.from({length: 40}, (_, i) => i * 40);
   let gridLines = [];
-
-
 
 
 
@@ -717,7 +726,6 @@ canvas.on('mouse:down', function(o){
                   scaleY: scaleFactorY,
                   originX: 'left',
                   originY: 'top',
-                  link: 'https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/sign/images/paine.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvcGFpbmUucG5nIiwiaWF0IjoxNjkzOTcxMTUxLCJleHAiOjE3MjU1MDcxNTF9.jjT84RALo8psjpZnMBFNTGjMmnd5jYmFpyqPi05ul9s&t=2023-09-06T03%3A32%3A31.209Z',
                   depth: 3,
               });
 
@@ -1130,12 +1138,21 @@ canvas.on('selection:updated', handleSelection);
 
 /////
 
+// Assuming supabaseClient is initialized somewhere above
 
-// Assuming supabaseClient is initialized somewhere above
-// Assuming supabaseClient is initialized somewhere above
+async function fileExistsInSupabase(filePath) {
+    const { data, error } = await supabaseClient.storage.from('images').list(filePath);
+    return data && data.length > 0;  // Check if data array is not empty
+}
 
 async function uploadToSupabase(file) {
     const filePath = `images/${file.name}`;
+    const exists = await fileExistsInSupabase(filePath);
+    if (exists) {
+        console.log('File already exists in Supabase. Skipping upload.');
+        return filePath;
+    }
+
     const { error } = await supabaseClient.storage.from('images').upload(filePath, file);
     if (error) {
         console.error('Error uploading file:', error);
@@ -1144,9 +1161,14 @@ async function uploadToSupabase(file) {
     return filePath;
 }
 
-// Assuming the 'Id' function is defined somewhere, something like:
-function Id(id) {
-    return document.getElementById(id);
+async function getImageFromSupabase(filePath) {
+    const { data, error } = await supabaseClient.storage.from('images').download(filePath);
+    if (error) {
+        console.error('Error fetching file:', error);
+        return null;
+    }
+    const blob = new Blob([data], { type: "image/*" });
+    return URL.createObjectURL(blob);
 }
 
 canvas.wrapperEl.addEventListener('dragover', function(e) {
@@ -1158,35 +1180,38 @@ canvas.wrapperEl.addEventListener('drop', async function(e) {
     e.preventDefault();
     Id('canvas').style.opacity = 1;
     var files = e.dataTransfer.files;
-
-    console.log('Files:', files); // Debug
+    const dropPoint = canvas.getPointer(e);  // Get drop position on canvas
 
     for (var i = 0; i < files.length; i++) {
         var file = files[i];
         if (file.type.includes("image")) {
-            const imagePath = await uploadToSupabase(file);
-
-            console.log('Image Path:', imagePath); // Debug
+            let imagePath = await uploadToSupabase(file);
+            let imageURL;
 
             if (imagePath) {
-                const imageURL = `https://daiyycuunubdakrxtztl.supabase.co/${imagePath}`;
-
-                console.log('Image URL:', imageURL); // Debug
-
-                fabric.Image.fromURL(imageURL, function(img) {
-                    console.log('Inside Image Callback'); // Debug
-                    img.scaleToWidth(300);
-                    img.scaleToHeight(300);
-                    canvas.add(img);
-                    canvas.renderAll(); // Force a canvas render
-                });
+                imageURL = await getImageFromSupabase(imagePath);
+            } else {
+                console.error('Failed to upload image to Supabase.');
+                continue;
             }
+
+            fabric.Image.fromURL(imageURL, function(img) {
+                img.scaleToWidth(300);
+                img.scaleToHeight(300);
+                img.set({
+                    left: dropPoint.x,
+                    top: dropPoint.y
+                });
+                canvas.add(img);
+                canvas.renderAll(); // Force a canvas render
+            });
         }
         // Handle videos similarly...
     }
 
-    saveCanvasToSupabase(); // Assuming this function is defined elsewhere in your code
+    saveCanvasToSupabase();  // Assuming this function is defined elsewhere in your code
 }, false);
+
 
 
 /*
@@ -1282,8 +1307,6 @@ function addText(x,y) {
 
 
 
-
-
 function resizeCanvas() {
   let maxHeight = 0;
 
@@ -1293,7 +1316,7 @@ function resizeCanvas() {
     const obj = object
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
-    const buffer = 30; // distance from edge to start expanding canvas
+    const buffer = 200; // distance from edge to start expanding canvas
 
     // Extend Canvas Height
     if ((obj.top + obj.height) > (canvasHeight - buffer)) {
@@ -1303,7 +1326,7 @@ function resizeCanvas() {
   });
 
   // Add 100px to maxHeight and update canvas height.
-  canvas.setHeight(maxHeight + 100);
+  canvas.setHeight(maxHeight + 300);
 
   // Update canvas dimensions on the actual HTML element
   canvas.calcOffset();
@@ -1317,26 +1340,26 @@ function resizeCanvas() {
 
 // Function to add image
 function addImage(x,y) {
-fabric.Image.fromURL('https://ncvoplbawcrefpsplcue.supabase.co/storage/v1/object/public/images/space/the-prince/icon/shelost_a_vector_scene_from_common_sense_by_thomas_paine_simpl_40d7bd6a-1e44-4fc1-b301-df7c459974b4.png', function(image) {
-  image.set({
-    left: x,
-    top: y,
-    scaleX: 0.2,
-    scaleY: 0.2,
-    easing: 'easeInOutQuad'
+  fabric.Image.fromURL('https://ncvoplbawcrefpsplcue.supabase.co/storage/v1/object/public/images/space/the-prince/icon/shelost_a_vector_scene_from_common_sense_by_thomas_paine_simpl_40d7bd6a-1e44-4fc1-b301-df7c459974b4.png', function(image) {
+    image.set({
+      left: x,
+      top: y,
+      scaleX: 0.2,
+      scaleY: 0.2,
+      easing: 'easeInOutQuad'
+    });
+    canvas.add(image);
   });
-  canvas.add(image);
-});
 }
 
 function debounce(func, wait) {
-let timeout;
-return function () {
-  clearTimeout(timeout);
-  timeout = setTimeout(() => {
-    func.apply(this, arguments);
-  }, wait);
-};
+  let timeout;
+  return function () {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(this, arguments);
+    }, wait);
+  };
 }
 
 // Function to add video
@@ -1597,7 +1620,7 @@ function addButton(x, y) {
     const options = [
       { label: 'Font', id: 'fontFamily', type: 'dropdown', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Newsreader', 'Helvetica', 'Times New Roman', 'Courier New'] },
       { label: 'Color', id: 'fill', type: 'color', prop: 'fill', value: activeObject.fill },
-      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'range', value: activeObject.charSpacing || 0, min: -50, max: 50 },
+      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'number', value: activeObject.charSpacing || 0, min: -50, max: 50 },
       { label: 'Font Size', id: 'fontSize', type: 'number', step: 1, prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
       { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
       { label: 'Font Weight', id: 'fontWeight', type: 'number', step: 100,prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
@@ -1732,7 +1755,7 @@ window.addEventListener('keyup', e => {
     const obj = event.target;
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
-    const buffer = 30; // distance from edge to start expanding/retracting canvas
+    const buffer = 200; // distance from edge to start expanding/retracting canvas
 
     // Extend Canvas Height
     const objectBottom = obj.top + obj.height; // Define object's bottom position
@@ -1779,7 +1802,8 @@ window.addEventListener('keyup', e => {
               id: data.id,
               title: title,
               content: json,
-              iwidth: canvas.width
+              iwidth: canvas.width,
+              color: color
             }
         ]);
 
