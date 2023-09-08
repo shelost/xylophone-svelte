@@ -238,7 +238,9 @@
 	overflow: hidden;
 
 	background: #FF004D;
+
 	background: none;
+
     display: flex;
 	flex-direction: column;
 	z-index: 3 !important;
