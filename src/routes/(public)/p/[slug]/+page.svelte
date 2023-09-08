@@ -84,12 +84,13 @@
 
     #banner{
       position: fixed;
-      bottom: 20px;
-      left: 20px;
-      padding: 13px 18px;
+      bottom: 0px;
+      left: 0px;
+      padding: 12px 15px 12px 12px;
       background: #f0f0f0;
-      color: black;
-      border-radius: 30px;
+      background: #ff004d;
+      color: white;
+      border-radius: 0 15px 0 0;
       letter-spacing: -0.3px;
       font-size: 13px;
       font-weight: 600;
@@ -99,13 +100,14 @@
       transition: 0.2s ease;
 
       display: flex;
-      gap: 10px;
+      gap: 8px;
 
       img{
-        width: 15px;
+        width: 13px;
+        filter: brightness(500%);
       }
 
-      animation: float 0.8s ease-in-out 0.5s forwards;
+      animation: float 0.3s ease-in-out 0s forwards;
     }
 
     @keyframes float{
@@ -197,7 +199,10 @@
         }
 
         #banner{
-            width: calc(100vw - 40px);
+            left: 10px;
+            bottom: 10px;
+            width: calc(100vw - 20px);
+            border-radius: 50px;
         }
     }
 
@@ -246,6 +251,7 @@ onMount(()=> {
     resizeCanvas()
 
 
+    document.getElementById('app').style.background = data.color
 
     canvas.loadFromJSON(data.content, function() {
         canvas.renderAll();
@@ -305,53 +311,52 @@ onMount(()=> {
 
 // Apply parallax effect based on the depth and scroll amount
 function applyParallaxEffect() {
+
     let scrollAmount = document.getElementById('app').scrollTop;
 
-    canvas.forEachObject(object => {
-        // Assuming default depth is 0 if not specified
-        let depth = object.depth || 0;
+        canvas.forEachObject(object => {
+            // Assuming default depth is 0 if not specified
+            let depth = object.depth || 0;
 
-        // Calculate the parallax shift. The '0.2' is the factor which
-        // determines how "fast" depth 1 objects move relative to the canvas.
-        let parallaxShift = 0.2 * depth * scrollAmount;
+            // Calculate the parallax shift. The '0.2' is the factor which
+            // determines how "fast" depth 1 objects move relative to the canvas.
+            let parallaxShift = 0.2 * depth * scrollAmount;
 
-        // Depth 0 objects should move with the canvas, so we subtract the scroll amount
-        let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
+            // Depth 0 objects should move with the canvas, so we subtract the scroll amount
+            let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
 
-        // Set the new top position for the object
+            // Set the new top position for the object
 
-        console.log(newTopPosition)
-
-
-        object.set('top', newTopPosition);
-    });
-
-    canvas.renderAll(); // Refresh the canvas to reflect the changes
-    canvas.calcOffset()
-}
-
-// Listen for the scroll event on the #app element
-document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
+            console.log(newTopPosition)
 
 
+            object.set('top', newTopPosition);
+        });
 
+        canvas.renderAll(); // Refresh the canvas to reflect the changes
+        canvas.calcOffset()
+    }
 
-
+    // Listen for the scroll event on the #app element
+    document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
 
 
 
         //resizeCanvas()
     },function(o,object){
 
-        object.set({
-            lockMovementX: true,
-            lockMovementY: true,
-            hasControls: false,
-            hasBorders: false,
-            selectable: true,
-            editable: false,
-            easing: fabric.util.ease.easeInOut
-        });
+        if (object){
+            object.set({
+                lockMovementX: true,
+                lockMovementY: true,
+                hasControls: false,
+                hasBorders: false,
+                selectable: true,
+                editable: false,
+                easing: fabric.util.ease.easeInOut
+            });
+        }
+
 
     })
 

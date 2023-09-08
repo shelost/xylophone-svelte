@@ -66,7 +66,8 @@
 	async function addPage(){
 
 		const {data: d, error} = await supabaseClient.from('pages').insert({
-			id: newID
+			id: newID,
+			color: '#ffffff',
 		})
 		newID = crypto.randomUUID()
 
