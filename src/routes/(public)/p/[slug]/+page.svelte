@@ -277,7 +277,6 @@ onMount(()=> {
 
 
 
-
     let maxHeight = 0;
 
     canvas.forEachObject((object) => {
@@ -295,6 +294,49 @@ onMount(()=> {
 
     // Update canvas dimensions on the actual HTML element
     canvas.calcOffset();
+
+
+    canvas.getObjects().forEach(object => {
+        object.originalTop = object.top;
+    });
+
+
+
+
+// Apply parallax effect based on the depth and scroll amount
+function applyParallaxEffect() {
+    let scrollAmount = document.getElementById('app').scrollTop;
+
+    canvas.forEachObject(object => {
+        // Assuming default depth is 0 if not specified
+        let depth = object.depth || 0;
+
+        // Calculate the parallax shift. The '0.2' is the factor which
+        // determines how "fast" depth 1 objects move relative to the canvas.
+        let parallaxShift = 0.2 * depth * scrollAmount;
+
+        // Depth 0 objects should move with the canvas, so we subtract the scroll amount
+        let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
+
+        // Set the new top position for the object
+
+        console.log(newTopPosition)
+
+
+        object.set('top', newTopPosition);
+    });
+
+    canvas.renderAll(); // Refresh the canvas to reflect the changes
+    canvas.calcOffset()
+}
+
+// Listen for the scroll event on the #app element
+document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
+
+
+
+
+
 
 
 
@@ -326,9 +368,21 @@ onMount(()=> {
     });
 
 
-    window.addEventListener('scroll', () => {
-      canvas.calcOffset()
-    })
+
+
+
+//// PARALLAX ////
+
+
+// Store original top positions for all objects once the window has loaded
+
+
+
+
+
+
+
+    //// RESIZE ////
 
 
     window.addEventListener('resize', debounce(() => {
@@ -368,6 +422,7 @@ onMount(()=> {
     // Re-render the canvas
     canvas.renderAll();
 }))
+
 
 
 
@@ -434,17 +489,17 @@ canvas.on('mouse:over', function(e) {
             onChange: canvas.renderAll.bind(canvas)
         });
 
+
+        if (e.target.link && e.target.link != 'undefined'){
+            document.getElementById('link').innerHTML = e.target.link
+            document.getElementById('link').style.left = e.e.screenX + 'px'
+            document.getElementById('link').style.top = e.e.screenY - 120 + 'px'
+            document.getElementById('link').style.opacity = 1
+    }
+
     }
 
 
-   if (e.target.link && e.target.link != 'undefined'){
-        document.getElementById('link').innerHTML = e.target.link
-        document.getElementById('link').style.left = e.e.screenX + 'px'
-
-        console.log( e.e.pageX + 'px')
-        document.getElementById('link').style.top = e.e.screenY - 120 + 'px'
-        document.getElementById('link').style.opacity = 1
-   }
 
 
    /*

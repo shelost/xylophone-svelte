@@ -29,7 +29,6 @@
     "@typescript-eslint/parser": "^5.27.0",
     "autoprefixer": "^10.4.7",
     "date-fns": "^2.30.0",
-    "esbuild": "^0.16.17",
     "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-svelte3": "^4.0.0",
@@ -53,8 +52,7 @@
     "tailwindcss": "^3.1.5",
     "tslib": "^2.3.1",
     "typescript": "^4.9.5",
-    "uuid": "^9.0.0",
-    "vite": "^4.4.9"
+    "uuid": "^9.0.0"
   },
   "type": "module",
   "dependencies": {
@@ -67,6 +65,7 @@
     "@sveltejs/adapter-vercel": "^3.0.3",
     "base64-arraybuffer": "^1.0.2",
     "dart-sass": "^1.25.0",
+    "esbuild": "^0.19.2",
     "prosemirror": "^0.11.1",
     "prosemirror-commands": "^1.5.2",
     "prosemirror-dropcursor": "^1.8.1",
@@ -80,9 +79,10 @@
     "prosemirror-state": "^1.4.3",
     "prosemirror-view": "^1.31.7",
     "sortablejs": "^1.15.0",
-    "supabase": "^1.77.9",
+    "supabase": "^1.93.0",
     "svelte-dnd-list": "^0.1.8",
     "svelte-inview": "^4.0.1",
-    "svelte-sortable": "^0.1.0"
+    "svelte-sortable": "^0.1.0",
+    "vite": "^4.4.9"
   }
 }

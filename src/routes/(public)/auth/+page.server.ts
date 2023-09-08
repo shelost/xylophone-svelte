@@ -41,9 +41,9 @@ export const actions: Actions = {
 				});
 			}
 			return fail(500, {
-				error: 'Server error. Try again later.',
+				error: 'Server error. Try again later.' + error,
 				values: {
-					email
+					email,
 				}
 			});
 		};
@@ -105,7 +105,7 @@ export const actions: Actions = {
 			}
 
 			return fail(500, {
-				error: 'Server error. Try again later.',
+				error: 'Server error. Try again later.' + error,
 				values: {
 					email,
 					full_name

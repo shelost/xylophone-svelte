@@ -203,6 +203,7 @@
 		letter-spacing: -0.3px;
 		font-weight: 400;
 		color: rgba(white, 0.7);
+		color: black;
 		transition: 0.2s ease;
 		display: flex;
 		align-items: center;
@@ -237,9 +238,11 @@
 	overflow: hidden;
 
 	background: #FF004D;
+	background: none;
     display: flex;
 	flex-direction: column;
 	z-index: 3 !important;
+
 
     opacity: 1;
 
@@ -254,14 +257,14 @@
 		width: calc(100% - 30px);
 		margin: 15px;
 		box-shadow: none;
-		background: rgba(white, 0.1);
-		color: white;
+		background: rgba(black, 0.05);
+		color: black;
 		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
 
 		&:hover{
-			background: rgba(white, 0.2);
+			background: rgba(black, 0.1);
 		}
 	}
 
@@ -281,13 +284,15 @@
 	}
 
 	#pages{
-		width: 230px;
+		width: 220px;
 		flex: 1;
 		border-radius: 10px;
 
 		overflow-y: scroll;
 		background: #DD0044;
-		margin: 10px;
+		background: rgba(black, 0.05);
+		margin: 15px;
+		margin-bottom: 10px;
 
 		padding-bottom: 10px;
 	}
