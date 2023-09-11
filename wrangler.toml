@@ -9,4 +9,5 @@ command = "npm run build"
 # This is where the SvelteKit app's Cloudflare worker script will be generated
 main = "./.cloudflare/worker.js"
 
-bucket = "./public"
+[site]
+bucket = "./build"
