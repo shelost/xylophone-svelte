@@ -6,8 +6,6 @@ workers_dev = true
 [build]
 command = "npm run build"
 
-# This is where the SvelteKit app's Cloudflare worker script will be generated
-main = "./.cloudflare/worker.js"
-
 [site]
 bucket = "./build"
+main = "./.cloudflare/worker.js"
