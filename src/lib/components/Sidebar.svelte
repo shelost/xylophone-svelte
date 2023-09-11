@@ -198,9 +198,9 @@
 
 .text-btn{
 		margin: 0 5px;
-		padding: 8px 12px;
+		padding: 6px 12px;
 		border-radius: 5px;
-		font-size: 12px;
+		font-size: 11px;
 		letter-spacing: -0.3px;
 		font-weight: 400;
 		color: rgba(white, 0.7);
@@ -238,20 +238,19 @@
 	height: 100vh;
 	overflow: hidden;
 
-	background: #FF004D;
+	//background: #FF004D;
 
-	background: none;
+	background: white;
 
     display: flex;
 	flex-direction: column;
 	z-index: 3 !important;
 
-
     opacity: 1;
 
 
     #logo{
-		height: 28px;
+		height: 24px;
 		margin: 25px 15px;
 	}
 
@@ -262,7 +261,7 @@
 		box-shadow: none;
 		background: rgba(black, 0.05);
 		color: black;
-		font-size: 12px;
+		font-size: 11px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
 
@@ -281,21 +280,22 @@
 		border-radius: 10px;
 		background: #EE0044;
 		background: rgba(white, 0.1);
-		margin-left: 10px;
-		margin-top: 10px;
+		margin-left: 5px;
 		padding-bottom: 15px;
 	}
 
 	#pages{
-		width: 220px;
+		width: 240px;
 		flex: 1;
-		border-radius: 10px;
+		//border-radius: 10px;
 
 		overflow-y: scroll;
-		background: #DD0044;
-		background: rgba(black, 0.05);
-		margin: 15px;
+		//background: #DD0044;
+		//background: rgba(black, 0.05);
+		border-top: 1px solid rgba(black, 0.08);
+		//margin: 15px;
 		margin-bottom: 10px;
+		margin-top: 10px;
 
 		padding-bottom: 10px;
 	}

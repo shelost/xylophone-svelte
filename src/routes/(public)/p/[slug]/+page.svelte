@@ -309,32 +309,34 @@ onMount(()=> {
 
 
 
-// Apply parallax effect based on the depth and scroll amount
-function applyParallaxEffect() {
-
-    let scrollAmount = document.getElementById('app').scrollTop;
-
-        canvas.forEachObject(object => {
-            // Assuming default depth is 0 if not specified
-            let depth = object.depth || 0;
-
-            // Calculate the parallax shift. The '0.2' is the factor which
-            // determines how "fast" depth 1 objects move relative to the canvas.
-            let parallaxShift = 0.2 * depth * scrollAmount;
-
-            // Depth 0 objects should move with the canvas, so we subtract the scroll amount
-            let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
-
-            // Set the new top position for the object
-
-            console.log(newTopPosition)
+    // Apply parallax effect based on the depth and scroll amount
+    function applyParallaxEffect() {
 
 
-            object.set('top', newTopPosition);
-        });
 
-        canvas.renderAll(); // Refresh the canvas to reflect the changes
-        canvas.calcOffset()
+        let scrollAmount = document.getElementById('app').scrollTop;
+
+            canvas.forEachObject(object => {
+                // Assuming default depth is 0 if not specified
+                let depth = object.depth || 0;
+
+                // Calculate the parallax shift. The '0.2' is the factor which
+                // determines how "fast" depth 1 objects move relative to the canvas.
+                let parallaxShift = 0.2 * depth * scrollAmount;
+
+                // Depth 0 objects should move with the canvas, so we subtract the scroll amount
+                let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
+
+                // Set the new top position for the object
+
+                console.log(newTopPosition)
+
+
+                object.set('top', newTopPosition);
+            });
+
+            canvas.renderAll(); // Refresh the canvas to reflect the changes
+            canvas.calcOffset()
     }
 
     // Listen for the scroll event on the #app element

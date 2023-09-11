@@ -7,9 +7,7 @@ const config = {
 	theme: {
 	  extend: {
 		// Custom focus styles for form elements, including input fields
-		ring: {
-		  '0': '0',
-		},
+
 	  },
 	},
 	plugins: [

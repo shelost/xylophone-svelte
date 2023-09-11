@@ -43,7 +43,13 @@ input{
     &:focus{
         border: none !important;
         outline: none !important;
+        -webkit-appearance: none !important;
+
     }
+}
+
+*:focus {
+    outline: none !important;
 }
 
 
