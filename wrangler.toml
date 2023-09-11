@@ -2,13 +2,9 @@ name = "arachne"
 type = "javascript"
 account_id = "c8ddea43874d39279fccdbc60e6ac045"
 workers_dev = true
-route = ""
-zone_id = ""
 
 [build]
 command = "npm run build"
 
-[site]
-bucket = "./src"
-entry-point = "workers-site"
-main = "./workers-site/index.js" # This line is especially important!
+# This is where the SvelteKit app's Cloudflare worker script will be generated
+main = "./.cloudflare/worker.js"
