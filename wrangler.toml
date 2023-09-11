@@ -2,10 +2,12 @@ name = "arachne"
 type = "javascript"
 account_id = "c8ddea43874d39279fccdbc60e6ac045"
 workers_dev = true
+zone_id = ""
+route = ""
 
 [build]
 command = "npm run build"
 
 [site]
 bucket = "./build"
-main = "./.cloudflare/worker.js"
+entry-point = "./.cloudflare/"
