@@ -1,0 +1,10 @@
+name = "arachne"
+type = "javascript"
+account_id = "c8ddea43874d39279fccdbc60e6ac045"
+workers_dev = true
+route = ""
+zone_id = ""
+
+[site]
+bucket = "./public"
+entry-point = "workers-site"
