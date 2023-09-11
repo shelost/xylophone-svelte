@@ -5,6 +5,10 @@ workers_dev = true
 route = ""
 zone_id = ""
 
+[build]
+command = "npm run build"
+
 [site]
-bucket = "./public"
+bucket = "./src"
 entry-point = "workers-site"
+main = "./workers-site/index.js" # This line is especially important!
