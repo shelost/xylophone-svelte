@@ -37,15 +37,11 @@
 
 	let path;
 
-	console.log(data)
-
 	let newID = crypto.randomUUID()
 
 	$: if ($page && $page.route && $page.route.id) {
 		path = $page.url.pathname
 	}
-
-	console.log($page.url.pathname)
 
 	let pages = writable([])
 
@@ -87,7 +83,7 @@
 
 <section>
 
-	<Sidebar />
+	<Sidebar {data}/>
 
 	<div id = 'app'>
 	  <slot />
@@ -127,13 +123,14 @@
 	#app{
 		position: fixed;
 		top: 0;
-		left: 0;
-		width: 100vw !important;
+		left: 240px;
+		width: calc(100vw - 240px);
 		height: 100vh;
 		overflow-x: visible !important;
 		overflow-y: scroll;
-		background: #f4f4f4;
-		background: #FF004D;
+		//background: #f4f4f4;
+		//background: #FF004D;
+		z-index: 3;
 	}
 
 

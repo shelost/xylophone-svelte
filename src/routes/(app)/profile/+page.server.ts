@@ -11,7 +11,7 @@ export const actions: Actions = {
       const {data, error} = await supabaseClient
         .from('users')
         .update({full_name: full_name, username: username})
-        .eq('id', session?.user.id)
+        .eq('id', session.user.id)
       return { success: true };
     }
 };

@@ -8,6 +8,8 @@
 	import X from '$lib/img/x.svg'
 	import Xylophone from '$lib/img/xylophone.svg'
 
+	import { onMount } from 'svelte'
+
 	import Arachne from '$lib/img/arachne.svg'
 
 
@@ -22,10 +24,11 @@
 	import { supabaseClient } from '$lib/db'
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-
+	import { pages, scrollPosition } from '$lib/utils/store.js';  // Adjust the path as needed
+	export let data;
 
 	let newID = crypto.randomUUID()
-
+	let pagesDiv;
 
 
 	const handleLogout: SubmitFunction = () => {
@@ -47,19 +50,37 @@
 		path = $page.url.pathname
 	}
 
-    let pages = writable([])
 
-	async function fetchPages(){
 
-		const {data: d, error} = await supabaseClient.from('pages').select('*')
+	onMount(() => {
+		if (pagesDiv) {
+            pagesDiv.scrollTop = $scrollPosition;
+        }
+	})
 
-		if (!error){
-			pages.set(d)
-			console.log(d)
-		}else{
-			console.log('Error fetching pages:' + JSON.stringify(error))
-		}
-	}
+
+	function saveScrollPosition() {
+        if (pagesDiv) {
+            scrollPosition.set(pagesDiv.scrollTop);
+        }
+    }
+
+
+	let isFetched = false;
+
+async function fetchPages(){
+    if (!isFetched) {
+        const { data: d, error } = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id);
+
+        if (!error) {
+            pages.set(d);
+            console.log(d);
+            isFetched = true;
+        } else {
+            console.log('Error fetching pages:' + JSON.stringify(error));
+        }
+    }
+}
 
 
 
@@ -67,15 +88,20 @@
 
 		const {data: d, error} = await supabaseClient.from('pages').insert({
 			id: newID,
-			color: '#ffffff',
+			color: '#f0f0f0',
+			user_id: data.user.id
 		})
-		newID = crypto.randomUUID()
+
 
 		if (!error){
-
+			window.location = '/x/' + newID
 		}else{
 			console.log('Error creating page:' + JSON.stringify(error))
 		}
+
+		newID = crypto.randomUUID()
+
+		fetchPages()
 	}
 
 	fetchPages()
@@ -166,7 +192,7 @@
 	</div>
 
 
-		<div id = 'pages'>
+	<div id='pages' bind:this={pagesDiv} on:click={saveScrollPosition}>
 
 			<button id = 'add' on:click={addPage}> + Add Page </button>
 
@@ -199,13 +225,12 @@
 .text-btn{
 		margin: 0 5px;
 		padding: 6px 12px;
-		border-radius: 5px;
-		font-size: 11px;
+		border-radius: 3px;
+		font-size: 13px;
 		letter-spacing: -0.3px;
-		font-weight: 400;
-		color: rgba(white, 0.7);
-		color: black;
-		transition: 0.2s ease;
+		font-weight: 500;
+		color: rgba(black, 0.5);
+		transition: 0.1s ease;
 		display: flex;
 		align-items: center;
 		width: 95%;
@@ -219,12 +244,12 @@
 		}
 
 		&.active{
-			background: rgba(white, 0.1);
-			color: white;
+			background: rgba(black, 0.08);
+			color: black;
 		}
 
 		&:hover{
-			background: rgba(white, 0.1);
+			background: rgba(black, 0.05);
 		}
 	}
 

@@ -29,51 +29,40 @@
 
 
 	onMount(async () => {
-		const initialCanvasWidth = window.innerWidth - 300;
-		const initialCanvasHeight = window.innerHeight;
+    const { data: pagesData, error } = await supabaseClient.from('pages').select('*');
 
-		const { data: pagesData, error } = await supabaseClient.from('pages').select('*');
+    if (error) {
+        console.error('Error fetching pages:', error);
+        return;
+    }
 
-		if (error) {
-			console.error('Error fetching pages:', error);
-			return;
-		}
+    pages.set(pagesData);
 
-		pages.set(pagesData);
+    pagesData.forEach(page => {
+        initializeCanvas(page);
+    });
+});
 
-		setTimeout(() => {
+function initializeCanvas(page) {
+    let canvas = new fabric.Canvas(`canvas-${page.id}`, {
+        width: 300,
+        height: 200,
+        renderOnAddRemove: false
+    });
 
-			for (let i=0; i<$pages.length; i++) {
+    if (page.content) {
+        canvas.loadFromJSON(JSON.parse(page.content), () => {
+            try {
+                // resize(canvas);
+                canvas.renderAll();
+                canvas.calcOffset();
+            } catch (error) {
+                console.error('Error rendering canvas:', error);
+            }
+        });
+    }
+}
 
-				let page = $pages[i]
-
-				let canvas = new fabric.Canvas(`canvas-${page.id}`, {
-					width: 300,
-					height: 200,
-					renderOnAddRemove: false,
-				});
-
-				setTimeout(() => {
-					if (page.content){
-					canvas.loadFromJSON(JSON.parse(page.content), () => {
-						try {
-							//resize(canvas);
-							canvas.clear().renderAll();
-							canvas.requestRenderAll()
-							canvas.calcOffset();
-							console.log('drawn')
-						} catch (error) {
-							console.error('Error rendering canvas:', error);
-						}
-					});
-				}
-				}, 1000);
-
-			}
-
-		}, 1000);
-
-	});
 
 function resize(canvas) {
     const newWidth = window.innerWidth < 800 ? window.innerWidth : 250;
@@ -114,16 +103,14 @@ function resize(canvas) {
 	<div id = 'pages'>
 
 		{#each $pages as page, i}
-
-			<a href = '/p/{page.id}'>
-				<div class = 'page' id = '{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }}
-				out:fly={{ x: 200, duration: 300 }}>
-					<canvas id = 'canvas-{page.id}' class = 'canvas'></canvas>
-					<h1> {page.title} </h1>
+			<a href='/p/{page.id}'>
+				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }} out:fly={{ x: 200, duration: 300 }}>
+				<canvas bind:this={page.canvasElement} id='canvas-{page.id}' class='canvas'></canvas>
+				<h1> {page.title} </h1>
 				</div>
 			</a>
-
 		{/each}
+
 
 	</div>
 
@@ -161,20 +148,20 @@ function resize(canvas) {
 		.page{
 
 			canvas{
-				border-radius: 10px;
+				border-radius: 5px;
 			}
 
 			h1{
 				margin-top: 10px;
-				font-size: 16px;
-				font-weight: 500;
-				letter-spacing: -0.2px;
+				font-size: 13px;
+				font-weight: 400;
+				letter-spacing: -0.3px;
 			}
 		}
 	}
 
 	#app{
-		margin-left: 240px;
+		//margin-left: 240px;
 	}
 
 	#loading{

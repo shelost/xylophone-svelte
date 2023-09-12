@@ -2,15 +2,36 @@
 
   <div id = 'container'>
       <div id = 'bar'>
-        <input id = 'title' bind:value = {title} placeholder = 'Untitled Page'>
+        <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
-        <div>
-          <button id = 'url'> Copy Link </button>
-        </div>
+        <div id = 'buttons'>
+          <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
+            <img src = {Text} class = 'icon'  alt = 'icon'>
+          </div>
+          <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
+            <img src = {Image} class = 'icon'  alt = 'icon'>
+          </div>
+          <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
+            <img src = {Triangle} class = 'icon'  alt = 'icon'>
+          </div>
+          <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
+            <img src = {Button} class = 'icon'  alt = 'icon'>
+          </div>
+          <div class = 'add' id="addRect" class:active = { MODE == 'rect' }>
+            <img src = {Rect} class = 'icon'  alt = 'icon'>
+          </div>
+          <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
+            <img src = {Ellipse} class = 'icon'  alt = 'icon'>
+          </div>
+
+          <div>
+            <input type="color" id="color" name="head" bind:value={color} />
+          </div>
 
       </div>
 
 
+      <!--
   <div id = 'controls'>
 
     <div id = 'buttons'>
@@ -40,18 +61,31 @@
 
         <div id = 'align'>
         </div>
-
-    <!-- Control panel UI elements -->
     </div>
 
+-->
 </div>
 
 
 
-
       <div id = 'canvas-container'>
-        <canvas id = 'canvas'></canvas>
 
+        <div class="center">
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+
+
+        <canvas id = 'canvas'></canvas>
+    <!-- id="resize-handle"></div>-->
       </div>
 
 
@@ -88,18 +122,16 @@
   }
 
   #app{
-      width: calc(100vw - 260px) !important;
-      margin-top: 10px;
-      height: calc(100vh - 20px);
-
-      border-radius: 8px;
-
-      margin-left: 250px;
+      width: calc(100vw - 240px) !important;
+      margin-top: 0px;
+      height: calc(100vh);
+      margin-left: 0;
       background: white;
       overflow: hidden !important;
+
       //border: 1px solid rgba(black, 0.1);
 
-      box-shadow: 0px 10px 30px rgba(black, 0.3);
+      //box-shadow: 0px 10px 50px rgba(black, 0.1);
 
   }
 
@@ -114,14 +146,51 @@
   }
 
   #canvas-container{
-    height: fit-content;
-    margin-top: 100px;
+    //height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 45px;
+
+    #resize-handle{
+      cursor: ew-resize;
+      height: 30px;
+      width: 10px;
+      background: #333;
+      z-index: 10;
+    }
+  }
+
+
+  #color{
+    width: 20px;
+    height: 20px;
+    transition: 0.2s ease;
+    margin-top: 3px;
+    border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.3);
+    box-shadow: 0x 5px 20px rgba(black, 0.2);
+    &:hover{
+      opacity: 0.9;
+    }
+  }
+
+  #color::-webkit-color-swatch{
+    padding: 0;
+    border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.2)  !important;
+    box-shadow: 0x 5px 5px rgba(black, 0.2) !important;
+    border-radius: 40px !important;
+  }
+
+  #color::-webkit-color-swatch-wrapper{
+    padding: 0;
+    border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.2)  !important;
+    box-shadow: 0x 5px 5px rgba(black, 0.2)  !important;
+    border-radius: 40px !important;
   }
 
   #canvas{
       flex-shrink: 0;
-      border-radius: 10px;
-      width: calc(100vw - 240px);
+      //width: calc(100vw - 240px);
   }
 
   #floatingOptions{
@@ -129,10 +198,6 @@
       opacity: 0;
   }
 
-  #title{
-    letter-spacing: -0.4px;
-
-  }
 
 :global(#delete){
     background: red;
@@ -146,7 +211,7 @@
 
     width: 28px;
     height: 28px;
-    border-radius: 5px;
+    border-radius: 3px;
     cursor: pointer;
     transition: 0.2s ease;
 
@@ -156,37 +221,39 @@
     justify-content: center;
 
     &.active{
-      background: rgba(black, 0.1);
+      background: rgba(white, 0.2);
     }
     &:hover{
-      background: rgba(black, 0.1);
+      background: rgba(white, 0.2);
     }
 
     .icon{
       width: 14px;
       height: 14px;
+      filter: invert(100%);
     }
   }
 
+
+  /*
   #controls{
 
     position: fixed;
 
     z-index: 3;
-    margin-top: 55px;
+    margin-top: 0px;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 45px;
-      border-radius: 0px;
-      width: calc(100vw - 260px);
-      background: #f0f0f0;
+      width: calc(100vw - 240px);
+      background: black;
 
       #buttons{
           display: flex;
           align-items: center;
-          gap: 10px;
-          margin: 30px;
+          gap: 0px;
+
 
           button{
             width: 20px;
@@ -196,6 +263,9 @@
       }
 
   }
+  */
+
+
 
 
   :global(.option){
@@ -212,7 +282,7 @@
 
   #container {
       flex-grow: 1;
-      width: calc(100vw - 260px);
+      width: calc(100vw - 240px);
       height: 100vh;
 
       display: flex;
@@ -227,53 +297,117 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 10px 15px;
-        border-radius: 8px 8px 0 0;
-        //border-bottom: 1px solid rgba(black, 0.2);
+        padding: 0 15px;
+
+        height: 60px;
+        border-bottom: 1px solid rgba(black, 0.02);
         //box-shadow: 0px 20px 60px rgba(black, 0.05);
-        width: calc(100vw - 260px);
-        background: white;
+        width: calc(100vw - 240px);
         position: fixed;
         background: white;
+        //background: black;
+        color: black;
+
         z-index: 3;
 
-        border-bottom: 1px solid rgba(black, 0.1);
+        //border-bottom: 1px solid rgba(black, 0.1);
 
 
-        input{
-          font-size: 18px;
-          font-weight: 700;
-          padding: 0;
+        #title{
+          font-size: 20px;
+          font-weight: 600;
+          letter-spacing: -0.3px;
+          padding: 0 5px;
+          height: 28px;
         }
 
         #buttons{
           display: flex;
           align-items: center;
-          gap: 20px;
+          gap: 15px;
+
+        }
+
+        button{
+          display: none;
         }
       }
   }
 
+  input.middle:focus {
+    outline-width: 0 !important;
+}
+
+input:focus,
+#title:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none !important;
+}
+
+#app #container #bar #title{
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+
+
+    &:focus{
+        border: none !important;
+        outline: none !important;
+        -webkit-appearance: none !important;
+
+    }
+}
+
+*:focus {
+    outline: none !important;
+}
+
+input::-moz-focus-inner {  /* for Firefox */
+    border: 0 !important;
+    outline: none !important;
+}
+
+input:-webkit-autofill,  /* for WebKit browsers */
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active  {
+    transition: background-color 5000s ease-in-out 0s;
+}
+
   :global(.input){
       font-size: 10px !important;
-      padding: 5px 8px;
+      padding: 3px 8px !important;
       border-radius: 5px !important;
       border: none;
-      background: rgba(white, 0.15) !important;
+      background: rgba(black, 0.05) !important;
+      //background: white;,
       transition: 0.2s ease;
-      color: white;
+      color: black;
+  }
+
+  :global(.flex){
+      align-items: center;
   }
 
   :global(.input:hover){
-    background: rgba(white, 0.3) !important;
+    background: rgba(black, 0.1)
+  }
+
+  input:focus{
+    border: none !important;
+    outline: none !important;
   }
 
   :global(label){
-      color: white;
       font-size: 10px;
       font-weight: 500;
-      color: rgba(white, 0.8);
-      margin-bottom: 5px;
+      color: rgba(black, 0.4);
+      letter-spacing: -0.5px;
+      line-height: 100%;
+      margin-right: 10px;
+     display: none;
   }
 
   :global(input:checked) {
@@ -285,13 +419,18 @@
 
   #panel{
     position: fixed;
-    top: 0;
-    right: -400px;
-    width: 200px;
+    top: 0px;
+    left: -400px;
+    width: 240px;
     padding: 20px;
     height: 100vh;
     background: #FF004D;
-    box-shadow: -20px 0px 70px rgba(black, 0.1);
+    background: rgb(10, 5, 19);
+    background: white;
+    //background: #fff3f5;
+    //border-radius: 10px;
+    border: 1px solid rgba(black, 0.1);
+   // box-shadow: -20px 0px 70px rgba(black, 0.1);
     transition: 0.3s ease-in-out;
     overflow-y: scroll;
 
@@ -301,37 +440,86 @@
     gap: 24px;
     letter-spacing: -0.4px;
 
-    z-index: 4;
+    z-index: 5 !important;
 
 
     :global(#controls-title){
       font-weight: 600;
-      color: white;
+      color: black;
     }
 
-    .option{
-      margin-top: 40px !important;
+    :global(.control){
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
     }
+
+
+
+      :global(.range){
+        -webkit-appearance: none;
+        width: 80%;
+        height: 20px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 1;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+      }
+
+      :global(.range:hover) {
+        //opacity: 1;
+        opacity: 1;
+      }
+
+      :global(.range::-webkit-slider-thumb) {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 8px;
+        height: 20px;
+        border-radius: 3px;
+        background: rgba(black, 0.3);
+        cursor: pointer;
+      }
+
+      :global(.range::-moz-range-thumb) {
+        width: 8px;
+        height: 20px;
+        background: rgba(black, 0.3);
+         border-radius: 3px;
+        cursor: pointer;
+      }
+
+
+    :global(.option){
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    :global(.icon){
+      width: 16px;
+      margin-right: 12px;
+    }
+
+
 
     &.active{
-      right: 0 !important;
+      left: 0 !important;
     }
   }
 
   .active{
-      right: 0 !important;
+      left: 0px !important;
     }
+
+
 
 
   @media screen and (max-width: 800px){
 
-      #container{
-          width: calc(100vw - 240px) !important;
-      }
 
-      #canvas{
-          width: calc(100vw - 240px) !important;
-      }
   }
 
 
@@ -348,6 +536,8 @@ import {supabaseClient} from '$lib/db'
 import {writable} from 'svelte/store'
 import icon from '$lib/img/favicon.svg'
 
+import Sidebar from '$lib/components/Sidebar.svelte'
+
 import Text from '$lib/img/i-text.svg'
 import Button from '$lib/img/i-button.svg'
 import Image from '$lib/img/i-img.svg'
@@ -357,7 +547,22 @@ import Ellipse from '$lib/img/i-ellipse.svg'
 import Copy from '$lib/img/copy.svg'
 
 import Grid from '$lib/components/Grid.svelte'
+import { object_without_properties } from 'svelte/internal';
 
+
+import IconW from '$lib/img/icon-w.svg'
+import IconH from '$lib/img/icon-h.svg'
+import IconX from '$lib/img/icon-x.svg'
+import IconY from '$lib/img/icon-y.svg'
+import IconC from '$lib/img/icon-c.svg'
+import IconA from '$lib/img/icon-a.svg'
+import IconD from '$lib/img/icon-d.svg'
+import IconLS from '$lib/img/icon-ls.svg'
+import IconLH from '$lib/img/icon-lh.svg'
+import IconP from '$lib/img/icon-p.svg'
+import IconS from '$lib/img/icon-s.svg'
+import IconT from '$lib/img/icon-t.svg'
+import IconB from '$lib/img/icon-b.svg'
 
 
 export let data
@@ -381,6 +586,7 @@ const panelWidth = 240
 onMount(()=> {
   // Initialize fabric.js canvas
 
+
   const PANEL = Id('panel')
 
   let initialCanvasWidth = window.innerWidth - panelWidth;  // Initial canvas width, 250 is the panel width
@@ -392,6 +598,9 @@ onMount(()=> {
       height: initialCanvasHeight,
       renderOnAddRemove: false,
   });
+
+  resize()
+
 
 
 
@@ -412,7 +621,6 @@ onMount(()=> {
 
 
   fabric.Textbox.prototype.controls.clone = fabric.Object.prototype.controls.clone;
-
 
 
 
@@ -438,37 +646,277 @@ onMount(()=> {
   }
 
 
+///////////////////////////////////////////////////
+//////////////// OBJECT PROPERTIES ////////////////
+///////////////////////////////////////////////////
 
-  window.applyStyles = function() {
-    const activeObject = canvas.getActiveObject();
 
-    if (activeObject) {
-        for (let i = 0; i < Class('input').length; i++) {
-            let input = Class('input')[i];
-            let prop = input.id.substring(6);
 
-            if (prop === "width" && activeObject.type === "image") {
-                const newWidth = parseFloat(input.value);
-                activeObject.scaleX = newWidth / activeObject.width;
-            } else if (prop === "height" && activeObject.type === "image") {
-                const newHeight = parseFloat(input.value);
-                activeObject.scaleY = newHeight / activeObject.height;
-            } else {
-                activeObject[prop] = input.value;
-            }
+// This function checks the proximity of two values
+function isClose(val1, val2, threshold) {
+    return Math.abs(val1 - val2) < threshold;
+}
+
+// Draw alignment guide
+function drawGuide(x1, y1, x2, y2) {
+    let line = new fabric.Line([x1, y1, x2, y2], {
+        stroke: '#ff0000',
+        opacity: 0.4,
+        selectable: false,
+        evented: false,
+        excludeFromExport: true
+    });
+    canvas.add(line);
+    return line;
+}
+
+// Clear all guides from the canvas
+function clearGuides() {
+    let objects = canvas.getObjects();
+    for (let i = objects.length - 1; i >= 0; i--) {
+        if (objects[i].excludeFromExport) {
+            canvas.remove(objects[i]);
+        }
+    }
+}
+
+
+const threshold = 10;  // Proximity threshold
+
+canvas.on('object:moving', (event) => {
+    clearGuides();  // Clear old guides
+
+    let activeObject = event.target;
+
+    canvas.getObjects().forEach((obj) => {
+        if (obj === activeObject || obj.excludeFromExport) return;
+
+        // Check horizontal alignments
+        if (isClose(activeObject.left, obj.left, threshold)) {
+            drawGuide(obj.left, 0, obj.left, canvas.height);
+            activeObject.left = obj.left;
+        } else if (isClose(activeObject.left + activeObject.width * activeObject.scaleX, obj.left, threshold)) {
+            drawGuide(obj.left, 0, obj.left, canvas.height);
+            activeObject.left = obj.left - activeObject.width * activeObject.scaleX;
+        } else if (isClose(activeObject.left, obj.left + obj.width * obj.scaleX, threshold)) {
+            drawGuide(obj.left + obj.width * obj.scaleX, 0, obj.left + obj.width * obj.scaleX, canvas.height);
+            activeObject.left = obj.left + obj.width * obj.scaleX;
         }
 
-        canvas.renderAll();
-        canvas.calcOffset();
-        saveCanvasToSupabase();
+        // Check vertical alignments
+        if (isClose(activeObject.top, obj.top, threshold)) {
+            drawGuide(0, obj.top, canvas.width, obj.top);
+            activeObject.top = obj.top;
+        } else if (isClose(activeObject.top + activeObject.height * activeObject.scaleY, obj.top, threshold)) {
+            drawGuide(0, obj.top, canvas.width, obj.top);
+            activeObject.top = obj.top - activeObject.height * activeObject.scaleY;
+        } else if (isClose(activeObject.top, obj.top + obj.height * obj.scaleY, threshold)) {
+            drawGuide(0, obj.top + obj.height * obj.scaleY, canvas.width, obj.top + obj.height * obj.scaleY);
+            activeObject.top = obj.top + obj.height * obj.scaleY;
+        }
+    });
+});
+
+
+
+
+
+///////////////////////////////////////////////////
+//////////////// OBJECT PROPERTIES ////////////////
+///////////////////////////////////////////////////
+
+
+
+ // Utility function to update the value of both input and range elements
+function updatePropertyElements(property, value) {
+  const inputElement = Id(`input-${property}`);
+  const rangeElement = Id(`range-${property}`);
+
+  if (inputElement) inputElement.value = value;
+  if (rangeElement) rangeElement.value = value;
+}
+
+// Automatically sync UI elements based on the active object's properties
+function updateUIFromCanvasObject(obj) {
+  const properties = ['width', 'height', 'angle', 'fontFamily', 'fill', 'charSpacing', 'fontSize', 'textAlign', 'fontWeight', 'fontStyle', 'fill', 'depth'];
+
+  properties.forEach(property => {
+    let value = obj[property];
+
+    if (property === 'width') value = Math.round(obj.width * obj.scaleX);
+    if (property === 'height') value = Math.round(obj.height * obj.scaleY);
+    if (property === 'angle') value = Math.round(obj.angle);
+
+    updatePropertyElements(property, value);
+  });
+}
+
+// Function to apply styles to the canvas object
+window.applyStyles = function(prop, value) {
+  const activeObjects = canvas.getActiveObjects();
+
+  activeObjects.forEach(activeObject => {
+    if (prop === "width" || prop === "height") {
+        const scaleValue = parseFloat(value) / (prop === "width" ? activeObject.width : activeObject.height);
+        activeObject.scaleX = prop === "width" ? scaleValue : activeObject.scaleX;
+        activeObject.scaleY = prop === "height" ? scaleValue : activeObject.scaleY;
+    } else {
+        if (typeof value == 'string' && !isNaN(value)) {
+            activeObject[prop] = parseFloat(value);
+        } else {
+            activeObject[prop] = value;
+        }
+
+        activeObject.dirty = true;
+        activeObject.textBackgroundColor = 'rgba(0,0,0,0)'
+        console.log(activeObject.fill)
+        canvas.requestRenderAll();
     }
+  });
+
+
+
+
+  canvas.requestRenderAll();
+  canvas.renderAll();
+  canvas.calcOffset();
+  saveCanvasToSupabase();
 };
 
 
-  document.addEventListener("DOMContentLoaded", function() {
-  console.log('yo')
+
+function attachInputListeners(id, property) {
+  const element = Id(id);
+  if (element) {
+    element.addEventListener('input', function() {
+
+      applyStyles(property, element.value);
+      updatePropertyElements(property, element.value); // Automatically sync input and range
+    });
+  }
+}
+
+function extractPropertiesFromTemplate(template) {
+    return template.map(item => item.id);
+}
+
+function combineProperties(...templates) {
+    let combined = [];
+    templates.forEach(template => {
+        combined = combined.concat(extractPropertiesFromTemplate(template));
+    });
+    return [...new Set(combined)]; // Return unique properties only
+}
+
+function getCurrentObjectProperties(obj) {
+    if (!obj) {
+        return [];
+    }
+
+
+    switch (obj.type){
+
+      case 'textbox':
+        return extractPropertiesFromTemplate(textTemplate(obj));
+        break
+
+      case 'image':
+        return extractPropertiesFromTemplate(imageTemplate(obj));
+        break
+
+      case 'rect':
+        return extractPropertiesFromTemplate(rectTemplate(obj));
+        break
+
+      default:
+        return []
+        break
+    }
+
+
+
+}
+
+function dynamicallyBindListeners() {
+    const activeObject = canvas.getActiveObject();
+    const properties = getCurrentObjectProperties(activeObject);
+
+    properties.forEach(property => {
+
+        attachInputListeners(`input-${property}`, property);
+        attachInputListeners(`range-${property}`, property);
+    });
+}
+
+
+
+
+
+// Input Correspondence
+
+canvas.on('object:scaling', function(event) {
+    const obj = event.target;
+
+    if (obj.type === 'textbox') {
+        const scaleX = obj.scaleX;
+        const newFontSize = Math.floor(obj.fontSize * scaleX);
+        obj.set('fontSize', newFontSize);
+        obj.set('scaleX', 1);
+        obj.set('scaleY', 1);
+        obj.initDimensions();
+    }else if (obj.width) {
+        // Update the width and height input values to the current scaled dimensions
+        Id('input-width').value = Math.round(obj.width * obj.scaleX)
+        Id('input-height').value = Math.round(obj.height * obj.scaleY)
+        Id('range-width').value =  Math.round(obj.height * obj.scaleY)
+        Id('range-height').value =Math.round(obj.width * obj.scaleX)
+    }
+
+    console.log('start')
+
+    canvas.renderAll();
+    dynamicallyBindListeners();
+    updateUIFromCanvasObject(event.target);
 });
 
+canvas.on('object:rotating', function(event) {
+    const obj = event.target;
+
+    if (Id('input-angle')) {
+      Id('input-angle').value = Math.round(obj.angle)
+      Id('range-angle').value = Math.round(obj.angle)
+    }
+
+    canvas.renderAll();
+    dynamicallyBindListeners();
+    updateUIFromCanvasObject(event.target);
+});
+
+canvas.on('object:selected', function(event) {
+    dynamicallyBindListeners();
+    updateUIFromCanvasObject(event.target);
+});
+
+canvas.on('object:modified', function(event) {
+    saveCanvasToSupabase()
+    dynamicallyBindListeners();
+    updateUIFromCanvasObject(event.target);
+
+});
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////
+////////////////// LOAD CANVAS ////////////////////
+///////////////////////////////////////////////////
 
 
   let xArr = Array.from({length: 40}, (_, i) => i * 40);
@@ -476,8 +924,15 @@ onMount(()=> {
   let gridLines = [];
 
 
+  Id('bar').style.background = data.color
+    canvas.setBackgroundColor(data.color, () => canvas.renderAll());
+
 
   setTimeout(() => {
+
+
+
+
   if (
     data &&
     data.content &&
@@ -494,14 +949,19 @@ onMount(()=> {
       canvas.loadFromJSON(parsedContent, () => {
         try {
           resizeCanvas();
-          resize(0);
+          resize(0)
+
+         setTimeout(() => {
+         // resizeInitial()
+         }, 1000);
 
 
 
-          let maxHeight = window.innerHeight - 200
+          let maxHeight = window.innerHeight
 
           canvas.forEachObject((object) => {
             const bottomEdge = object.top + object.height;
+            object.originalTop = object.top;
             if (bottomEdge > maxHeight) {
               maxHeight = bottomEdge;
             }
@@ -509,9 +969,37 @@ onMount(()=> {
 
           // Add buffer and update canvas height
           const buffer = 100;
-          canvas.setHeight(maxHeight + buffer); // additional 100px as per your requirement
+          canvas.setHeight(maxHeight + 100); // additional 100px as per your requirement
+
+
+
           canvas.renderAll();
           canvas.calcOffset();
+
+
+
+// Apply parallax effect based on the depth and scroll amount
+function applyParallaxEffect() {
+    let scrollAmount = document.getElementById('container').scrollTop;
+
+    canvas.forEachObject(object => {
+        let depth = object.depth || 0;
+        let parallaxShift = 0.2 * depth * scrollAmount;
+
+        // Adjust the top position of the object using its 'originalTop' and the parallax shift
+        let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
+        object.set('top', newTopPosition);
+    });
+
+    canvas.renderAll();
+    canvas.calcOffset();
+}
+
+// Listen for the scroll event
+//document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
+
+
+
 
 
           /*
@@ -527,12 +1015,16 @@ onMount(()=> {
         }
       },
       function (o, object) {
-        object.set({
-          borderColor: 'red',
-          cornerColor: '#FF005C',
-          cornerSize: 5,
-          transparentCorners: false,
-        });
+
+        if (object){
+          object.set({
+            borderColor: 'red',
+            cornerColor: '#FF005C',
+            cornerSize: 5,
+            transparentCorners: false,
+          });
+        }
+
       });
 
     } catch (error) {
@@ -543,39 +1035,12 @@ onMount(()=> {
 
 
 
+Id('color').addEventListener('input', e => {
+  canvas.setBackgroundColor(Id('color').value, () => canvas.renderAll());
+  Id('bar').style.background = Id('color').value
+  saveCanvasToSupabase()
+})
 
-/*
-
-setTimeout(() => {
-
-if (data && data.content && Id('canvas') && canvas && document && document.readyState === 'complete') {
-  try {
-    const parsedContent = typeof data.content === 'string' ? JSON.parse(data.content) : data.content;
-    console.log('Parsed content:', parsedContent);
-
-    canvas.loadFromJSON(parsedContent, () => {
-      try {
-        resizeCanvas();
-        calculateGrid();
-        drawGrid();
-        canvas.getContext('2d').resetTransform();
-        resize();
-         resizeCanvas();
-        canvas.renderAll();  // Choose either renderAll or requestRenderAll, not both
-        canvas.calcOffset();
-        console.log('drawed');
-      } catch (error) {
-        console.error('Error in canvas callback:', error);
-      }
-    });
-  } catch (error) {
-    console.error('Error loading canvas:', error);
-  }
-}
-
-}, 1000)
-
-*/
 
 
 
@@ -594,10 +1059,33 @@ canvas.on('object:modified', function() {
 canvas.on('selection:created', function() {
     isObjectBeingModified = true;
 });
-canvas.on('selection:cleared', function() {
-    isObjectBeingModified = true;
-});
+
+
 canvas.on('object:moving', function() {
+    const activeObject = canvas.getActiveObject();
+    if (activeObject){
+        let depth = activeObject.depth || 0;
+        let scrollAmount = document.getElementById('container').scrollTop;
+
+        // Calculate and set the 'unaffected' top position of the object without any parallax shift
+        let parallaxShift = 0.2 * depth * scrollAmount;
+        activeObject.originalTop = activeObject.top + scrollAmount - parallaxShift;
+    }
+    isObjectBeingModified = true;
+    clearGuides();
+});
+
+
+
+
+
+canvas.on('object:moving', function() {
+   //debouncedResize()
+    const activeObject = canvas.getActiveObject();
+    if (activeObject){
+    activeObject.originalTop = activeObject.top
+    activeObject.set('originalTop', activeObject.top)
+  }
     isObjectBeingModified = true;
 });
 canvas.on('object:scaling', function() {
@@ -613,6 +1101,7 @@ canvas.on('object:rotating', function() {
 
 let isCloning = false;
 
+/*
 const handleObjectMoving = (e) => {
     const activeObject = e.target;
 
@@ -647,8 +1136,13 @@ canvas.on('object:added', (e) => {
 });
 
 
+*/
 
 
+
+///////////////////////////////////////////////////
+//////////////// CREATING ELEMENTS ////////////////
+///////////////////////////////////////////////////
 
 
 canvas.on('mouse:down', function(o){
@@ -685,19 +1179,19 @@ canvas.on('mouse:down', function(o){
           elem= new fabric.Textbox('Hello World!', {
               left: origX,
               top: origY,
-              fontFamily: 'Arial',
+              fontFamily: 'Helvetica',
               fill: '#000',
               charSpacing: -20,
               fontSize: 18,
               lineHeight: 1,
-              fontWeight: '500',
+              fontWeight: '400',
 
               originX: 'left',
               originY: 'top',
               width: 100,
               editable: true,
               link: 'https://capsule.pw',
-              depth: 1,
+              depth: 2,
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -710,7 +1204,7 @@ canvas.on('mouse:down', function(o){
                     originX: 'left',
                     originY: 'top',
                     link: 'https://path_to_video.com',
-                    depth: 3,
+                    depth: 2,
                 });
                 canvas.add(img);
                 canvas.setActiveObject(img);
@@ -728,7 +1222,7 @@ canvas.on('mouse:down', function(o){
                   scaleY: scaleFactorY,
                   originX: 'left',
                   originY: 'top',
-                  depth: 3,
+                  depth: 2,
               });
 
               canvas.add(img);
@@ -746,7 +1240,7 @@ canvas.on('mouse:down', function(o){
                 fill: 'rgba(0,0,255,1)',
                 label: 'Click Me!',
                 link: 'https://capsule.pw',
-                depth: 4,
+                depth: 2,
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -760,7 +1254,7 @@ canvas.on('mouse:down', function(o){
                 width: 100,
                 height: 100,
                 fill: 'rgba(0,255,0,1)',
-                depth: 5,
+                depth: 2,
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -774,7 +1268,7 @@ canvas.on('mouse:down', function(o){
                 rx: 40,
                 ry: 40,
                 fill: 'rgba(0,0,255,1)',
-                depth: 6,
+                depth: 2,
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -789,6 +1283,8 @@ canvas.on('mouse:down', function(o){
 
 
 });
+
+
 
 
 
@@ -841,36 +1337,6 @@ function reflowText(obj, newWidth) {
 
 
 
-// Input Correspondence
-
-canvas.on('object:scaling', function(event) {
-    const obj = event.target;
-
-    if (obj.type === 'textbox') {
-        const scaleX = obj.scaleX;
-        const newFontSize = Math.floor(obj.fontSize * scaleX);
-        obj.set('fontSize', newFontSize);
-        obj.set('scaleX', 1);
-        obj.set('scaleY', 1);
-        obj.initDimensions();
-    }else if (obj.width) {
-        // Update the width and height input values to the current scaled dimensions
-        Id('input-width').value = Math.round(obj.width * obj.scaleX)
-        Id('input-height').value = Math.round(obj.height * obj.scaleY)
-    }
-
-    canvas.renderAll();
-});
-
-canvas.on('object:rotating', function(event) {
-    const obj = event.target;
-
-    if (Id('input-angle')) {
-      Id('input-angle').value = Math.round(obj.angle)
-    }
-
-    canvas.renderAll();
-});
 
 
 
@@ -917,54 +1383,165 @@ canvas.on('mouse:up', function(o){
 
   window.addEventListener('load', function () {
     console.log('loaded')
+    resize()
   });
 
 
-  window.addEventListener('resize', resize)
+
+  function resizeInitial(initial = 1) {
+    let newWidth = window.innerWidth - panelWidth;
+
+    if (window.innerWidth < 800){
+        newWidth = window.innerWidth;
+    }
+
+    let scaleX = newWidth / initialCanvasWidth;
+    if (initial === 0){
+        scaleX = newWidth / data.iwidth;
+    }
+
+    // Calculate center shift difference to maintain the centering
+    const centerShiftX = (canvas.getWidth() - newWidth) / 2;
+
+    // Scale and center each object
+    canvas.getObjects().forEach((object) => {
+        object.left = (object.left - centerShiftX) * scaleX;
+        object.scaleX *= scaleX;
+        object.top *= scaleX;
+        object.scaleY *= scaleX;
+        object.setCoords();
+    });
 
 
-  function resize(initial = 1){
-      let newWidth = window.innerWidth - panelWidth;
+    // Clip objects to canvas boundaries
+    canvas.clipTo = function(ctx) {
+        ctx.rect(0, 0, newWidth, initialCanvasHeight * scaleX);
+        ctx.clip();
+    };
 
-      if (window.innerWidth < 800){
-          newWidth = window.innerWidth
-      }
+    // Update canvas dimensions
+    canvas.setWidth(newWidth);
+    canvas.setHeight(initialCanvasHeight * scaleX);
+    canvas.renderAll();
+    canvas.calcOffset();
 
+    // Also adjust the actual HTML canvas size
+    canvas.getElement().style.width = `${initialCanvasWidth}px`;
+    canvas.getElement().style.height = `${initialCanvasHeight * scaleX}px`;
 
-      let scaleX = newWidth / initialCanvasWidth;
-      if (initial == 0){
-        scaleX = newWidth / data.iwidth
-      }
-
-
-
-      // Scale each object
-      canvas.getObjects().forEach((object) => {
-          object.left *= scaleX;
-          object.scaleX *= scaleX;
-          object.top *= scaleX;
-          object.scaleY *= scaleX;
-          object.setCoords();
-      });
-
-      // Update canvas dimensions
-      canvas.setWidth(newWidth);
-      canvas.setHeight(initialCanvasHeight * scaleX);
-      canvas.renderAll();
-      canvas.calcOffset()
-
-
-      /*
-    calculateGrid()
-    drawGrid()
-    */
-
+    // Adjust the width of the canvas container
+    document.getElementById('canvas-container').style.width = `${initialCanvasWidth}px`;
 
     // Update initial dimensions
-    initialCanvasWidth = newWidth;
     initialCanvasHeight = canvas.getHeight();
+}
 
-  }
+
+
+function resize(initial = 1) {
+    let newWidth = window.innerWidth - panelWidth;
+
+    if (window.innerWidth < 800){
+        newWidth = window.innerWidth;
+    }
+
+
+    let scaleX = newWidth / initialCanvasWidth;
+    if (initial === 0){
+        scaleX = newWidth / data.iwidth;
+    }
+
+    // Calculate center shift difference to maintain the centering
+    const centerShiftX = (canvas.getWidth() - newWidth) / 2;
+
+
+    let maxHeight = initialCanvasHeight
+    // Adjust object positions without scaling them
+    canvas.getObjects().forEach((object) => {
+        object.left -= centerShiftX;
+        object.setCoords();
+
+
+        if (object.top + object.height > maxHeight){
+          maxHeight = object.top + object.height
+        }
+    });
+
+    // Clip objects to canvas boundaries (if necessary)
+    canvas.clipTo = function(ctx) {
+        ctx.rect(0, 0, newWidth, canvas.getHeight());
+        ctx.clip();
+    };
+
+    // Update canvas dimensions
+    canvas.setWidth(newWidth);
+    canvas.setHeight(maxHeight + 100);
+
+    // Adjust the width of the canvas container
+    const canvasContainer = document.getElementById('canvas-container');
+    if (canvasContainer) {
+        canvasContainer.style.width = `${newWidth}px`;
+    }
+
+    // Render canvas and calculate offset
+    canvas.renderAll();
+    canvas.calcOffset();
+}
+
+
+
+  window.addEventListener('resize', resize)
+    window.addEventListener('load', resize)
+    window.addEventListener('mousemove', resize)
+
+
+    setTimeout(() => {
+      resize(0)
+    },300)
+
+
+    setTimeout(() => {
+      resize(0)
+    },600)
+
+    setTimeout(() => {
+      resize()
+    },3000)
+
+
+
+
+
+  /*
+  let isResizing = false;
+let lastX;
+
+// 1. Start resizing on mousedown
+document.getElementById("resize-handle").addEventListener('mousedown', function (e) {
+    isResizing = true;
+    lastX = e.clientX;
+});
+
+// 2. End resizing on mouseup anywhere on the page
+window.addEventListener('mouseup', function () {
+    isResizing = false;
+});
+
+// 3. Handle the resizing on mousemove
+window.addEventListener('mousemove', function (e) {
+    if (!isResizing) return;
+
+    const deltaX = e.clientX - lastX;
+    lastX = e.clientX;
+
+    // Calculate the new width based on the mouse movement
+    const newWidth = initialCanvasWidth + deltaX;
+
+    // Set the new width to canvas and resize it
+    initialCanvasWidth = newWidth;
+    resize();
+});
+*/
 
 
 let initialX, initialY;
@@ -972,14 +1549,49 @@ let initialX, initialY;
 // Function to add text
 
 
+function getOverlappingProperties(objects) {
+    if (objects.length === 0) {
+        return [];
+    }
+
+    let overlappingProps = getCurrentObjectProperties(objects[0]);
+
+    for (let i = 1; i < objects.length; i++) {
+        const currentProps = getCurrentObjectProperties(objects[i]);
+        overlappingProps = overlappingProps.filter(prop => currentProps.includes(prop));
+    }
+
+    return overlappingProps;
+}
+
+function updateUIFromCanvasObjects(objects) {
+    const overlappingProps = getOverlappingProperties(objects);
+
+    overlappingProps.forEach(property => {
+        // For simplicity, use the value from the first object
+        let value = objects[0][property];
+
+        if (property === 'width') value = Math.round(objects[0].width * objects[0].scaleX);
+        if (property === 'height') value = Math.round(objects[0].height * objects[0].scaleY);
+        if (property === 'angle') value = Math.round(objects[0].angle);
+
+        updatePropertyElements(property, value);
+    });
+}
+
+
+
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function handleSelection(event) {
-  const activeObject = canvas.getActiveObject()
+  const activeObjects = canvas.getActiveObjects()
 
 
+  if(activeObjects.length === 1) {
+
+    let activeObject = activeObjects[0];
   let options = {};
 
   console.log(activeObject.type)
@@ -990,6 +1602,12 @@ function handleSelection(event) {
       break;
     case 'image':
       options = imageTemplate(activeObject);
+      break;
+    case 'rect':
+      options = rectTemplate(activeObject);
+      break;
+    case 'ellipse':
+      options = ellipseTemplate(activeObject);
       break;
     case 'video':
       options = videoTemplate(activeObject);
@@ -1009,24 +1627,34 @@ function handleSelection(event) {
 
     let opt = '';
 
-    switch (option.type) {
-      case 'range':
 
+
+    switch (option.type) {
+      /*
+      case 'range':
+mb
         console.log(activeObject)
         opt = `
         <div id = 'option-${option.id}' class="option option-${option.type}}">
           <label> ${option.label} </label>
-          <input id = 'input-${option.id}' class = 'input range' value='${Math.round(activeObject[option.id])}' type="range" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
+          <input id = 'input-${option.id}' class = 'input range' value='${Math.round(activeObject[option.id])}' type="range" min="${option.min}" max="${option.max}" oninput="applyStyles()">
         </div>
         `;
         break;
+        */
 
       case 'number':
+        let val = Math.round(activeObject[option.id])
         opt = `
         <div id = 'option-${option.id}' class="option option-${option.type} option-${option.id}">
           <label> ${option.label} </label>
-          <input id = 'input-${option.id}' step ='${option.step}' class = 'input number' value='${Math.round(activeObject[option.id])}' type="number" min="${option.min}" max="${option.max}" oninput="applyStyles(canvas)">
-        </div>
+
+          <img src = '${option.icon}' class = 'icon' alt = 'icon'>
+          <div class = 'control'>
+            <input id = 'input-${option.id}' step ='${option.step}' class = 'input input-${option.id} number' value='${Math.round(activeObject[option.id])}' type="number" min="${option.min}" max="${option.max}">
+            <input id = 'range-${option.id}' step ='${option.step}' class = 'input input-${option.id} range' value='${Math.round(activeObject[option.id])}' type="range" min="${option.min}" max="${option.max}">
+          </div>
+          </div>
         `;
         break;
 
@@ -1034,13 +1662,12 @@ function handleSelection(event) {
         opt = `
         <div id = 'option-${option.id}' class="option option-${option.type} option-${option.id}">
           <label> ${option.label} </label>
+                <img src = '${option.icon}' class = 'icon' alt = 'icon'>
           <select id = 'input-${option.prop}' class = 'input dropdown' onchange="applyStyles(canvas)">
         `
 
         for (let i=0; i<option.options.length; i++) {
           let o = option.options[i];
-
-          console.log(o)
 
           if (activeObject[option.id] == o) {
             opt += `<option value = '${o}' selected> ${o} </option> `
@@ -1069,6 +1696,16 @@ function handleSelection(event) {
         `;
         break;
 
+      case 'color':
+        opt = `
+        <div id="option-${option.id}" class="option option-${option.type} option-${option.id}">
+            <label>${option.label}</label>
+              <img src = '${option.icon}' class = 'icon' alt = 'icon'>
+            <input id="input-${option.id}" class="input ${option.type}" value =${activeObject.fill} type="${option.type}" />
+        </div>
+        `;
+        break;
+
       default:
         break;
     }
@@ -1082,7 +1719,7 @@ function handleSelection(event) {
   `
   <div id = 'option-link' class="option option-link">
     <label> Link </label>
-    <input id = 'input-link' class = 'input range' value = '${activeObject.link}' placeholder='Enter URL here...' type="text" oninput="applyStyles(canvas)">
+    <input id = 'input-link' class = 'input' value = '${activeObject.link}' placeholder='Enter URL here...' type="text" oninput="applyStyles(canvas)">
   </div>
 
   <button id="delete" class = 'red' onclick = "deleteObject()"> Delete </button>
@@ -1093,20 +1730,29 @@ function handleSelection(event) {
   PANEL.innerHTML = div;
 
 
+  /*
   switch (activeObject.type) {
     case 'textbox':
       break;
     case 'image':
       Id('input-width').value = Math.round(activeObject.width * activeObject.scaleX)
       Id('input-height').value = Math.round(activeObject.height * activeObject.scaleY)
+      Id('range-width').value = Math.round(activeObject.width * activeObject.scaleX)
+      Id('range-height').value = Math.round(activeObject.height * activeObject.scaleY)
       break;
     case 'video':
       break;
     default:
       break;
-  }
+  }*/
+
+  dynamicallyBindListeners()
+}else{
+  updateUIFromCanvasObjects(activeObjects);
+}
 
 }
+
 
 
 
@@ -1138,19 +1784,24 @@ canvas.on('selection:updated', handleSelection);
 
 
 
-/////
+///////////////////////////////////////////////////
+//////////////// UPLOADING IMAGES /////////////////
+///////////////////////////////////////////////////
 
 // Assuming supabaseClient is initialized somewhere above
-
 async function fileExistsInSupabase(filePath) {
-    const { data, error } = await supabaseClient.storage.from('images').list(filePath);
-    return data && data.length > 0;  // Check if data array is not empty
+    const { error } = await supabaseClient.storage.from('images').download(filePath);
+    return !error;
+}
+
+async function getImageUrlFromSupabase(filePath) {
+    return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
 }
 
 async function uploadToSupabase(file) {
-    const filePath = `images/${file.name}`;
-    const exists = await fileExistsInSupabase(filePath);
-    if (exists) {
+    const filePath = `${file.name}`;
+
+    if (await fileExistsInSupabase(filePath)) {
         console.log('File already exists in Supabase. Skipping upload.');
         return filePath;
     }
@@ -1161,16 +1812,6 @@ async function uploadToSupabase(file) {
         return null;
     }
     return filePath;
-}
-
-async function getImageFromSupabase(filePath) {
-    const { data, error } = await supabaseClient.storage.from('images').download(filePath);
-    if (error) {
-        console.error('Error fetching file:', error);
-        return null;
-    }
-    const blob = new Blob([data], { type: "image/*" });
-    return URL.createObjectURL(blob);
 }
 
 canvas.wrapperEl.addEventListener('dragover', function(e) {
@@ -1191,28 +1832,39 @@ canvas.wrapperEl.addEventListener('drop', async function(e) {
             let imageURL;
 
             if (imagePath) {
-                imageURL = await getImageFromSupabase(imagePath);
+                imageURL = await getImageUrlFromSupabase(imagePath);  // <-- The change is here
             } else {
                 console.error('Failed to upload image to Supabase.');
                 continue;
             }
 
-            fabric.Image.fromURL(imageURL, function(img) {
-                img.scaleToWidth(300);
-                img.scaleToHeight(300);
-                img.set({
-                    left: dropPoint.x,
-                    top: dropPoint.y
+            if (typeof imageURL === "string" && imageURL) {
+                fabric.Image.fromURL(imageURL, function(img) {
+                    img.scaleToWidth(300);
+                    img.scaleToHeight(300);
+                    img.set({
+                        left: dropPoint.x,
+                        top: dropPoint.y,
+                        depth: 2,
+                    });
+                    canvas.add(img);
+                    canvas.renderAll();
+                    saveCanvasToSupabase();
                 });
-                canvas.add(img);
-                canvas.renderAll(); // Force a canvas render
-            });
+            } else {
+                console.error('Invalid imageURL:', imageURL);
+            }
         }
         // Handle videos similarly...
     }
-
-    saveCanvasToSupabase();  // Assuming this function is defined elsewhere in your code
 }, false);
+
+
+
+
+// Assuming the saveCanvasToSupabase function is defined elsewhere, as mentioned.
+
+
 
 
 
@@ -1310,7 +1962,11 @@ function addText(x,y) {
 
 
 function resizeCanvas() {
+
   let maxHeight = 0;
+  const container = canvas.wrapperEl;
+  const oldScrollTop = container.scrollTop;
+
 
   canvas.getObjects().forEach((object) => {
     // Calculate the bottom edge position for each object.
@@ -1321,11 +1977,13 @@ function resizeCanvas() {
     const buffer = 100; // distance from edge to start expanding canvas
 
     // Extend Canvas Height
-    if ((obj.top + obj.height) > (canvasHeight - buffer)) {
-      canvas.setHeight(canvasHeight + buffer);
-      console.log(obj)
-    }
+    if ((obj.top + obj.height) > (canvasHeight - buffer) && (obj.top + obj.height) > maxHeight) {
+   maxHeight = obj.top + obj.height;
+}
   });
+
+
+  container.scrollTop = oldScrollTop;
 
   // Add 100px to maxHeight and update canvas height.
   canvas.setHeight(maxHeight + 100);
@@ -1356,13 +2014,14 @@ function addImage(x,y) {
 
 function debounce(func, wait) {
   let timeout;
-  return function () {
+  return function() {
+    const context = this, args = arguments;
     clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      func.apply(this, arguments);
-    }, wait);
+    timeout = setTimeout(() => func.apply(context, args), wait);
   };
 }
+
+const debouncedResize = debounce(resizeCanvas, 100);
 
 // Function to add video
 function addVideo(x,y) {
@@ -1447,43 +2106,10 @@ function addButton(x, y) {
 
 
 
-/*
-  // Get the floating options div
-  const floatingOptions = document.getElementById('floatingOptions');
-
-  // Add a mouse event to the canvas to show the floating options div
-  canvas.on('selection:created', moveControls);
-  canvas.on('selection:updated', moveControls);
-  canvas.on('object:moving', moveControls);
-  Id('container').addEventListener('scroll', moveControls);
-
-
-  function moveControls(event){
-    const activeObject = canvas.getActiveObject()
-
-    if (activeObject){
-      CONTROLS.style.left = `${activeObject.left - 10}px`;
-      CONTROLS.style.top = `${activeObject.top - Id('container').scrollTop - 20}px`;
-    }
-  }
-  */
-
-
-
-
   canvas.on('mouse:out', function(event) {
 
     //CONTROLS.style.opacity = '0'
   })
-
-
-  $: for (let i=0; i<Class('input').innerHTML; i++){
-    let option = Class('input')[i]
-
-    option.addEventListener('change', function(e){
-      applyStyles(canvas)
-    })
-  }
 
 
   // Add text on button click
@@ -1620,23 +2246,15 @@ function addButton(x, y) {
 
   function textTemplate(activeObject) {
     const options = [
-      { label: 'Font', id: 'fontFamily', type: 'dropdown', prop: 'fontFamily', value: activeObject.fontFamily, options: ['Arial', 'Newsreader', 'Helvetica', 'Times New Roman', 'Courier New'] },
-      { label: 'Color', id: 'fill', type: 'color', prop: 'fill', value: activeObject.fill },
-      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', type: 'number', value: activeObject.charSpacing || 0, min: -50, max: 50 },
-      { label: 'Font Size', id: 'fontSize', type: 'number', step: 1, prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
-      { label: 'Text Align', id: 'textAlign', type: 'dropdown', prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
-      { label: 'Font Weight', id: 'fontWeight', type: 'number', step: 100,prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
-      { label: 'Font Style', id: 'fontStyle', type: 'dropdown', prop: 'fontStyle', value: activeObject.fontStyle, options: ['normal', 'italic', 'oblique'] },
-      {
-      label: 'Angle',
-      id: 'angle',
-      type: 'number',
-      value: activeObject.angle
-    },
-      /*
-      { label: 'Underline', id: 'underline', type: 'checkbox', prop: 'underline', value: activeObject.underline },
-      { label: 'Strikethrough', id: 'linethrough', type: 'checkbox', prop: 'linethrough', value: activeObject.linethrough },
-      */
+      { label: 'Font', id: 'fontFamily', type: 'dropdown', prop: 'fontFamily', icon: IconT, value: activeObject.fontFamily, options: ['Arial', 'Newsreader', 'Helvetica', 'Times New Roman', 'Courier New'] },
+      { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
+      { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', icon: IconLS, type: 'number', value: activeObject.charSpacing || 0, min: -50, max: 50 },
+      { label: 'Font Size', id: 'fontSize', type: 'number', step: 1, icon: IconS, prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
+      { label: 'Text Align', id: 'textAlign', type: 'dropdown', icon: IconP, prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
+      { label: 'Font Weight', id: 'fontWeight', type: 'number', icon: IconB, step: 100,prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
+      { label: 'Font Style', id: 'fontStyle', type: 'dropdown', icon: IconT, prop: 'fontStyle', value: activeObject.fontStyle, options: ['normal', 'italic', 'oblique'] },
+      { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0,  max: 360 },
+      { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
     ];
 
     return options;
@@ -1653,34 +2271,43 @@ function addButton(x, y) {
   }
 
   function imageTemplate(activeObject) {
-  return [
-    {
-      label: 'Width',
-      id: 'width',
-      type: 'number',
-      value: activeObject.width * activeObject.scaleX,
-    },
-    {
-      label: 'Height',
-      id: 'height',
-      type: 'number',
-      value: activeObject.height * activeObject.scaleY,
-    },
-    {
-      label: 'Angle',
-      id: 'angle',
-      type: 'number',
-      value: activeObject.angle
-    },
-    {
-      label: 'Filter',
-      id: 'filter',
-      type: 'select',
-      value: 'normal', // Initial value
-      options: ['normal', 'invert', 'monochrome'],
-    }
-  ];
+    return [
+      { label: 'Width', id: 'width', type: 'number', icon: IconW, value: activeObject.width * activeObject.scaleX, min: 0, max: 1000, },
+      { label: 'Height', id: 'height', type: 'number', icon: IconH, value: activeObject.height * activeObject.scaleY, min: 0, max: 1000, },
+      { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
+      { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
+      { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+
+      { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
+    ];
   }
+
+  function rectTemplate(activeObject) {
+    return [
+      { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
+      { label: 'Width', id: 'width', type: 'number', icon: IconW, value: activeObject.width * activeObject.scaleX, min: 0, max: 1000, },
+      { label: 'Height', id: 'height', type: 'number', icon: IconH, value: activeObject.height * activeObject.scaleY, min: 0, max: 1000, },
+      { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
+      { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
+      { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+
+      { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5},
+    ];
+  }
+
+  function ellipseTemplate(activeObject) {
+    return [
+      { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
+      { label: 'Width', id: 'width', type: 'number', icon: IconW, value: activeObject.width * activeObject.scaleX, min: 0, max: 1000, },
+      { label: 'Height', id: 'height', type: 'number', icon: IconH, value: activeObject.height * activeObject.scaleY, min: 0, max: 1000, },
+      { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
+      { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
+      { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+
+      { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max:  5},
+    ];
+  }
+
 
   function videoTemplate(activeObject) {
   const options = [
@@ -1699,7 +2326,6 @@ window.addEventListener('keyup', e => {
   switch (e.code){
     case 'Backspace':
 
-
       //deleteObject()
       break;
     default:
@@ -1709,7 +2335,7 @@ window.addEventListener('keyup', e => {
 
 
   canvas.on('selection:cleared', function() {
-    saveCanvasToSupabase()
+    //saveCanvasToSupabase()
   });
 
 
@@ -1753,6 +2379,7 @@ window.addEventListener('keyup', e => {
   })
   */
 
+  /*
   canvas.on('object:moving', function(event) {
     const obj = event.target;
     const canvasWidth = canvas.getWidth();
@@ -1768,53 +2395,126 @@ window.addEventListener('keyup', e => {
 
     // Retract Canvas Height (if needed)
     // Find the object with the maximum bottom position
-    let maxObjectBottom = 0;
-    canvas.getObjects().forEach(object => {
-        const currentObjectBottom = object.top + object.height;
-        if (currentObjectBottom > maxObjectBottom) {
-            maxObjectBottom = currentObjectBottom;
-        }
-    });
 
     // If there's a lot of extra space below the bottom-most object, reduce canvas height
-    if ((canvasHeight - maxObjectBottom) > buffer) {
+    if ((canvasHeight - maxObjectBottom) > buffer && maxObjectBottom > window.innerHeight) {
         canvas.setHeight(maxObjectBottom + buffer);
         canvas.calcOffset();
     }
 });
+*/
+
+
 
 
 ////////
 
-  async function saveCanvasToSupabase() {
 
-    // Serialize the current canvas state
 
-   // removeGrid()
-    const canv = canvas.toJSON(['link', 'depth']);
-    const json = JSON.stringify(canv);
-   // calculateGrid()
-  //  drawGrid()
+function preventScroll(event) {
+    event.preventDefault();
+}
 
-    // Save to Supabase
-    const { data: d, error } = await supabaseClient
-        .from('pages')
-        .upsert([
-            {
-              id: data.id,
-              title: title,
-              content: json,
-              iwidth: canvas.width,
-              color: color
-            }
-        ]);
+function saveCanvasToSupabase() {
 
-    if (error) {
-        console.error('Error saving canvas: ', error);
-    } else {
-        console.log('Canvas saved successfully: ', d);
-    }
-  }
+
+
+    // Step 2: Save the scroll position
+    const scrollTop = Id('container').scrollTop
+    console.log(Id('container').scrollTop)
+
+    // Calculate original dimensions
+    const originalCanvasWidth = data.iwidth;
+    const aspectRatio = initialCanvasHeight / initialCanvasWidth;
+    const originalCanvasHeight = originalCanvasWidth * aspectRatio;
+
+    // Backup current size and position of all objects
+    const backupObjects = canvas.getObjects().map(object => ({
+        left: object.left,
+        top: object.top,
+        scaleX: object.scaleX,
+        scaleY: object.scaleY
+    }));
+
+    // Remove clipping (if any)
+    canvas.clipTo = null;
+
+    // Temporarily reset the canvas to its full/original size
+    canvas.setWidth(originalCanvasWidth);
+    //canvas.setHeight(originalCanvasHeight);
+
+    // Upload the full canvas version to the database
+    uploadCanvas();
+
+    // Restore the canvas to the backed-up size and reposition all objects
+    canvas.setWidth(initialCanvasWidth);
+    //canvas.setHeight(initialCanvasHeight);
+    canvas.getObjects().forEach((object, index) => {
+        object.set({
+            left: backupObjects[index].left,
+            top: backupObjects[index].top,
+            scaleX: backupObjects[index].scaleX,
+            scaleY: backupObjects[index].scaleY
+        }).setCoords();
+    });
+
+    // Restore the clipping
+    const newWidth = window.innerWidth - panelWidth;
+    const scaleX = newWidth / originalCanvasWidth;
+    canvas.clipTo = function(ctx) {
+        ctx.rect(0, 0, newWidth, originalCanvasHeight * scaleX);
+        ctx.clip();
+    };
+
+    canvas.renderAll();
+    canvas.calcOffset();
+
+    // Step 4: Restore the scroll position
+
+    console.log(Id('container').scrollTop, scrollTop)
+
+    Id('container').scrollTo({
+      top: scrollTop,
+    })
+
+    console.log(Id('container').scrollTop, scrollTop)
+
+    // Step 5: Remove the event listener to allow scrolling
+    window.removeEventListener('scroll', preventScroll);
+
+}
+
+
+async function uploadCanvas() {
+
+// Serialize the current canvas state
+
+// removeGrid()
+const canv = canvas.toJSON(['link', 'depth']);
+const json = JSON.stringify(canv);
+// calculateGrid()
+//  drawGrid()
+
+
+// Save to Supabase
+const { data: d, error } = await supabaseClient
+    .from('pages')
+    .upsert([
+        {
+          id: data.id,
+          title: title,
+          content: json,
+          iwidth: canvas.width,
+          color: color
+        }
+    ]);
+
+if (error) {
+    console.error('Error saving canvas: ', error);
+} else {
+    console.log('Canvas saved successfully: ', d);
+}
+}
 
 
   function downloadCanvasAsJSON() {
@@ -1848,6 +2548,7 @@ window.addEventListener('keyup', e => {
   // document.getElementById('delete').addEventListener('click', deleteObject);
   document.getElementById('title').addEventListener('input', saveCanvasToSupabase);
 
+  /*
   document.getElementById('url').addEventListener('click', () => {
     // Assuming data.id is defined somewhere in your code
     const textToCopy = `https://xylophone.dev/p/${data.id}`;
@@ -1860,7 +2561,7 @@ window.addEventListener('keyup', e => {
         console.error('Could not copy text: ', err);
       });
   });
-
+  */
 });
 
 </script>
