@@ -566,7 +566,11 @@ import Copy from '$lib/img/copy.svg'
 import Grid from '$lib/components/Grid.svelte'
 import { object_without_properties } from 'svelte/internal';
 
-import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+//import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+
+import { pages, isPanelVisible } from '../../../../lib/utils/store.js'; // Adjust the path as necessary
+
+
 import { page } from '$app/stores';
 import Panel from '$lib/components/Panel.svelte';
 

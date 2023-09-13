@@ -70,8 +70,6 @@ function initializeCanvas(page, index) {
         canvases = value;
     });
 
-	console.log('yo')
-
 
     if (canvases[index]) {
         let canvas = new fabric.Canvas(canvases[index], {
@@ -152,8 +150,8 @@ function handleCanvasCreation(node) {
 			<a href='/p/{page.id}'>
 				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }} out:fly={{ x: 200, duration: 300 }}>
 					<canvas use:handleCanvasCreation id='canvas-{page.id}' class='canvas'></canvas>
-
-				<h1> {page.title} </h1>
+					<h1> {page.title} </h1>
+					<p> {page.user_id} </p>
 				</div>
 			</a>
 		{/each}
