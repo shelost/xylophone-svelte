@@ -8,45 +8,91 @@
     let editMode = false;
     let imageFile: File;
 
-    async function updateProfile() {
-        try {
-            const { error } = await supabaseClient
+    let loading = false; // Loading indicator for the Save button
+    let usernameError: string | null = null;
+
+    console.log(profile)
+
+    async function checkUsername() {
+        if (profile.username) {
+            const { data, error } = await supabaseClient
                 .from('users')
-                .update({
-                    full_name: profile.full_name,
-                    username: profile.username
-                })
-                .eq('id', profile.id);
+                .select('username')
+                .eq('username', profile.username)
+                .neq('id', profile.id); // Don't select the current user's username
 
-            if (imageFile) {
-                const filePath = `profiles/${profile.id}/${imageFile.name}`;
-                let { error: uploadError } = await supabaseClient.storage
-                    .from('images')
-                    .upload(filePath, imageFile);
-
-                if (!uploadError) {
-                    const { error: updateImageError } = await supabaseClient
-                        .from('users')
-                        .update({ pfp: filePath })
-                        .eq('id', profile.id);
-
-                    if (updateImageError) {
-                        console.error('Error updating image path in profile:', updateImageError);
-                    }
-                } else {
-                    console.error('Error uploading image:', uploadError);
-                }
-            }
-
-            if (!error) {
-                console.log('Profile updated successfully!');
+            if (error) {
+                usernameError = "Error checking username.";
+            } else if (data && data.length > 0) {
+                usernameError = "This username is already taken.";
             } else {
-                console.error('Error updating profile:', error);
+                usernameError = null;
             }
-        } catch (error) {
-            console.error('Error updating profile:', error.message);
         }
     }
+
+    function handleProfilePictureChange(event) {
+        imageFile = event.target.files[0];
+    }
+
+
+   // Assuming supabaseClient is initialized somewhere above
+async function fileExistsInSupabase(filePath) {
+    const { error } = await supabaseClient.storage.from('images').download(filePath);
+    return !error;
+}
+
+async function getImageUrlFromSupabase(filePath) {
+
+    return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
+}
+
+async function uploadToSupabase(file) {
+    const filePath = `profiles/${profile.id}/${file.name}`;
+
+    if (await fileExistsInSupabase(filePath)) {
+        console.log('File already exists in Supabase. Skipping upload.');
+        return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
+    }
+
+    const { error } = await supabaseClient.storage.from('images').upload(filePath, file);
+    if (error) {
+        console.error('Error uploading file:', error);
+        return null;
+    }
+    return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
+}
+
+async function updateProfile() {
+    try {
+        let filePath = null;
+        if (imageFile) {
+            filePath = await uploadToSupabase(imageFile);
+            if (!filePath) {
+                console.error('Error processing image file.');
+                return;
+            }
+        }
+
+        console.log(filePath)
+        console.log(profile)
+
+        const { error: profileUpdateError } = await supabaseClient
+            .from('users')
+            .update({ pfp: filePath || profile.pfp, full_name: profile.full_name, username: profile.username })
+            .eq('id', profile.id);
+
+        if (profileUpdateError) {
+            console.error('Error updating profile:', profileUpdateError);
+        } else {
+            console.log('Profile updated successfully!');
+        }
+
+    } catch (error) {
+        console.error('Error updating profile:', error.message);
+    }
+}
+
 
     onMount(() => {
         // Fetch user profile data or other operations...
@@ -54,7 +100,6 @@
 </script>
 
 <section>
-    <h1 id='title'>Profile</h1>
 
     {#if editMode}
         <form on:submit|preventDefault="{updateProfile}" class="flex flex-col gap-2">
@@ -65,13 +110,19 @@
                     type="file"
                     id="profile_picture"
                     accept="image/*"
-                    bind:files="{imageFile}"
+                    on:change="{updateProfile}"
+                    on:change="{handleProfilePictureChange}"
                 />
+                {#if profile.pfp}
+                    <img src={profile.pfp} alt="Preview" class="image-preview" />
+                {/if}
             </div>
 
-            <!-- Full Name field -->
+
+            <!-- Full name field -->
             <div class="field">
-                <label for="full_name" class="label">Full Name</label>
+
+                <label for="full_name" class="label"> Full Name </label>
                 <input
                     id="full_name"
                     name="full_name"
@@ -82,8 +133,10 @@
                 />
             </div>
 
+
             <!-- Username field -->
             <div class="field">
+
                 <label for="username" class="label">Username</label>
                 <input
                     id="username"
@@ -91,20 +144,29 @@
                     class="input"
                     type="text"
                     bind:value="{profile.username}"
+                    on:input="{checkUsername}"
                     required
                 />
+                {#if usernameError}
+                    <p class="error-text">{usernameError}</p> <!-- Display any username errors -->
+                {/if}
             </div>
+
+
 
             <!-- Save button -->
             <div class="mx-auto">
-                <button type="submit" class="btn btn-filled-primary" on:click={() => editMode = false}>Save</button>
+                <button type="submit" class="btn btn-filled-primary" on:click={() => {editMode = false; updateProfile()}}  disabled={loading || usernameError}>Save</button>
             </div>
         </form>
     {:else}
-        <img class="image-preview" src={profile.pfp} alt="Profile Picture"/>
-        <p>{profile.full_name}</p>
-        <p>@{profile.username}</p>
-        <button on:click={() => editMode = true}>Edit Profile</button>
+        <div id = 'mast'>
+
+            <img class="image-preview" src={profile.pfp} alt="Profile Picture"/>
+            <h2>{profile.full_name}</h2>
+            <p>@{profile.username}</p>
+            <button on:click={() => editMode = true}>Edit Profile</button>
+        </div>
     {/if}
 </section>
 
@@ -113,6 +175,22 @@
 
 section {
     padding: 30px;
+}
+
+#mast{
+
+    h2{
+        font-size: 20px;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+
+    p{
+        font-size: 14px;
+        letter-spacing: -0.2px;
+        color: rgba(black, 0.4);
+        margin-bottom: 10px;
+    }
 }
 
 #title {
@@ -139,10 +217,22 @@ button {
 }
 
 .image-preview {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 10px;
+}
+
+.error-text {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+// Optional: Style for the disabled Save button
+button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 </style>

@@ -68,25 +68,16 @@
 
 
 
+
       <div id = 'canvas-container'>
 
-        <div class="center">
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-          <div class="wave"></div>
-        </div>
-
+        <div id="loader"></div>
 
         <canvas id = 'canvas'></canvas>
     <!-- id="resize-handle"></div>-->
       </div>
+
+      <Panel bind:activeObject />
 
 
   </div>
@@ -159,6 +150,32 @@
       background: #333;
       z-index: 10;
     }
+
+
+
+    #loader {
+      position: absolute;
+      left: calc(50% - 50px);
+      top: calc(50% - 50px);
+      z-index: 1;
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(black, 0.1);
+      border-radius: 50%;
+      border-top: 4px solid black;
+      animation: spin 1s linear infinite;
+  }
+
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
   }
 
 
@@ -533,7 +550,7 @@ input:-webkit-autofill:active  {
 import {onMount} from 'svelte'
 import {fabric} from 'fabric'
 import {supabaseClient} from '$lib/db'
-import {writable} from 'svelte/store'
+import {writable, get} from 'svelte/store'
 import icon from '$lib/img/favicon.svg'
 
 import Sidebar from '$lib/components/Sidebar.svelte'
@@ -548,6 +565,12 @@ import Copy from '$lib/img/copy.svg'
 
 import Grid from '$lib/components/Grid.svelte'
 import { object_without_properties } from 'svelte/internal';
+
+import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+import { page } from '$app/stores';
+import Panel from '$lib/components/Panel.svelte';
+
+//export { textTemplate, imageTemplate, videoTemplate };
 
 
 import IconW from '$lib/img/icon-w.svg'
@@ -567,24 +590,32 @@ import IconB from '$lib/img/icon-b.svg'
 
 export let data
 
-let MODE = 'text'
-let title = data.title
+let title= data.title
 let color = data.color
-
-
-console.log(data)
-
-
-function Id(e){
-  return document.getElementById(e)
-}
-
-
-const panelWidth = 240
+let activeObject;
+let MODE
 
 
 onMount(()=> {
   // Initialize fabric.js canvas
+
+  let id = $page.params.slug
+  //let data = get(pages).find(page => page.id === id);
+
+  MODE = 'text'
+  title = data.title
+  color = data.color
+
+
+
+
+  function Id(e){
+    return document.getElementById(e)
+  }
+
+
+  const panelWidth = 240
+
 
 
   const PANEL = Id('panel')
@@ -659,6 +690,8 @@ function isClose(val1, val2, threshold) {
 
 // Draw alignment guide
 function drawGuide(x1, y1, x2, y2) {
+
+  console.log(x1,y1)
     let line = new fabric.Line([x1, y1, x2, y2], {
         stroke: '#ff0000',
         opacity: 0.4,
@@ -688,6 +721,7 @@ canvas.on('object:moving', (event) => {
 
     let activeObject = event.target;
 
+
     canvas.getObjects().forEach((obj) => {
         if (obj === activeObject || obj.excludeFromExport) return;
 
@@ -715,6 +749,10 @@ canvas.on('object:moving', (event) => {
             activeObject.top = obj.top + obj.height * obj.scaleY;
         }
     });
+
+
+
+
 });
 
 
@@ -838,7 +876,7 @@ function getCurrentObjectProperties(obj) {
 }
 
 function dynamicallyBindListeners() {
-    const activeObject = canvas.getActiveObject();
+    activeObject = canvas.getActiveObject();
     const properties = getCurrentObjectProperties(activeObject);
 
     properties.forEach(property => {
@@ -946,6 +984,7 @@ canvas.on('object:modified', function(event) {
           ? JSON.parse(data.content)
           : data.content;
 
+          Id('loader').style.opacity = 0
       canvas.loadFromJSON(parsedContent, () => {
         try {
           resizeCanvas();
@@ -1062,7 +1101,9 @@ canvas.on('selection:created', function() {
 
 
 canvas.on('object:moving', function() {
-    const activeObject = canvas.getActiveObject();
+    activeObject = canvas.getActiveObject();
+
+    /*
     if (activeObject){
         let depth = activeObject.depth || 0;
         let scrollAmount = document.getElementById('container').scrollTop;
@@ -1071,8 +1112,9 @@ canvas.on('object:moving', function() {
         let parallaxShift = 0.2 * depth * scrollAmount;
         activeObject.originalTop = activeObject.top + scrollAmount - parallaxShift;
     }
+    */
     isObjectBeingModified = true;
-    clearGuides();
+    //clearGuides();
 });
 
 
@@ -1081,7 +1123,6 @@ canvas.on('object:moving', function() {
 
 canvas.on('object:moving', function() {
    //debouncedResize()
-    const activeObject = canvas.getActiveObject();
     if (activeObject){
     activeObject.originalTop = activeObject.top
     activeObject.set('originalTop', activeObject.top)
@@ -1139,6 +1180,9 @@ canvas.on('object:added', (e) => {
 */
 
 
+let CLICK = 0
+
+
 
 ///////////////////////////////////////////////////
 //////////////// CREATING ELEMENTS ////////////////
@@ -1146,9 +1190,10 @@ canvas.on('object:added', (e) => {
 
 
 canvas.on('mouse:down', function(o){
-    if (isObjectBeingModified || canvas.getActiveObject()) {
+    if (isObjectBeingModified || canvas.getActiveObject() || CLICK > 0) {
         // Reset and exit early if an object is being modified
         isObjectBeingModified = false;
+        CLICK = 0
         return;
     }
 
@@ -1182,9 +1227,9 @@ canvas.on('mouse:down', function(o){
               fontFamily: 'Helvetica',
               fill: '#000',
               charSpacing: -20,
-              fontSize: 18,
+              fontSize: 16,
               lineHeight: 1,
-              fontWeight: '400',
+              fontWeight: '300',
 
               originX: 'left',
               originY: 'top',
@@ -1589,6 +1634,8 @@ function handleSelection(event) {
   const activeObjects = canvas.getActiveObjects()
 
 
+  $isPanelVisible = true;
+
   if(activeObjects.length === 1) {
 
     let activeObject = activeObjects[0];
@@ -1762,18 +1809,11 @@ function Class(id){
 
 
 
-
-canvas.on('selection:created', () => {
-
-  console.log(canvas.getActiveObject().fontSize)
-
-  Id('panel').classList.add('active')
-
-});
-
 canvas.on('selection:cleared', () => {
 
-  Id('panel').classList.remove('active')
+  clearGuides()
+  isPanelVisible.set(false)
+  CLICK++
 
 });
 
@@ -1787,6 +1827,7 @@ canvas.on('selection:updated', handleSelection);
 ///////////////////////////////////////////////////
 //////////////// UPLOADING IMAGES /////////////////
 ///////////////////////////////////////////////////
+
 
 // Assuming supabaseClient is initialized somewhere above
 async function fileExistsInSupabase(filePath) {
@@ -2215,9 +2256,6 @@ function addButton(x, y) {
     });
 
 
-    console.log('yo')
-
-
     /*
     // Snapping function when object is moving
     canvas.on('object:moving', function(event) {
@@ -2334,9 +2372,6 @@ window.addEventListener('keyup', e => {
 })
 
 
-  canvas.on('selection:cleared', function() {
-    //saveCanvasToSupabase()
-  });
 
 
 

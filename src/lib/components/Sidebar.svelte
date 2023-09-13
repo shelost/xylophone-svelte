@@ -66,6 +66,8 @@
     }
 
 
+
+
 	let isFetched = false;
 
 async function fetchPages(){
@@ -286,7 +288,7 @@ async function fetchPages(){
 		box-shadow: none;
 		background: rgba(black, 0.05);
 		color: black;
-		font-size: 11px;
+		font-size: 13px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
 

@@ -11,9 +11,22 @@
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
     let userData = {};
-	let pages = writable([]);
 	let books = []
 	let loading = true
+
+	import {canvasElements, allPages} from '$lib/utils/store.js'
+
+
+	let newCanvas;
+
+	function addCanvas(canvas) {
+    canvasElements.update(allCanvases => {
+        allCanvases.push(canvas);
+
+        return allCanvases;
+    });
+}
+
 
 
 	function Class(id){
@@ -28,6 +41,14 @@
 	let initialCanvasHeight = window.innerHeight
 
 
+
+	$: if ($allPages.length && $canvasElements.length === $allPages.length) {
+		$allPages.forEach((page, i) => {
+			initializeCanvas(page, i);
+		});
+	}
+
+
 	onMount(async () => {
     const { data: pagesData, error } = await supabaseClient.from('pages').select('*');
 
@@ -36,32 +57,47 @@
         return;
     }
 
-    pages.set(pagesData);
+    allPages.set(pagesData);
 
-    pagesData.forEach(page => {
-        initializeCanvas(page);
+    pagesData.forEach((page, index) => {
+        initializeCanvas(page, index);
     });
 });
 
-function initializeCanvas(page) {
-    let canvas = new fabric.Canvas(`canvas-${page.id}`, {
-        width: 300,
-        height: 200,
-        renderOnAddRemove: false
+function initializeCanvas(page, index) {
+    let canvases;
+    canvasElements.subscribe(value => {
+        canvases = value;
     });
 
-    if (page.content) {
-        canvas.loadFromJSON(JSON.parse(page.content), () => {
-            try {
-                // resize(canvas);
-                canvas.renderAll();
-                canvas.calcOffset();
-            } catch (error) {
-                console.error('Error rendering canvas:', error);
-            }
+	console.log('yo')
+
+
+    if (canvases[index]) {
+        let canvas = new fabric.Canvas(canvases[index], {
+            width: 300,
+            height: 200,
+            renderOnAddRemove: false
         });
+
+
+        canvas.setBackgroundColor(page.color, () => {canvas.renderAll(); canvas.calcOffset()});
+
+
+        if (page.content) {
+            canvas.loadFromJSON(JSON.parse(page.content), () => {
+                try {
+                    // resize(canvas);
+                    canvas.renderAll();
+                    canvas.calcOffset();
+                } catch (error) {
+                    console.error('Error rendering canvas:', error);
+                }
+            });
+        }
     }
 }
+
 
 
 function resize(canvas) {
@@ -82,6 +118,16 @@ function resize(canvas) {
 }
 
 
+function handleCanvasCreation(node) {
+    addCanvas(node);
+    return {
+        destroy() {
+            // Cleanup if necessary
+        }
+    };
+}
+
+
 </script>
 
 
@@ -91,7 +137,7 @@ function resize(canvas) {
 	<section>
 	<h1 id = 'title'> Home </h1>
 
-{#await $pages}
+{#await $allPages}
 
 	<div id = 'loading'>
 		<div class="lds-ripple"><div></div><div></div></div>
@@ -102,10 +148,11 @@ function resize(canvas) {
 
 	<div id = 'pages'>
 
-		{#each $pages as page, i}
+		{#each $allPages as page, i}
 			<a href='/p/{page.id}'>
 				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }} out:fly={{ x: 200, duration: 300 }}>
-				<canvas bind:this={page.canvasElement} id='canvas-{page.id}' class='canvas'></canvas>
+					<canvas use:handleCanvasCreation id='canvas-{page.id}' class='canvas'></canvas>
+
 				<h1> {page.title} </h1>
 				</div>
 			</a>
@@ -132,10 +179,13 @@ function resize(canvas) {
 	}
 
 	:global(canvas){
-		border: 1px solid rgba(black, 0.1);
+		//border: 1px solid rgba(black, 0.1);
 		width: 350px;
 		height: 250px;
 		background: white;
+		border-radius: 5px;
+
+		box-shadow: 0px 0px 50px rgba(black, 0.04);
 	}
 
 
