@@ -6,9 +6,9 @@
 	import { AppShell } from '@brainandbones/skeleton';
 	import NavBar from '$lib/components/common/NavBar.svelte';
 
-	import { pages } from '$lib/utils/store';
+	//import { pages } from '$lib/utils/store';
 
-	import { supabaseClient } from '$lib/db';
+	//import { supabaseClient } from '$lib/db';
 
 	export let data;
 
@@ -17,6 +17,7 @@
 	// Import the newly created Loader component
 	//import Loader from '$lib/components/Loader.svelte';
 
+	/*
 	async function fetchPages(){
 			const { data: d, error } = await supabaseClient.from('pages').select('*').eq('user_id', data.session.user.id);
 
@@ -29,6 +30,7 @@
 	}
 
 	fetchPages()
+	*/
 
 
   </script>
