@@ -173,6 +173,7 @@ async function updateProfile() {
 
 section {
     padding: 30px;
+    margin-left: 240px;
 }
 
 #mast{

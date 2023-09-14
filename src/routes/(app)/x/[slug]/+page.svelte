@@ -1,6 +1,6 @@
 <div id = 'app'>
 
-  <div id = 'container'>
+  <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
       <div id = 'bar'>
         <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
@@ -149,7 +149,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 50px;
+    margin-top: 45px;
 
 
     overflow-y: scroll;
@@ -178,7 +178,7 @@
 
     #loader {
       position: absolute;
-      left: calc(50% + 70px);
+      left: calc(50% + 0px);
       top: calc(50% - 30px);
       z-index: 1;
       width: 50px;
@@ -208,7 +208,7 @@
     transition: 0.2s ease;
     margin-top: 3px;
     border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.3);
-    box-shadow: 0x 5px 20px rgba(black, 0.2);
+    //box-shadow: 0x 5px 20px rgba(black, 0.2);
     &:hover{
       opacity: 0.9;
     }
@@ -217,14 +217,12 @@
   #color::-webkit-color-swatch{
     padding: 0;
     border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.2)  !important;
-    box-shadow: 0x 5px 5px rgba(black, 0.2) !important;
     border-radius: 40px !important;
   }
 
   #color::-webkit-color-swatch-wrapper{
     padding: 0;
     border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.2)  !important;
-    box-shadow: 0x 5px 5px rgba(black, 0.2)  !important;
     border-radius: 40px !important;
   }
 
@@ -319,13 +317,15 @@
 
   #container {
       flex-grow: 1;
-      width: calc(100vw - 250px);
-      height: calc(100vh - 20px);
-      margin-top: 10px;
+      width: calc(100vw - 260px);
+      height: calc(100vh - 30px);
+      margin-top: 15px;
 
       //border: 1px solid rgba(black, 0.1);
 
       box-shadow: 0px 30px 100px rgba(black, 0.1);
+
+
 
 
 
@@ -346,12 +346,12 @@
 
 
 
-        height: 50px;
+        height: 45px;
+        border-radius: 5px 5px  0 0;
         border-bottom: 1px solid rgba(black, 0.02);
         //box-shadow: 0px 20px 60px rgba(black, 0.05);
-        width: calc(100vw - 255px);
+        width: calc(100vw - 260px);
         position: fixed;
-        background: rgba(white, 0);
         color: black;
 
         z-index: 3;
@@ -507,6 +507,8 @@ import Triangle from '$lib/img/i-triangle.svg'
 import Rect from '$lib/img/i-rect.svg'
 import Ellipse from '$lib/img/i-ellipse.svg'
 import Copy from '$lib/img/copy.svg'
+
+import { fly } from 'svelte/transition'
 
 import Grid from '$lib/components/Grid.svelte'
 import { object_without_properties } from 'svelte/internal';
@@ -938,7 +940,7 @@ canvas.on('object:modified', function(event) {
   let gridLines = [];
 
 
-  //Id('bar').style.background = data.color
+  Id('bar').style.background = data.color
   canvas.setBackgroundColor(data.color, () => canvas.renderAll());
 
   setTimeout(() => {
@@ -972,6 +974,10 @@ canvas.on('object:modified', function(event) {
 
 
 
+         calculateGrid()
+          drawGrid()
+
+
           let maxHeight = window.innerHeight
 
           canvas.forEachObject((object) => {
@@ -988,17 +994,10 @@ canvas.on('object:modified', function(event) {
 
 
 
+
+
           canvas.renderAll();
           canvas.calcOffset();
-
-
-
-
-          /*
-          calculateGrid()
-          drawGrid()
-
-          */
 
 
           console.log('drawed');
@@ -1035,8 +1034,16 @@ setTimeout(() => {
 
           canvas.setBackgroundColor(data.color, () => canvas.renderAll());
 
+           Id('bar').style.background = data.color
           Id('loader').style.opacity = 0
       canvas.loadFromJSON(parsedContent, () => {
+
+
+
+        calculateGrid()
+          drawGrid()
+
+
         canvas.renderAll()
         canvas.calcOffset()
 
@@ -1051,13 +1058,16 @@ setTimeout(() => {
 
 Id('color').addEventListener('input', e => {
   canvas.setBackgroundColor(Id('color').value, () => canvas.renderAll());
-  //Id('bar').style.background = Id('color').value
+  Id('bar').style.background = Id('color').value
   saveCanvasToSupabase()
 })
 
 
 
 function applyParallaxEffect() {
+
+  drawGrid()
+  /*
     let scrollAmount = document.getElementById('container').scrollTop;
 
     canvas.forEachObject(object => {
@@ -1070,11 +1080,12 @@ function applyParallaxEffect() {
     });
 
     canvas.renderAll();
+    */
 }
 
 
 // Listen for the scroll event
-//document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
+document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
 
 
 
@@ -1127,8 +1138,6 @@ canvas.on('object:moving', function() {
       console.log(activeObject.originalTop)
     activeObject.originalTop = activeObject.top
     activeObject.set('originalTop', activeObject.top)
-
-    console.log(activeObject.originalTop)
   }
     isObjectBeingModified = true;
 });
@@ -1192,7 +1201,13 @@ let CLICK = 0
 ///////////////////////////////////////////////////
 
 
-canvas.on('mouse:down', function(o){
+
+for (let i=0; i<Class('add').length; i++){
+  Class('add')[i].addEventListener('click', addObject)
+}
+
+
+function addObject(){
     if (isObjectBeingModified || canvas.getActiveObject() || CLICK > 0) {
         // Reset and exit early if an object is being modified
         isObjectBeingModified = false;
@@ -1201,9 +1216,9 @@ canvas.on('mouse:down', function(o){
     }
 
     isDown = true;
-    var pointer = canvas.getPointer(o.e);
-    origX = pointer.x;
-    origY = pointer.y;
+    //var pointer = canvas.getPointer(o.e);
+    origX = 30
+    origY = 30
 
     switch (MODE){
         case 'rect':
@@ -1350,7 +1365,7 @@ canvas.on('mouse:down', function(o){
     saveCanvasToSupabase()
 
 
-});
+}
 
 
 
@@ -1858,12 +1873,14 @@ async function fileExistsInSupabase(filePath) {
     return !error;
 }
 
+console.log(data)
+
 async function getImageUrlFromSupabase(filePath) {
-    return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
+    return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${data.user.id}/${filePath}`;
 }
 
 async function uploadToSupabase(file) {
-    const filePath = `${file.name}`;
+    const filePath = `${data.user.id}/${file.name}`;
 
     if (await fileExistsInSupabase(filePath)) {
         console.log('File already exists in Supabase. Skipping upload.');
@@ -2265,25 +2282,21 @@ function addButton(x, y) {
 
     removeGrid();
 
-    // Draw new grid
-    xArr.forEach(x => {
-        const line = new fabric.Path(`M ${x}, 0 V ${canvas.height}`, {
-            stroke: '#f6f6f6',
-            selectable: false
+     // Draw new dot matrix
+     xArr.forEach(x => {
+        yArr.forEach(y => {
+            const circle = new fabric.Circle({
+                radius: 2,  // You can adjust the size of the dots here
+                fill: '#f6f6f6',
+                left: x,
+                top: y,
+                selectable: false,
+                excludeFromExport: true
+            });
+            canvas.add(circle);
+            canvas.sendToBack(circle);
+            gridLines.push(circle); // Populate gridLines array with dots
         });
-        canvas.add(line);
-        canvas.sendToBack(line);
-        gridLines.push(line); // Populate gridLines array
-    });
-
-    yArr.forEach(y => {
-        const line = new fabric.Path(`M 0, ${y} H ${canvas.width}`, {
-            stroke: '#f6f6f6',
-            selectable: false
-        });
-        canvas.add(line);
-        canvas.sendToBack(line);
-        gridLines.push(line); // Populate gridLines array
     });
 
 
@@ -2478,7 +2491,7 @@ window.addEventListener('keyup', e => {
 
 
 function preventScroll(event) {
-    event.preventDefault();
+    //event.preventDefault();
 }
 
 function saveCanvasToSupabase() {
@@ -2544,6 +2557,7 @@ function saveCanvasToSupabase() {
     })
 
     console.log(Id('container').scrollTop, scrollTop)
+
 
     // Step 5: Remove the event listener to allow scrolling
     window.removeEventListener('scroll', preventScroll);

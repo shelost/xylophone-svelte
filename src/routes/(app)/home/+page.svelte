@@ -199,6 +199,12 @@ function handleCanvasCreation(node) {
 		color: black;
 	}
 
+	#app{
+		margin-left: 240px;
+		height: 100vh;
+		overflow-y: scroll;
+	}
+
 	:global(canvas){
 		//border: 1px solid rgba(black, 0.1);
 		width: 350px;
