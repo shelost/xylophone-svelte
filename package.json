@@ -12,7 +12,7 @@
     "ionic:build": "npm run build",
     "ionic:serve": "npm run dev",
     "heroku-postbuild": "npm run build",
-    "build": "vite build",
+    "build": "npx vite build",
     "dev": "vite dev"
   },
   "devDependencies": {
@@ -53,6 +53,7 @@
     "tslib": "^2.3.1",
     "typescript": "^4.9.5",
     "uuid": "^9.0.0",
+    "vite": "^4.4.9",
     "wrangler": "^3.7.0"
   },
   "type": "module",
@@ -88,7 +89,6 @@
     "supabase": "^1.93.0",
     "svelte-dnd-list": "^0.1.8",
     "svelte-inview": "^4.0.1",
-    "svelte-sortable": "^0.1.0",
-    "vite": "^4.4.9"
+    "svelte-sortable": "^0.1.0"
   }
 }
