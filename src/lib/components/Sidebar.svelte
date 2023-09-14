@@ -90,7 +90,7 @@ async function fetchPages(){
 
 		const {data: d, error} = await supabaseClient.from('pages').insert({
 			id: newID,
-			color: '#f0f0f0',
+			color: '#ffffff',
 			user_id: data.user.id
 		})
 
@@ -316,12 +316,7 @@ async function fetchPages(){
 
 
 	#top{
-		border-radius: 5px;
-	}
-
-	#top{
 		width: 230px;
-		border-radius: 10px;
 		background: #EE0044;
 		background: rgba(white, 0.1);
 		margin-left: 5px;

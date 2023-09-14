@@ -17,6 +17,11 @@
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 
+	import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+
+	import Panel from '$lib/components/Panel.svelte';
+
+
 
 
 	const handleLogout: SubmitFunction = () => {
@@ -43,7 +48,7 @@
 		path = $page.url.pathname
 	}
 
-	let pages = writable([])
+	//let pages = writable([])
 
 	async function fetchPages(){
 
@@ -88,6 +93,8 @@
 	<div id = 'app'>
 	  <slot />
 	</div>
+
+	<Panel />
 
 </section>
 
@@ -134,8 +141,9 @@
 	}
 
 	:global(#panel){
+		position: fixed;
 		z-index: 10 !important;
-		background: yellow !important;
+		//background: yellow !important;
 	}
 
 

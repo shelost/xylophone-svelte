@@ -90,7 +90,6 @@
 </div>
 
 
-<Panel bind:activeObject />
 
 
 <svelte:head>
@@ -119,6 +118,8 @@
       margin-top: 0px;
       height: calc(100vh);
 
+
+      padding-left: 240px;
 
       //padding-left: 240px;
 
@@ -154,20 +155,15 @@
     overflow-y: scroll;
     width: calc(100vw - 250px) !important;
     height: 100vh;
-    border-radius: 10px;
+
     background: none;
-    box-shadow: 0px 30px 100px rgba(black, 0.1);
-    margin-bottom: 10px;
 
 
-
-
-
-    border-radius: 5px solid black;
+    //border: 1px solid rgba(black, 0.05);
 
     #canvas{
       flex-shrink: 0;
-      border-radius: 10px;
+
       width: calc(100vw - 250px);
       margin: 0;
   }
@@ -260,17 +256,18 @@
     align-items: center;
     justify-content: center;
 
+
     &.active{
-      background: rgba(white, 0.2);
+      background: rgba(black, 0.1);
     }
     &:hover{
-      background: rgba(white, 0.2);
+      background: rgba(black, 0.1);
     }
 
     .icon{
       width: 14px;
       height: 14px;
-      filter: invert(100%);
+
     }
   }
 
@@ -322,10 +319,14 @@
 
   #container {
       flex-grow: 1;
-      width: calc(100vw + 60px);
-      height: 100vh;
+      width: calc(100vw - 250px);
+      height: calc(100vh - 20px);
+      margin-top: 10px;
 
-      padding-left: 240px;
+      //border: 1px solid rgba(black, 0.1);
+
+      box-shadow: 0px 30px 100px rgba(black, 0.1);
+
 
 
       display: flex;
@@ -333,20 +334,22 @@
       overflow-x:hidden;
       overflow-y: hidden;
 
+      border-radius: 5px;
+
 
       #bar{
 
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 0px;
+        padding: 0 10px;
 
-        padding-right: 15px;
+
 
         height: 50px;
         border-bottom: 1px solid rgba(black, 0.02);
         //box-shadow: 0px 20px 60px rgba(black, 0.05);
-        width: calc(100vw - 240px);
+        width: calc(100vw - 255px);
         position: fixed;
         background: rgba(white, 0);
         color: black;
@@ -368,7 +371,7 @@
         #buttons{
           display: flex;
           align-items: center;
-          gap: 15px;
+          gap: 10px;
         }
 
         button{
@@ -510,7 +513,7 @@ import { object_without_properties } from 'svelte/internal';
 
 //import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
 
-import { pages, isPanelVisible } from '../../../../lib/utils/store.js'; // Adjust the path as necessary
+import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 
 import { page } from '$app/stores';
