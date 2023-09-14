@@ -11,8 +11,6 @@
     let loading = false; // Loading indicator for the Save button
     let usernameError: string | null = null;
 
-    console.log(profile)
-
     async function checkUsername() {
         if (profile.username) {
             const { data, error } = await supabaseClient

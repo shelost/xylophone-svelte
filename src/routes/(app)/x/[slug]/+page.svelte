@@ -24,6 +24,10 @@
             <img src = {Ellipse} class = 'icon'  alt = 'icon'>
           </div>
 
+          <div class = 'add' id="addDraw" class:active = { MODE == 'draw' }>
+            <img src = {Ellipse} class = 'icon'  alt = 'icon'>
+          </div>
+
           <div>
             <input type="color" id="color" name="head" bind:value={color} />
           </div>
@@ -77,19 +81,16 @@
     <!-- id="resize-handle"></div>-->
       </div>
 
-      <Panel bind:activeObject />
+
 
 
   </div>
 
 
-
-<div id = 'panel'>
-  <h1> Controls </h1>
 </div>
 
-</div>
 
+<Panel bind:activeObject />
 
 
 <svelte:head>
@@ -103,9 +104,10 @@
 <style lang='scss'>
 
   ::-webkit-scrollbar{
-      width: 0 !important;
+      width: 3px;
       height: 0;
-      background: white;
+      width: 0;
+      background: rgba(black, 0.1);
   }
 
   ::-webkit-scrollbar-thumb{
@@ -113,12 +115,16 @@
   }
 
   #app{
-      width: calc(100vw - 240px) !important;
+      width: 100vw;
       margin-top: 0px;
       height: calc(100vh);
-      margin-left: 0;
-      background: white;
-      overflow: hidden !important;
+
+
+      //padding-left: 240px;
+
+      overflow: visible !important;
+
+
 
       //border: 1px solid rgba(black, 0.1);
 
@@ -139,9 +145,32 @@
   #canvas-container{
     //height: fit-content;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin-top: 45px;
+    justify-content: flex-start;
+    margin-top: 50px;
+
+
+    overflow-y: scroll;
+    width: calc(100vw - 250px) !important;
+    height: 100vh;
+    border-radius: 10px;
+    background: none;
+    box-shadow: 0px 30px 100px rgba(black, 0.1);
+    margin-bottom: 10px;
+
+
+
+
+
+    border-radius: 5px solid black;
+
+    #canvas{
+      flex-shrink: 0;
+      border-radius: 10px;
+      width: calc(100vw - 250px);
+      margin: 0;
+  }
 
     #resize-handle{
       cursor: ew-resize;
@@ -151,12 +180,10 @@
       z-index: 10;
     }
 
-
-
     #loader {
       position: absolute;
-      left: calc(50% - 50px);
-      top: calc(50% - 50px);
+      left: calc(50% + 70px);
+      top: calc(50% - 30px);
       z-index: 1;
       width: 50px;
       height: 50px;
@@ -205,10 +232,6 @@
     border-radius: 40px !important;
   }
 
-  #canvas{
-      flex-shrink: 0;
-      //width: calc(100vw - 240px);
-  }
 
   #floatingOptions{
       position: absolute;
@@ -299,14 +322,16 @@
 
   #container {
       flex-grow: 1;
-      width: calc(100vw - 240px);
+      width: calc(100vw + 60px);
       height: 100vh;
+
+      padding-left: 240px;
+
 
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-      overflow-y: scroll;
-
+      overflow-x:hidden;
+      overflow-y: hidden;
 
 
       #bar{
@@ -314,35 +339,36 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 15px;
+        padding: 0 0px;
 
-        height: 60px;
+        padding-right: 15px;
+
+        height: 50px;
         border-bottom: 1px solid rgba(black, 0.02);
         //box-shadow: 0px 20px 60px rgba(black, 0.05);
         width: calc(100vw - 240px);
         position: fixed;
-        background: white;
-        //background: black;
+        background: rgba(white, 0);
         color: black;
 
         z-index: 3;
+
 
         //border-bottom: 1px solid rgba(black, 0.1);
 
 
         #title{
-          font-size: 20px;
-          font-weight: 600;
+          font-size: 14px;
+          font-weight: 500;
           letter-spacing: -0.3px;
           padding: 0 5px;
-          height: 28px;
+          height: 24px;
         }
 
         #buttons{
           display: flex;
           align-items: center;
           gap: 15px;
-
         }
 
         button{
@@ -350,6 +376,7 @@
         }
       }
   }
+
 
   input.middle:focus {
     outline-width: 0 !important;
@@ -377,6 +404,7 @@ button:focus {
     }
 }
 
+
 *:focus {
     outline: none !important;
 }
@@ -399,7 +427,6 @@ input:-webkit-autofill:active  {
       border-radius: 5px !important;
       border: none;
       background: rgba(black, 0.05) !important;
-      //background: white;,
       transition: 0.2s ease;
       color: black;
   }
@@ -433,109 +460,24 @@ input:-webkit-autofill:active  {
   }
 
 
-
-  #panel{
-    position: fixed;
-    top: 0px;
-    left: -400px;
-    width: 240px;
-    padding: 20px;
-    height: 100vh;
-    background: #FF004D;
-    background: rgb(10, 5, 19);
-    background: white;
-    //background: #fff3f5;
-    //border-radius: 10px;
-    border: 1px solid rgba(black, 0.1);
-   // box-shadow: -20px 0px 70px rgba(black, 0.1);
-    transition: 0.3s ease-in-out;
-    overflow-y: scroll;
-
-
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    letter-spacing: -0.4px;
-
-    z-index: 5 !important;
-
-
-    :global(#controls-title){
-      font-weight: 600;
-      color: black;
-    }
-
-    :global(.control){
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-    }
-
-
-
-      :global(.range){
-        -webkit-appearance: none;
-        width: 80%;
-        height: 20px;
-        background: #d3d3d3;
-        outline: none;
-        opacity: 1;
-        -webkit-transition: .2s;
-        transition: opacity .2s;
-      }
-
-      :global(.range:hover) {
-        //opacity: 1;
-        opacity: 1;
-      }
-
-      :global(.range::-webkit-slider-thumb) {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 8px;
-        height: 20px;
-        border-radius: 3px;
-        background: rgba(black, 0.3);
-        cursor: pointer;
-      }
-
-      :global(.range::-moz-range-thumb) {
-        width: 8px;
-        height: 20px;
-        background: rgba(black, 0.3);
-         border-radius: 3px;
-        cursor: pointer;
-      }
-
-
-    :global(.option){
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    :global(.icon){
-      width: 16px;
-      margin-right: 12px;
-    }
-
-
-
-    &.active{
-      left: 0 !important;
-    }
-  }
-
-  .active{
-      left: 0px !important;
-    }
-
-
-
-
   @media screen and (max-width: 800px){
 
+    #app{
+      width: 100vw !important;
+      border: 2px solid blue;
+    }
+
+    #canvas-container{
+      width: 100vw !important;
+    }
+
+    #container{
+      width: 100vw !important;
+    }
+
+    #canvas{
+      width: 100vw !important;
+    }
 
   }
 
@@ -611,15 +553,12 @@ onMount(()=> {
   color = data.color
 
 
-
-
   function Id(e){
     return document.getElementById(e)
   }
 
 
-  const panelWidth = 240
-
+  const panelWidth = 250
 
 
   const PANEL = Id('panel')
@@ -674,8 +613,10 @@ onMount(()=> {
     var target = transform.target;
     var canvas = target.canvas;
     target.clone(function(cloned) {
-      cloned.left += 10;
-      cloned.top += 10;
+      cloned.left += 20;
+      cloned.top += 20;
+      cloned.depth = target.depth
+      cloned.link = target.link
       canvas.add(cloned);
     });
   }
@@ -693,18 +634,16 @@ function isClose(val1, val2, threshold) {
 }
 
 // Draw alignment guide
-function drawGuide(x1, y1, x2, y2) {
-
-  console.log(x1,y1)
-    let line = new fabric.Line([x1, y1, x2, y2], {
-        stroke: '#ff0000',
-        opacity: 0.4,
-        selectable: false,
-        evented: false,
-        excludeFromExport: true
-    });
-    canvas.add(line);
-    return line;
+function drawGuide(x1, y1, x2, y2, stroke = '#ff0000') {
+  let line = new fabric.Line([x1, y1, x2, y2], {
+      stroke: stroke,
+      opacity: 0.4,
+      selectable: false,
+      evented: false,
+      excludeFromExport: true
+  });
+  canvas.add(line);
+  return line;
 }
 
 // Clear all guides from the canvas
@@ -719,11 +658,16 @@ function clearGuides() {
 
 
 const threshold = 10;  // Proximity threshold
+const strong = 20
 
 canvas.on('object:moving', (event) => {
-    clearGuides();  // Clear old guides
+
+
+  clearGuides();  // Clear old guides
 
     let activeObject = event.target;
+
+    let midPoint = canvas.width / 2;
 
 
     canvas.getObjects().forEach((obj) => {
@@ -755,7 +699,32 @@ canvas.on('object:moving', (event) => {
     });
 
 
+     // First priority: Object's center aligning with canvas center
+     if (isClose(activeObject.left + (activeObject.width * activeObject.scaleX) / 2, midPoint, strong)) {
 
+        drawGuide(midPoint, 0, midPoint, canvas.height, 'blue');
+        activeObject.left = midPoint - (activeObject.width * activeObject.scaleX) / 2;
+        //return;  // Exit the function after snapping to center
+    }
+
+    // Second priority: Object's edges and center aligning with every 10th gridline
+    for (let i = 0; i <= canvas.width; i += 10) {
+        if (isClose(activeObject.left, i, threshold)) {
+            drawGuide(i, 0, i, canvas.height, 'green');
+            activeObject.left = i;
+        } else if (isClose(activeObject.left + activeObject.width * activeObject.scaleX, i, threshold)) {
+            drawGuide(i, 0, i, canvas.height, 'green');
+            activeObject.left = i - activeObject.width * activeObject.scaleX;
+        } else if (isClose(activeObject.left + (activeObject.width * activeObject.scaleX) / 2, i, threshold)) {
+            drawGuide(i, 0, i, canvas.height, 'yellow');
+            activeObject.left = i - (activeObject.width * activeObject.scaleX) / 2;
+        }
+    }
+
+
+
+
+    canvas.renderAll()
 
 });
 
@@ -966,13 +935,10 @@ canvas.on('object:modified', function(event) {
   let gridLines = [];
 
 
-  Id('bar').style.background = data.color
-    canvas.setBackgroundColor(data.color, () => canvas.renderAll());
-
+  //Id('bar').style.background = data.color
+  canvas.setBackgroundColor(data.color, () => canvas.renderAll());
 
   setTimeout(() => {
-
-
 
 
   if (
@@ -988,15 +954,18 @@ canvas.on('object:modified', function(event) {
           ? JSON.parse(data.content)
           : data.content;
 
-          Id('loader').style.opacity = 0
+
       canvas.loadFromJSON(parsedContent, () => {
         try {
+          canvas.setBackgroundColor(data.color, () => canvas.renderAll());
           resizeCanvas();
           resize(0)
 
          setTimeout(() => {
          // resizeInitial()
          }, 1000);
+
+         Id('loader').style.opacity = 0
 
 
 
@@ -1018,29 +987,6 @@ canvas.on('object:modified', function(event) {
 
           canvas.renderAll();
           canvas.calcOffset();
-
-
-
-// Apply parallax effect based on the depth and scroll amount
-function applyParallaxEffect() {
-    let scrollAmount = document.getElementById('container').scrollTop;
-
-    canvas.forEachObject(object => {
-        let depth = object.depth || 0;
-        let parallaxShift = 0.2 * depth * scrollAmount;
-
-        // Adjust the top position of the object using its 'originalTop' and the parallax shift
-        let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
-        object.set('top', newTopPosition);
-    });
-
-    canvas.renderAll();
-    canvas.calcOffset();
-}
-
-// Listen for the scroll event
-//document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
-
 
 
 
@@ -1074,15 +1020,61 @@ function applyParallaxEffect() {
       console.error('Error loading canvas:', error);
     }
   }
-}, 200);
+}, 500);
 
+
+setTimeout(() => {
+
+      const parsedContent =
+        typeof data.content === 'string'
+          ? JSON.parse(data.content)
+          : data.content;
+
+          canvas.setBackgroundColor(data.color, () => canvas.renderAll());
+
+          Id('loader').style.opacity = 0
+      canvas.loadFromJSON(parsedContent, () => {
+        canvas.renderAll()
+        canvas.calcOffset()
+
+        canvas.forEachObject((object) => {
+            object.originalTop = object.top;
+          });
+
+      })
+
+},2000)
 
 
 Id('color').addEventListener('input', e => {
   canvas.setBackgroundColor(Id('color').value, () => canvas.renderAll());
-  Id('bar').style.background = Id('color').value
+  //Id('bar').style.background = Id('color').value
   saveCanvasToSupabase()
 })
+
+
+
+function applyParallaxEffect() {
+    let scrollAmount = document.getElementById('container').scrollTop;
+
+    canvas.forEachObject(object => {
+        let depth = object.depth || 0;
+        let parallaxShift = 0.2 * depth * scrollAmount;
+
+        // Use the originalTop (which isn't affected by parallax) and add the shift.
+        let newTopPosition = object.originalTop + parallaxShift;
+        object.set('top', newTopPosition);
+    });
+
+    canvas.renderAll();
+}
+
+
+// Listen for the scroll event
+//document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
+
+
+
 
 
 
@@ -1098,28 +1090,29 @@ let isObjectBeingModified = false; // Track if an object is being edited, resize
 // Listen for object modification events
 canvas.on('object:modified', function() {
     isObjectBeingModified = true;
+   // applyParallaxEffect();
 });
+
 canvas.on('selection:created', function() {
     isObjectBeingModified = true;
 });
 
 
 canvas.on('object:moving', function() {
-    activeObject = canvas.getActiveObject();
+    let activeObject = canvas.getActiveObject();
 
-    /*
-    if (activeObject){
+    if (activeObject) {
         let depth = activeObject.depth || 0;
         let scrollAmount = document.getElementById('container').scrollTop;
 
-        // Calculate and set the 'unaffected' top position of the object without any parallax shift
+        // Adjust for parallax shift during dragging
         let parallaxShift = 0.2 * depth * scrollAmount;
-        activeObject.originalTop = activeObject.top + scrollAmount - parallaxShift;
+
+        // Set the 'originalTop' relative to the entire canvas height
+        activeObject.originalTop = activeObject.top - parallaxShift;
     }
-    */
-    isObjectBeingModified = true;
-    //clearGuides();
 });
+
 
 
 
@@ -1128,8 +1121,11 @@ canvas.on('object:moving', function() {
 canvas.on('object:moving', function() {
    //debouncedResize()
     if (activeObject){
+      console.log(activeObject.originalTop)
     activeObject.originalTop = activeObject.top
     activeObject.set('originalTop', activeObject.top)
+
+    console.log(activeObject.originalTop)
   }
     isObjectBeingModified = true;
 });
@@ -1322,9 +1318,29 @@ canvas.on('mouse:down', function(o){
             canvas.add(elem);
             canvas.setActiveObject(elem);
             break;
-        default:
+
+        case 'draw':
+            canvas.isDrawingMode = true; // Enable free drawing
+            canvas.freeDrawingBrush.width = 5; // Set brush width
+            canvas.freeDrawingBrush.color = "#000"; // Set brush color
             break;
+
+        case 'erase':
+            canvas.isDrawingMode = true; // Enable free drawing mode
+            canvas.freeDrawingBrush.width = 20; // Make the brush larger to simulate an eraser
+            canvas.freeDrawingBrush.color = "#FFF"; // Set the brush to white to simulate erasing
+            break;
+        default:
+            canvas.isDrawingMode = false;
+            break;
+
     }
+
+
+    if (MODE !== 'draw' && MODE !== 'erase') {
+        canvas.isDrawingMode = false;
+    }
+
 
 
     canvas.renderAll()
@@ -2163,6 +2179,14 @@ function addButton(x, y) {
 
     MODE = 'text'
   });
+
+
+  document.getElementById('addDraw').addEventListener('click', ()=> {
+    //addText(10,10);
+
+    MODE = 'draw'
+  });
+
 
    // Add text on button click
    document.getElementById('addRect').addEventListener('click', ()=> {

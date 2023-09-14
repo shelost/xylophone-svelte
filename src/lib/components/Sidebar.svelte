@@ -177,6 +177,21 @@ async function fetchPages(){
 			</div>
 		</a>
 
+		<a href = '/assets' id = 'settings' >
+			<div class = 'text-btn' class:active={path === '/assets'}>
+				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				</div>
+				<h2> Assets </h2>
+			</div>
+		</a>
+
+		<a href = '/data' id = 'settings' >
+			<div class = 'text-btn' class:active={path === '/data'}>
+				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				</div>
+				<h2> Database </h2>
+			</div>
+		</a>
 
 
 		<!--
@@ -204,6 +219,8 @@ async function fetchPages(){
 
 					<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
 
+
+						<div class = 'color' style='background-color: {page.color}; width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.05)'></div>
 						<h2> {page.title} </h2>
 
 					</div>
@@ -267,7 +284,7 @@ async function fetchPages(){
 
 	//background: #FF004D;
 
-	background: white;
+	background: none;
 
     display: flex;
 	flex-direction: column;

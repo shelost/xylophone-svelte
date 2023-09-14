@@ -123,14 +123,19 @@
 	#app{
 		position: fixed;
 		top: 0;
-		left: 240px;
-		width: calc(100vw - 240px);
+		left: 0px;
+		width: 100vw;
 		height: 100vh;
 		overflow-x: visible !important;
-		overflow-y: scroll;
+		overflow-y: hidden;
 		//background: #f4f4f4;
-		//background: #FF004D;
-		z-index: 3;
+		//background: #FF004D
+
+	}
+
+	:global(#panel){
+		z-index: 10 !important;
+		background: yellow !important;
 	}
 
 

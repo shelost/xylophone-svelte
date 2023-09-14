@@ -49,20 +49,29 @@
 	}
 
 
-	onMount(async () => {
-    const { data: pagesData, error } = await supabaseClient.from('pages').select('*');
+	let initializedCanvasCount = 0;  // New variable to keep track of initialized canvases
 
-    if (error) {
-        console.error('Error fetching pages:', error);
-        return;
-    }
+    onMount(async () => {
+        const { data: pagesData, error } = await supabaseClient.from('pages').select('*');
+        if (error) {
+            console.error('Error fetching pages:', error);
+            return;
+        }
 
-    allPages.set(pagesData);
+        allPages.set(pagesData);
 
-    pagesData.forEach((page, index) => {
-        initializeCanvas(page, index);
+        // Use an interval to initialize canvases sequentially
+        const intervalId = setInterval(() => {
+            if (initializedCanvasCount < pagesData.length) {
+                initializeCanvas(pagesData[initializedCanvasCount], initializedCanvasCount);
+                initializedCanvasCount++;
+            } else {
+                clearInterval(intervalId);  // Clear the interval when done
+            }
+        }, 2000);  // 2 seconds interval
     });
-});
+
+
 
 function initializeCanvas(page, index) {
     let canvases;
@@ -75,17 +84,33 @@ function initializeCanvas(page, index) {
         let canvas = new fabric.Canvas(canvases[index], {
             width: 300,
             height: 200,
-            renderOnAddRemove: false
+
         });
+
+		let rect = new fabric.Rect({top:0,left:0,width:20,height:20,fill:'black'})
+
+		canvas.add(rect)
+
+		canvas.renderAll()
 
 
         canvas.setBackgroundColor(page.color, () => {canvas.renderAll(); canvas.calcOffset()});
 
 
+
+
+
         if (page.content) {
+
+			canvas.add(new fabric.Rect({x:0,y:0,width:20,height:20,fill:'black'}))
+
             canvas.loadFromJSON(JSON.parse(page.content), () => {
+				//canvas.setBackgroundColor('black')
+				canvas.renderAll();
+            	canvas.calcOffset();
+
                 try {
-                    // resize(canvas);
+                    //resize(canvas);
                     canvas.renderAll();
                     canvas.calcOffset();
                 } catch (error) {
@@ -151,7 +176,6 @@ function handleCanvasCreation(node) {
 				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }} out:fly={{ x: 200, duration: 300 }}>
 					<canvas use:handleCanvasCreation id='canvas-{page.id}' class='canvas'></canvas>
 					<h1> {page.title} </h1>
-					<p> {page.user_id} </p>
 				</div>
 			</a>
 		{/each}
@@ -173,7 +197,6 @@ function handleCanvasCreation(node) {
 
 	h1{
 		color: black;
-
 	}
 
 	:global(canvas){
@@ -195,6 +218,8 @@ function handleCanvasCreation(node) {
 
 		.page{
 
+
+
 			canvas{
 				border-radius: 5px;
 			}
@@ -208,55 +233,14 @@ function handleCanvasCreation(node) {
 		}
 	}
 
-	#app{
-		//margin-left: 240px;
-	}
 
-	#loading{
-		background: red;
-	}
 
-	#title{
-		font-family: 'Inter', 'Newsreader', sans-serif;
-		letter-spacing: -0.7px;
-		font-size: 28px;
-	}
-
-	.lds-ripple {
-		display: inline-block;
-		position: relative;
-		width: 80px;
-		height: 80px;
-	}
-	.lds-ripple div {
-		position: absolute;
-		border: 4px solid black;
-		opacity: 1;
-		border-radius: 50%;
-		animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-	}
-	.lds-ripple div:nth-child(2) {
-		animation-delay: -0.5s;
-	}
-
-    #spaces{
-        display: flex;
-        flex-wrap: wrap;
-        gap: 30px 30px;
-        justify-content: flex-start;
-        align-items: flex-start;
-        padding-bottom: 100px !important;
-    }
 
 	section{
 		margin: 30px 30px;
 	}
 
-	.profile{
-		border: 1px solid black;
-		text-align: left;
-		padding: 15px;
-	}
+
 
 
 </style>
