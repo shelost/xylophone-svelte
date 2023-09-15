@@ -24,40 +24,24 @@
 	import { supabaseClient } from '$lib/db'
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { pages, scrollPosition } from '$lib/utils/store.js';  // Adjust the path as needed
+	import { pages, user, scrollPosition } from '$lib/utils/store.js';  // Adjust the path as needed
+
 	export let data;
 
-	let newID = crypto.randomUUID()
+	let newID = crypto.randomUUID();
 	let pagesDiv;
-
-
-	const handleLogout: SubmitFunction = () => {
-		//loading.set(true);
-		return async ({ result }) => {
-			if (result.type === 'redirect') {
-				await invalidate('supabase:auth');
-			} else {
-				await applyAction(result);
-			}
-			//loading.set(false);
-		};
-	};
-
-
+	let isFetched = false;
 	let path;
 
 	$: if ($page && $page.route && $page.route.id) {
-		path = $page.url.pathname
+		path = $page.url.pathname;
 	}
-
-
 
 	onMount(() => {
 		if (pagesDiv) {
             pagesDiv.scrollTop = $scrollPosition;
         }
-	})
-
+	});
 
 	function saveScrollPosition() {
         if (pagesDiv) {
@@ -65,69 +49,42 @@
         }
     }
 
+	const handleLogout: SubmitFunction = async ({ result }) => {
+		if (result.type === 'redirect') {
+			await invalidate('supabase:auth');
+		} else {
+			await applyAction(result);
+		}
+	};
 
+	async function fetchPages() {
+		if (!isFetched) {
+			const { data: d, error } = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id);
+			if (!error) {
+				pages.set(d);
+				isFetched = true;
+			} else {
+				console.error('Error fetching pages:', error);
+			}
+		}
+	}
 
-
-	let isFetched = false;
-
-async function fetchPages(){
-    if (!isFetched) {
-        const { data: d, error } = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id);
-
-        if (!error) {
-            pages.set(d);
-            console.log(d);
-            isFetched = true;
-        } else {
-            console.log('Error fetching pages:' + JSON.stringify(error));
-        }
-    }
-}
-
-
-
-	async function addPage(){
-
-		const {data: d, error} = await supabaseClient.from('pages').insert({
+	async function addPage() {
+		const { data: d, error } = await supabaseClient.from('pages').insert({
 			id: newID,
 			color: '#ffffff',
 			user_id: data.user.id
-		})
-
-
-		if (!error){
-			window.location = '/x/' + newID
-		}else{
-			console.log('Error creating page:' + JSON.stringify(error))
-		}
-
-		newID = crypto.randomUUID()
-
-		fetchPages()
-	}
-
-	fetchPages()
-
-
-	/*
-	async function saveCanvasToSupabase() {
-		// Serialize the current canvas state
-		const canvasState = JSON.stringify(canvas);
-
-		// Save to Supabase
-		const { data, error } = await supabaseClient
-			.from('pages')
-			.insert([
-				{ title: title }
-			]);
-
-		if (error) {
-			console.error('Error saving canvas: ', error);
+		});
+		if (!error) {
+			window.location = '/x/' + newID;
 		} else {
-			console.log('Canvas saved successfully: ', data);
+			console.error('Error creating page:', error);
 		}
+		newID = crypto.randomUUID();
+		fetchPages();
 	}
-	*/
+
+	fetchPages();
 
 </script>
 
@@ -137,9 +94,27 @@ async function fetchPages(){
 
 	<div id = 'top'>
 
+
+		{#await $user}
+
+		<h2> {JSON.stringify($user)} </h2>
+
+
+		{:then $user}
+
+		{#if $user[0]}
 		<a href = '/home'>
-			<img src = '{Arachne}' alt = 'Scrollable Logo' id = 'logo'>
+			<div id = 'profile'>
+				<img src = '{$user[0].pfp}' alt = 'Scrollable Logo' id = 'logo'>
+				<h2> {$user[0].full_name} </h2>
+			</div>
 		</a>
+
+		{/if}
+		{/await}
+
+
+
 
 		<a href = '/home'>
 			<div class = 'text-btn' id = 'home' class:active={path === '/home'}>
@@ -241,6 +216,37 @@ async function fetchPages(){
 	width: 0;
 }
 
+
+#profile{
+	display: flex;
+	align-items: center;
+	background: white;
+	height: 44px;
+	padding: 10px 10px;
+	margin: 10px 5px;
+	//margin-top: 10px;
+	gap: 10px;
+	border-radius: 5px;
+
+	img{
+		border: 1px solid rgba(black, 0.2);
+		border-radius: 5px;
+		height: 22px;
+
+	}
+
+	h2{
+		font-size: 14px;
+		letter-spacing: -0.2px;
+		font-weight: 500;
+	}
+
+	&:hover{
+		background: rgba(black, 0.05);
+	}
+}
+
+
 .text-btn{
 		margin: 0 5px;
 		padding: 6px 12px;
@@ -248,7 +254,7 @@ async function fetchPages(){
 		font-size: 13px;
 		letter-spacing: -0.3px;
 		font-weight: 500;
-		color: rgba(black, 0.5);
+		color: rgba(black, 0.4);
 		transition: 0.1s ease;
 		display: flex;
 		align-items: center;
@@ -263,7 +269,7 @@ async function fetchPages(){
 		}
 
 		&.active{
-			background: rgba(black, 0.08);
+			background: rgba(black, 0.05);
 			color: black;
 		}
 
@@ -293,10 +299,7 @@ async function fetchPages(){
     opacity: 1;
 
 
-    #logo{
-		height: 24px;
-		margin: 25px 15px;
-	}
+
 
 
 	#add{

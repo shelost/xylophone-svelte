@@ -17,9 +17,10 @@
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 
-	import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+	import { pages, allPages, user, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 	import Panel from '$lib/components/Panel.svelte';
+
 
 
 
@@ -52,13 +53,40 @@
 
 	async function fetchPages(){
 
-		const {data: d, error} = await supabaseClient.from('pages').select('*')
+		const {data: d, error} = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id)
 
 		if (!error){
 			pages.set(d)
 			console.log(d)
 		}else{
 			console.log('Error fetching pages:' + error)
+		}
+	}
+
+	async function fetchUser(){
+
+const {data: d, error} = await supabaseClient.from('users').select('*').eq('id', data.user.id)
+
+if (!error){
+	user.set(d)
+	console.log(d)
+}else{
+	console.log('Error fetching user:' + error)
+}
+}
+
+
+
+	async function fetchAllPages(){
+
+		const {data: d, error} = await supabaseClient.from('pages').select('*')
+
+
+		if (error) {
+            console.error('Error fetching pages:', error);
+            return;
+        }else{
+			allPages.set(d);
 		}
 	}
 
@@ -78,7 +106,8 @@
 	}
 
 	fetchPages()
-
+	fetchAllPages()
+	fetchUser()
 
 </script>
 
@@ -135,6 +164,7 @@
 		height: 100vh;
 		overflow-x: visible !important;
 		overflow-y: hidden;
+		background: white;
 		//background: #f4f4f4;
 		//background: #FF004D
 

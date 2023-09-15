@@ -61,7 +61,6 @@
         width: calc(100vw - 480px) !important;
         margin-top: 0px;
         flex-shrink: 0;
-        border: 5px solid red;
 
     }
 
@@ -227,6 +226,33 @@ export let data;
 import Arachne from '$lib/img/octagon.svg'
 
 onMount(()=> {
+
+
+
+    let isScrolling = false;  // Flag to check if scrolling is active
+let scrollInterval;  // Store the interval ID
+
+document.addEventListener('keydown', function(e) {
+  if (e.keyCode === 32) {  // Check if the pressed key is spacebar
+    e.preventDefault();  // Prevent default spacebar action (page jump)
+
+    if (isScrolling) {
+      clearInterval(scrollInterval);  // Stop the auto-scrolling
+    } else {
+      scrollInterval = setInterval(function() {
+        let currentScrollPos = document.querySelector('#app').scrollTop;
+        document.querySelector('#app').scrollTop = currentScrollPos + 0.75;  // Adjust '1' to change scroll speed
+      }, 10);  // Adjust '30' to make scrolling faster or slower
+    }
+    isScrolling = !isScrolling;  // Toggle the flag
+  }
+});
+
+
+
+
+
+
     // Initialize fabric.js canvas
     let xArr = Array.from({length: 40}, (_, i) => i * 40);
     let yArr = Array.from({length: 40}, (_, i) => i * 40);
@@ -241,12 +267,12 @@ onMount(()=> {
     });
 
 
-    let panelWidth = 240
+    let panelWidth = 400
     let newWidth = window.innerWidth - panelWidth;
     if (window.innerWidth < 800){
       newWidth = window.innerWidth
     }
-    let scaleX = newWidth / data.iwidth
+    let scaleX = newWidth / data.iwidth * 0.9;
 
     resizeCanvas()
 
@@ -256,6 +282,8 @@ onMount(()=> {
     canvas.loadFromJSON(data.content, function() {
         canvas.renderAll();
         canvas.calcOffset();
+
+
 
         canvas.forEachObject((object) => {
             object.left *= scaleX;
@@ -276,7 +304,7 @@ onMount(()=> {
         canvas.setWidth(window.innerWidth);
 
     }else{
-        canvas.setWidth(window.innerWidth - 300);
+        canvas.setWidth(window.innerWidth - panelWidth);
     }
     canvas.setHeight(window.innerHeight)
 
@@ -328,9 +356,6 @@ onMount(()=> {
                 let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
 
                 // Set the new top position for the object
-
-                console.log(newTopPosition)
-
 
                 object.set('top', newTopPosition);
             });

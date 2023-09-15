@@ -86,6 +86,10 @@
 
   </div>
 
+  <!--
+
+  <Panel bind:activeObject />
+-->
 
 </div>
 
@@ -163,8 +167,7 @@
 
     #canvas{
       flex-shrink: 0;
-
-      width: calc(100vw - 250px);
+      width: calc(100vw - 255px);
       margin: 0;
   }
 
@@ -178,7 +181,7 @@
 
     #loader {
       position: absolute;
-      left: calc(50% + 0px);
+      left: calc(50% + 70px);
       top: calc(50% - 30px);
       z-index: 1;
       width: 50px;
@@ -187,6 +190,7 @@
       border-radius: 50%;
       border-top: 4px solid black;
       animation: spin 1s linear infinite;
+      transition: 0.3s ease;
   }
 
   @-webkit-keyframes spin {
@@ -317,11 +321,11 @@
 
   #container {
       flex-grow: 1;
-      width: calc(100vw - 260px);
+      width: calc(100vw - 255px);
       height: calc(100vh - 30px);
       margin-top: 15px;
 
-      //border: 1px solid rgba(black, 0.1);
+      border: 2px solid white;
 
       box-shadow: 0px 30px 100px rgba(black, 0.1);
 
@@ -334,7 +338,7 @@
       overflow-x:hidden;
       overflow-y: hidden;
 
-      border-radius: 5px;
+      border-radius: 10px;
 
 
       #bar{
@@ -347,10 +351,10 @@
 
 
         height: 45px;
-        border-radius: 5px 5px  0 0;
+        border-radius: 10px 10px 0 0;
         border-bottom: 1px solid rgba(black, 0.02);
         //box-shadow: 0px 20px 60px rgba(black, 0.05);
-        width: calc(100vw - 260px);
+        width: calc(100vw - 258px);
         position: fixed;
         color: black;
 
@@ -564,7 +568,6 @@ onMount(()=> {
 
 
   const panelWidth = 250
-
 
   const PANEL = Id('panel')
 
@@ -862,6 +865,10 @@ function dynamicallyBindListeners() {
         attachInputListeners(`input-${property}`, property);
         attachInputListeners(`range-${property}`, property);
     });
+
+    document.getElementById("sendToFront").addEventListener("click", sendObjectToFront);
+    document.getElementById("sendToBack").addEventListener("click", sendObjectToBack);
+
 }
 
 
@@ -970,8 +977,9 @@ canvas.on('object:modified', function(event) {
          // resizeInitial()
          }, 1000);
 
-         Id('loader').style.opacity = 0
 
+
+         Id('loader').style.display = 'none'
 
 
          calculateGrid()
@@ -1035,13 +1043,45 @@ setTimeout(() => {
           canvas.setBackgroundColor(data.color, () => canvas.renderAll());
 
            Id('bar').style.background = data.color
-          Id('loader').style.opacity = 0
+           Id('loader').style.display = 'none'
+
       canvas.loadFromJSON(parsedContent, () => {
 
 
+        canvas.renderAll()
+        canvas.calcOffset()
 
-        calculateGrid()
-          drawGrid()
+        canvas.forEachObject((object) => {
+            object.originalTop = object.top;
+            object.set({
+            borderColor: 'red',
+            cornerColor: '#FF005C',
+            cornerSize: 5,
+            transparentCorners: false,
+          });
+          });
+
+      })
+
+},2000)
+
+
+ const parsedContent =
+        typeof data.content === 'string'
+          ? JSON.parse(data.content)
+          : data.content;
+
+          canvas.setBackgroundColor(data.color, () => canvas.renderAll());
+
+           Id('bar').style.background = data.color
+           Id('loader').style.display = 'none'
+      canvas.loadFromJSON(parsedContent, () => {
+
+
+        console.log('jo')
+
+       //  calculateGrid()
+         // drawGrid()
 
 
         canvas.renderAll()
@@ -1053,7 +1093,7 @@ setTimeout(() => {
 
       })
 
-},2000)
+console.log('jo')
 
 
 Id('color').addEventListener('input', e => {
@@ -1066,8 +1106,6 @@ Id('color').addEventListener('input', e => {
 
 function applyParallaxEffect() {
 
-  drawGrid()
-  /*
     let scrollAmount = document.getElementById('container').scrollTop;
 
     canvas.forEachObject(object => {
@@ -1079,8 +1117,11 @@ function applyParallaxEffect() {
         object.set('top', newTopPosition);
     });
 
+
+    console.log('t')
+
     canvas.renderAll();
-    */
+
 }
 
 
@@ -1202,12 +1243,8 @@ let CLICK = 0
 
 
 
-for (let i=0; i<Class('add').length; i++){
-  Class('add')[i].addEventListener('click', addObject)
-}
-
-
-function addObject(){
+canvas.on('mouse:down', (o) => {
+   Id('loader').style.display = 'none'
     if (isObjectBeingModified || canvas.getActiveObject() || CLICK > 0) {
         // Reset and exit early if an object is being modified
         isObjectBeingModified = false;
@@ -1216,9 +1253,9 @@ function addObject(){
     }
 
     isDown = true;
-    //var pointer = canvas.getPointer(o.e);
-    origX = 30
-    origY = 30
+    var pointer = canvas.getPointer(o.e);
+    origX = pointer.x
+    origY = pointer.y
 
     switch (MODE){
         case 'rect':
@@ -1360,12 +1397,14 @@ function addObject(){
     }
 
 
+    MODE = null
+
 
     canvas.renderAll()
     saveCanvasToSupabase()
 
 
-}
+})
 
 
 
@@ -1671,7 +1710,6 @@ function capitalize(string) {
 function handleSelection(event) {
   const activeObjects = canvas.getActiveObjects()
 
-
   $isPanelVisible = true;
 
   if(activeObjects.length === 1) {
@@ -1807,29 +1845,16 @@ mb
     <input id = 'input-link' class = 'input' value = '${activeObject.link}' placeholder='Enter URL here...' type="text" oninput="applyStyles(canvas)">
   </div>
 
-  <button id="delete" class = 'red' onclick = "deleteObject()"> Delete </button>
+  <button id="delete" class='red' onclick="deleteObject()"> Delete </button>
+  <button id="sendToFront" onclick="sendObjectToFront()"> Send to Front </button>
+  <button id="sendToBack" onclick="sendObjectToBack()"> Send to Back </button>
+
   `
 
 
   console.log(PANEL)
   PANEL.innerHTML = div;
 
-
-  /*
-  switch (activeObject.type) {
-    case 'textbox':
-      break;
-    case 'image':
-      Id('input-width').value = Math.round(activeObject.width * activeObject.scaleX)
-      Id('input-height').value = Math.round(activeObject.height * activeObject.scaleY)
-      Id('range-width').value = Math.round(activeObject.width * activeObject.scaleX)
-      Id('range-height').value = Math.round(activeObject.height * activeObject.scaleY)
-      break;
-    case 'video':
-      break;
-    default:
-      break;
-  }*/
 
   dynamicallyBindListeners()
 }else{
@@ -1838,6 +1863,20 @@ mb
 
 }
 
+
+function sendObjectToFront() {
+    if (activeObject) {
+        activeObject.bringToFront();
+        canvas.renderAll();
+    }
+}
+
+function sendObjectToBack() {
+    if (activeObject) {
+        activeObject.sendToBack();
+        canvas.renderAll();
+    }
+}
 
 
 
@@ -1876,7 +1915,7 @@ async function fileExistsInSupabase(filePath) {
 console.log(data)
 
 async function getImageUrlFromSupabase(filePath) {
-    return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${data.user.id}/${filePath}`;
+    return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
 }
 
 async function uploadToSupabase(file) {
@@ -1940,90 +1979,6 @@ canvas.wrapperEl.addEventListener('drop', async function(e) {
     }
 }, false);
 
-
-
-
-// Assuming the saveCanvasToSupabase function is defined elsewhere, as mentioned.
-
-
-
-
-
-/*
-canvas.wrapperEl.addEventListener('drop', function(e) {
-  e.preventDefault();
-  Id('canvas').style.opacity = 1
-  var files = e.dataTransfer.files;
-  for (var i = 0; i < files.length; i++) {
-    var file = files[i];
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var dataURL = e.target.result;
-      if (file.type.includes("image")) {
-        // Create Fabric.js Image object
-        fabric.Image.fromURL(dataURL, function(img) {
-          img.scaleToWidth(300);  // Scale the image
-          img.scaleToHeight(300);  // Scale the image
-          canvas.add(img);  // Add image to canvas
-        });
-      } else if (file.type.includes("video")) {
-        // Create Fabric.js Video object (a rect that acts as a placeholder)
-        var videoEl = document.createElement('video');
-        videoEl.src = dataURL;
-        videoEl.addEventListener('loadedmetadata', function() {
-          var rect = new fabric.Rect({
-            left: 100,
-            top: 100,
-            fill: 'transparent',
-            width: 300,
-            height: videoEl.videoHeight / (videoEl.videoWidth / 300)
-          });
-          canvas.add(rect);
-          // Use the video element as a pattern in Fabric.js
-          var patternSourceCanvas = new fabric.StaticCanvas();
-          patternSourceCanvas.add(new fabric.Image(videoEl, {
-            originX: 'left',
-            originY: 'top',
-            left: 0,
-            top: 0,
-            angle: 0,
-            clipTo: function (ctx) {
-              ctx.rect(0, 0, videoEl.videoWidth, videoEl.videoHeight);
-            }
-          }));
-          var pattern = new fabric.Pattern({
-            source: function() {
-              patternSourceCanvas.setDimensions({
-                width: videoEl.videoWidth,
-                height: videoEl.videoHeight
-              });
-              patternSourceCanvas.renderAll();
-              return patternSourceCanvas.getElement();
-            },
-            repeat: 'no-repeat'
-          });
-          rect.set({ fill: pattern });
-          canvas.renderAll();
-          videoEl.play();
-          // Update pattern for every frame
-          var animate = function() {
-            canvas.renderAll();
-            fabric.util.requestAnimFrame(animate);
-          }
-          fabric.util.requestAnimFrame(animate);
-        });
-      }
-    };
-    reader.readAsDataURL(file);
-  }
-  saveCanvasToSupabase()
-}, false);
-*/
-
-
-
-
-/////
 
 function addText(x,y) {
   const text = new fabric.IText('Hello World!', {
