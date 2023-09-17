@@ -57,7 +57,6 @@
 
 		if (!error){
 			pages.set(d)
-			console.log(d)
 		}else{
 			console.log('Error fetching pages:' + error)
 		}
@@ -69,7 +68,6 @@ const {data: d, error} = await supabaseClient.from('users').select('*').eq('id',
 
 if (!error){
 	user.set(d)
-	console.log(d)
 }else{
 	console.log('Error fetching user:' + error)
 }
@@ -131,9 +129,8 @@ if (!error){
 
 
 <svelte:head>
-	<title> Xylophone | Build Freely </title>
-	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
-	<link rel="icon" href={X} />
+	<title> Arachne | Build Your Perfect Web </title>
+	<meta name="description" content="Arachne is a different kind of dev." />
 </svelte:head>
 
 

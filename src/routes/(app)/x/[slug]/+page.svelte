@@ -1,76 +1,52 @@
 <div id = 'app'>
 
-  <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
-      <div id = 'bar'>
-        <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
-        <div id = 'buttons'>
-          <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
-            <img src = {Text} class = 'icon'  alt = 'icon'>
-          </div>
-          <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
-            <img src = {Image} class = 'icon'  alt = 'icon'>
-          </div>
-          <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
-            <img src = {Triangle} class = 'icon'  alt = 'icon'>
-          </div>
-          <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
-            <img src = {Button} class = 'icon'  alt = 'icon'>
-          </div>
-          <div class = 'add' id="addRect" class:active = { MODE == 'rect' }>
-            <img src = {Rect} class = 'icon'  alt = 'icon'>
-          </div>
-          <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
-            <img src = {Ellipse} class = 'icon'  alt = 'icon'>
-          </div>
+  <div id = 'bar'>
+    <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
-          <div class = 'add' id="addDraw" class:active = { MODE == 'draw' }>
-            <img src = {Ellipse} class = 'icon'  alt = 'icon'>
-          </div>
+    <div id = 'buttons'>
+      <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
+        <img src = {Text} class = 'icon'  alt = 'icon'>
+      </div>
+      <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
+        <img src = {Image} class = 'icon'  alt = 'icon'>
+      </div>
+      <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
+        <img src = {Triangle} class = 'icon'  alt = 'icon'>
+      </div>
+      <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
+        <img src = {Button} class = 'icon'  alt = 'icon'>
+      </div>
+      <div class = 'add' id="addRect" class:active = { MODE == 'rect' }>
+        <img src = {Rect} class = 'icon'  alt = 'icon'>
+      </div>
+      <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
+        <img src = {Ellipse} class = 'icon'  alt = 'icon'>
+      </div>
 
-          <div>
-            <input type="color" id="color" name="head" bind:value={color} />
-          </div>
-
+      <div class = 'add' id="addDraw" class:active = { MODE == 'draw' }>
+        <img src = {Ellipse} class = 'icon'  alt = 'icon'>
       </div>
 
 
-      <!--
-  <div id = 'controls'>
+      <label class="switch">
+        <input type="checkbox" id = 'ruler' bind:checked={ruler} >
+        <span class="slider round"></span>
+      </label>
 
-    <div id = 'buttons'>
-        <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
-          <img src = {Text} class = 'icon'  alt = 'icon'>
-        </div>
-        <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
-          <img src = {Image} class = 'icon'  alt = 'icon'>
-        </div>
-        <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
-          <img src = {Triangle} class = 'icon'  alt = 'icon'>
-        </div>
-        <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
-          <img src = {Button} class = 'icon'  alt = 'icon'>
-        </div>
-        <div class = 'add' id="addRect" class:active = { MODE == 'rect' }>
-          <img src = {Rect} class = 'icon'  alt = 'icon'>
-        </div>
-        <div class = 'add' id="addCircle" class:active = { MODE == 'circle' }>
-          <img src = {Ellipse} class = 'icon'  alt = 'icon'>
-        </div>
+      <div>
+        <input type="color" id="color" name="head" bind:value={color} />
+      </div>
 
-        <div>
-          <input type="color" id="color" name="head" bind:value={color} />
-        </div>
+  </div>
 
-
-        <div id = 'align'>
-        </div>
-    </div>
-
--->
 </div>
 
 
+
+
+
+  <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
 
 
       <div id = 'canvas-container'>
@@ -78,12 +54,14 @@
         <div id="loader"></div>
 
         <canvas id = 'canvas'></canvas>
-    <!-- id="resize-handle"></div>-->
+
+
+
       </div>
 
 
 
-
+      <div id="handle"></div>
   </div>
 
   <!--
@@ -97,17 +75,80 @@
 
 
 <svelte:head>
-	<title> Xylophone | Build Freely </title>
-	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
-	<link rel="icon" href={icon} />
+	<title> Arachne | Build Your Perfect Web </title>
+	<meta name="description" content="Arachne is a different kind of dev." />
 </svelte:head>
 
 
 
 <style lang='scss'>
 
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 28px;
+  height: 16px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 1px;
+  bottom: 1px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #0074ff;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #0074ff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(11px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+
   ::-webkit-scrollbar{
-      width: 3px;
+      width: 50px;
       height: 0;
       width: 0;
       background: rgba(black, 0.1);
@@ -147,21 +188,31 @@
     background: #FF006B;
   }
 
+  #handle {
+    cursor: ew-resize;  // cursor indicates horizontal resizing
+    position: absolute;
+    right: 0;
+    top: calc(50vh - 50px);
+    width: 10px;
+    height: 60px;
+    background: white; // semi-transparent background for the handle
+    border-radius: 50px;
+    box-shadow: 0px 20px 40px rgba(black, 0.3);
+    transform: translateX(5px);
+}
+
   #canvas-container{
     //height: fit-content;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    margin-top: 45px;
+    align-items: flex-start;
+    justify-content: center;
 
 
     overflow-y: scroll;
-    width: calc(100vw - 250px) !important;
+    width: calc(100vw - 260px) !important;
     height: 100vh;
 
     background: none;
-
 
     //border: 1px solid rgba(black, 0.05);
 
@@ -171,13 +222,7 @@
       margin: 0;
   }
 
-    #resize-handle{
-      cursor: ew-resize;
-      height: 30px;
-      width: 10px;
-      background: #333;
-      z-index: 10;
-    }
+
 
     #loader {
       position: absolute;
@@ -322,12 +367,18 @@
   #container {
       flex-grow: 1;
       width: calc(100vw - 255px);
-      height: calc(100vh - 30px);
-      margin-top: 15px;
+      height: calc(100vh - 55px);
+      margin-top: 0px;
 
       border: 2px solid white;
-
       box-shadow: 0px 30px 100px rgba(black, 0.1);
+
+
+
+
+    resize: horizontal;  // allows horizontal resizing
+    overflow: auto;      // to account for the scrollbar that may appear
+    position: relative;  //
 
 
 
@@ -335,54 +386,56 @@
 
       display: flex;
       flex-direction: column;
-      overflow-x:hidden;
-      overflow-y: hidden;
+      overflow-x: visible;
+      overflow-y: scroll;
 
       border-radius: 10px;
 
 
-      #bar{
 
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 10px;
-
-
-
-        height: 45px;
-        border-radius: 10px 10px 0 0;
-        border-bottom: 1px solid rgba(black, 0.02);
-        //box-shadow: 0px 20px 60px rgba(black, 0.05);
-        width: calc(100vw - 258px);
-        position: fixed;
-        color: black;
-
-        z-index: 3;
-
-
-        //border-bottom: 1px solid rgba(black, 0.1);
-
-
-        #title{
-          font-size: 14px;
-          font-weight: 500;
-          letter-spacing: -0.3px;
-          padding: 0 5px;
-          height: 24px;
-        }
-
-        #buttons{
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        button{
-          display: none;
-        }
-      }
   }
+
+
+
+  #bar{
+
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding-right: 20px;
+
+height: 45px;
+border-bottom: 1px solid rgba(black, 0.02);
+//box-shadow: 0px 20px 60px rgba(black, 0.05);
+width: 100%;
+color: black;
+
+z-index: 3;
+
+
+
+//border-bottom: 1px solid rgba(black, 0.1);
+
+
+#title{
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  padding: 0 5px;
+  height: 24px;
+}
+
+#buttons{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+button{
+  display: none;
+}
+}
+
 
 
   input.middle:focus {
@@ -463,7 +516,6 @@ input:-webkit-autofill:active  {
 
   :global(input:checked) {
     border: none;
-    background: blue !important;
   }
 
 
@@ -471,7 +523,6 @@ input:-webkit-autofill:active  {
 
     #app{
       width: 100vw !important;
-      border: 2px solid blue;
     }
 
     #canvas-container{
@@ -547,6 +598,7 @@ export let data
 
 let title= data.title
 let color = data.color
+let ruler = true
 let activeObject;
 let MODE
 
@@ -630,6 +682,9 @@ onMount(()=> {
   }
 
 
+
+
+
 ///////////////////////////////////////////////////
 //////////////// OBJECT PROPERTIES ////////////////
 ///////////////////////////////////////////////////
@@ -672,6 +727,8 @@ canvas.on('object:moving', (event) => {
 
 
   clearGuides();  // Clear old guides
+
+  if (ruler){
 
     let activeObject = event.target;
 
@@ -729,10 +786,8 @@ canvas.on('object:moving', (event) => {
         }
     }
 
-
-
-
     canvas.renderAll()
+  }
 
 });
 
@@ -921,15 +976,11 @@ canvas.on('object:selected', function(event) {
 });
 
 canvas.on('object:modified', function(event) {
-    saveCanvasToSupabase()
     dynamicallyBindListeners();
     updateUIFromCanvasObject(event.target);
+    saveCanvasToSupabase()
 
 });
-
-
-
-
 
 
 
@@ -947,8 +998,6 @@ canvas.on('object:modified', function(event) {
   let gridLines = [];
 
 
-  Id('bar').style.background = data.color
-  canvas.setBackgroundColor(data.color, () => canvas.renderAll());
 
   setTimeout(() => {
 
@@ -960,145 +1009,118 @@ canvas.on('object:modified', function(event) {
     document &&
     document.readyState === 'complete'
   ) {
-    try {
-      const parsedContent =
-        typeof data.content === 'string'
-          ? JSON.parse(data.content)
-          : data.content;
-
-
-      canvas.loadFromJSON(parsedContent, () => {
-        try {
-          canvas.setBackgroundColor(data.color, () => canvas.renderAll());
-          resizeCanvas();
-          resize(0)
-
-         setTimeout(() => {
-         // resizeInitial()
-         }, 1000);
-
-
-
-         Id('loader').style.display = 'none'
-
-
-         calculateGrid()
-          drawGrid()
-
-
-          let maxHeight = window.innerHeight
-
-          canvas.forEachObject((object) => {
-            const bottomEdge = object.top + object.height;
-            object.originalTop = object.top;
-            if (bottomEdge > maxHeight) {
-              maxHeight = bottomEdge;
-            }
-          });
-
-          // Add buffer and update canvas height
-          const buffer = 100;
-          canvas.setHeight(maxHeight + 100); // additional 100px as per your requirement
-
-
-
-
-
-          canvas.renderAll();
-          canvas.calcOffset();
-
-
-          console.log('drawed');
-        } catch (error) {
-          console.error('Error in canvas callback:', error);
-        }
-      },
-      function (o, object) {
-
-        if (object){
-          object.set({
-            borderColor: 'red',
-            cornerColor: '#FF005C',
-            cornerSize: 5,
-            transparentCorners: false,
-          });
-        }
-
-      });
-
-    } catch (error) {
-      console.error('Error loading canvas:', error);
-    }
+    loadCanvasFromSupabase();
+  }else{
+    Id('loader').style.display = 'none'
   }
 }, 500);
 
 
+
+const loadCanvasFromSupabase = async () => {
+    if (!data.content) {
+        return;
+    }
+
+    // Ensure that the user has an active session
+    const session = data.session
+
+    // Use the session's access token in headers for authorization
+    const headers = {
+        'Authorization': `Bearer ${session.access_token}`
+    };
+
+    const { data: fileData, error } = await supabaseClient.storage.from('fabric')
+        .download(data.content, { headers });  // Provide headers as options
+
+    if (error) {
+        console.error('Error downloading the file:', error);
+        return;
+    }
+
+    // Convert blob data to JSON string
+    const blobToText = (blob) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsText(blob);
+        });
+    };
+
+    try {
+        const fileText = await blobToText(fileData);
+        const fileJson = JSON.parse(fileText);
+
+
+        // Load the parsed data into the canvas
+        canvas.loadFromJSON(fileJson, () => {
+            //canvas.setBackgroundColor(data.color);
+            Id('loader').style.display = 'none';
+            canvas.renderAll();
+        });
+
+
+    } catch (parseError) {
+        console.error('Error parsing the blob data:', parseError);
+    }
+};
+
+
+// Usage:
+// loadCanvasFromSupabase(yourData);
+
+
+
+
+let isResizing = false;
+let lastX;
+
+
+document.getElementById("handle").addEventListener("mousedown", function(event) {
+    isResizing = true;
+    lastX = event.clientX;
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", () => {
+        isResizing = false;
+        document.removeEventListener("mousemove", handleMouseMove);
+    });
+});
+
+
+function handleMouseMove(event) {
+
+    let deltaX = event.clientX - lastX;
+    let container = document.getElementById("container");
+    const previousWidth = container.offsetWidth;
+    let width = previousWidth + deltaX
+    if (width > 300 && width < window.innerWidth - 250){
+      container.style.width = `${previousWidth + deltaX}px`;
+
+    if (container.offsetWidth !== previousWidth) {
+        resize(); // Call your resize function
+    }
+
+    lastX = event.clientX;
+    }
+}
+
+
+
+
+
 setTimeout(() => {
 
-      const parsedContent =
-        typeof data.content === 'string'
-          ? JSON.parse(data.content)
-          : data.content;
-
-          canvas.setBackgroundColor(data.color, () => canvas.renderAll());
-
-           Id('bar').style.background = data.color
-           Id('loader').style.display = 'none'
-
-      canvas.loadFromJSON(parsedContent, () => {
-
-
-        canvas.renderAll()
-        canvas.calcOffset()
-
-        canvas.forEachObject((object) => {
-            object.originalTop = object.top;
-            object.set({
-            borderColor: 'red',
-            cornerColor: '#FF005C',
-            cornerSize: 5,
-            transparentCorners: false,
-          });
-          });
-
-      })
+   loadCanvasFromSupabase()
 
 },2000)
 
 
- const parsedContent =
-        typeof data.content === 'string'
-          ? JSON.parse(data.content)
-          : data.content;
-
-          canvas.setBackgroundColor(data.color, () => canvas.renderAll());
-
-           Id('bar').style.background = data.color
-           Id('loader').style.display = 'none'
-      canvas.loadFromJSON(parsedContent, () => {
-
-
-        console.log('jo')
-
-       //  calculateGrid()
-         // drawGrid()
-
-
-        canvas.renderAll()
-        canvas.calcOffset()
-
-        canvas.forEachObject((object) => {
-            object.originalTop = object.top;
-          });
-
-      })
-
-console.log('jo')
 
 
 Id('color').addEventListener('input', e => {
   canvas.setBackgroundColor(Id('color').value, () => canvas.renderAll());
-  Id('bar').style.background = Id('color').value
+  //Id('bar').style.background = Id('color').value
   saveCanvasToSupabase()
 })
 
@@ -1109,16 +1131,13 @@ function applyParallaxEffect() {
     let scrollAmount = document.getElementById('container').scrollTop;
 
     canvas.forEachObject(object => {
-        let depth = object.depth || 0;
+    let depth = object.depth || 0;
         let parallaxShift = 0.2 * depth * scrollAmount;
 
         // Use the originalTop (which isn't affected by parallax) and add the shift.
         let newTopPosition = object.originalTop + parallaxShift;
         object.set('top', newTopPosition);
     });
-
-
-    console.log('t')
 
     canvas.renderAll();
 
@@ -1165,23 +1184,16 @@ canvas.on('object:moving', function() {
 
         // Set the 'originalTop' relative to the entire canvas height
         activeObject.originalTop = activeObject.top - parallaxShift;
-    }
-});
 
-
-
-
-
-
-canvas.on('object:moving', function() {
-   //debouncedResize()
-    if (activeObject){
-      console.log(activeObject.originalTop)
-    activeObject.originalTop = activeObject.top
+        activeObject.originalTop = activeObject.top
     activeObject.set('originalTop', activeObject.top)
-  }
-    isObjectBeingModified = true;
+    }
+
+     isObjectBeingModified = true;
 });
+
+
+
 canvas.on('object:scaling', function() {
     isObjectBeingModified = true;
 });
@@ -1195,46 +1207,9 @@ canvas.on('object:rotating', function() {
 
 let isCloning = false;
 
-/*
-const handleObjectMoving = (e) => {
-    const activeObject = e.target;
-
-    if (!e.e.altKey || isCloning) return;
-
-    isCloning = true;
-
-    activeObject.clone((cloned) => {
-        cloned.set({
-            top: activeObject.top,
-            left: activeObject.left
-        });
-        canvas.add(cloned);
-        canvas.setActiveObject(cloned);
-        canvas.requestRenderAll();
-    });
-};
-
-const handleObjectMoved = () => {
-    isCloning = false;
-};
-
-canvas.on('object:moving', handleObjectMoving);
-canvas.on('object:moved', handleObjectMoved);
-
-canvas.on('object:added', (e) => {
-    const obj = e.target;
-
-    // Attach the moving and moved listeners to the newly added object
-    obj.on('moving', handleObjectMoving);
-    obj.on('moved', handleObjectMoved);
-});
-
-
-*/
 
 
 let CLICK = 0
-
 
 
 ///////////////////////////////////////////////////
@@ -1403,7 +1378,6 @@ canvas.on('mouse:down', (o) => {
     canvas.renderAll()
     saveCanvasToSupabase()
 
-
 })
 
 
@@ -1426,87 +1400,9 @@ window.deleteObject = function(){
 }
 
 
-canvas.on('mouse:over', function(e) {
-    canvas.renderAll();
-});
-
-
-
-// Function to reflow text inside a bounding box
-function reflowText(obj, newWidth) {
-  var words = obj.text.split(' ');
-  var tempLine = '';
-  var newLines = [];
-
-  for (var i = 0; i < words.length; i++) {
-    var testLine = `${tempLine}${words[i]} `;
-    var testLineWidth = obj.getLineWidth(0, testLine);
-
-    if (testLineWidth > newWidth) {
-      newLines.push(tempLine);
-      tempLine = `${words[i]} `;
-    } else {
-      tempLine = testLine;
-    }
-  }
-  newLines.push(tempLine);
-  obj.set({
-    text: newLines.join('\n'),
-    width: newWidth,
-    scaleX: 1
-  });
-}
-
-
-
-
-
-
-
-
-
-
-/*
-canvas.on('mouse:move', function(o){
-    if (!isDown || isObjectBeingModified) return;  // Also check isObjectBeingModified here
-    var pointer = canvas.getPointer(o.e);
-
-    switch (MODE){
-        case 'rect':
-          let pointer = canvas.getPointer(o.e);
-
-            if(origX > pointer.x){
-                elem.set({ left: Math.abs(pointer.x) });
-            }
-            if(origY > pointer.y){
-                elem.set({ top: Math.abs(pointer.y) });
-            }
-
-            elem.set({ width: Math.abs(origX - pointer.x) });
-            elem.set({ height: Math.abs(origY - pointer.y) });
-
-            break;
-        default:
-            break;
-    }
-
-    canvas.renderAll();
-});
-*/
-
-
-
-
-
 canvas.on('mouse:up', function(o){
   isDown = false;
 });
-
-
-  window.addEventListener('load', function () {
-    console.log('loaded')
-    resize()
-  });
 
 
 
@@ -1561,6 +1457,8 @@ canvas.on('mouse:up', function(o){
 
 
 function resize(initial = 1) {
+
+  //handleMouseMove()
     let newWidth = window.innerWidth - panelWidth;
 
     if (window.innerWidth < 800){
@@ -1614,7 +1512,7 @@ function resize(initial = 1) {
 
   window.addEventListener('resize', resize)
     window.addEventListener('load', resize)
-    window.addEventListener('mousemove', resize)
+
 
 
     setTimeout(() => {
@@ -1911,8 +1809,6 @@ async function fileExistsInSupabase(filePath) {
     const { error } = await supabaseClient.storage.from('images').download(filePath);
     return !error;
 }
-
-console.log(data)
 
 async function getImageUrlFromSupabase(filePath) {
     return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
@@ -2274,7 +2170,6 @@ function addButton(x, y) {
         );
     }
     */
-
   }
 
 
@@ -2374,71 +2269,6 @@ window.addEventListener('keyup', e => {
 
 
 
-////////////////////////////// LISTENERS //////////////////////////////
-
-/*
-
-  canvas.on('selection:cleared', function() {
-    let panel = document.getElementById('controls');
-    panel.innerHTML = '';
-    $selectedType = nullI;
-  });
-
-  canvas.on('mouse:down', function(event) {
-    const pointer = canvas.getPointer(event.e);
-    initialX = pointer.x;
-    initialY = pointer.y;
-
-    floatingOptions.style.left = `${pointer.x}px`;
-    floatingOptions.style.top = `${pointer.y}px`;
-    floatingOptions.classList.add('active')
-  });
-
-  canvas.on('mouse:move', function(event) {
-    if (floatingOptions.classList.contains('active')) return;
-
-    const pointer = canvas.getPointer(event.e);
-    const dx = pointer.x - initialX;
-    const dy = pointer.y - initialY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance > 200) {
-      floatingOptions.classList.remove('active')
-    }
-  });
-
-
-  canvas.on('object:deselected', function(event){
-    saveCanvasToSupabase()
-  })
-  */
-
-  /*
-  canvas.on('object:moving', function(event) {
-    const obj = event.target;
-    const canvasWidth = canvas.getWidth();
-    const canvasHeight = canvas.getHeight();
-    const buffer = 100; // distance from edge to start expanding/retracting canvas
-
-    // Extend Canvas Height
-    const objectBottom = obj.top + obj.height; // Define object's bottom position
-    if (objectBottom > (canvasHeight - buffer)) {
-        canvas.setHeight(canvasHeight + buffer);
-        canvas.calcOffset();
-    }
-
-    // Retract Canvas Height (if needed)
-    // Find the object with the maximum bottom position
-
-    // If there's a lot of extra space below the bottom-most object, reduce canvas height
-    if ((canvasHeight - maxObjectBottom) > buffer && maxObjectBottom > window.innerHeight) {
-        canvas.setHeight(maxObjectBottom + buffer);
-        canvas.calcOffset();
-    }
-});
-*/
-
-
 
 
 ////////
@@ -2449,13 +2279,13 @@ function preventScroll(event) {
     //event.preventDefault();
 }
 
-function saveCanvasToSupabase() {
 
+
+function saveCanvasToSupabase() {
 
 
     // Step 2: Save the scroll position
     const scrollTop = Id('container').scrollTop
-    console.log(Id('container').scrollTop)
 
     // Calculate original dimensions
     const originalCanvasWidth = data.iwidth;
@@ -2474,7 +2304,7 @@ function saveCanvasToSupabase() {
     canvas.clipTo = null;
 
     // Temporarily reset the canvas to its full/original size
-    canvas.setWidth(originalCanvasWidth);
+    //canvas.setWidth(originalCanvasWidth);
     //canvas.setHeight(originalCanvasHeight);
 
     // Upload the full canvas version to the database
@@ -2519,36 +2349,74 @@ function saveCanvasToSupabase() {
 
 }
 
-
 async function uploadCanvas() {
+    // Retrieve the session token
+    const session = data.session
+    const token = session?.access_token;
 
-// Serialize the current canvas state
+    if (!token) {
+        console.error('No session token available');
+        return;
+    }
 
-// removeGrid()
-const canv = canvas.toJSON(['link', 'depth']);
-const json = JSON.stringify(canv);
-// calculateGrid()
-//  drawGrid()
+    const headers = {
+        'Authorization': `Bearer ${token}`
+    };
 
+    // Serialize the current canvas state
+    const canv = canvas.toJSON(['link', 'depth']);
+    const json = JSON.stringify(canv);
 
-// Save to Supabase
-const { data: d, error } = await supabaseClient
-    .from('pages')
-    .upsert([
-        {
-          id: data.id,
-          title: title,
-          content: json,
-          iwidth: canvas.width,
-          color: color
+    // Prepare the file for Supabase Storage
+    const fileName = `${data.id}.json`;  // Assuming the ID is unique and suitable for a filename
+
+    const uploadFile = async () => {
+        return await supabaseClient.storage
+            .from('fabric')
+            .upload(fileName, new Blob([json], { type: 'application/json' }), { upsert: true }, headers);
+    };
+
+    let uploadResponse = await uploadFile();
+
+    if (uploadResponse.error && uploadResponse.error.statusCode === '409') {
+        // If duplicate error, try to delete the old file
+        const { error: deleteError } = await supabaseClient.storage
+            .from('fabric')
+            .remove([fileName], headers);
+
+        if (deleteError) {
+            console.warn('Error deleting existing file:', deleteError);
+            return;
         }
-    ]);
 
-if (error) {
-    console.error('Error saving canvas: ', error);
-} else {
-    console.log('Canvas saved successfully: ', d);
-}
+        // Retry the upload after deleting the old file
+        uploadResponse = await uploadFile();
+    }
+
+    // Handle upload errors
+    if (uploadResponse.error) {
+        console.error('Error uploading to Supabase Storage: ', uploadResponse.error);
+        return;
+    }
+
+    // Save the reference to the Supabase database
+    const { data: dbData, error: dbError } = await supabaseClient
+        .from('pages')
+        .upsert([
+            {
+              id: data.id,
+              title: title,
+              content: fileName,  // Storing the file name as the reference
+              iwidth: canvas.width,
+              color: color
+            }
+        ]);
+
+    if (dbError) {
+        console.error('Error saving reference to database: ', dbError);
+    } else {
+        console.log('Canvas saved and reference stored successfully: ', dbData);
+    }
 }
 
 

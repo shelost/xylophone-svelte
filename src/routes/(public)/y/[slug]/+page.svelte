@@ -108,10 +108,10 @@
 
 
 <svelte:head>
-	<title> Xylophone | Build Freely </title>
-	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
-	<link rel="icon" href={icon} />
+	<title> Arachne | Build Your Perfect Web </title>
+	<meta name="description" content="Arachne is a different kind of dev." />
 </svelte:head>
+
 
 
 

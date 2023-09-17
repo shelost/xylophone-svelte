@@ -17,17 +17,6 @@
 	import {canvasElements, allPages} from '$lib/utils/store.js'
 
 
-	let newCanvas;
-
-	function addCanvas(canvas) {
-    canvasElements.update(allCanvases => {
-        allCanvases.push(canvas);
-
-        return allCanvases;
-    });
-}
-
-
 
 	function Class(id){
 		return document.getElementsByClassName(id)
@@ -41,114 +30,107 @@
 	let initialCanvasHeight = window.innerHeight
 
 
+	function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
+		const scaleX = targetWidth / originalWidth
 
-	$: if ($allPages.length && $canvasElements.length === $allPages.length) {
-		$allPages.forEach((page, i) => {
-			initializeCanvas(page, i);
+
+		canvas.forEachObject((obj: any) => {
+			const left = obj.left || 0;
+			const top = obj.top || 0;
+
+
+			console.log(scaleX)
+
+
+			obj.scaleX *= scaleX
+			obj.scaleY *= scaleX
+			obj.left *= scaleX
+			obj.top *= scaleX
+
+
+			obj.setCoords(); // Refresh object coordinates after updates
 		});
+		canvas.renderAll();
 	}
 
 
-	let initializedCanvasCount = 0;  // New variable to keep track of initialized canvases
 
-    onMount(async () => {
-        const { data: pagesData, error } = await supabaseClient.from('pages').select('*');
-        if (error) {
-            console.error('Error fetching pages:', error);
-            return;
-        }
+	async function loadCanvas(page, canvas) {
+		if (!page.content) {
+			return;
+		}
 
-        allPages.set(pagesData);
+		// Ensure that the user has an active session
+		const session = data.session
 
-        // Use an interval to initialize canvases sequentially
-        const intervalId = setInterval(() => {
-            if (initializedCanvasCount < pagesData.length) {
-                initializeCanvas(pagesData[initializedCanvasCount], initializedCanvasCount);
-                initializedCanvasCount++;
-            } else {
-                clearInterval(intervalId);  // Clear the interval when done
-            }
-        }, 2000);  // 2 seconds interval
-    });
+		// Use the session's access token in headers for authorization
+		const headers = {
+			'Authorization': `Bearer ${session.access_token}`
+		};
+
+		const { data: fileData, error } = await supabaseClient.storage.from('fabric')
+			.download(page.content, { headers });  // Provide headers as options
+
+		if (error) {
+			console.error('Error downloading the file:', error);
+			return;
+		}
+
+		// Convert blob data to JSON string
+		const blobToText = (blob) => {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onloadend = () => resolve(reader.result);
+				reader.onerror = reject;
+				reader.readAsText(blob);
+			});
+		};
+
+		try {
+			const fileText = await blobToText(fileData);
+			const fileJson = JSON.parse(fileText);
+
+
+			// Log the parsed data for confirmation
 
 
 
-function initializeCanvas(page, index) {
-    let canvases;
-    canvasElements.subscribe(value => {
-        canvases = value;
-    });
+
+			// Load the parsed data into the canvas
+			canvas.loadFromJSON(fileJson, () => {
+				resizeObjectsToCanvas(canvas, page.iwidth, 300);
+				canvas.renderAll();
+			}, (o, object, error) => {
+			});
 
 
-    if (canvases[index]) {
-        let canvas = new fabric.Canvas(canvases[index], {
+
+		} catch (parseError) {
+			console.error('Error parsing the blob data:', parseError);
+		}
+	}
+
+
+
+
+
+	onMount(() => {
+    for (let i=0; i<$allPages.length; i++){
+        let page = $allPages[i];
+
+        let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
             width: 300,
             height: 200,
-
+            renderOnAddRemove: false
         });
 
-		let rect = new fabric.Rect({top:0,left:0,width:20,height:20,fill:'black'})
+        if (page.content){
+            loadCanvas(page, canvas);
 
-		canvas.add(rect)
-
-		canvas.renderAll()
-
-
-        canvas.setBackgroundColor(page.color, () => {canvas.renderAll(); canvas.calcOffset()});
-
-
-
-
-
-        if (page.content) {
-
-			canvas.add(new fabric.Rect({x:0,y:0,width:20,height:20,fill:'black'}))
-
-            canvas.loadFromJSON(JSON.parse(page.content), () => {
-				//canvas.setBackgroundColor('black')
-				canvas.renderAll();
-            	canvas.calcOffset();
-
-                try {
-                    //resize(canvas);
-                    canvas.renderAll();
-                    canvas.calcOffset();
-                } catch (error) {
-                    console.error('Error rendering canvas:', error);
-                }
-            });
         }
     }
-}
+});
 
-
-
-function resize(canvas) {
-    const newWidth = window.innerWidth < 800 ? window.innerWidth : 250;
-    const scaleX = newWidth / initialCanvasWidth;
-    canvas.forEachObject((object) => {
-        object.left *= scaleX;
-        object.scaleX *= scaleX;
-        object.top *= scaleX;
-        object.scaleY *= scaleX;
-        object.setCoords();
-    });
-
-    canvas.setWidth(newWidth);
-    canvas.setHeight(initialCanvasHeight * scaleX);
-    canvas.renderAll();
-    canvas.calcOffset();
-}
-
-
-function handleCanvasCreation(node) {
-    addCanvas(node);
-    return {
-        destroy() {
-            // Cleanup if necessary
-        }
-    };
-}
 
 
 </script>
@@ -169,15 +151,18 @@ function handleCanvasCreation(node) {
 
 {:then}
 
-	<div id = 'pages'>
+	<div id = 'pages' in:fly={{ y: 50, duration: 300}} out:fly={{ x: 200, duration: 300 }}>
 
 		{#each $allPages as page, i}
+
+			{#if page.content}
 			<a href='/p/{page.id}'>
-				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 100*i }} out:fly={{ x: 200, duration: 300 }}>
-					<canvas use:handleCanvasCreation id='canvas-{page.id}' class='canvas'></canvas>
+				<div class='page' id='{page.id}' >
+					<canvas id='canvas-{page.id}' class='canvas'></canvas>
 					<h1> {page.title} </h1>
 				</div>
 			</a>
+			{/if}
 		{/each}
 
 
@@ -209,10 +194,9 @@ function handleCanvasCreation(node) {
 		//border: 1px solid rgba(black, 0.1);
 		width: 350px;
 		height: 250px;
-		background: white;
 		border-radius: 5px;
 
-		box-shadow: 0px 0px 50px rgba(black, 0.04);
+		// box-shadow: 0px 0px 50px rgba(black, 0.04);
 	}
 
 
@@ -224,17 +208,31 @@ function handleCanvasCreation(node) {
 
 		.page{
 
+			background: white;
+			padding: 5px;
+			border-radius: 5px;
+			box-shadow: 0px 0px 50px rgba(black, 0.08);
+			padding-bottom: 10px;
+			transition: 0.2s ease;
+			cursor: pointer;
 
 
 			canvas{
 				border-radius: 5px;
+				cursor: pointer;
 			}
 
 			h1{
-				margin-top: 10px;
+				margin-top: 8px;
+				margin-left: 5px;
 				font-size: 13px;
-				font-weight: 400;
-				letter-spacing: -0.3px;
+				font-weight: 500;
+				letter-spacing: -0.5px;
+			}
+
+			&:hover{
+
+				transform: translateY(-5px);
 			}
 		}
 	}
