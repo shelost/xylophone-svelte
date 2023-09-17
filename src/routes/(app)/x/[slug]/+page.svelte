@@ -46,28 +46,27 @@
 
 
 
+
+
   <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
 
 
-      <div id = 'canvas-container'>
+    <div id = 'canvas-container'>
 
-        <div id="loader"></div>
+      <div id="loader"></div>
 
-        <canvas id = 'canvas'></canvas>
+      <canvas id = 'canvas'></canvas>
 
-
-
-      </div>
+    </div>
 
 
 
-      <div id="handle"></div>
-  </div>
+    <div id="handle"></div>
+</div>
 
-  <!--
 
-  <Panel bind:activeObject />
--->
+
+
 
 </div>
 
@@ -77,6 +76,7 @@
 <svelte:head>
 	<title> Arachne | Build Your Perfect Web </title>
 	<meta name="description" content="Arachne is a different kind of dev." />
+  <link rel = 'icon' href = '{icon}'>
 </svelte:head>
 
 
@@ -125,11 +125,11 @@
 }
 
 input:checked + .slider {
-  background-color: #0074ff;
+  background-color: #ff004d;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #0074ff;
+  box-shadow: 0 0 1px #ff004d;
 }
 
 input:checked + .slider:before {
@@ -159,16 +159,21 @@ input:checked + .slider:before {
   }
 
   #app{
-      width: 100vw;
+      width: calc(100vw - 240px);
       margin-top: 0px;
       height: calc(100vh);
 
 
-      padding-left: 240px;
+
+      margin-left: 240px;
 
       //padding-left: 240px;
 
       overflow: visible !important;
+
+      display: flex;
+
+      justify-content: center;
 
 
 
@@ -205,7 +210,7 @@ input:checked + .slider:before {
     //height: fit-content;
     display: flex;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: flex-start;
 
 
     overflow-y: scroll;
@@ -365,10 +370,10 @@ input:checked + .slider:before {
   }
 
   #container {
-      flex-grow: 1;
+
       width: calc(100vw - 255px);
       height: calc(100vh - 55px);
-      margin-top: 0px;
+      margin-top: 50px;
 
       border: 2px solid white;
       box-shadow: 0px 30px 100px rgba(black, 0.1);
@@ -382,10 +387,8 @@ input:checked + .slider:before {
 
 
 
-
-
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       overflow-x: visible;
       overflow-y: scroll;
 
@@ -407,11 +410,13 @@ padding-right: 20px;
 height: 45px;
 border-bottom: 1px solid rgba(black, 0.02);
 //box-shadow: 0px 20px 60px rgba(black, 0.05);
-width: 100%;
+width: calc(100vw - 240px);
 color: black;
 
 z-index: 3;
 
+
+position: fixed;
 
 
 //border-bottom: 1px solid rgba(black, 0.1);
@@ -519,6 +524,7 @@ input:-webkit-autofill:active  {
   }
 
 
+  /*
   @media screen and (max-width: 800px){
 
     #app{
@@ -538,6 +544,7 @@ input:-webkit-autofill:active  {
     }
 
   }
+  */
 
 
 </style>
@@ -619,7 +626,7 @@ onMount(()=> {
   }
 
 
-  const panelWidth = 250
+  const panelWidth = 260
 
   const PANEL = Id('panel')
 
@@ -843,7 +850,6 @@ window.applyStyles = function(prop, value) {
 
         activeObject.dirty = true;
         activeObject.textBackgroundColor = 'rgba(0,0,0,0)'
-        console.log(activeObject.fill)
         canvas.requestRenderAll();
     }
   });
@@ -950,8 +956,6 @@ canvas.on('object:scaling', function(event) {
         Id('range-height').value =Math.round(obj.width * obj.scaleX)
     }
 
-    console.log('start')
-
     canvas.renderAll();
     dynamicallyBindListeners();
     updateUIFromCanvasObject(event.target);
@@ -980,7 +984,9 @@ canvas.on('object:modified', function(event) {
     updateUIFromCanvasObject(event.target);
     saveCanvasToSupabase()
 
+
 });
+
 
 
 
@@ -1057,6 +1063,25 @@ const loadCanvasFromSupabase = async () => {
         canvas.loadFromJSON(fileJson, () => {
             //canvas.setBackgroundColor(data.color);
             Id('loader').style.display = 'none';
+
+            calculateGrid()
+            drawGrid()
+
+            let maxHeight = initialCanvasHeight;
+
+              canvas.getObjects().forEach((object) => {
+
+                  object.originalTop = object.top
+                  object.setCoords();
+
+                  if (object.top + object.height > maxHeight) {
+                      maxHeight = object.top + object.height;
+                  }
+              });
+
+              canvas.setHeight(maxHeight + 50);
+
+
             canvas.renderAll();
         });
 
@@ -1072,38 +1097,6 @@ const loadCanvasFromSupabase = async () => {
 
 
 
-
-let isResizing = false;
-let lastX;
-
-
-document.getElementById("handle").addEventListener("mousedown", function(event) {
-    isResizing = true;
-    lastX = event.clientX;
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", () => {
-        isResizing = false;
-        document.removeEventListener("mousemove", handleMouseMove);
-    });
-});
-
-
-function handleMouseMove(event) {
-
-    let deltaX = event.clientX - lastX;
-    let container = document.getElementById("container");
-    const previousWidth = container.offsetWidth;
-    let width = previousWidth + deltaX
-    if (width > 300 && width < window.innerWidth - 250){
-      container.style.width = `${previousWidth + deltaX}px`;
-
-    if (container.offsetWidth !== previousWidth) {
-        resize(); // Call your resize function
-    }
-
-    lastX = event.clientX;
-    }
-}
 
 
 
@@ -1145,7 +1138,7 @@ function applyParallaxEffect() {
 
 
 // Listen for the scroll event
-document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
+//document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
 
 
 
@@ -1259,11 +1252,9 @@ canvas.on('mouse:down', (o) => {
               charSpacing: -20,
               fontSize: 16,
               lineHeight: 1,
-              fontWeight: '300',
-
+              fontWeight: 300,
               originX: 'left',
               originY: 'top',
-              width: 100,
               editable: true,
               link: 'https://capsule.pw',
               depth: 2,
@@ -1351,7 +1342,7 @@ canvas.on('mouse:down', (o) => {
 
         case 'draw':
             canvas.isDrawingMode = true; // Enable free drawing
-            canvas.freeDrawingBrush.width = 5; // Set brush width
+            canvas.freeDrawingBrush.width = 1; // Set brush width
             canvas.freeDrawingBrush.color = "#000"; // Set brush color
             break;
 
@@ -1372,7 +1363,7 @@ canvas.on('mouse:down', (o) => {
     }
 
 
-    MODE = null
+    // MODE = null
 
 
     canvas.renderAll()
@@ -1448,7 +1439,7 @@ canvas.on('mouse:up', function(o){
     canvas.getElement().style.height = `${initialCanvasHeight * scaleX}px`;
 
     // Adjust the width of the canvas container
-    document.getElementById('canvas-container').style.width = `${initialCanvasWidth}px`;
+    document.getElementById('container').style.width = `${initialCanvasWidth}px`;
 
     // Update initial dimensions
     initialCanvasHeight = canvas.getHeight();
@@ -1456,62 +1447,127 @@ canvas.on('mouse:up', function(o){
 
 
 
-function resize(initial = 1) {
 
-  //handleMouseMove()
-    let newWidth = window.innerWidth - panelWidth;
 
-    if (window.innerWidth < 800){
-        newWidth = window.innerWidth;
+let isResizing = false;
+let lastX;
+
+
+document.getElementById("handle").addEventListener("mousedown", function(event) {
+    isResizing = true;
+    lastX = event.clientX;
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", () => {
+        isResizing = false;
+        document.removeEventListener("mousemove", handleMouseMove);
+    });
+});
+
+
+function handleMouseMove(event) {
+    let deltaX = event.clientX - lastX;
+    let container = document.getElementById("container");
+    const previousWidth = container.offsetWidth;
+    let newWidth = previousWidth + deltaX;
+
+    if (newWidth > 300 && newWidth < window.innerWidth - 260) {
+        container.style.width = `${newWidth}px`;
+        if (container.offsetWidth !== previousWidth) {
+            adjustCanvasSize(container.offsetWidth);
+        }
+        lastX = event.clientX;
     }
+}
 
 
-    let scaleX = newWidth / initialCanvasWidth;
-    if (initial === 0){
-        scaleX = newWidth / data.iwidth;
-    }
 
-    // Calculate center shift difference to maintain the centering
+
+function adjustCanvasSize(newContainerWidth) {
+    const newWidth = newContainerWidth;
     const centerShiftX = (canvas.getWidth() - newWidth) / 2;
 
+    let maxHeight = initialCanvasHeight;
 
-    let maxHeight = initialCanvasHeight
-    // Adjust object positions without scaling them
     canvas.getObjects().forEach((object) => {
-        object.left -= centerShiftX;
+        object.left = object.left - centerShiftX;
         object.setCoords();
 
-
-        if (object.top + object.height > maxHeight){
-          maxHeight = object.top + object.height
+        if (object.top + object.height > maxHeight) {
+            maxHeight = object.top + object.height;
         }
     });
 
-    // Clip objects to canvas boundaries (if necessary)
     canvas.clipTo = function(ctx) {
         ctx.rect(0, 0, newWidth, canvas.getHeight());
         ctx.clip();
     };
 
-    // Update canvas dimensions
     canvas.setWidth(newWidth);
-    canvas.setHeight(maxHeight + 100);
+    canvas.setHeight(maxHeight + 50);
 
-    // Adjust the width of the canvas container
+    // Adjust the widths of both the container and the canvas-container to the new width.
+    const container = document.getElementById('container');
     const canvasContainer = document.getElementById('canvas-container');
+
+    if (container) {
+        container.style.width = `${newWidth}px`;
+    }
+
     if (canvasContainer) {
         canvasContainer.style.width = `${newWidth}px`;
     }
 
-    // Render canvas and calculate offset
+    canvas.renderAll();
+    canvas.calcOffset();
+}
+
+function resize(initial = 1) {
+    let newWidth = window.innerWidth - panelWidth;
+
+    if (window.innerWidth < 800) {
+        newWidth = window.innerWidth;
+    }
+
+    const centerShiftX = (canvas.getWidth() - newWidth) / 2;
+
+    let maxHeight = initialCanvasHeight;
+
+    canvas.getObjects().forEach((object) => {
+        object.left -= centerShiftX;
+        object.setCoords();
+
+        if (object.top + object.height > maxHeight) {
+            maxHeight = object.top + object.height;
+        }
+    });
+
+    canvas.clipTo = function(ctx) {
+        ctx.rect(0, 0, newWidth, canvas.getHeight());
+        ctx.clip();
+    };
+
+    canvas.setWidth(newWidth);
+    canvas.setHeight(maxHeight + 50);
+
+    // Adjust the widths of both the container and the canvas-container to the new width.
+    const container = document.getElementById('container');
+    const canvasContainer = document.getElementById('canvas-container');
+
+    if (container) {
+        container.style.width = `${newWidth}px`;
+    }
+
+    if (canvasContainer) {
+        canvasContainer.style.width = `${newWidth}px`;
+    }
+
     canvas.renderAll();
     canvas.calcOffset();
 }
 
 
-
   window.addEventListener('resize', resize)
-    window.addEventListener('load', resize)
+  window.addEventListener('load', resize)
 
 
 
@@ -1520,48 +1576,7 @@ function resize(initial = 1) {
     },300)
 
 
-    setTimeout(() => {
-      resize(0)
-    },600)
 
-    setTimeout(() => {
-      resize()
-    },3000)
-
-
-
-
-
-  /*
-  let isResizing = false;
-let lastX;
-
-// 1. Start resizing on mousedown
-document.getElementById("resize-handle").addEventListener('mousedown', function (e) {
-    isResizing = true;
-    lastX = e.clientX;
-});
-
-// 2. End resizing on mouseup anywhere on the page
-window.addEventListener('mouseup', function () {
-    isResizing = false;
-});
-
-// 3. Handle the resizing on mousemove
-window.addEventListener('mousemove', function (e) {
-    if (!isResizing) return;
-
-    const deltaX = e.clientX - lastX;
-    lastX = e.clientX;
-
-    // Calculate the new width based on the mouse movement
-    const newWidth = initialCanvasWidth + deltaX;
-
-    // Set the new width to canvas and resize it
-    initialCanvasWidth = newWidth;
-    resize();
-});
-*/
 
 
 let initialX, initialY;
@@ -1614,8 +1629,6 @@ function handleSelection(event) {
 
     let activeObject = activeObjects[0];
   let options = {};
-
-  console.log(activeObject.type)
 
   switch (activeObject.type) {
     case 'textbox':
@@ -1707,7 +1720,6 @@ mb
         break;
 
       case 'checkbox':
-        console.log(activeObject[option.id])
         const isChecked = activeObject[option.id] ? 'checked' : '';
         opt = `
         <div id="option-${option.id}" class="option option-${option.type} option-${option.id}">
@@ -1749,8 +1761,6 @@ mb
 
   `
 
-
-  console.log(PANEL)
   PANEL.innerHTML = div;
 
 
@@ -2128,20 +2138,26 @@ function addButton(x, y) {
     }
   }
 
-  function drawGrid(){
+  function drawGrid() {
     // Draw the grid on the canvas
-
     removeGrid();
 
-     // Draw new dot matrix
-     xArr.forEach(x => {
+    const zoom = canvas.getZoom();
+    const pan = canvas.viewportTransform;
+
+    // Get pan offsets
+    const panOffsetX = pan[4];
+    const panOffsetY = pan[5];
+
+    xArr.forEach(x => {
         yArr.forEach(y => {
             const circle = new fabric.Circle({
                 radius: 2,  // You can adjust the size of the dots here
-                fill: '#f6f6f6',
-                left: x,
-                top: y,
+                fill: '#000',
+                left: (x + panOffsetX) / zoom,  // Adjust position considering pan and zoom
+                top: (y + panOffsetY) / zoom,
                 selectable: false,
+                opacity: 0.1,
                 excludeFromExport: true
             });
             canvas.add(circle);
@@ -2149,28 +2165,7 @@ function addButton(x, y) {
             gridLines.push(circle); // Populate gridLines array with dots
         });
     });
-
-
-    /*
-    // Snapping function when object is moving
-    canvas.on('object:moving', function(event) {
-    const obj = event.target;
-    const closestX = findClosest(obj.left, xArr);
-    const closestY = findClosest(obj.top, yArr);
-    obj.set({
-        left: closestX,
-        top: closestY
-    }).setCoords();  // Update object's coordinates
-    });
-
-    // Find the closest value in an array to a given number
-    function findClosest(num, arr) {
-        return arr.reduce((prev, curr) =>
-            Math.abs(curr - num) < Math.abs(prev - num) ? curr : prev
-        );
-    }
-    */
-  }
+}
 
 
 ////////////////////////////// TEMPLATES //////////////////////////////
@@ -2286,9 +2281,10 @@ function saveCanvasToSupabase() {
 
     // Step 2: Save the scroll position
     const scrollTop = Id('container').scrollTop
+    const backupGridLines = [...gridLines];
 
     // Calculate original dimensions
-    const originalCanvasWidth = data.iwidth;
+    const originalCanvasWidth = window.innerWidth - panelWidth
     const aspectRatio = initialCanvasHeight / initialCanvasWidth;
     const originalCanvasHeight = originalCanvasWidth * aspectRatio;
 
@@ -2304,7 +2300,7 @@ function saveCanvasToSupabase() {
     canvas.clipTo = null;
 
     // Temporarily reset the canvas to its full/original size
-    //canvas.setWidth(originalCanvasWidth);
+    canvas.setWidth(originalCanvasWidth);
     //canvas.setHeight(originalCanvasHeight);
 
     // Upload the full canvas version to the database
@@ -2333,6 +2329,10 @@ function saveCanvasToSupabase() {
     canvas.renderAll();
     canvas.calcOffset();
 
+    gridLines = backupGridLines;
+    gridLines.forEach(circle => canvas.add(circle));
+
+
     // Step 4: Restore the scroll position
 
     console.log(Id('container').scrollTop, scrollTop)
@@ -2341,11 +2341,14 @@ function saveCanvasToSupabase() {
       top: scrollTop,
     })
 
-    console.log(Id('container').scrollTop, scrollTop)
 
 
     // Step 5: Remove the event listener to allow scrolling
     window.removeEventListener('scroll', preventScroll);
+
+
+    calculateGrid()
+    drawGrid()
 
 }
 

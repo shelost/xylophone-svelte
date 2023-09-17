@@ -254,14 +254,17 @@ document.addEventListener('keydown', function(e) {
     });
 
 
-    let panelWidth = 100
+    let panelWidth = 260
     let newWidth = window.innerWidth - panelWidth;
     if (window.innerWidth < 800){
       newWidth = window.innerWidth
     }
-    let scaleX = newWidth / data.iwidth * 0.9;
+
+    canvas.setWidth(newWidth)
+    let scaleX = newWidth / data.iwidth
 
     resizeCanvas()
+
 
 
 
@@ -318,6 +321,12 @@ const loadCanvasFromSupabase = async () => {
             }
 
 
+            document.getElementById('app').style.background = data.color
+
+
+
+            console.log(data.color)
+            console.log( document.getElementById('app').style.background)
 
             let maxHeight = 0;
 
@@ -498,7 +507,7 @@ document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
 
 
 window.addEventListener('resize', debounce(() => {
-        panelWidth = 240
+        panelWidth = 260
         newWidth = window.innerWidth - panelWidth;
 
         if (window.innerWidth < 800){
