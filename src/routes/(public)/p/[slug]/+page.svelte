@@ -515,8 +515,6 @@ window.addEventListener('resize', debounce(() => {
         }
         scaleX = newWidth / canvas.getWidth()
 
-        console.log(scaleX)
-
         // Scale each object
         canvas.forEachObject((object) => {
             object.left *= scaleX;

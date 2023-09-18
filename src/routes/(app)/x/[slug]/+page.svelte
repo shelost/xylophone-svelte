@@ -44,10 +44,6 @@
 
 
 
-
-
-
-
   <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
 
 
@@ -162,25 +158,10 @@ input:checked + .slider:before {
       width: calc(100vw - 240px);
       margin-top: 0px;
       height: calc(100vh);
-
-
-
       margin-left: 240px;
-
-      //padding-left: 240px;
-
       overflow: visible !important;
-
       display: flex;
-
       justify-content: center;
-
-
-
-      //border: 1px solid rgba(black, 0.1);
-
-      //box-shadow: 0px 10px 50px rgba(black, 0.1);
-
   }
 
   #url{
@@ -211,27 +192,20 @@ input:checked + .slider:before {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-
-
     overflow-y: scroll;
     width: calc(100vw - 260px) !important;
     height: 100vh;
-
     background: none;
-
-    //border: 1px solid rgba(black, 0.05);
 
     #canvas{
       flex-shrink: 0;
       width: calc(100vw - 255px);
       margin: 0;
-  }
-
-
+    }
 
     #loader {
       position: absolute;
-      left: calc(50% + 70px);
+      left: calc(50% - 20px);
       top: calc(50% - 30px);
       z-index: 1;
       width: 50px;
@@ -323,41 +297,7 @@ input:checked + .slider:before {
     }
   }
 
-
-  /*
-  #controls{
-
-    position: fixed;
-
-    z-index: 3;
-    margin-top: 0px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 45px;
-      width: calc(100vw - 240px);
-      background: black;
-
-      #buttons{
-          display: flex;
-          align-items: center;
-          gap: 0px;
-
-
-          button{
-            width: 20px;
-            height: 20px;
-            filter: invert(100%);
-          }
-      }
-
-  }
-  */
-
-
-
-
-  :global(.option){
+  #global(.option){
       font-size: 12px;
       display: flex;
       flex-direction: column;
@@ -372,30 +312,22 @@ input:checked + .slider:before {
   #container {
 
       width: calc(100vw - 255px);
-      height: calc(100vh - 55px);
+      height: calc(100vh - 60px);
       margin-top: 50px;
 
       border: 2px solid white;
-      box-shadow: 0px 30px 100px rgba(black, 0.1);
-
-
-
+      box-shadow: 20px 50px 150px rgba(black, 0.15);
 
     resize: horizontal;  // allows horizontal resizing
     overflow: auto;      // to account for the scrollbar that may appear
-    position: relative;  //
-
-
+    position: relative;
 
       display: flex;
       justify-content: center;
       overflow-x: visible;
       overflow-y: scroll;
 
-      border-radius: 10px;
-
-
-
+      border-radius: 5px;
   }
 
 
@@ -523,32 +455,7 @@ input:-webkit-autofill:active  {
     border: none;
   }
 
-
-  /*
-  @media screen and (max-width: 800px){
-
-    #app{
-      width: 100vw !important;
-    }
-
-    #canvas-container{
-      width: 100vw !important;
-    }
-
-    #container{
-      width: 100vw !important;
-    }
-
-    #canvas{
-      width: 100vw !important;
-    }
-
-  }
-  */
-
-
 </style>
-
 
 
 <script>
@@ -584,8 +491,6 @@ import { page } from '$app/stores';
 import Panel from '$lib/components/Panel.svelte';
 
 //export { textTemplate, imageTemplate, videoTemplate };
-
-
 import IconW from '$lib/img/icon-w.svg'
 import IconH from '$lib/img/icon-h.svg'
 import IconX from '$lib/img/icon-x.svg'
@@ -599,7 +504,6 @@ import IconP from '$lib/img/icon-p.svg'
 import IconS from '$lib/img/icon-s.svg'
 import IconT from '$lib/img/icon-t.svg'
 import IconB from '$lib/img/icon-b.svg'
-
 
 export let data
 
@@ -687,7 +591,6 @@ onMount(()=> {
       canvas.add(cloned);
     });
   }
-
 
 
 
@@ -1067,9 +970,20 @@ const loadCanvasFromSupabase = async () => {
             calculateGrid()
             drawGrid()
 
+
+            const canvasCenterX = canvas.width / 2;
+    const canvasCenterY = canvas.height / 2;
+
+
+
             let maxHeight = initialCanvasHeight;
 
               canvas.getObjects().forEach((object) => {
+
+                object.set({
+            left: object.left + canvasCenterX - object.width * object.scaleX / 2,
+            top: object.top + canvasCenterY - object.height * object.scaleY / 2
+        }).setCoords();
 
                   object.originalTop = object.top
                   object.setCoords();
@@ -1465,7 +1379,7 @@ document.getElementById("handle").addEventListener("mousedown", function(event) 
 
 
 function handleMouseMove(event) {
-    let deltaX = event.clientX - lastX;
+    let deltaX = (event.clientX - lastX)*2
     let container = document.getElementById("container");
     const previousWidth = container.offsetWidth;
     let newWidth = previousWidth + deltaX;
@@ -2274,19 +2188,21 @@ function preventScroll(event) {
     //event.preventDefault();
 }
 
-
-
 function saveCanvasToSupabase() {
-
+    // Current center of the canvas
+    const canvasCenterX = canvas.width / 2;
+    const canvasCenterY = canvas.height / 2;
 
     // Step 2: Save the scroll position
     const scrollTop = Id('container').scrollTop
     const backupGridLines = [...gridLines];
 
     // Calculate original dimensions
-    const originalCanvasWidth = window.innerWidth - panelWidth
+    const originalCanvasWidth = window.innerWidth - panelWidth;
+    const originalCanvasCenterX = originalCanvasWidth / 2;
     const aspectRatio = initialCanvasHeight / initialCanvasWidth;
     const originalCanvasHeight = originalCanvasWidth * aspectRatio;
+    const originalCanvasCenterY = originalCanvasHeight / 2;
 
     // Backup current size and position of all objects
     const backupObjects = canvas.getObjects().map(object => ({
@@ -2296,19 +2212,27 @@ function saveCanvasToSupabase() {
         scaleY: object.scaleY
     }));
 
+    // Adjust object positions relative to the center of the original canvas
+    canvas.getObjects().forEach(object => {
+        object.set({
+            left: (object.left - canvasCenterX) + originalCanvasCenterX,
+            top: (object.top - canvasCenterY) + originalCanvasCenterY
+        }).setCoords();
+    });
+
     // Remove clipping (if any)
     canvas.clipTo = null;
 
     // Temporarily reset the canvas to its full/original size
     canvas.setWidth(originalCanvasWidth);
-    //canvas.setHeight(originalCanvasHeight);
+    canvas.setHeight(originalCanvasHeight);
 
     // Upload the full canvas version to the database
     uploadCanvas();
 
     // Restore the canvas to the backed-up size and reposition all objects
     canvas.setWidth(initialCanvasWidth);
-    //canvas.setHeight(initialCanvasHeight);
+    canvas.setHeight(initialCanvasHeight);
     canvas.getObjects().forEach((object, index) => {
         object.set({
             left: backupObjects[index].left,
@@ -2332,25 +2256,15 @@ function saveCanvasToSupabase() {
     gridLines = backupGridLines;
     gridLines.forEach(circle => canvas.add(circle));
 
-
     // Step 4: Restore the scroll position
-
-    console.log(Id('container').scrollTop, scrollTop)
-
     Id('container').scrollTo({
       top: scrollTop,
-    })
-
-
+    });
 
     // Step 5: Remove the event listener to allow scrolling
     window.removeEventListener('scroll', preventScroll);
-
-
-    calculateGrid()
-    drawGrid()
-
 }
+
 
 async function uploadCanvas() {
     // Retrieve the session token

@@ -119,8 +119,8 @@
         let page = $allPages[i];
 
         let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
-            width: 300,
-            height: 200,
+            width: 350,
+            height: 250,
             renderOnAddRemove: false
         });
 
@@ -199,6 +199,11 @@
 		// box-shadow: 0px 0px 50px rgba(black, 0.04);
 	}
 
+	#title{
+		font-size: 24px;
+		font-weight: 700;
+	}
+
 
 	#pages{
 		display: flex;
@@ -225,9 +230,9 @@
 			h1{
 				margin-top: 8px;
 				margin-left: 5px;
-				font-size: 13px;
-				font-weight: 500;
-				letter-spacing: -0.5px;
+				font-size: 14px;
+				font-weight: 600;
+				letter-spacing: -0.3px;
 			}
 
 			&:hover{

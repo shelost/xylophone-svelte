@@ -3,6 +3,8 @@
     import { supabaseClient } from '$lib/db';
     import { onMount } from 'svelte';
 
+    import V from '$lib/img/verified.svg'
+
     export let data: PageData;
     let { profile } = data;
     let editMode = false;
@@ -161,7 +163,11 @@ async function updateProfile() {
         <div id = 'mast'>
 
             <img class="image-preview" src={profile.pfp} alt="Profile Picture"/>
-            <h2>{profile.full_name}</h2>
+            <div id = 'name'>
+                <h2>{profile.full_name}</h2>
+                <img src = '{V}' alt = 'verified'>
+            </div>
+
             <p>@{profile.username}</p>
             <button on:click={() => editMode = true}>Edit Profile</button>
         </div>
@@ -205,6 +211,18 @@ form {
 
 .field {
     margin: 10px 0;
+}
+
+
+#name{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    img{
+        height: 16px;
+        margin-top: 11px;
+    }
 }
 
 input {

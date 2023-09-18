@@ -64,14 +64,14 @@
 
 	async function fetchUser(){
 
-const {data: d, error} = await supabaseClient.from('users').select('*').eq('id', data.user.id)
+		const {data: d, error} = await supabaseClient.from('users').select('*').eq('id', data.user.id)
 
-if (!error){
-	user.set(d)
-}else{
-	console.log('Error fetching user:' + error)
-}
-}
+		if (!error){
+			user.set(d)
+		}else{
+			console.log('Error fetching user:' + error)
+		}
+	}
 
 
 
@@ -139,13 +139,13 @@ if (!error){
 
 
 	::-webkit-scrollbar{
-      width: 0;
+      width: 5px;
       height: 0;
       background: white;
  	}
 
 	::-webkit-scrollbar-thumb{
-		background: rgba(black, 0.4);
+		background: rgba(black, 1);
 	}
 
 	#settings{

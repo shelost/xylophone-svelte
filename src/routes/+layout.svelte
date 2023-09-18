@@ -45,3 +45,16 @@
 		<slot />
 
 </div>
+
+
+<style>
+	::-webkit-scrollbar{
+      width: 5px;
+      height: 0;
+      background: white;
+ 	}
+
+	::-webkit-scrollbar-thumb{
+		background: rgba(black, 1);
+	}
+</style>
