@@ -1,6 +1,4 @@
 import { supabaseClient } from "$lib/db";
-import { pages } from "$lib/utils/store.js"
-
 export async function load({ params }) {
 
 

@@ -433,6 +433,8 @@ position: fixed;
   letter-spacing: -0.3px;
   padding: 0 5px;
   height: 24px;
+  flex: 1;
+  border-radius: 5px;
 }
 
 #buttons{
@@ -582,7 +584,7 @@ import { object_without_properties } from 'svelte/internal';
 
 //import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
 
-import { pages, isPanelVisible, assets } from '$lib/utils/store.js'; // Adjust the path as necessary
+import { pages, isPanelVisible, assets } from '../../../../store'; // Adjust the path as necessary
 
 
 import { page } from '$app/stores';
@@ -1179,7 +1181,7 @@ function applyParallaxEffect() {
 
 
 // Listen for the scroll event
-//document.getElementById('container').addEventListener('scroll', applyParallaxEffect);
+document.getElementById('canvas-container').addEventListener('scroll', applyParallaxEffect);
 
 
 
@@ -1576,8 +1578,6 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
     const maxObjectWidth = newWidth * 0.95;
 
-    console.log('-')
-    console.log(canvas.width)
 
     canvas.getObjects().forEach((object) => {
         const isTextbox = object.type === 'textbox';
