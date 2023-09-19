@@ -582,7 +582,7 @@ import { object_without_properties } from 'svelte/internal';
 
 //import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
 
-import { pages, isPanelVisible, assets } from '$lib/utils/store.js'; // Adjust the path as necessary
+import { pages, isPanelVisible, assets } from '../../../../lib/utils/store.js'; // Adjust the path as necessary
 
 
 import { page } from '$app/stores';
