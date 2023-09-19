@@ -13,10 +13,10 @@
 	import Arachne from '$lib/img/arachne.svg'
 
 
-	import IconHome from '$lib/img/iconx_home.svg'
-	import IconCreate from '$lib/img/iconx_create.svg'
-	import IconFeed from '$lib/img/iconx_settings.svg'
-	import IconShop from '$lib/img/icon_shop.svg'
+	import IconHome from '$lib/img/iconx.svg'
+	import IconProfile from '$lib/img/iconx-3.svg'
+	import IconData from '$lib/img/iconx-2.svg'
+	import IconAssets from '$lib/img/iconx-1.svg'
 	import { page } from '$app/stores';
 	import { fly } from 'svelte/transition';
 	import Sidebar from '$lib/components/Sidebar.svelte'
@@ -146,7 +146,7 @@
 
 		<a href = '/profile' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/profile'}>
-				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				<div class = 'icon' style = 'background-image: url({IconProfile})'>
 				</div>
 				<h2> Profile </h2>
 			</div>
@@ -154,7 +154,7 @@
 
 		<a href = '/assets' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/assets'}>
-				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				<div class = 'icon' style = 'background-image: url({IconAssets})'>
 				</div>
 				<h2> Assets </h2>
 			</div>
@@ -162,7 +162,7 @@
 
 		<a href = '/data' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/data'}>
-				<div class = 'icon' style = 'background-image: url({IconFeed})'>
+				<div class = 'icon' style = 'background-image: url({IconData})'>
 				</div>
 				<h2> Database </h2>
 			</div>
@@ -195,7 +195,7 @@
 					<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
 
 
-						<div class = 'color' style='background-color: {page.color}; width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.05)'></div>
+						<div class = 'color' style='background-color: {page.color}'></div>
 						<h2> {page.title} </h2>
 
 					</div>
@@ -247,15 +247,28 @@
 }
 
 
+.color{
+	width: 14px;
+	height: 14px;
+	border-radius: 10px;
+	border: 1px solid rgba(0,0,0,0.1);
+}
+
 .text-btn{
 		margin: 0 5px;
-		padding: 6px 12px;
-		border-radius: 3px;
+		padding: 7px 12px;
+
+
+		border-radius: 8px;
+
+
+
+
 		font-size: 13px;
 		letter-spacing: -0.3px;
 		font-weight: 500;
 		color: rgba(black, 0.4);
-		transition: 0.1s ease;
+		transition: 0.2s ease;
 		display: flex;
 		align-items: center;
 		width: 95%;
@@ -265,16 +278,19 @@
 			width: 18px;
 			height: 18px;
 			background-size: cover;
-			filter: invert(100%);
+			filter: invert(20%);
 		}
 
 		&.active{
-			background: rgba(black, 0.05);
+			background: white;
 			color: black;
+			box-shadow: -3px 5px 15px rgba(black, 0.05);
 		}
 
 		&:hover{
-			background: rgba(black, 0.05);
+			//background: rgba(black, 0.05);
+			background: white;
+			box-shadow: -3px 5px 15px rgba(black, 0.05);
 		}
 	}
 
@@ -303,17 +319,26 @@
 
 
 	#add{
-		width: calc(100% - 30px);
+		width: calc(100% - 24px);
 		margin: 15px;
 		box-shadow: none;
 		background: rgba(black, 0.05);
-		color: black;
-		font-size: 13px;
+		background: #ff004d;
+
+
+		border-radius: 8px;
+
+
+		color: white;
+
+
+		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
 
 		&:hover{
 			background: rgba(black, 0.1);
+			background: #ee0048;
 		}
 	}
 

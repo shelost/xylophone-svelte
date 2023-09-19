@@ -270,14 +270,18 @@ document.addEventListener('keydown', function(e) {
 
 ///
 
+
 const loadCanvasFromSupabase = async () => {
     if (!data.content) {
         return;
     }
 
     // Ensure that the user has an active session
-    const session = data.session
+    const session = data.session;
 
+    if (!session) {
+        return;
+    }
     // Use the session's access token in headers for authorization
     const headers = {
         'Authorization': `Bearer ${session.access_token}`
@@ -305,68 +309,38 @@ const loadCanvasFromSupabase = async () => {
         const fileText = await blobToText(fileData);
         const fileJson = JSON.parse(fileText);
 
-        // Log the parsed data for confirmation
-        console.log(fileJson);
-
         // Load the parsed data into the canvas
         canvas.loadFromJSON(fileJson, () => {
-            //canvas.setBackgroundColor(data.color);
-            //Id('loader').style.display = 'none';
+           // calculateGrid()
+           // drawGrid()
 
-            if (window.innerWidth < 800) {
-                canvas.setWidth(window.innerWidth);
+            const canvasCenterX = canvas.width / 2;
+            let maxHeight = initialCanvasHeight;
 
-            }else{
-                canvas.setWidth(window.innerWidth - panelWidth);
-            }
+            canvas.getObjects().forEach((object) => {
+                // Since we've stored objects' positions relative to the center of the canvas,
+                // we need to revert the positions when loading them back.
+                object.set({
+                    left: object.left + canvasCenterX
+                }).setCoords();
 
-
-            document.getElementById('app').style.background = data.color
-
-
-
-            console.log(data.color)
-            console.log( document.getElementById('app').style.background)
-
-            let maxHeight = 0;
-
-            canvas.forEachObject((object) => {
-            // Calculate the bottom edge position for each object.
-            const objBottomEdge = object.top + object.height * object.scaleY;
-
-            // Update maxHeight if this object is lower.
-            if (objBottomEdge > maxHeight) {
-                maxHeight = objBottomEdge;
-            }
-            });
-
-            // Add 30px to maxHeight and update canvas height.
-            canvas.setHeight(maxHeight + 100);
-
-            // Update canvas dimensions on the actual HTML element
-            canvas.calcOffset();
-
-
-            canvas.getObjects().forEach(object => {
                 object.originalTop = object.top;
+
+                if (object.top + object.height > maxHeight) {
+                    maxHeight = object.top + object.height;
+                }
             });
 
-
-
-
-            canvas.forEachObject((object) => {
-                object.left *= scaleX;
-                object.scaleX *= scaleX;
-                object.top *= scaleX;
-                object.scaleY *= scaleX;
-                object.setCoords();
-            });
+            canvas.setHeight(maxHeight + 50);
             canvas.renderAll();
+
         });
+
     } catch (parseError) {
         console.error('Error parsing the blob data:', parseError);
     }
 };
+
 
 
 loadCanvasFromSupabase()
@@ -505,6 +479,7 @@ document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
 
 //// PARALLAX ////
 
+/*
 
 window.addEventListener('resize', debounce(() => {
         panelWidth = 260
@@ -541,6 +516,38 @@ window.addEventListener('resize', debounce(() => {
     // Re-render the canvas
     canvas.renderAll();
 }))
+
+
+*/
+
+
+
+window.addEventListener('resize', unifiedResize)
+
+function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
+
+
+
+
+    // Adjust position relative to the canvas width change.
+    const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX)/2
+
+    object.left = newLeftPos
+    object.setCoords();
+
+
+
+    canvas.clipTo = function(ctx) {
+        ctx.rect(0, 0, newWidth, canvas.getHeight());
+        ctx.clip();
+    };
+
+    canvas.setWidth(newWidth);
+
+
+    canvas.renderAll();
+    canvas.calcOffset();
+}
 
 
 

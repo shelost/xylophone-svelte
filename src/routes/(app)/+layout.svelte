@@ -17,7 +17,7 @@
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 
-	import { pages, allPages, user, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+	import { pages, allPages, user, users, isPanelVisible, assets } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 	import Panel from '$lib/components/Panel.svelte';
 
@@ -74,6 +74,19 @@
 	}
 
 
+	async function fetchUsers(){
+
+const {data: d, error} = await supabaseClient.from('users').select('*')
+
+if (!error){
+	users.set(d)
+}else{
+	console.log('Error fetching user:' + error)
+}
+}
+
+
+
 
 	async function fetchAllPages(){
 
@@ -103,9 +116,45 @@
 		}
 	}
 
+
+async function loadImagesFromSupabase() {
+
+	assets.set([])
+	const path = `${data.user.id}/`; // Construct the path to your subfolder
+
+	const { data: files, error } = await supabaseClient.storage.from('images').list(path);
+
+	console.log(files)
+
+	if (error) {
+		console.error("Error fetching files:", error);
+		return;
+	}
+
+	// Iterate through the files and download each one
+	for (const file of files) {
+		const { data: fileData, error } = await supabaseClient.storage.from(`images/${data.user.id}`).download(file.name);
+
+		if (error) {
+			console.error("Error downloading the file:", error);
+			continue;
+		}
+
+		//console.log(fileData)
+
+		const url = URL.createObjectURL(fileData);
+		assets.update(urls => [...urls, {name: file.name, id: file.id, url: url}]);
+	}
+}
+
+
+
+
+	loadImagesFromSupabase()
 	fetchPages()
 	fetchAllPages()
 	fetchUser()
+	fetchUsers()
 
 </script>
 
@@ -138,15 +187,7 @@
 <style lang="scss">
 
 
-	::-webkit-scrollbar{
-      width: 5px;
-      height: 0;
-      background: white;
- 	}
 
-	::-webkit-scrollbar-thumb{
-		background: rgba(black, 1);
-	}
 
 	#settings{
 		z-index: 5 !important;

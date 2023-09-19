@@ -14,8 +14,7 @@
 	let books = []
 	let loading = true
 
-	import {canvasElements, allPages} from '$lib/utils/store.js'
-
+	import {canvasElements, allPages, users} from '$lib/utils/store.js'
 
 
 	function Class(id){
@@ -39,13 +38,14 @@
 			const top = obj.top || 0;
 
 
-			console.log(scaleX)
 
 
 			obj.scaleX *= scaleX
 			obj.scaleY *= scaleX
 			obj.left *= scaleX
 			obj.top *= scaleX
+
+			obj.left += (canvas.width/2)
 
 
 			obj.setCoords(); // Refresh object coordinates after updates
@@ -94,8 +94,6 @@
 			// Log the parsed data for confirmation
 
 
-
-
 			// Load the parsed data into the canvas
 			canvas.loadFromJSON(fileJson, () => {
 				resizeObjectsToCanvas(canvas, page.iwidth, 300);
@@ -112,24 +110,34 @@
 
 
 
+	let userInfo = {}
 
 
 	onMount(() => {
-    for (let i=0; i<$allPages.length; i++){
-        let page = $allPages[i];
 
-        let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
-            width: 350,
-            height: 250,
-            renderOnAddRemove: false
-        });
+		for (let i=0; i<$users.length; i++){
+			userInfo[$users[i].id] = $users[i]
+		}
 
-        if (page.content){
-            loadCanvas(page, canvas);
 
-        }
-    }
-});
+
+		for (let i=0; i<$allPages.length; i++){
+			let page = $allPages[i];
+
+			let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
+				width: 350,
+				height: 250,
+				renderOnAddRemove: false
+			});
+
+
+			page.user = userInfo[page.user_id]
+
+			if (page.content){
+				loadCanvas(page, canvas);
+			}
+		}
+	});
 
 
 
@@ -140,7 +148,7 @@
 <div id = 'app'>
 
 	<section>
-	<h1 id = 'title'> Home </h1>
+	<h1 id = 'title'> Gallery </h1>
 
 {#await $allPages}
 
@@ -160,6 +168,12 @@
 				<div class='page' id='{page.id}' >
 					<canvas id='canvas-{page.id}' class='canvas'></canvas>
 					<h1> {page.title} </h1>
+					{#if page.user}
+					<div class = 'user'>
+						<img src = {page.user.pfp} >
+						<p> {page.user.full_name} </p>
+					</div>
+					{/if}
 				</div>
 			</a>
 			{/if}
@@ -183,6 +197,7 @@
 	h1{
 		color: black;
 	}
+
 
 	#app{
 		margin-left: 240px;
@@ -222,17 +237,43 @@
 			cursor: pointer;
 
 
+			.user{
+				display: flex;
+				align-items: center;
+				padding: 6px 10px 6px 8px;
+				gap: 8px;
+				margin: 5px;
+				margin-top: 10px;
+				background: rgba(black, 0.05);
+				width: fit-content;
+				border-radius: 10px;
+
+
+				img{
+					height: 15px;
+					border-radius: 5px;
+					border: 1px solid rgba(black, 0.3);
+				}
+				p{
+					font-size: 12px;
+					font-weight: 500;
+					letter-spacing: -0.3px;
+					color: rgba(black, 0.8);
+				}
+			}
+
+
 			canvas{
 				border-radius: 5px;
 				cursor: pointer;
 			}
 
 			h1{
-				margin-top: 8px;
-				margin-left: 5px;
-				font-size: 14px;
+				margin-top: 10px;
+				margin-left: 7px;
+				font-size: 16px;
 				font-weight: 600;
-				letter-spacing: -0.3px;
+				letter-spacing: -0.2px;
 			}
 
 			&:hover{

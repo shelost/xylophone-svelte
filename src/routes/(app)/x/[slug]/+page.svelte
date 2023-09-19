@@ -5,6 +5,9 @@
     <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
     <div id = 'buttons'>
+      <div class = 'add' id="pointer"  class:active = { MODE == null } >
+        <img src = {Text} class = 'icon'  alt = 'icon'>
+      </div>
       <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
         <img src = {Text} class = 'icon'  alt = 'icon'>
       </div>
@@ -41,6 +44,10 @@
   </div>
 
 </div>
+
+
+
+
 
 
 
@@ -143,25 +150,30 @@ input:checked + .slider:before {
 
 
 
-  ::-webkit-scrollbar{
-      width: 50px;
-      height: 0;
-      width: 0;
-      background: rgba(black, 0.1);
-  }
-
-  ::-webkit-scrollbar-thumb{
-      background: rgba(black, 0.4);
-  }
 
   #app{
       width: calc(100vw - 240px);
       margin-top: 0px;
       height: calc(100vh);
+
+
+
       margin-left: 240px;
+
+      //padding-left: 240px;
+
       overflow: visible !important;
+
       display: flex;
+
       justify-content: center;
+
+
+
+      //border: 1px solid rgba(black, 0.1);
+
+      //box-shadow: 0px 10px 50px rgba(black, 0.1);
+
   }
 
   #url{
@@ -179,7 +191,7 @@ input:checked + .slider:before {
     position: absolute;
     right: 0;
     top: calc(50vh - 50px);
-    width: 10px;
+    width: 12px;
     height: 60px;
     background: white; // semi-transparent background for the handle
     border-radius: 50px;
@@ -192,16 +204,31 @@ input:checked + .slider:before {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    overflow-y: scroll;
+
+
+
+
+
+
+
+
+    overflow-x: hidden;
+    overflow-y: scroll !important;
     width: calc(100vw - 260px) !important;
-    height: 100vh;
+    height: calc(100vh - 65px) !important;
+
     background: none;
+
+    //border: 1px solid rgba(black, 0.05);
 
     #canvas{
       flex-shrink: 0;
       width: calc(100vw - 255px);
       margin: 0;
-    }
+
+  }
+
+
 
     #loader {
       position: absolute;
@@ -235,7 +262,8 @@ input:checked + .slider:before {
     height: 20px;
     transition: 0.2s ease;
     margin-top: 3px;
-    border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.3);
+    border: none;
+    outline: none;
     //box-shadow: 0x 5px 20px rgba(black, 0.2);
     &:hover{
       opacity: 0.9;
@@ -297,7 +325,43 @@ input:checked + .slider:before {
     }
   }
 
-  #global(.option){
+
+  /*
+  #controls{
+
+    position: fixed;
+
+    z-index: 3;
+    margin-top: 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 45px;
+      width: calc(100vw - 240px);
+      background: black;
+
+      #buttons{
+          display: flex;
+          align-items: center;
+          gap: 0px;
+
+
+          button{
+            width: 20px;
+            height: 20px;
+            filter: invert(100%);
+          }
+      }
+
+  }
+  */
+
+
+
+
+
+
+  :global(.option){
       font-size: 12px;
       display: flex;
       flex-direction: column;
@@ -318,16 +382,24 @@ input:checked + .slider:before {
       border: 2px solid white;
       box-shadow: 20px 50px 150px rgba(black, 0.15);
 
-    resize: horizontal;  // allows horizontal resizing
+      border: 3px solid black;
+
+
+
+
+    //resize: horizontal;  // allows horizontal resizing
     overflow: auto;      // to account for the scrollbar that may appear
-    position: relative;
+    position: relative;  //
+
+
 
       display: flex;
       justify-content: center;
-      overflow-x: visible;
-      overflow-y: scroll;
+      overflow-x: visible !important;
+      overflow-y: hidden;
 
-      border-radius: 5px;
+      border-radius: 10px;
+
   }
 
 
@@ -338,11 +410,12 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 padding-right: 20px;
+margin-left: 10px;
 
 height: 45px;
 border-bottom: 1px solid rgba(black, 0.02);
 //box-shadow: 0px 20px 60px rgba(black, 0.05);
-width: calc(100vw - 240px);
+width: calc(100vw - 250px);
 color: black;
 
 z-index: 3;
@@ -455,7 +528,32 @@ input:-webkit-autofill:active  {
     border: none;
   }
 
+
+  /*
+  @media screen and (max-width: 800px){
+
+    #app{
+      width: 100vw !important;
+    }
+
+    #canvas-container{
+      width: 100vw !important;
+    }
+
+    #container{
+      width: 100vw !important;
+    }
+
+    #canvas{
+      width: 100vw !important;
+    }
+
+  }
+  */
+
+
 </style>
+
 
 
 <script>
@@ -484,13 +582,15 @@ import { object_without_properties } from 'svelte/internal';
 
 //import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
 
-import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+import { pages, isPanelVisible, assets } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 
 import { page } from '$app/stores';
 import Panel from '$lib/components/Panel.svelte';
 
 //export { textTemplate, imageTemplate, videoTemplate };
+
+
 import IconW from '$lib/img/icon-w.svg'
 import IconH from '$lib/img/icon-h.svg'
 import IconX from '$lib/img/icon-x.svg'
@@ -504,6 +604,8 @@ import IconP from '$lib/img/icon-p.svg'
 import IconS from '$lib/img/icon-s.svg'
 import IconT from '$lib/img/icon-t.svg'
 import IconB from '$lib/img/icon-b.svg'
+	import { settings } from 'firebase/analytics';
+
 
 export let data
 
@@ -544,7 +646,7 @@ onMount(()=> {
       renderOnAddRemove: false,
   });
 
-  resize()
+  unifiedResize()
 
 
 
@@ -591,6 +693,7 @@ onMount(()=> {
       canvas.add(cloned);
     });
   }
+
 
 
 
@@ -824,14 +927,22 @@ function dynamicallyBindListeners() {
     activeObject = canvas.getActiveObject();
     const properties = getCurrentObjectProperties(activeObject);
 
-    properties.forEach(property => {
+    setTimeout(() => {
 
-        attachInputListeners(`input-${property}`, property);
-        attachInputListeners(`range-${property}`, property);
-    });
+      properties.forEach(property => {
 
-    document.getElementById("sendToFront").addEventListener("click", sendObjectToFront);
-    document.getElementById("sendToBack").addEventListener("click", sendObjectToBack);
+attachInputListeners(`input-${property}`, property);
+attachInputListeners(`range-${property}`, property);
+});
+
+
+document.getElementById("sendToFront").addEventListener("click", sendObjectToFront);
+document.getElementById("sendToBack").addEventListener("click", sendObjectToBack);
+
+
+
+    }, 300);
+
 
 }
 
@@ -925,15 +1036,17 @@ canvas.on('object:modified', function(event) {
 }, 500);
 
 
-
 const loadCanvasFromSupabase = async () => {
     if (!data.content) {
         return;
     }
 
     // Ensure that the user has an active session
-    const session = data.session
+    const session = data.session;
 
+    if (!session) {
+        return;
+    }
     // Use the session's access token in headers for authorization
     const headers = {
         'Authorization': `Bearer ${session.access_token}`
@@ -961,50 +1074,64 @@ const loadCanvasFromSupabase = async () => {
         const fileText = await blobToText(fileData);
         const fileJson = JSON.parse(fileText);
 
-
         // Load the parsed data into the canvas
         canvas.loadFromJSON(fileJson, () => {
-            //canvas.setBackgroundColor(data.color);
             Id('loader').style.display = 'none';
 
-            calculateGrid()
-            drawGrid()
+           // calculateGrid()
+           // drawGrid()
 
+           canvas.setBackgroundColor(data.color);
 
             const canvasCenterX = canvas.width / 2;
-    const canvasCenterY = canvas.height / 2;
-
-
-
             let maxHeight = initialCanvasHeight;
 
-              canvas.getObjects().forEach((object) => {
+            canvas.getObjects().forEach((object) => {
+                // Since we've stored objects' positions relative to the center of the canvas,
+                // we need to revert the positions when loading them back.
 
                 object.set({
-            left: object.left + canvasCenterX - object.width * object.scaleX / 2,
-            top: object.top + canvasCenterY - object.height * object.scaleY / 2
-        }).setCoords();
-
-                  object.originalTop = object.top
-                  object.setCoords();
-
-                  if (object.top + object.height > maxHeight) {
-                      maxHeight = object.top + object.height;
-                  }
-              });
-
-              canvas.setHeight(maxHeight + 50);
+                    left: object.left + canvas.width/2
+                }).setCoords();
 
 
+
+
+  //object.left = canvasCenterX - (object.left - object.width * object.scaleX) / 2;
+
+
+                object.originalTop = object.top;
+
+                if (object.top + object.height > maxHeight) {
+                    maxHeight = object.top + object.height;
+                }
+
+                object.xPercent = (object.left + (object.width*object.scaleX)/2 - canvasCenterX) / canvas.width
+
+
+                // Store initial properties directly in the object.
+              object.originalProperties = {
+                  left:object.left,
+                  top:object.top,
+                  width:object.width,
+                  height:object.height,
+                  scaleX:object.scaleX,
+                  scaleY:object.scaleY
+                };
+
+
+
+            });
+
+            canvas.setHeight(maxHeight + 50);
             canvas.renderAll();
-        });
 
+        });
 
     } catch (parseError) {
         console.error('Error parsing the blob data:', parseError);
     }
 };
-
 
 // Usage:
 // loadCanvasFromSupabase(yourData);
@@ -1035,7 +1162,7 @@ Id('color').addEventListener('input', e => {
 
 function applyParallaxEffect() {
 
-    let scrollAmount = document.getElementById('container').scrollTop;
+    let scrollAmount = document.getElementById('canvas-container').scrollTop;
 
     canvas.forEachObject(object => {
     let depth = object.depth || 0;
@@ -1071,29 +1198,40 @@ let isObjectBeingModified = false; // Track if an object is being edited, resize
 // Listen for object modification events
 canvas.on('object:modified', function() {
     isObjectBeingModified = true;
+    MODE = null
    // applyParallaxEffect();
 });
 
 canvas.on('selection:created', function() {
+  //MODE = null
     isObjectBeingModified = true;
+
+    let activeObject = canvas.getActiveObject()
+
+    activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2  - canvas.width/2 )/ canvas.width
+
+
 });
 
 
 canvas.on('object:moving', function() {
-    let activeObject = canvas.getActiveObject();
+ // resizeCanvas()
 
     if (activeObject) {
         let depth = activeObject.depth || 0;
-        let scrollAmount = document.getElementById('container').scrollTop;
+        let scrollAmount = document.getElementById('canvas-container').scrollTop;
 
         // Adjust for parallax shift during dragging
         let parallaxShift = 0.2 * depth * scrollAmount;
 
         // Set the 'originalTop' relative to the entire canvas height
+        activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2 - canvas.width/2)/ canvas.width
+
+
+
         activeObject.originalTop = activeObject.top - parallaxShift;
 
-        activeObject.originalTop = activeObject.top
-    activeObject.set('originalTop', activeObject.top)
+        activeObject.set('originalTop', activeObject.top - parallaxShift)
     }
 
      isObjectBeingModified = true;
@@ -1191,6 +1329,7 @@ canvas.on('mouse:down', (o) => {
             });
             break;
           case 'image':
+            /*
             elem = new fabric.Image.fromURL('https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/sign/images/paine.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZXMvcGFpbmUucG5nIiwiaWF0IjoxNjkzOTcxMTUxLCJleHAiOjE3MjU1MDcxNTF9.jjT84RALo8psjpZnMBFNTGjMmnd5jYmFpyqPi05ul9s&t=2023-09-06T03%3A32%3A31.209Z', function(img) {
               const scaleFactorX = 250 / img.width;
               const scaleFactorY = 250 / img.height;
@@ -1208,6 +1347,7 @@ canvas.on('mouse:down', (o) => {
               canvas.add(img);
               canvas.setActiveObject(img);
             });
+            */
             break;
         case 'button':
             elem = new fabric.Rect({
@@ -1387,72 +1527,120 @@ function handleMouseMove(event) {
     if (newWidth > 300 && newWidth < window.innerWidth - 260) {
         container.style.width = `${newWidth}px`;
         if (container.offsetWidth !== previousWidth) {
-            adjustCanvasSize(container.offsetWidth);
+            unifiedResize(container.offsetWidth);
         }
         lastX = event.clientX;
     }
 }
 
-
-
-
-function adjustCanvasSize(newContainerWidth) {
-    const newWidth = newContainerWidth;
-    const centerShiftX = (canvas.getWidth() - newWidth) / 2;
-
-    let maxHeight = initialCanvasHeight;
-
-    canvas.getObjects().forEach((object) => {
-        object.left = object.left - centerShiftX;
-        object.setCoords();
-
-        if (object.top + object.height > maxHeight) {
-            maxHeight = object.top + object.height;
-        }
-    });
-
-    canvas.clipTo = function(ctx) {
-        ctx.rect(0, 0, newWidth, canvas.getHeight());
-        ctx.clip();
-    };
-
-    canvas.setWidth(newWidth);
-    canvas.setHeight(maxHeight + 50);
-
-    // Adjust the widths of both the container and the canvas-container to the new width.
-    const container = document.getElementById('container');
-    const canvasContainer = document.getElementById('canvas-container');
-
-    if (container) {
-        container.style.width = `${newWidth}px`;
+canvas.getObjects().forEach((object) => {
+    if (!object.originalWidth) {
+        object.originalWidth = object.width;
     }
-
-    if (canvasContainer) {
-        canvasContainer.style.width = `${newWidth}px`;
+    if (!object.originalLeft) {
+        object.originalLeft = object.left;
     }
+});
 
-    canvas.renderAll();
-    canvas.calcOffset();
-}
 
-function resize(initial = 1) {
-    let newWidth = window.innerWidth - panelWidth;
+canvas.on('object:added', function(options) {
+  const obj = options.target;
+  const canvasCenterX = canvas.width / 2;
 
+  // Calculate offset from the center.
+  obj.xPercent = (obj.left + (obj.width*obj.scaleX)/2  - canvasCenterX)/ canvas.width
+
+
+  // Store initial properties directly in the object.
+  obj.originalProperties = {
+    left: obj.left,
+    top: obj.top,
+    width: obj.width,
+    height: obj.height,
+    scaleX: obj.scaleX,
+    scaleY: obj.scaleY,
+    xPercent: obj.xPercent
+  };
+});
+
+
+
+
+function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
     if (window.innerWidth < 800) {
-        newWidth = window.innerWidth;
+        newContainerWidth = window.innerWidth;
     }
 
-    const centerShiftX = (canvas.getWidth() - newWidth) / 2;
+    const newWidth = newContainerWidth;
+    const canvasCenterX = newWidth / 2;
 
-    let maxHeight = initialCanvasHeight;
+    const maxObjectWidth = newWidth * 0.95;
+
+    console.log('-')
+    console.log(canvas.width)
 
     canvas.getObjects().forEach((object) => {
-        object.left -= centerShiftX;
+        const isTextbox = object.type === 'textbox';
+
+
+
+        /*
+        if (isTextbox) {
+
+
+            let maxLineWidth = 0;
+            object._textLines.forEach(line => {
+                const lineWidth = object.get2DCursorLocation(line.length).left;
+                if (lineWidth > maxLineWidth) {
+                    maxLineWidth = lineWidth;
+                }
+            });
+            const actualTextWidth = maxLineWidth;
+
+
+            if (Math.round(object.width * object.scaleX) < Math.round(maxObjectWidth)) {
+                const origProps = object.originalProperties;
+                object.width = origProps.width
+            } else {
+                object.width = actualTextWidth
+            }
+            object.setCoords();
+
+
+        } else {
+            const origProps = object.originalProperties;
+            object.set({
+                left: origProps.left,
+                top: origProps.top,
+                width: origProps.width,
+                height: origProps.height,
+                scaleX: origProps.scaleX,
+                scaleY: origProps.scaleY
+            });
+            object.setCoords();
+        }
+        */
+
+        /*
+        const origProps = object.originalProperties;
+            object.set({
+                left: origProps.left,
+                top: origProps.top,
+                width: origProps.width,
+                height: origProps.height,
+                scaleX: origProps.scaleX,
+                scaleY: origProps.scaleY
+            });
+            object.setCoords();
+
+            */
+
+        // Adjust position relative to the canvas width change.
+        const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX)/2
+
+        object.left = newLeftPos
         object.setCoords();
 
-        if (object.top + object.height > maxHeight) {
-            maxHeight = object.top + object.height;
-        }
     });
 
     canvas.clipTo = function(ctx) {
@@ -1461,16 +1649,14 @@ function resize(initial = 1) {
     };
 
     canvas.setWidth(newWidth);
-    canvas.setHeight(maxHeight + 50);
 
-    // Adjust the widths of both the container and the canvas-container to the new width.
+    // Adjust the widths of both the container and the canvas-container.
     const container = document.getElementById('container');
     const canvasContainer = document.getElementById('canvas-container');
 
     if (container) {
         container.style.width = `${newWidth}px`;
     }
-
     if (canvasContainer) {
         canvasContainer.style.width = `${newWidth}px`;
     }
@@ -1480,13 +1666,19 @@ function resize(initial = 1) {
 }
 
 
-  window.addEventListener('resize', resize)
-  window.addEventListener('load', resize)
+
+
+
+
+window.addEventListener('resize', () => unifiedResize());
+
+
+  window.addEventListener('load', () => unifiedResize())
 
 
 
     setTimeout(() => {
-      resize(0)
+      unifiedResize()
     },300)
 
 
@@ -1686,17 +1878,19 @@ mb
 }
 
 
-function sendObjectToFront() {
+window.sendObjectToFront = () => {
     if (activeObject) {
         activeObject.bringToFront();
         canvas.renderAll();
+        saveCanvasToSupabase()
     }
 }
 
-function sendObjectToBack() {
+window.sendObjectToBack = () => {
     if (activeObject) {
         activeObject.sendToBack();
         canvas.renderAll();
+        saveCanvasToSupabase()
     }
 }
 
@@ -1755,49 +1949,113 @@ async function uploadToSupabase(file) {
 }
 
 canvas.wrapperEl.addEventListener('dragover', function(e) {
+
     e.preventDefault();
     Id('canvas').style.opacity = 0.3;
 }, false);
 
+
+
+async function loadImagesFromSupabase() {
+
+assets.set([])
+const path = `${data.user.id}/`; // Construct the path to your subfolder
+
+console.log(data)
+
+const { data: files, error } = await supabaseClient.storage.from('images').list(path);
+
+
+if (error) {
+  console.error("Error fetching files:", error);
+  return;
+}
+
+// Iterate through the files and download each one
+for (const file of files) {
+  const { data: fileData, error } = await supabaseClient.storage.from(`images/${data.user.id}`).download(file.name);
+
+  if (error) {
+    console.error("Error downloading the file:", error);
+    continue;
+  }
+
+
+  const url = URL.createObjectURL(fileData);
+  assets.update(urls => [...urls, {name: file.name, id: file.id, url: url}]);
+
+}
+}
+
+
+
 canvas.wrapperEl.addEventListener('drop', async function(e) {
     e.preventDefault();
     Id('canvas').style.opacity = 1;
-    var files = e.dataTransfer.files;
     const dropPoint = canvas.getPointer(e);  // Get drop position on canvas
 
-    for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        if (file.type.includes("image")) {
-            let imagePath = await uploadToSupabase(file);
-            let imageURL;
+    const files = e.dataTransfer.files;
+    if (files && files.length) {
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            console.log(file);
 
-            if (imagePath) {
-                imageURL = await getImageUrlFromSupabase(imagePath);  // <-- The change is here
-            } else {
-                console.error('Failed to upload image to Supabase.');
-                continue;
-            }
+            if (file.type.includes("image")) {
+                let imagePath = await uploadToSupabase(file);
+                let imageURL;
 
-            if (typeof imageURL === "string" && imageURL) {
-                fabric.Image.fromURL(imageURL, function(img) {
-                    img.scaleToWidth(300);
-                    img.scaleToHeight(300);
-                    img.set({
-                        left: dropPoint.x,
-                        top: dropPoint.y,
-                        depth: 2,
+                if (imagePath) {
+                    imageURL = await getImageUrlFromSupabase(imagePath);
+                    loadImagesFromSupabase();
+                } else {
+                    console.error('Failed to upload image to Supabase.');
+                    continue;
+                }
+
+                if (typeof imageURL === "string" && imageURL) {
+                    fabric.Image.fromURL(imageURL, function(img) {
+                        img.scaleToWidth(300);
+                        img.scaleToHeight(300);
+                        img.set({
+                            left: dropPoint.x,
+                            top: dropPoint.y,
+                            depth: 2,
+                        });
+                        canvas.add(img);
+                        canvas.renderAll();
+                        saveCanvasToSupabase();
                     });
-                    canvas.add(img);
-                    canvas.renderAll();
-                    saveCanvasToSupabase();
-                });
-            } else {
-                console.error('Invalid imageURL:', imageURL);
+                } else {
+                    console.error('Invalid imageURL:', imageURL);
+                }
             }
+            // Handle videos similarly...
         }
-        // Handle videos similarly...
+    } else {
+      const droppedElement = e.dataTransfer.getData('text/html');
+      const parser = new DOMParser();
+      const parsed = parser.parseFromString(droppedElement, 'text/html');
+      const imgTag = parsed.querySelector('img');
+      const imageURL = imgTag ? imgTag.src : null;
+      const originalFilename = imgTag ? imgTag.dataset.filename : null;
+
+      if (imageURL) {
+            fabric.Image.fromURL(`https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/8310ad31-edea-43ca-b02b-4dbf29f7602d/${originalFilename}`, function(img) {
+                img.scaleToWidth(300);
+                img.scaleToHeight(300);
+                img.set({
+                    left: dropPoint.x,
+                    top: dropPoint.y,
+                    depth: 2,
+                });
+                canvas.add(img);
+                canvas.renderAll();
+                saveCanvasToSupabase();
+            });
+      }
     }
 }, false);
+
 
 
 function addText(x,y) {
@@ -1819,7 +2077,7 @@ function addText(x,y) {
 
 function resizeCanvas() {
 
-  let maxHeight = 0;
+  let maxHeight = initialCanvasHeight
   const container = canvas.wrapperEl;
   const oldScrollTop = container.scrollTop;
 
@@ -1967,12 +2225,22 @@ function addButton(x, y) {
     //CONTROLS.style.opacity = '0'
   })
 
+  document.getElementById('pointer').addEventListener('click', ()=> {
+    //addText(10,10);
+
+    MODE = null
+
+    $isPanelVisible = false
+
+  });
+
 
   // Add text on button click
   document.getElementById('addText').addEventListener('click', ()=> {
     //addText(10,10);
 
     MODE = 'text'
+
   });
 
 
@@ -1989,6 +2257,8 @@ function addButton(x, y) {
     MODE = 'rect'
   });
 
+
+
   document.getElementById('addCircle').addEventListener('click', ()=> {
 
     MODE = 'ellipse'
@@ -1999,6 +2269,34 @@ function addButton(x, y) {
     //addImage(10,10);
 
     MODE = 'image'
+
+
+    $isPanelVisible = true
+
+
+
+    let PANEL = Id('panel')
+
+    PANEL.addEventListener('dragstart', function(e) {
+    if (e.target.tagName === 'IMG') {
+        e.dataTransfer.setData('text/plain', e.target.dataset.url);
+    }
+});
+
+
+    let div = ``
+
+    for (let i=0; i<$assets.length; i++){
+      let asset = $assets[i]
+
+      div +=
+        `
+        <img src="${asset.url}" data-filename="${asset.name}" alt="image" draggable="true" data-url="${asset.url}">
+        `;
+    }
+
+    PANEL.innerHTML = div
+
   });
 
   // Add video on button click
@@ -2187,22 +2485,31 @@ window.addEventListener('keyup', e => {
 function preventScroll(event) {
     //event.preventDefault();
 }
-
 function saveCanvasToSupabase() {
-    // Current center of the canvas
+    // Center of the canvas
     const canvasCenterX = canvas.width / 2;
-    const canvasCenterY = canvas.height / 2;
 
-    // Step 2: Save the scroll position
-    const scrollTop = Id('container').scrollTop
+    canvas.getObjects().forEach((object) => {
+        if (object.originalWidth && object.originalWidth <= canvas.getWidth() * 0.95) {
+            object.set({
+                scaleX: 1,
+                scaleY: 1,
+                left: object.originalLeft,
+                width: object.originalWidth
+            }).setCoords();
+        }
+    });
+
+    // Save the scroll position
+    const scrollTop = Id('canvas-container').scrollTop;
+
+    console.log(scrollTop)
     const backupGridLines = [...gridLines];
 
     // Calculate original dimensions
     const originalCanvasWidth = window.innerWidth - panelWidth;
-    const originalCanvasCenterX = originalCanvasWidth / 2;
     const aspectRatio = initialCanvasHeight / initialCanvasWidth;
     const originalCanvasHeight = originalCanvasWidth * aspectRatio;
-    const originalCanvasCenterY = originalCanvasHeight / 2;
 
     // Backup current size and position of all objects
     const backupObjects = canvas.getObjects().map(object => ({
@@ -2212,11 +2519,10 @@ function saveCanvasToSupabase() {
         scaleY: object.scaleY
     }));
 
-    // Adjust object positions relative to the center of the original canvas
+    // Adjust object positions relative to the center of the canvas before upload
     canvas.getObjects().forEach(object => {
         object.set({
-            left: (object.left - canvasCenterX) + originalCanvasCenterX,
-            top: (object.top - canvasCenterY) + originalCanvasCenterY
+            left: object.left - canvasCenterX
         }).setCoords();
     });
 
@@ -2225,14 +2531,16 @@ function saveCanvasToSupabase() {
 
     // Temporarily reset the canvas to its full/original size
     canvas.setWidth(originalCanvasWidth);
-    canvas.setHeight(originalCanvasHeight);
+    //canvas.setHeight(originalCanvasHeight);
 
     // Upload the full canvas version to the database
     uploadCanvas();
 
     // Restore the canvas to the backed-up size and reposition all objects
     canvas.setWidth(initialCanvasWidth);
-    canvas.setHeight(initialCanvasHeight);
+    //canvas.setHeight(initialCanvasHeight);
+
+
     canvas.getObjects().forEach((object, index) => {
         object.set({
             left: backupObjects[index].left,
@@ -2256,20 +2564,27 @@ function saveCanvasToSupabase() {
     gridLines = backupGridLines;
     gridLines.forEach(circle => canvas.add(circle));
 
-    // Step 4: Restore the scroll position
-    Id('container').scrollTo({
-      top: scrollTop,
+    // Restore the scroll position
+    Id('canvas-container').scrollTo({
+        top: scrollTop,
     });
+    Id('canvas-container').scrollTop = scrollTop
 
-    // Step 5: Remove the event listener to allow scrolling
+    // Remove the event listener to allow scrolling
     window.removeEventListener('scroll', preventScroll);
 }
+
+
 
 
 async function uploadCanvas() {
     // Retrieve the session token
     const session = data.session
     const token = session?.access_token;
+
+
+
+
 
     if (!token) {
         console.error('No session token available');
@@ -2281,7 +2596,7 @@ async function uploadCanvas() {
     };
 
     // Serialize the current canvas state
-    const canv = canvas.toJSON(['link', 'depth']);
+    const canv = canvas.toJSON(['link', 'depth', 'xPercent', 'scaler']);
     const json = JSON.stringify(canv);
 
     // Prepare the file for Supabase Storage
@@ -2332,6 +2647,9 @@ async function uploadCanvas() {
     if (dbError) {
         console.error('Error saving reference to database: ', dbError);
     } else {
+
+
+
         console.log('Canvas saved and reference stored successfully: ', dbData);
     }
 }
