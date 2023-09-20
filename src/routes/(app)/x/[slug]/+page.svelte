@@ -47,32 +47,23 @@
 
 
 
-
-
-
-
   <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
 
-
     <div id = 'canvas-container'>
-
       <div id="loader"></div>
-
       <canvas id = 'canvas'></canvas>
-
     </div>
-
-
 
     <div id="handle"></div>
 </div>
 
 
-
+<!--
+  <Panel activeObject = {activeObject} active={$isPanelVisible}/>
+-->
 
 
 </div>
-
 
 
 
@@ -379,10 +370,10 @@ input:checked + .slider:before {
       height: calc(100vh - 60px);
       margin-top: 50px;
 
-      border: 2px solid white;
+      border: 4px solid white;
       box-shadow: 20px 50px 150px rgba(black, 0.15);
 
-      border: 3px solid black;
+      //border: 3px solid black;
 
 
 
@@ -398,7 +389,7 @@ input:checked + .slider:before {
       overflow-x: visible !important;
       overflow-y: hidden;
 
-      border-radius: 10px;
+      border-radius: 15px;
 
   }
 
@@ -531,6 +522,108 @@ input:-webkit-autofill:active  {
   }
 
 
+
+  #panel{
+    position: fixed;
+    top: 0px;
+    left: -400px;
+    width: 240px;
+    padding: 20px;
+    height: 100vh;
+    background: #FF004D;
+    background: rgb(10, 5, 19);
+    background: white;
+    //background: #fff3f5;
+    //border-radius: 10px;
+    border: 1px solid rgba(black, 0.1);
+   // box-shadow: -20px 0px 70px rgba(black, 0.1);
+    transition: 0.3s ease-in-out;
+    overflow-y: scroll;
+
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    letter-spacing: -0.4px;
+
+    z-index: 4;
+
+
+    :global(#controls-title){
+      font-weight: 600;
+      color: black;
+    }
+
+    :global(.control){
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+    }
+
+
+
+      :global(.range){
+        -webkit-appearance: none;
+        width: 80%;
+        height: 20px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 1;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+      }
+
+      :global(.range:hover) {
+        //opacity: 1;
+        opacity: 1;
+      }
+
+      :global(.range::-webkit-slider-thumb) {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 8px;
+        height: 20px;
+        border-radius: 3px;
+        background: rgba(black, 0.3);
+        cursor: pointer;
+      }
+
+      :global(.range::-moz-range-thumb) {
+        width: 8px;
+        height: 20px;
+        background: rgba(black, 0.3);
+         border-radius: 3px;
+        cursor: pointer;
+      }
+
+
+    :global(.option){
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    :global(.icon){
+      width: 16px;
+      margin-right: 12px;
+    }
+
+
+
+    &.active{
+      left: 0 !important;
+    }
+  }
+
+  .active{
+      left: 0px !important;
+    }
+
+
+
+
+
   /*
   @media screen and (max-width: 800px){
 
@@ -582,9 +675,9 @@ import { fly } from 'svelte/transition'
 import Grid from '$lib/components/Grid.svelte'
 import { object_without_properties } from 'svelte/internal';
 
-//import { pages, isPanelVisible } from '$lib/utils/store.js'; // Adjust the path as necessary
+import { pages, isPanelVisible, assets} from '$lib/utils/store.js'; // Adjust the path as necessary
 
-import { pages, isPanelVisible, assets } from '../../../../store'; // Adjust the path as necessary
+//import { pages, isPanelVisible, assets } from '../../../../store'; // Adjust the path as necessary
 
 
 import { page } from '$app/stores';
@@ -607,6 +700,9 @@ import IconS from '$lib/img/icon-s.svg'
 import IconT from '$lib/img/icon-t.svg'
 import IconB from '$lib/img/icon-b.svg'
 	import { settings } from 'firebase/analytics';
+
+
+
 
 
 export let data
@@ -1093,7 +1189,8 @@ const loadCanvasFromSupabase = async () => {
                 // we need to revert the positions when loading them back.
 
                 object.set({
-                    left: object.left + canvas.width/2
+                    left: canvasCenterX + object.xPercent * canvas.width + (object.width * object.scaleX) / 2,
+
                 }).setCoords();
 
 
@@ -1170,6 +1267,8 @@ function applyParallaxEffect() {
     let depth = object.depth || 0;
         let parallaxShift = 0.2 * depth * scrollAmount;
 
+        console.log(parallaxShift)
+
         // Use the originalTop (which isn't affected by parallax) and add the shift.
         let newTopPosition = object.originalTop + parallaxShift;
         object.set('top', newTopPosition);
@@ -1216,28 +1315,45 @@ canvas.on('selection:created', function() {
 });
 
 
-canvas.on('object:moving', function() {
- // resizeCanvas()
+function handleObject(obj) {
+  console.log(obj)
+  let depth = obj.depth || 0;
+  let scrollAmount = document.getElementById('canvas-container').scrollTop;
 
-    if (activeObject) {
-        let depth = activeObject.depth || 0;
-        let scrollAmount = document.getElementById('canvas-container').scrollTop;
+  // Adjust for parallax shift during dragging
+  let parallaxShift = 0.2 * depth * scrollAmount;
 
-        // Adjust for parallax shift during dragging
-        let parallaxShift = 0.2 * depth * scrollAmount;
+  // Set the 'originalTop' relative to the entire canvas height
+  obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
 
-        // Set the 'originalTop' relative to the entire canvas height
-        activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2 - canvas.width/2)/ canvas.width
+  obj.originalTop = obj.top - parallaxShift;
+
+  console.log(obj.originalTop);
+
+  obj.set('originalTop', obj.top - parallaxShift);
+}
 
 
 
-        activeObject.originalTop = activeObject.top - parallaxShift;
+canvas.on('object:moving', function(options) {
+    // resizeCanvas()
 
-        activeObject.set('originalTop', activeObject.top - parallaxShift)
+    let activeObject = options.target;
+
+    // Function to handle the object logic
+
+    if (activeObject.type === 'activeSelection') {
+        // If multiple objects are selected, iterate through them
+        activeObject.getObjects().forEach(x => handleObject(x));
+    } else {
+        handleObject(activeObject);
     }
 
-     isObjectBeingModified = true;
+    resizeCanvas()
+
+    isObjectBeingModified = true;
 });
+
 
 
 
@@ -1441,6 +1557,7 @@ window.deleteObject = function(){
       canvas.discardActiveObject().renderAll()
     }
   }
+  resizeCanvas()
   canvas.renderAll()
   canvas.calcOffset()
   saveCanvasToSupabase()
@@ -1906,6 +2023,7 @@ canvas.on('selection:cleared', () => {
 
   clearGuides()
   isPanelVisible.set(false)
+  $isPanelVisible = false
   CLICK++
 
 });
@@ -2284,10 +2402,12 @@ function addButton(x, y) {
 });
 
 
-    let div = ``
+    let div = `<h1 id = 'title'> Images </h1>`
 
     for (let i=0; i<$assets.length; i++){
       let asset = $assets[i]
+
+      console.log(asset.url)
 
       div +=
         `
@@ -2296,6 +2416,8 @@ function addButton(x, y) {
     }
 
     PANEL.innerHTML = div
+
+    console.log(PANEL)
 
   });
 

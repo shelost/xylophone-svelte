@@ -170,7 +170,7 @@ async function loadImagesFromSupabase() {
 	  <slot />
 	</div>
 
-	<Panel />
+	<Panel active = {$isPanelVisible}/>
 
 </section>
 
