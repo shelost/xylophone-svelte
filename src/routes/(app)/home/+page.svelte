@@ -38,15 +38,12 @@
 			const top = obj.top || 0;
 
 
-
-
 			obj.scaleX *= scaleX
 			obj.scaleY *= scaleX
 			obj.left *= scaleX
 			obj.top *= scaleX
 
 			obj.left += (canvas.width/2)
-
 
 			obj.setCoords(); // Refresh object coordinates after updates
 		});

@@ -113,23 +113,73 @@
 
 
 
+	let COLS = [[],[],[]]
+
+
+	async function loadImagesFromSupabase() {
+
+		assets.set([])
+		const path = `${data.user.id}/`; // Construct the path to your subfolder
+
+		const { data: files, error } = await supabaseClient.storage.from('images').list(path);
+
+		console.log(files)
+
+		if (error) {
+			console.error("Error fetching files:", error);
+			return;
+		}
+
+
+
+
+
+
+		// Iterate through the files and download each one
+		for (const file of files) {
+			const { data: fileData, error } = await supabaseClient.storage.from(`images/${data.user.id}`).download(file.name);
+
+			if (error) {
+				console.error("Error downloading the file:", error);
+				continue;
+			}
+
+			//console.log(fileData)
+
+			const url = URL.createObjectURL(fileData);
+			assets.update(urls => [...urls, {name: file.name, id: file.id, url: url}]);
+
+			COLS = [[],[],[]]
+
+			for (let i=0; i<$assets.length; i++){
+
+				let asset = $assets[i]
+
+				COLS[i%3].push(asset)
+			}
+		}
+	}
+
+
+loadImagesFromSupabase()
+
 
 	onMount(() => {
-    for (let i=0; i<$users.length; i++){
-        let page = $users[i];
+		for (let i=0; i<$users.length; i++){
+			let page = $users[i];
 
-        let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
-            width: 350,
-            height: 250,
-            renderOnAddRemove: false
-        });
+			let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
+				width: 350,
+				height: 250,
+				renderOnAddRemove: false
+			});
 
-        if (page.content){
-            loadCanvas(page, canvas);
+			if (page.content){
+				loadCanvas(page, canvas);
 
-        }
-    }
-});
+			}
+		}
+	});
 
 
 
@@ -151,15 +201,22 @@
 
 {:then}
 
-	<div id = 'pages' in:fly={{ y: 50, duration: 300}} out:fly={{ x: 200, duration: 300 }}>
+	<div id = 'pages' in:fly={{ y: 50, duration: 300, delay: 1000}} out:fly={{ x: 200, duration: 300 }}>
 
-		{#each $assets as image, i}
-				<div class='page' id='{image.id}' >
-					<img src = '{image.url}' alt = 'image'>
-					<h1> {image.name} </h1>
-				</div>
+		{#each COLS as col}
+
+			<div class = 'col'>
+
+				{#each col as image, i}
+					<div class='page' id='{image.id}' >
+						<img src = '{image.url}' alt = 'image'>
+						<h1> {image.name} </h1>
+					</div>
+				{/each}
+
+			</div>
+
 		{/each}
-
 
 	</div>
 
@@ -202,9 +259,13 @@
 
 	#pages{
 		display: flex;
-		flex-wrap: wrap;
-		gap: 30px;
+		//flex-wrap: wrap;
+		gap: 20px;
 		margin-top: 40px;
+
+		.col{
+			width: 100%;
+		}
 
 		.page{
 
@@ -214,6 +275,8 @@
 			box-shadow: 0px 0px 50px rgba(black, 0.08);
 			padding-bottom: 10px;
 			transition: 0.2s ease;
+
+			margin: 20px 0;
 
             flex-grow: 0;
             height: fit-content;

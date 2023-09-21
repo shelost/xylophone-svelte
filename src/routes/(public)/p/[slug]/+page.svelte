@@ -1,5 +1,28 @@
 <div id = 'app'>
 
+    <div id = 'bar'>
+
+        <h2 id = 'title'> {data.title} </h2>
+
+        {#await $user}
+
+        {:then $user}
+
+
+        {#if $user}
+
+        <div id = 'profile'>
+
+
+            <img src = '{$user.pfp}' alt = 'pfp'>
+          <h2 id = 'name'> {$user.full_name} </h2>
+        </div>
+
+          {/if}
+
+        {/await}
+    </div>
+
   <canvas id = 'canvas'></canvas>
 
 
@@ -162,21 +185,43 @@
         overflow-y: scroll;
 
 
-        #bar{
-            padding: 5px;
-            position: fixed;
-            top: 0;
-            left: 240px;
-            width: calc(100vw - 480px);
-            z-index: 3;
-            background: #f0f0f0;
-            display: none;
-            input{
-                font-size: 18px;
-                font-weight: 600;
-            }
-        }
+
     }
+
+
+    #bar{
+        padding: 10px 16px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        z-index: 3;
+
+        display: flex;
+        justify-content: space-between;
+
+        h2{
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+
+        #profile{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            img{
+                height: 16px;
+                border-radius: 5px;
+            }
+
+
+        }
+
+    }
+
 
 
     @media screen and (max-width: 800px){
@@ -211,12 +256,18 @@
 <script>
 
 import {onMount} from 'svelte'
+import {writable} from 'svelte/store'
 import {fabric} from 'fabric'
 import {supabaseClient} from '$lib/db'
 import X from '$lib/img/favicon.svg'
 export let data;
 
 import Arachne from '$lib/img/octagon.svg'
+
+
+const user = writable(null)
+
+
 
 onMount(()=> {
 
@@ -308,32 +359,32 @@ const loadCanvasFromSupabase = async () => {
     try {
         const fileText = await blobToText(fileData);
         const fileJson = JSON.parse(fileText);
-
-        // Load the parsed data into the canvas
-        canvas.loadFromJSON(fileJson, () => {
-           // calculateGrid()
-           // drawGrid()
+ // Load the parsed data into the canvas
+ canvas.loadFromJSON(fileJson, () => {
 
             const canvasCenterX = canvas.width / 2;
-            let maxHeight = initialCanvasHeight;
 
             canvas.getObjects().forEach((object) => {
-                // Since we've stored objects' positions relative to the center of the canvas,
-                // we need to revert the positions when loading them back.
-                object.set({
-                    left: object.left + canvasCenterX
-                }).setCoords();
-
-                object.originalTop = object.top;
-
-                if (object.top + object.height > maxHeight) {
-                    maxHeight = object.top + object.height;
+                if (object.xPercent !== undefined) {
+                    const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+                    object.set('left', newLeftPos);
+                    object.set('top', object.originalTop)
                 }
+
             });
 
-            canvas.setHeight(maxHeight + 50);
+
+            applyParallaxEffect();
+            canvas.setHeight(data.height);
+            //document.getElementById('app').style.height = data.height + 'px'
+            canvas.setBackgroundColor(data.color);
             canvas.renderAll();
 
+
+
+        }, function (o, object) {
+
+            object.selectable = false
         });
 
     } catch (parseError) {
@@ -348,40 +399,54 @@ loadCanvasFromSupabase()
 ///
 
 
+
+
+
+async function fetchUser(){
+    const { data : k, error: e} = await supabaseClient
+        .from('users') // Update the table name to 'profiles'
+        .select('*') // Fetch all columns for the active user
+        .eq('id', data.user_id) // Use the user.id to fetch data for the active user
+		.single()
+    if (!e) {
+        user.set(k)
+        console.log(k)
+    } else {
+        console.error('Error fetching user data:', e);
+    }
+}
+
+fetchUser()
+
+
+
 function applyParallaxEffect() {
 
 
+    let scrollAmount = document.getElementById('app').scrollTop;
 
-let scrollAmount = document.getElementById('app').scrollTop;
+        canvas.forEachObject(object => {
+            // Assuming default depth is 0 if not specified
+            let depth = object.depth || 0;
 
-    canvas.forEachObject(object => {
-        // Assuming default depth is 0 if not specified
-        let depth = object.depth || 0;
+            // Calculate the parallax shift. The '0.2' is the factor which
+            // determines how "fast" depth 1 objects move relative to the canvas.
+            let parallaxShift = 0.3 * depth * scrollAmount;
 
-        // Calculate the parallax shift. The '0.2' is the factor which
-        // determines how "fast" depth 1 objects move relative to the canvas.
-        let parallaxShift = 0.2 * depth * scrollAmount;
+            // Depth 0 objects should move with the canvas, so we subtract the scroll amount
+            let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
 
-        // Depth 0 objects should move with the canvas, so we subtract the scroll amount
-        let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
+            // Set the new top position for the object
 
-        // Set the new top position for the object
+            object.set('top', newTopPosition);
+        });
 
-        object.set('top', newTopPosition);
-    });
+        canvas.renderAll(); // Refresh the canvas to reflect the changes
+        canvas.calcOffset()
+    }
 
-    canvas.renderAll(); // Refresh the canvas to reflect the changes
-    canvas.calcOffset()
-}
-
-// Listen for the scroll event on the #app element
-document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
-
-
-
-
-
-
+    // Listen for the scroll event on the #app element
+    document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
 
     document.getElementById('app').style.background = data.color
 
@@ -529,6 +594,7 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
 
 
+    const canvasCenterX = canvas.width/2
     // Adjust position relative to the canvas width change.
     const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX)/2
 
@@ -581,7 +647,7 @@ function resizeCanvas() {
   });
 
   // Add 30px to maxHeight and update canvas height.
-  canvas.setHeight(maxHeight + 30);
+ //canvas.setHeight(maxHeight + 30);
 
   // Update canvas dimensions on the actual HTML element
   canvas.calcOffset();

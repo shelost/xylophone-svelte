@@ -4,6 +4,13 @@
   <div id = 'bar'>
     <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
+    <button id = 'setHeight'> <h1> Save </h1> </button>
+
+
+    <input id = 'height' bind:value = {height} type = 'number' style='outline: none !important;'>
+
+
+
     <div id = 'buttons'>
       <div class = 'add' id="pointer"  class:active = { MODE == null } >
         <img src = {Text} class = 'icon'  alt = 'icon'>
@@ -198,15 +205,10 @@ input:checked + .slider:before {
 
 
 
-
-
-
-
-
-    overflow-x: hidden;
+    overflow-x: hidden !important;
     overflow-y: scroll !important;
     width: calc(100vw - 260px) !important;
-    height: calc(100vh - 65px) !important;
+    height: calc(100vh - 60px) !important;
 
     background: none;
 
@@ -367,8 +369,8 @@ input:checked + .slider:before {
   #container {
 
       width: calc(100vw - 255px);
-      height: calc(100vh - 60px);
-      margin-top: 50px;
+      height: calc(100vh - 50px);
+      margin-top: 40px;
 
       border: 4px solid white;
       box-shadow: 20px 50px 150px rgba(black, 0.15);
@@ -434,9 +436,6 @@ position: fixed;
   gap: 10px;
 }
 
-button{
-  display: none;
-}
 }
 
 
@@ -709,7 +708,8 @@ export let data
 
 let title= data.title
 let color = data.color
-let ruler = true
+let height = data.height
+let ruler = false
 let activeObject;
 let MODE
 
@@ -1174,56 +1174,32 @@ const loadCanvasFromSupabase = async () => {
 
         // Load the parsed data into the canvas
         canvas.loadFromJSON(fileJson, () => {
-            Id('loader').style.display = 'none';
-
-           // calculateGrid()
-           // drawGrid()
-
-           canvas.setBackgroundColor(data.color);
+          Id('loader').style.display = 'none';
 
             const canvasCenterX = canvas.width / 2;
-            let maxHeight = initialCanvasHeight;
 
             canvas.getObjects().forEach((object) => {
-                // Since we've stored objects' positions relative to the center of the canvas,
-                // we need to revert the positions when loading them back.
-
-                object.set({
-                    left: canvasCenterX + object.xPercent * canvas.width + (object.width * object.scaleX) / 2,
-
-                }).setCoords();
-
-
-
-
-  //object.left = canvasCenterX - (object.left - object.width * object.scaleX) / 2;
-
-
-                object.originalTop = object.top;
-
-                if (object.top + object.height > maxHeight) {
-                    maxHeight = object.top + object.height;
+                if (object.xPercent !== undefined) {
+                    const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+                    object.set('left', newLeftPos);
+                    //object.set('top', object.originalTop)
                 }
-
-                object.xPercent = (object.left + (object.width*object.scaleX)/2 - canvasCenterX) / canvas.width
-
-
-                // Store initial properties directly in the object.
-              object.originalProperties = {
-                  left:object.left,
-                  top:object.top,
-                  width:object.width,
-                  height:object.height,
-                  scaleX:object.scaleX,
-                  scaleY:object.scaleY
-                };
-
-
 
             });
 
-            canvas.setHeight(maxHeight + 50);
+
+            applyParallaxEffect();
+            canvas.setHeight(data.height);
+            canvas.setBackgroundColor(data.color);
+
+
+           // calculateGrid()
+            //drawGrid()
+
+
             canvas.renderAll();
+           // canvas.calcOffset()
+
 
         });
 
@@ -1257,32 +1233,31 @@ Id('color').addEventListener('input', e => {
   saveCanvasToSupabase()
 })
 
+Id('setHeight').addEventListener('click', async () => {
+
+  canvas.setHeight(height)
+  //Id('bar').style.background = Id('color').value
+  saveCanvasToSupabase()
+})
+
+
+
 
 
 function applyParallaxEffect() {
-
     let scrollAmount = document.getElementById('canvas-container').scrollTop;
 
     canvas.forEachObject(object => {
-    let depth = object.depth || 0;
+        let depth = object.depth || 1;
         let parallaxShift = 0.2 * depth * scrollAmount;
-
-        console.log(parallaxShift)
-
-        // Use the originalTop (which isn't affected by parallax) and add the shift.
         let newTopPosition = object.originalTop + parallaxShift;
         object.set('top', newTopPosition);
     });
 
     canvas.renderAll();
-
 }
 
-
-// Listen for the scroll event
 document.getElementById('canvas-container').addEventListener('scroll', applyParallaxEffect);
-
-
 
 
 
@@ -1311,50 +1286,34 @@ canvas.on('selection:created', function() {
 
     activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2  - canvas.width/2 )/ canvas.width
 
-
 });
 
 
 function handleObject(obj) {
-  console.log(obj)
-  let depth = obj.depth || 0;
-  let scrollAmount = document.getElementById('canvas-container').scrollTop;
+    let depth = obj.depth || 0;
+    let scrollAmount = document.getElementById('canvas-container').scrollTop;
+    let parallaxShift = 0.2 * depth * scrollAmount;
+    obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
 
-  // Adjust for parallax shift during dragging
-  let parallaxShift = 0.2 * depth * scrollAmount;
 
-  // Set the 'originalTop' relative to the entire canvas height
-  obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
-
-  obj.originalTop = obj.top - parallaxShift;
-
-  console.log(obj.originalTop);
-
-  obj.set('originalTop', obj.top - parallaxShift);
+    console.log(parallaxShift, obj.top)
+    obj.originalTop = obj.top - parallaxShift;
 }
 
-
-
 canvas.on('object:moving', function(options) {
-    // resizeCanvas()
-
     let activeObject = options.target;
 
-    // Function to handle the object logic
+
+    activeObject.top = Math.round(activeObject.top)
 
     if (activeObject.type === 'activeSelection') {
-        // If multiple objects are selected, iterate through them
         activeObject.getObjects().forEach(x => handleObject(x));
     } else {
         handleObject(activeObject);
     }
 
-    resizeCanvas()
-
-    isObjectBeingModified = true;
+    applyParallaxEffect();
 });
-
-
 
 
 canvas.on('object:scaling', function() {
@@ -1380,6 +1339,8 @@ let CLICK = 0
 ///////////////////////////////////////////////////
 
 
+
+let boundingBoxGroup
 
 canvas.on('mouse:down', (o) => {
    Id('loader').style.display = 'none'
@@ -1523,6 +1484,23 @@ canvas.on('mouse:down', (o) => {
             canvas.freeDrawingBrush.width = 20; // Make the brush larger to simulate an eraser
             canvas.freeDrawingBrush.color = "#FFF"; // Set the brush to white to simulate erasing
             break;
+
+        case 'bound':
+            isDown = true;
+            let pointer = canvas.getPointer(o.e);
+            origX = pointer.x;
+            origY = pointer.y;
+            boundingBoxGroup = new fabric.Rect({
+              left: origX,
+              top: origY,
+              width: pointer.x-origX,
+              height: pointer.y-origY,
+              fill: 'transparent',
+              stroke: 'black',
+              strokeWidth: 2
+            });
+            canvas.add(boundingBoxGroup);
+            break;
         default:
             canvas.isDrawingMode = false;
             break;
@@ -1546,6 +1524,64 @@ canvas.on('mouse:down', (o) => {
 
 
 
+////// DRAWING GROUPS ////////
+
+
+
+
+/*
+canvas.on('mouse:move', (o) => {
+      if (!isDown) return;
+      if (MODE === "bound") {
+        let pointer = canvas.getPointer(o.e);
+        boundingBoxGroup.set({ width: Math.abs(pointer.x - origX) });
+        boundingBoxGroup.set({ height: Math.abs(pointer.y - origY) });
+        if (pointer.x > origX) {
+          boundingBoxGroup.set({ left: origX });
+        }
+        if (pointer.y > origY) {
+          boundingBoxGroup.set({ top: origY });
+        }
+        canvas.renderAll();
+      }
+    });
+
+    canvas.on('mouse:up', (o) => {
+      if (MODE === "bound") {
+        isDown = false;
+        MODE = "draw";
+        canvas.isDrawingMode = true;
+
+        // Double-click event to enter the bounding box
+        boundingBoxGroup.on('mousedblclick', () => {
+          if (MODE === "draw") {
+            // Your logic to enter the group and draw freely.
+          }
+        });
+
+        // Prevent transforming the bounding box group
+        canvas.on('object:scaling', (e) => {
+          if (e.target === boundingBoxGroup) {
+            e.target.set({ scaleX: 1, scaleY: 1 });
+          }
+        });
+        canvas.on('object:moving', (e) => {
+          if (e.target === boundingBoxGroup) {
+            e.preventDefault();
+          }
+        });
+        canvas.on('object:rotating', (e) => {
+          if (e.target === boundingBoxGroup) {
+            e.preventDefault();
+          }
+        });
+      }
+    });
+
+
+
+*/
+
 
 
 window.deleteObject = function(){
@@ -1555,11 +1591,12 @@ window.deleteObject = function(){
     if (active.type == "activeSelection") {
       active.getObjects().forEach(x => canvas.remove(x))
       canvas.discardActiveObject().renderAll()
+    }else{
+      canvas.renderAll()
+  canvas.calcOffset()
     }
   }
   resizeCanvas()
-  canvas.renderAll()
-  canvas.calcOffset()
   saveCanvasToSupabase()
 }
 
@@ -1567,56 +1604,6 @@ window.deleteObject = function(){
 canvas.on('mouse:up', function(o){
   isDown = false;
 });
-
-
-
-  function resizeInitial(initial = 1) {
-    let newWidth = window.innerWidth - panelWidth;
-
-    if (window.innerWidth < 800){
-        newWidth = window.innerWidth;
-    }
-
-    let scaleX = newWidth / initialCanvasWidth;
-    if (initial === 0){
-        scaleX = newWidth / data.iwidth;
-    }
-
-    // Calculate center shift difference to maintain the centering
-    const centerShiftX = (canvas.getWidth() - newWidth) / 2;
-
-    // Scale and center each object
-    canvas.getObjects().forEach((object) => {
-        object.left = (object.left - centerShiftX) * scaleX;
-        object.scaleX *= scaleX;
-        object.top *= scaleX;
-        object.scaleY *= scaleX;
-        object.setCoords();
-    });
-
-
-    // Clip objects to canvas boundaries
-    canvas.clipTo = function(ctx) {
-        ctx.rect(0, 0, newWidth, initialCanvasHeight * scaleX);
-        ctx.clip();
-    };
-
-    // Update canvas dimensions
-    canvas.setWidth(newWidth);
-    canvas.setHeight(initialCanvasHeight * scaleX);
-    canvas.renderAll();
-    canvas.calcOffset();
-
-    // Also adjust the actual HTML canvas size
-    canvas.getElement().style.width = `${initialCanvasWidth}px`;
-    canvas.getElement().style.height = `${initialCanvasHeight * scaleX}px`;
-
-    // Adjust the width of the canvas container
-    document.getElementById('container').style.width = `${initialCanvasWidth}px`;
-
-    // Update initial dimensions
-    initialCanvasHeight = canvas.getHeight();
-}
 
 
 
@@ -1669,6 +1656,8 @@ canvas.on('object:added', function(options) {
   // Calculate offset from the center.
   obj.xPercent = (obj.left + (obj.width*obj.scaleX)/2  - canvasCenterX)/ canvas.width
 
+  obj.originalTop = obj.top
+
 
   // Store initial properties directly in the object.
   obj.originalProperties = {
@@ -1686,20 +1675,23 @@ canvas.on('object:added', function(options) {
 
 
 function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
+
+    /*
     if (window.innerWidth < 800) {
         newContainerWidth = window.innerWidth;
     }
+    */
 
     const newWidth = newContainerWidth;
     const canvasCenterX = newWidth / 2;
 
     const maxObjectWidth = newWidth * 0.95;
 
+    canvas.setWidth(newWidth);
+
 
     canvas.getObjects().forEach((object) => {
         const isTextbox = object.type === 'textbox';
-
-
 
         /*
         if (isTextbox) {
@@ -1738,34 +1730,36 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
         }
         */
 
+
         /*
         const origProps = object.originalProperties;
             object.set({
-                left: origProps.left,
-                top: origProps.top,
+                //left: origProps.left,
+                //top: origProps.top,
                 width: origProps.width,
                 height: origProps.height,
                 scaleX: origProps.scaleX,
                 scaleY: origProps.scaleY
-            });
-            object.setCoords();
-
-            */
+        });
+        */
 
         // Adjust position relative to the canvas width change.
         const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX)/2
+
+
 
         object.left = newLeftPos
         object.setCoords();
 
     });
 
+    /*
     canvas.clipTo = function(ctx) {
         ctx.rect(0, 0, newWidth, canvas.getHeight());
         ctx.clip();
     };
+    */
 
-    canvas.setWidth(newWidth);
 
     // Adjust the widths of both the container and the canvas-container.
     const container = document.getElementById('container');
@@ -1778,7 +1772,7 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
         canvasContainer.style.width = `${newWidth}px`;
     }
 
-    canvas.renderAll();
+    //canvas.renderAll();
     canvas.calcOffset();
 }
 
@@ -1786,11 +1780,12 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
 
 
+Id('canvas-container').addEventListener('resize', () => unifiedResize());
 
 window.addEventListener('resize', () => unifiedResize());
 
 
-  window.addEventListener('load', () => unifiedResize())
+window.addEventListener('load', () => unifiedResize())
 
 
 
@@ -2079,8 +2074,6 @@ async function loadImagesFromSupabase() {
 assets.set([])
 const path = `${data.user.id}/`; // Construct the path to your subfolder
 
-console.log(data)
-
 const { data: files, error } = await supabaseClient.storage.from('images').list(path);
 
 
@@ -2116,7 +2109,6 @@ canvas.wrapperEl.addEventListener('drop', async function(e) {
     if (files && files.length) {
         for (let i = 0; i < files.length; i++) {
             let file = files[i];
-            console.log(file);
 
             if (file.type.includes("image")) {
                 let imagePath = await uploadToSupabase(file);
@@ -2218,7 +2210,7 @@ function resizeCanvas() {
   container.scrollTop = oldScrollTop;
 
   // Add 100px to maxHeight and update canvas height.
-  canvas.setHeight(maxHeight + 100);
+  //canvas.setHeight(maxHeight + 100);
 
   // Update canvas dimensions on the actual HTML element
   canvas.calcOffset();
@@ -2365,7 +2357,7 @@ function addButton(x, y) {
   document.getElementById('addDraw').addEventListener('click', ()=> {
     //addText(10,10);
 
-    MODE = 'draw'
+    MODE = 'bound'
   });
 
 
@@ -2407,8 +2399,6 @@ function addButton(x, y) {
     for (let i=0; i<$assets.length; i++){
       let asset = $assets[i]
 
-      console.log(asset.url)
-
       div +=
         `
         <img src="${asset.url}" data-filename="${asset.name}" alt="image" draggable="true" data-url="${asset.url}">
@@ -2416,8 +2406,6 @@ function addButton(x, y) {
     }
 
     PANEL.innerHTML = div
-
-    console.log(PANEL)
 
   });
 
@@ -2515,6 +2503,9 @@ function addButton(x, y) {
       { label: 'Font Weight', id: 'fontWeight', type: 'number', icon: IconB, step: 100,prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
       { label: 'Font Style', id: 'fontStyle', type: 'dropdown', icon: IconT, prop: 'fontStyle', value: activeObject.fontStyle, options: ['normal', 'italic', 'oblique'] },
       { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0,  max: 360 },
+        { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
+      { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+
       { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
     ];
 
@@ -2611,7 +2602,9 @@ function saveCanvasToSupabase() {
     // Center of the canvas
     const canvasCenterX = canvas.width / 2;
 
-    canvas.getObjects().forEach((object) => {
+
+    canvas.getObjects().forEach((obj) => {
+      /*
         if (object.originalWidth && object.originalWidth <= canvas.getWidth() * 0.95) {
             object.set({
                 scaleX: 1,
@@ -2620,12 +2613,14 @@ function saveCanvasToSupabase() {
                 width: object.originalWidth
             }).setCoords();
         }
+        */
+
+
+        obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
     });
 
     // Save the scroll position
     const scrollTop = Id('canvas-container').scrollTop;
-
-    console.log(scrollTop)
     const backupGridLines = [...gridLines];
 
     // Calculate original dimensions
@@ -2637,6 +2632,7 @@ function saveCanvasToSupabase() {
     const backupObjects = canvas.getObjects().map(object => ({
         left: object.left,
         top: object.top,
+        xPercent: object.xPercent,
         scaleX: object.scaleX,
         scaleY: object.scaleY
     }));
@@ -2644,7 +2640,7 @@ function saveCanvasToSupabase() {
     // Adjust object positions relative to the center of the canvas before upload
     canvas.getObjects().forEach(object => {
         object.set({
-            left: object.left - canvasCenterX
+            //left: object.left - canvasCenterX
         }).setCoords();
     });
 
@@ -2667,6 +2663,7 @@ function saveCanvasToSupabase() {
         object.set({
             left: backupObjects[index].left,
             top: backupObjects[index].top,
+            xPercent: backupObjects[index].xPercent,
             scaleX: backupObjects[index].scaleX,
             scaleY: backupObjects[index].scaleY
         }).setCoords();
@@ -2718,7 +2715,7 @@ async function uploadCanvas() {
     };
 
     // Serialize the current canvas state
-    const canv = canvas.toJSON(['link', 'depth', 'xPercent', 'scaler']);
+    const canv = canvas.toJSON(['link', 'depth', 'xPercent', 'scaler', 'originalProperties', 'originalTop']);
     const json = JSON.stringify(canv);
 
     // Prepare the file for Supabase Storage
@@ -2762,7 +2759,8 @@ async function uploadCanvas() {
               title: title,
               content: fileName,  // Storing the file name as the reference
               iwidth: canvas.width,
-              color: color
+              color: color,
+              height: height
             }
         ]);
 

@@ -53,7 +53,7 @@
 
 	async function fetchPages(){
 
-		const {data: d, error} = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id)
+		const {data: d, error} = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id).order('index', { ascending: true });
 
 		if (!error){
 			pages.set(d)
@@ -99,6 +99,7 @@ if (!error){
         }else{
 			allPages.set(d);
 		}
+
 	}
 
 

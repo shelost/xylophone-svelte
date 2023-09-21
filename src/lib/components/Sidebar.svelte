@@ -10,6 +10,8 @@
 
 	import { onMount } from 'svelte'
 
+	import Sortable from 'sortablejs';
+
 	import Arachne from '$lib/img/arachne.svg'
 
 
@@ -33,15 +35,117 @@
 	let isFetched = false;
 	let path;
 
+
+	let folders = writable([]);  // Store for the folders
+    let newFolderName = "";  // Temporary variable to hold the name of the new folder during creation
+
+
+
+
+
 	$: if ($page && $page.route && $page.route.id) {
 		path = $page.url.pathname;
 	}
 
 	onMount(() => {
-		if (pagesDiv) {
-            pagesDiv.scrollTop = $scrollPosition;
-        }
+		let sortable = Sortable.create(document.querySelector('.pages'), {
+			group: 'shared',
+			animation: 150,
+			onAdd: function (evt) {
+				const folderId = evt.to.closest('.folder').dataset.id;
+				const targetFolder = $folders.find(f => f.id == folderId);
+				const item = $pages[evt.oldIndex];
+				$pages = [...$pages.slice(0, evt.oldIndex), ...$pages.slice(evt.oldIndex + 1)];
+
+				targetFolder.pages = [...targetFolder.pages, item];
+			}
+		});
+
+
+		$folders.forEach((folder, index) => {
+
+				/*
+			// Initialize Sortable for each folder
+			Sortable.create(document.querySelector(`.folder[data-id="${folder.id}"] .folder-contents`), {
+				group: 'shared',
+				animation: 150,
+				onAdd: function (evt) {
+					const sourceFolderId = evt.from.closest('.folder')?.dataset.id;
+					const item = folder.pages[evt.oldIndex];
+					folder.pages = [...folder.pages.slice(0, evt.oldIndex), ...folder.pages.slice(evt.oldIndex + 1)];
+
+					if (sourceFolderId) { // Moved from another folder
+						const sourceFolder = $folders.find(f => f.id == sourceFolderId);
+						sourceFolder.pages = [...sourceFolder.pages, item];
+					} else { // Moved from the main pages container
+						$pages = [...$pages, item];
+					}
+				}
+			});
+
+
+		*/
+
+
+		let sortable = Sortable.create(document.getElementById('content-' + folder.id), {
+				group: 'shared',
+				animation: 150,
+				onAdd: function (evt) {
+					const sourceFolderId = evt.from.closest('.folder')?.dataset.id;
+					const item = folder.pages[evt.oldIndex];
+					folder.pages = [...folder.pages.slice(0, evt.oldIndex), ...folder.pages.slice(evt.oldIndex + 1)];
+
+					if (sourceFolderId) { // Moved from another folder
+						const sourceFolder = $folders.find(f => f.id == sourceFolderId);
+						sourceFolder.pages = [...sourceFolder.pages, item];
+					} else { // Moved from the main pages container
+						$pages = [...$pages, item];
+					}
+				}
+			});
+
+		})
+
+
+
+
 	});
+
+	async function updateIndices(e){
+
+		[].forEach.call(e.from.getElementsByClassName('page'), function (el,index) {
+			let id = el.id
+			updateIndex(id, index)
+
+			//el.index = e.newIndex
+
+		});
+
+		fetchPages()
+
+
+
+		//console.log($pages.map(p => p.index))
+
+	}
+
+	async function updateIndex(id, index){
+		const { data: d, error } = await supabaseClient
+			.from('pages')
+				.update({
+				index: index
+			})
+			.eq('id', id);
+
+			if (!error){
+
+			}else{
+			console.error('Error updating index:', error);
+			}
+	}
+
+
+
 
 	function saveScrollPosition() {
         if (pagesDiv) {
@@ -59,7 +163,7 @@
 
 	async function fetchPages() {
 		if (!isFetched) {
-			const { data: d, error } = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id);
+			const { data: d, error } = await supabaseClient.from('pages').select('*').eq('user_id', data.user.id).order('index', { ascending: true });
 			if (!error) {
 				pages.set(d);
 				isFetched = true;
@@ -68,6 +172,79 @@
 			}
 		}
 	}
+
+
+	async function sortFolder(folder, pageID){
+		const { data: d, error } = await supabaseClient.from('folders').update({pages: [...folder.pages, pageID]}).eq('id', folder.id);
+
+
+
+
+		if (!error){
+			console.log(`success`)
+
+			const { data: k, error: e } = await supabaseClient.from('pages').update({folder_id: folder.id}).eq('id', pageID);
+
+			if (!e){
+				console.log(`success`)
+			}else{
+				console.error('Error updating page folder:', k);
+			}
+
+		}else{
+			console.error('Error updating folder pages:', error);
+		}
+	}
+
+	async function fetchFolders() {
+		if (!isFetched) {
+			const { data: d, error } = await supabaseClient.from('folders').select('*').eq('user_id', data.user.id)
+			if (!error) {
+
+				folders.set(d);
+
+				setTimeout(() => {
+
+
+
+					$folders.forEach(async (folder, index) => {
+
+						let sortable = Sortable.create(document.getElementById('content-' + folder.id), {
+							group: 'shared',
+							animation: 150,
+							onAdd: function (evt) {
+								let pageID = evt.item.firstElementChild.id
+								sortFolder(folder, pageID)
+							}
+						});
+
+												//console.log(folder)
+							folder.objects = []
+
+
+
+						folder.pages.forEach(page => {
+								console.log(page)
+
+								let object = $pages.find(x => x.id == page)
+								folder.objects.push(object)
+							})
+
+							console.log(folder.objects)
+
+					})
+
+
+				}, 100);
+
+
+
+			} else {
+				console.error('Error fetching folders:', error);
+			}
+		}
+	}
+
 
 	async function addPage() {
 		const { data: d, error } = await supabaseClient.from('pages').insert({
@@ -85,6 +262,73 @@
 	}
 
 	fetchPages();
+	fetchFolders()
+
+
+
+
+   	async function addFolder() {
+        // Create a new folder with a random ID and empty pages array
+
+
+
+		let newID =  crypto.randomUUID()
+
+        const folder = {
+            id: newID,
+            name: newFolderName || "Unnamed Folder",
+            pages: [],
+			objects: []
+        };
+
+        $folders = [...$folders, folder];
+        newFolderName = "";  // Reset folder name for the next addition
+
+		console.log('yo')
+
+
+		const {data, error} = await supabaseClient.from('folders').insert(folder)
+
+		if (!error){
+
+		}else{
+			console.error('Error creating folder:', error);
+		}
+
+
+		setTimeout(() => {
+			console.log(document.getElementById(newID))
+
+			let sortable = Sortable.create(document.getElementById('content-' + newID), {
+				group: 'shared',
+				animation: 150,
+				onAdd: function (evt) {
+					const sourceFolderId = evt.from.closest('.folder')?.dataset.id;
+					const item = folder.pages[evt.oldIndex];
+					folder.pages = [...folder.pages.slice(0, evt.oldIndex), ...folder.pages.slice(evt.oldIndex + 1)];
+
+					if (sourceFolderId) { // Moved from another folder
+						const sourceFolder = $folders.find(f => f.id == sourceFolderId);
+						sourceFolder.pages = [...sourceFolder.pages, item];
+					} else { // Moved from the main pages container
+						$pages = [...$pages, item];
+					}
+
+
+					console.log(evt)
+				}
+			});
+		}, 100);
+
+
+    }
+
+
+    function toggleFolder(folderId) {
+        let targetFolder = $folders.find(folder => folder.id === folderId);
+        targetFolder.open = !targetFolder.open;  // Toggle folder open state
+        folders.set($folders);  // Trigger update
+    }
 
 </script>
 
@@ -183,29 +427,79 @@
 
 	</div>
 
+	<!--
 
 	<div id='pages' bind:this={pagesDiv} on:click={saveScrollPosition}>
+		<button id='add' on:click={addPage}> + Add Page </button>
 
-			<button id = 'add' on:click={addPage}> + Add Page </button>
+		<button id='group' on:click={addGroup}> + Add Group </button>
+		{#each $pages as page}
+			<a href='/x/{page.id}' >
+				<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
+					<div class='color' style='background-color: {page.color}'></div>
+					<h2> {page.title} </h2>
+				</div>
+			</a>
+		{/each}
+	</div>
+-->
 
-			{#each $pages as page}
 
-				<a href = '/x/{page.id}'>
+<div id='pages' bind:this={pagesDiv} on:click={saveScrollPosition}>
+    <button id='add' on:click={addPage}> + Add Page </button>
+    <button id='group' on:click={addFolder}> + Add Group </button>
 
-					<div class = 'text-btn'  class:active={path === `/x/${page.id}`}>
+	 <!-- Folders display -->
+	 {#each $folders as folder}
+		<div class="folder" id = '{folder.id}' data-id={folder.id}>
+			<div class="folder-header" on:click={() => toggleFolder(folder.id)}>
+				{folder.name}
+			</div>
 
-
-						<div class = 'color' style='background-color: {page.color}'></div>
-						<h2> {page.title} </h2>
-
-					</div>
-				</a>
-
-			{/each}
+			<div class="folder-contents" class:active = {folder.open} id = 'content-{folder.id}'>
+				{#each folder.objects as page}
+					<a href='/x/{page.id}' >
+						<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
+							<div class='color' style='background-color: {page.color}'></div>
+							<h2> {page.title} </h2>
+						</div>
+					</a>
+				{/each}
+			</div>
 
 		</div>
+	{/each}
+
+
+	<!--
+    <div class="folder-creation">
+        <input bind:value={newFolderName} placeholder="Enter folder name" />
+        <button on:click={addFolder}>Create Folder</button>
+    </div>
+-->
+
+
+	<div class = 'pages'>
+
+		{#each $pages as page}
+
+			{#if page}
+					<a href='/x/{page.id}' >
+						<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
+							<div class='color' style='background-color: {page.color}'></div>
+							<h2> {page.title} </h2>
+						</div>
+					</a>
+
+			{/if}
+
+		{/each}
 
 	</div>
+
+</div>
+
+</div>
 
 
 
@@ -253,6 +547,45 @@
 	border-radius: 10px;
 	border: 1px solid rgba(0,0,0,0.1);
 }
+
+
+
+.folder {
+  .folder-header {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    padding: 5px 10px;
+    margin: 0 5px;
+	cursor: pointer;
+
+    &:hover {
+      background: rgba(black, 0.1);
+    }
+  }
+
+  .folder-contents {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out; /* Transition effect */
+
+	&::after{
+		content: '';
+  		display: inline-block;
+		height: 1px;
+		width: 220px;
+		margin-left: 10px;
+		background: rgba(black, 0.2);
+	}
+
+    &.active {
+      max-height: 500px; /* This value should be more than enough for the content. Adjust if needed. */
+    }
+  }
+
+}
+
+
 
 .text-btn{
 		margin: 0 5px;
