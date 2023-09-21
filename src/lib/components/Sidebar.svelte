@@ -23,6 +23,10 @@
 	import { pages, user, scrollPosition } from '$lib/utils/store.js';  // Adjust the path as needed
 	export let data;
 
+
+	import Open from '$lib/img/folder-open.svg'
+	import Closed from '$lib/img/folder-closed.svg'
+
 	let newID = crypto.randomUUID();
 	let pagesDiv;
 	let isFetched = false;
@@ -43,41 +47,8 @@ onMount(() => {
 		animation: 150,
 		onAdd: async function (evt) {
 
-			/*
-
-			// Prevent adding a page if it's already in the target folder.
-			if (!folderId || folderId == item.folder_id) {
-				evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
-				return;
-			}
-			*/
-
-
-
 			console.log(evt.to)
-
-
-			if (evt.to && evt.to instanceof Element) {
-				const folderElement = evt.to.closest('.folder');
-				if (folderElement) {
-					const folderId = folderElement.dataset.id;
-					// ... rest of your code that uses folderId
-				} else {
-					console.warn("No closest '.folder' found for the element.");
-				}
-			} else {
-				console.error("evt.to is not a valid DOM Element:", evt.to);
-			}
-
-
-			const folderId = folderElement.dataset.id;
-
-
-			console.log(folderId)
-
-
-
-
+			const folderId = evt.to.closest('.folder').dataset.id;
 
 			const item = $pages[evt.oldIndex];
 
@@ -86,6 +57,8 @@ onMount(() => {
 			// Remove page from the main pages array
 			$pages = $pages.filter(p => p.id !== item.id);
 		},
+
+
 		onRemove: async function (evt) {
 			const item = $pages[evt.oldIndex];
 
@@ -213,6 +186,13 @@ async function removePageFromFolder(pageId) {
 								sortFolder(folder, pageID)
 							}
 						});
+
+
+
+						folder.pages = folder.pages.filter(function(item, pos) {
+							return folder.pages.indexOf(item) == pos;
+						})
+
 
 						folder.objects = []
 
@@ -345,18 +325,39 @@ async function removePageFromFolder(pageId) {
 	 <!-- Folders display -->
 	 {#each $folders as folder}
 		<div class="folder" id = '{folder.id}' data-id={folder.id}>
-			<div class="folder-header" on:click={() => toggleFolder(folder.id)}>
-				{folder.name}
+			<div class="folder-header" class:active = {folder.open} on:click={() => toggleFolder(folder.id)}>
+
+				<div class = 'flex'>
+
+
+					{#if folder.open}
+					<img src = {Open} alt = 'folder'>
+
+					{:else}
+					<img src = {Closed} alt = 'folder'>
+					{/if}
+
+					<h2> {folder.name} </h2>
+
+				</div>
+
+
+					<svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M5 25L18.781 10.7438C19.1741 10.3371 19.8259 10.3371 20.219 10.7438L34 25" stroke="black" stroke-width="5" stroke-linecap="round"/>
+					</svg>
+
 			</div>
 
 			<div class="folder-contents" class:active = {folder.open} id = 'content-{folder.id}'>
 				{#each folder.objects as page}
-					<a href='/x/{page.id}' >
-						<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
-							<div class='color' style='background-color: {page.color}'></div>
-							<h2> {page.title} </h2>
-						</div>
-					</a>
+					{#if page}
+						<a href='/x/{page.id}' >
+							<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
+								<div class='color' style='background-color: {page.color}'></div>
+								<h2> {page.title} </h2>
+							</div>
+						</a>
+					{/if}
 				{/each}
 			</div>
 
@@ -403,7 +404,6 @@ async function removePageFromFolder(pageId) {
 		border: 1px solid rgba(black, 0.2);
 		border-radius: 5px;
 		height: 22px;
-
 	}
 
 	h2{
@@ -426,36 +426,65 @@ async function removePageFromFolder(pageId) {
 }
 
 
-
 .folder {
   .folder-header {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     letter-spacing: -0.2px;
     padding: 5px 10px;
     margin: 0 5px;
 	transition: 0.2s ease;
 	border-radius: 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	cursor: pointer;
 
+
+	.flex{
+		gap: 6px;
+	}
+
+	img{
+		height: 18px;
+	}
+
+
+	svg{
+		height: 12px;
+		width: 12px;
+		transform: rotate(-180deg);
+		transition: 0.3s ease;
+		opacity: 0.3;
+		path{
+			width: 50px;
+		}
+	}
+
+	&.active{
+		svg{
+			transform: rotate(0deg);
+		}
+	}
+
     &:hover {
-      background: rgba(black, 0.1);
+      background: rgba(black, 0.05);
     }
   }
 
   .folder-contents {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.2s ease-in-out; /* Transition effect */
+    transition: max-height 0.3s ease-in-out; /* Transition effect */
 
 	&::after{
 		content: '';
   		display: inline-block;
 		height: 1px;
-		width: 220px;
-		margin-left: 10px;
-		background: rgba(black, 0.2);
-		transform: translateY(-10px);
+		width: 210px;
+		margin-left: 15px;
+		background: rgba(black, 0.1);
+		transform: translateY(-5px);
 	}
 
     &.active {
@@ -470,11 +499,7 @@ async function removePageFromFolder(pageId) {
 .text-btn{
 		margin: 0 5px;
 		padding: 7px 12px;
-
-
 		border-radius: 8px;
-
-
 		font-size: 13px;
 		letter-spacing: -0.3px;
 		font-weight: 500;
@@ -497,7 +522,7 @@ async function removePageFromFolder(pageId) {
 			color: black;
 			//box-shadow: -3px 5px 15px rgba(black, 0.05);
 
-			background: rgba(black, 0.1);
+			background: rgba(black, 0.05);
 		}
 
 		&:hover{
@@ -505,7 +530,7 @@ async function removePageFromFolder(pageId) {
 			background: white;
 			//box-shadow: -3px 5px 15px rgba(black, 0.05);
 
-			background: rgba(black, 0.1);
+			background: rgba(black, 0.05);
 		}
 	}
 
@@ -518,56 +543,55 @@ async function removePageFromFolder(pageId) {
 	width: 240px;
 	height: 100vh;
 	overflow: hidden;
-
-	//background: #FF004D;
-
 	background: none;
-
     display: flex;
 	flex-direction: column;
 	z-index: 3 !important;
-
     opacity: 1;
-
-
-
 
 
 	#add{
 		width: calc(100% - 24px);
 		margin: 15px;
+		margin-bottom: 0px;
 		box-shadow: none;
 		background: rgba(black, 0.05);
 		background: #ff004d;
-
-
 		border-radius: 8px;
-
-
+		padding: 8px 0;
 		color: white;
-
-
 		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
 
+
+		transition: 0.2s ease;
+
 		&:hover{
 			background: rgba(black, 0.1);
-			background: #ee0048;
+			background: #de0025;
 		}
 	}
 
 	#group{
-		background: none;
-		color: #ff004d;
+		width: calc(100% - 24px);
+		margin: 15px;
+		margin-top: 10px;
 		box-shadow: none;
-		width: 100%;
+		background: rgba(black, 0.05);
+		background: #ff004d;
+		border-radius: 8px;
+		padding: 8px 0;
+		color: #ff004d;
 		font-size: 12px;
 		font-weight: 500;
-		letter-spacing: -0.3px;
-		margin-top: -15px;
+		letter-spacing: -0.2px;
+		background: #ffeaf1;
+
+		transition: 0.2s ease;
+
 		&:hover{
-			color: #ad0034;
+			background: #ffdce8;
 		}
 	}
 

@@ -4,11 +4,6 @@
   <div id = 'bar'>
     <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
-    <button id = 'setHeight'> <h1> Save </h1> </button>
-
-
-    <input id = 'height' bind:value = {height} type = 'number' style='outline: none !important;'>
-
 
 
     <div id = 'buttons'>
@@ -48,9 +43,15 @@
         <input type="color" id="color" name="head" bind:value={color} />
       </div>
 
-  </div>
+    </div>
 
-</div>
+
+    <div id = 'input'>
+      <input id = 'height' bind:value = {height} type = 'number' style='outline: none !important;'>
+      <button id = 'setHeight'> <h1> Save </h1> </button>
+    </div>
+
+  </div>
 
 
 
@@ -426,7 +427,7 @@ position: fixed;
   letter-spacing: -0.3px;
   padding: 0 5px;
   height: 24px;
-  flex: 1;
+
   border-radius: 5px;
 }
 
@@ -434,6 +435,14 @@ position: fixed;
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+#input{
+  display: flex;
+  input{
+    width: 80px;
+    font-size: 14px;
+  }
 }
 
 }
@@ -756,12 +765,24 @@ onMount(()=> {
   fabric.Object.prototype.controls.clone = new fabric.Control({
     x: -0.5,
     y: -0.5,
-    offsetY: 5,
+    offsetY: 10,
     offsetX: -16,
     cursorStyle: 'pointer',
     mouseUpHandler: cloneObject,
     render: renderIcon(cloneImg),
-    cornerSize: 18
+    cornerSize: 24,
+  });
+
+
+  fabric.Object.prototype.controls.edit = new fabric.Control({
+    x: -0.5,
+    y: -0.5,
+    offsetY: 40,
+    offsetX: -16,
+    cursorStyle: 'pointer',
+    mouseUpHandler: cloneObject,
+    render: renderIcon(cloneImg),
+    cornerSize: 24
   });
 
 
@@ -1274,6 +1295,7 @@ let isObjectBeingModified = false; // Track if an object is being edited, resize
 // Listen for object modification events
 canvas.on('object:modified', function() {
     isObjectBeingModified = true;
+    activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2  - canvas.width/2 )/ canvas.width
     MODE = null
    // applyParallaxEffect();
 });
@@ -1295,8 +1317,6 @@ function handleObject(obj) {
     let parallaxShift = 0.2 * depth * scrollAmount;
     obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
 
-
-    console.log(parallaxShift, obj.top)
     obj.originalTop = obj.top - parallaxShift;
 }
 
@@ -1742,7 +1762,7 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
                 scaleY: origProps.scaleY
         });
         */
-
+        //object.xPercent = (object.left + (object.width*object.scaleX)/2  - canvas.width/2 )/ canvas.width
         // Adjust position relative to the canvas width change.
         const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX)/2
 
@@ -1771,6 +1791,8 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
     if (canvasContainer) {
         canvasContainer.style.width = `${newWidth}px`;
     }
+
+    canvas.setWidth(newWidth);
 
     //canvas.renderAll();
     canvas.calcOffset();

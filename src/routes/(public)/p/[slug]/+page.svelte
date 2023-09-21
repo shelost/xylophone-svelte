@@ -2,7 +2,14 @@
 
     <div id = 'bar'>
 
-        <h2 id = 'title'> {data.title} </h2>
+        <h2 id = 'title'>
+
+            {#if $folder}
+                {$folder.name}
+             {:else}
+                {data.title}
+             {/if}
+        </h2>
 
 
 
@@ -19,11 +26,15 @@
                     {#each $folder.objects as page}
 
 
-                            <a href = '/p/{page.id}'>
-                                <h2>
+                        {#if page}
+
+                            <a href = '/p/{page.id}' >
+                                <h2 class:active = {page.id == data.id}>
                                     {page.title}
                                 </h2>
                             </a>
+
+                            {/if}
 
 
 
@@ -130,11 +141,11 @@
       position: fixed;
       bottom: 0px;
       left: 0px;
-      padding: 12px 15px 12px 12px;
+      padding: 12px 15px 10px 12px;
       background: #f0f0f0;
       background: #ff004d;
       color: white;
-      border-radius: 0 15px 0 0;
+      border-radius: 0 10px 0 0;
       letter-spacing: -0.3px;
       font-size: 13px;
       font-weight: 600;
@@ -220,7 +231,7 @@
 
 
     #bar{
-        padding: 15px 16px;
+        padding: 10px 16px;
         position: fixed;
         top: 0;
         left: 0;
@@ -236,7 +247,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 40px;
+        gap: 30px;
     }
 
 
@@ -244,22 +255,32 @@
 
         #title{
             position: fixed;
-            top: 15px;
-            left: 20px;
+            top: 10px;
+            left: 15px;
 
         }
 
         h2{
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 500;
             letter-spacing: -0.3px;
+            transition: 0.2s ease;
+            opacity: 0.4;
+
+            &.active{
+                opacity: 1;
+            }
+
+            &:hover{
+                opacity: 1;
+            }
         }
 
 
         #profile{
             position: fixed;
-            top: 15px;
-            right: 20px;
+            top: 10px;
+            right: 15px;
 
 
             display: flex;
@@ -354,6 +375,14 @@ async function fetchFolder(){
                     return $folder.pages.indexOf(item) == pos;
                 })
 
+
+                $folder.pages = $folder.pages.filter(function(item, pos) {
+                    return $folder.pages.indexOf(item) == pos;
+                })
+
+
+
+
                 $folder.pages.forEach(page => {
 
 
@@ -375,6 +404,10 @@ async function fetchFolder(){
     }
 }
 
+
+
+fetchPages()
+fetchFolder()
 
 
 
@@ -482,7 +515,7 @@ const loadCanvasFromSupabase = async () => {
                 if (object.xPercent !== undefined) {
                     const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
                     object.set('left', newLeftPos);
-                    object.set('top', object.originalTop)
+                    //object.set('top', object.originalTop)
                 }
 
             });
@@ -491,6 +524,8 @@ const loadCanvasFromSupabase = async () => {
             applyParallaxEffect();
             canvas.setHeight(data.height);
             //document.getElementById('app').style.height = data.height + 'px'
+
+            document.getElementById('bar').style.background = data.color
             canvas.setBackgroundColor(data.color);
             canvas.renderAll();
 
