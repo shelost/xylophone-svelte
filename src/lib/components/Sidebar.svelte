@@ -7,14 +7,9 @@
 	import Scrollable from '$lib/img/scrollable.svg'
 	import X from '$lib/img/x.svg'
 	import Xylophone from '$lib/img/xylophone.svg'
-
 	import { onMount } from 'svelte'
-
 	import Sortable from 'sortablejs';
-
 	import Arachne from '$lib/img/arachne.svg'
-
-
 	import IconHome from '$lib/img/iconx.svg'
 	import IconProfile from '$lib/img/iconx-3.svg'
 	import IconData from '$lib/img/iconx-2.svg'
@@ -24,109 +19,121 @@
 	import Sidebar from '$lib/components/Sidebar.svelte'
 	import {invalidate} from '$app/navigation'
 	import { supabaseClient } from '$lib/db'
-
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import { pages, user, scrollPosition } from '$lib/utils/store.js';  // Adjust the path as needed
-
 	export let data;
 
 	let newID = crypto.randomUUID();
 	let pagesDiv;
 	let isFetched = false;
 	let path;
-
-
 	let folders = writable([]);  // Store for the folders
     let newFolderName = "";  // Temporary variable to hold the name of the new folder during creation
-
-
-
 
 
 	$: if ($page && $page.route && $page.route.id) {
 		path = $page.url.pathname;
 	}
 
-	onMount(() => {
-		let sortable = Sortable.create(document.querySelector('.pages'), {
-			group: 'shared',
-			animation: 150,
-			onAdd: function (evt) {
-				const folderId = evt.to.closest('.folder').dataset.id;
-				const targetFolder = $folders.find(f => f.id == folderId);
-				const item = $pages[evt.oldIndex];
-				$pages = [...$pages.slice(0, evt.oldIndex), ...$pages.slice(evt.oldIndex + 1)];
+	// ... [rest of the imports and variables]
 
-				targetFolder.pages = [...targetFolder.pages, item];
+onMount(() => {
+	let sortable = Sortable.create(document.querySelector('.pages'), {
+		group: 'shared',
+		animation: 150,
+		onAdd: async function (evt) {
+
+			/*
+
+			// Prevent adding a page if it's already in the target folder.
+			if (!folderId || folderId == item.folder_id) {
+				evt.from.insertBefore(evt.item, evt.from.children[evt.oldIndex]);
+				return;
 			}
-		});
+			*/
 
 
-		$folders.forEach((folder, index) => {
 
-				/*
-			// Initialize Sortable for each folder
-			Sortable.create(document.querySelector(`.folder[data-id="${folder.id}"] .folder-contents`), {
-				group: 'shared',
-				animation: 150,
-				onAdd: function (evt) {
-					const sourceFolderId = evt.from.closest('.folder')?.dataset.id;
-					const item = folder.pages[evt.oldIndex];
-					folder.pages = [...folder.pages.slice(0, evt.oldIndex), ...folder.pages.slice(evt.oldIndex + 1)];
+			console.log(evt.to)
 
-					if (sourceFolderId) { // Moved from another folder
-						const sourceFolder = $folders.find(f => f.id == sourceFolderId);
-						sourceFolder.pages = [...sourceFolder.pages, item];
-					} else { // Moved from the main pages container
-						$pages = [...$pages, item];
-					}
+
+			if (evt.to && evt.to instanceof Element) {
+				const folderElement = evt.to.closest('.folder');
+				if (folderElement) {
+					const folderId = folderElement.dataset.id;
+					// ... rest of your code that uses folderId
+				} else {
+					console.warn("No closest '.folder' found for the element.");
 				}
-			});
+			} else {
+				console.error("evt.to is not a valid DOM Element:", evt.to);
+			}
 
 
-		*/
+			const folderId = folderElement.dataset.id;
 
 
-		let sortable = Sortable.create(document.getElementById('content-' + folder.id), {
-				group: 'shared',
-				animation: 150,
-				onAdd: function (evt) {
-					const sourceFolderId = evt.from.closest('.folder')?.dataset.id;
-					const item = folder.pages[evt.oldIndex];
-					folder.pages = [...folder.pages.slice(0, evt.oldIndex), ...folder.pages.slice(evt.oldIndex + 1)];
-
-					if (sourceFolderId) { // Moved from another folder
-						const sourceFolder = $folders.find(f => f.id == sourceFolderId);
-						sourceFolder.pages = [...sourceFolder.pages, item];
-					} else { // Moved from the main pages container
-						$pages = [...$pages, item];
-					}
-				}
-			});
-
-		})
+			console.log(folderId)
 
 
 
 
+
+			const item = $pages[evt.oldIndex];
+
+			await movePageToFolder(item.id, folderId);
+
+			// Remove page from the main pages array
+			$pages = $pages.filter(p => p.id !== item.id);
+		},
+		onRemove: async function (evt) {
+			const item = $pages[evt.oldIndex];
+
+			if (evt.from.classList.contains('folder-contents')) {
+				await removePageFromFolder(item.id);
+			}
+
+			// Add the page back to the main pages array
+			$pages = [...$pages, item];
+		}
 	});
+});
+
+async function movePageToFolder(pageId, folderId) {
+	const folder = $folders.find(f => f.id === folderId);
+
+	// Add the page to the folder
+	folder.pages.push(pageId);
+	folder.objects.push($pages.find(p => p.id === pageId));
+
+	// Update in DB
+	await supabaseClient.from('folders').update({ pages: folder.pages }).eq('id', folderId);
+	await supabaseClient.from('pages').update({ folder_id: folderId }).eq('id', pageId);
+}
+
+async function removePageFromFolder(pageId) {
+	$folders.forEach(folder => {
+		const pageIndex = folder.pages.indexOf(pageId);
+		if (pageIndex !== -1) {
+			folder.pages.splice(pageIndex, 1);
+			folder.objects = folder.objects.filter(o => o.id !== pageId);
+		}
+	});
+
+	// Update in DB
+	await supabaseClient.from('pages').update({ folder_id: null }).eq('id', pageId);
+}
+
+
 
 	async function updateIndices(e){
 
 		[].forEach.call(e.from.getElementsByClassName('page'), function (el,index) {
 			let id = el.id
 			updateIndex(id, index)
-
-			//el.index = e.newIndex
-
 		});
 
 		fetchPages()
-
-
-
-		//console.log($pages.map(p => p.index))
-
 	}
 
 	async function updateIndex(id, index){
@@ -143,9 +150,6 @@
 			console.error('Error updating index:', error);
 			}
 	}
-
-
-
 
 	function saveScrollPosition() {
         if (pagesDiv) {
@@ -177,9 +181,6 @@
 	async function sortFolder(folder, pageID){
 		const { data: d, error } = await supabaseClient.from('folders').update({pages: [...folder.pages, pageID]}).eq('id', folder.id);
 
-
-
-
 		if (!error){
 			console.log(`success`)
 
@@ -200,13 +201,8 @@
 		if (!isFetched) {
 			const { data: d, error } = await supabaseClient.from('folders').select('*').eq('user_id', data.user.id)
 			if (!error) {
-
 				folders.set(d);
-
 				setTimeout(() => {
-
-
-
 					$folders.forEach(async (folder, index) => {
 
 						let sortable = Sortable.create(document.getElementById('content-' + folder.id), {
@@ -218,27 +214,15 @@
 							}
 						});
 
-												//console.log(folder)
-							folder.objects = []
-
-
+						folder.objects = []
 
 						folder.pages.forEach(page => {
-								console.log(page)
 
-								let object = $pages.find(x => x.id == page)
-								folder.objects.push(object)
-							})
-
-							console.log(folder.objects)
-
+							let object = $pages.find(x => x.id == page)
+							folder.objects.push(object)
+						})
 					})
-
-
 				}, 100);
-
-
-
 			} else {
 				console.error('Error fetching folders:', error);
 			}
@@ -266,11 +250,7 @@
 
 
 
-
    	async function addFolder() {
-        // Create a new folder with a random ID and empty pages array
-
-
 
 		let newID =  crypto.randomUUID()
 
@@ -283,10 +263,6 @@
 
         $folders = [...$folders, folder];
         newFolderName = "";  // Reset folder name for the next addition
-
-		console.log('yo')
-
-
 		const {data, error} = await supabaseClient.from('folders').insert(folder)
 
 		if (!error){
@@ -294,32 +270,6 @@
 		}else{
 			console.error('Error creating folder:', error);
 		}
-
-
-		setTimeout(() => {
-			console.log(document.getElementById(newID))
-
-			let sortable = Sortable.create(document.getElementById('content-' + newID), {
-				group: 'shared',
-				animation: 150,
-				onAdd: function (evt) {
-					const sourceFolderId = evt.from.closest('.folder')?.dataset.id;
-					const item = folder.pages[evt.oldIndex];
-					folder.pages = [...folder.pages.slice(0, evt.oldIndex), ...folder.pages.slice(evt.oldIndex + 1)];
-
-					if (sourceFolderId) { // Moved from another folder
-						const sourceFolder = $folders.find(f => f.id == sourceFolderId);
-						sourceFolder.pages = [...sourceFolder.pages, item];
-					} else { // Moved from the main pages container
-						$pages = [...$pages, item];
-					}
-
-
-					console.log(evt)
-				}
-			});
-		}, 100);
-
 
     }
 
@@ -356,10 +306,6 @@
 
 		{/if}
 		{/await}
-
-
-
-
 		<a href = '/home'>
 			<div class = 'text-btn' id = 'home' class:active={path === '/home'}>
 				<div class = 'icon' style = 'background-image: url({IconHome}'>
@@ -367,27 +313,6 @@
 				<h2> Home </h2>
 			</div>
 		</a>
-
-		<!--
-		<a href = '/shop' id = 'shop' >
-			<div class = 'text-btn' class:active={path === '/shop'}>
-				<div class = 'icon' style = 'background-image: url({IconShop})'>
-				</div>
-				<h2> Shop </h2>
-			</div>
-		</a>
-		-->
-
-		<!--
-		<a href = '/studio' id = 'create' >
-			<div class = 'text-btn' class:active={path === '/create'}>
-				<div class = 'icon' style = 'background-image: url({IconCreate})'>
-				</div>
-				<h2> Create </h2>
-			</div>
-		</a>
-		-->
-
 		<a href = '/profile' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/profile'}>
 				<div class = 'icon' style = 'background-image: url({IconProfile})'>
@@ -411,39 +336,7 @@
 				<h2> Database </h2>
 			</div>
 		</a>
-
-
-		<!--
-
-		<form action="/logout" method="post" use:enhance={handleLogout}>
-			<button>
-				<h1> Log Out</h1>
-			</button>
-		</form>
-
-		-->
-
-
-
 	</div>
-
-	<!--
-
-	<div id='pages' bind:this={pagesDiv} on:click={saveScrollPosition}>
-		<button id='add' on:click={addPage}> + Add Page </button>
-
-		<button id='group' on:click={addGroup}> + Add Group </button>
-		{#each $pages as page}
-			<a href='/x/{page.id}' >
-				<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
-					<div class='color' style='background-color: {page.color}'></div>
-					<h2> {page.title} </h2>
-				</div>
-			</a>
-		{/each}
-	</div>
--->
-
 
 <div id='pages' bind:this={pagesDiv} on:click={saveScrollPosition}>
     <button id='add' on:click={addPage}> + Add Page </button>
@@ -470,31 +363,15 @@
 		</div>
 	{/each}
 
-
-	<!--
-    <div class="folder-creation">
-        <input bind:value={newFolderName} placeholder="Enter folder name" />
-        <button on:click={addFolder}>Create Folder</button>
-    </div>
--->
-
-
 	<div class = 'pages'>
-
-		{#each $pages as page}
-
-			{#if page}
-					<a href='/x/{page.id}' >
-						<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
-							<div class='color' style='background-color: {page.color}'></div>
-							<h2> {page.title} </h2>
-						</div>
-					</a>
-
-			{/if}
-
+		{#each $pages.filter(p => !p.folder_id) as page}
+			<a href='/x/{page.id}' >
+				<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
+					<div class='color' style='background-color: {page.color}'></div>
+					<h2> {page.title} </h2>
+				</div>
+			</a>
 		{/each}
-
 	</div>
 
 </div>
@@ -557,6 +434,8 @@
     letter-spacing: -0.2px;
     padding: 5px 10px;
     margin: 0 5px;
+	transition: 0.2s ease;
+	border-radius: 8px;
 	cursor: pointer;
 
     &:hover {
@@ -567,7 +446,7 @@
   .folder-contents {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease-in-out; /* Transition effect */
+    transition: max-height 0.2s ease-in-out; /* Transition effect */
 
 	&::after{
 		content: '';
@@ -576,6 +455,7 @@
 		width: 220px;
 		margin-left: 10px;
 		background: rgba(black, 0.2);
+		transform: translateY(-10px);
 	}
 
     &.active {
@@ -593,8 +473,6 @@
 
 
 		border-radius: 8px;
-
-
 
 
 		font-size: 13px;
@@ -617,13 +495,17 @@
 		&.active{
 			background: white;
 			color: black;
-			box-shadow: -3px 5px 15px rgba(black, 0.05);
+			//box-shadow: -3px 5px 15px rgba(black, 0.05);
+
+			background: rgba(black, 0.1);
 		}
 
 		&:hover{
 			//background: rgba(black, 0.05);
 			background: white;
-			box-shadow: -3px 5px 15px rgba(black, 0.05);
+			//box-shadow: -3px 5px 15px rgba(black, 0.05);
+
+			background: rgba(black, 0.1);
 		}
 	}
 
@@ -672,6 +554,20 @@
 		&:hover{
 			background: rgba(black, 0.1);
 			background: #ee0048;
+		}
+	}
+
+	#group{
+		background: none;
+		color: #ff004d;
+		box-shadow: none;
+		width: 100%;
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: -0.3px;
+		margin-top: -15px;
+		&:hover{
+			color: #ad0034;
 		}
 	}
 

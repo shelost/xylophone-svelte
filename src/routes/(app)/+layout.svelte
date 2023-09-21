@@ -76,13 +76,13 @@
 
 	async function fetchUsers(){
 
-const {data: d, error} = await supabaseClient.from('users').select('*')
+	const {data: d, error} = await supabaseClient.from('users').select('*')
 
-if (!error){
-	users.set(d)
-}else{
-	console.log('Error fetching user:' + error)
-}
+	if (!error){
+		users.set(d)
+	}else{
+		console.log('Error fetching user:' + error)
+	}
 }
 
 

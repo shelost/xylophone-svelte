@@ -4,19 +4,48 @@
 
         <h2 id = 'title'> {data.title} </h2>
 
+
+
+
+
+        {#await $folder}
+
+        {:then $folder}
+
+            {#if $folder}
+
+                <div id = 'pages' data-sveltekit-reload>
+
+                    {#each $folder.objects as page}
+
+
+                            <a href = '/p/{page.id}'>
+                                <h2>
+                                    {page.title}
+                                </h2>
+                            </a>
+
+
+
+                    {/each}
+
+                </div>
+
+            {/if}
+
+        {/await}
+
+
         {#await $user}
 
         {:then $user}
 
+            {#if $user}
 
-        {#if $user}
-
-        <div id = 'profile'>
-
-
-            <img src = '{$user.pfp}' alt = 'pfp'>
-          <h2 id = 'name'> {$user.full_name} </h2>
-        </div>
+                <div id = 'profile'>
+                    <img src = '{$user.pfp}' alt = 'pfp'>
+                    <h2 id = 'name'> {$user.full_name} </h2>
+                </div>
 
           {/if}
 
@@ -55,6 +84,7 @@
         font-weight: 500;
         opacity: 0;
     }
+
 
 
     ::-webkit-scrollbar{
@@ -190,7 +220,7 @@
 
 
     #bar{
-        padding: 10px 16px;
+        padding: 15px 16px;
         position: fixed;
         top: 0;
         left: 0;
@@ -198,7 +228,26 @@
         z-index: 3;
 
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+
+
+
+    #pages{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+    }
+
+
+
+
+        #title{
+            position: fixed;
+            top: 15px;
+            left: 20px;
+
+        }
 
         h2{
             font-size: 14px;
@@ -208,6 +257,11 @@
 
 
         #profile{
+            position: fixed;
+            top: 15px;
+            right: 20px;
+
+
             display: flex;
             align-items: center;
             gap: 10px;
@@ -264,12 +318,72 @@ export let data;
 
 import Arachne from '$lib/img/octagon.svg'
 
+import {pages} from '$lib/utils/store'
+
 
 const user = writable(null)
+
+const folder = writable(null)
+
+
+
+
+async function fetchPages(){
+
+const {data: d, error} = await supabaseClient.from('pages').select('*').eq('user_id', data.user_id).order('index', { ascending: true });
+
+if (!error){
+	pages.set(d)
+}else{
+	console.log('Error fetching pages:' + error)
+}
+}
+
+
+async function fetchFolder(){
+
+    const {data: d, error} = await supabaseClient.from('folders').select('*').eq('id', data.folder_id).single()
+
+    if (!error){
+        folder.set(d)
+
+        $: if ($folder){
+                $folder.objects = []
+
+                $folder.pages = $folder.pages.filter(function(item, pos) {
+                    return $folder.pages.indexOf(item) == pos;
+                })
+
+                $folder.pages.forEach(page => {
+
+
+                    let object = $pages.find(x => x.id == page)
+                    $folder.objects.push(object)
+
+                })
+
+            }
+
+        setTimeout(()=> {
+
+
+        },500)
+
+
+    }else{
+        console.error('error fetching folder: ' + folder)
+    }
+}
+
 
 
 
 onMount(()=> {
+
+
+
+fetchPages()
+fetchFolder()
 
 
 
@@ -586,6 +700,7 @@ window.addEventListener('resize', debounce(() => {
 */
 
 
+/*
 
 window.addEventListener('resize', unifiedResize)
 
@@ -614,7 +729,7 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
     canvas.renderAll();
     canvas.calcOffset();
 }
-
+*/
 
 
 
