@@ -8,4 +8,7 @@ export const isPanelVisible = writable(false);
 export const canvasElements = writable([])
 export const allPages = writable([])
 export const assets = writable([])
+export const folders = writable([])
+export const openFolders = writable([])
+export const activePage = writable(null);
 

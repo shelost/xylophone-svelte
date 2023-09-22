@@ -15,9 +15,11 @@
 	import Sidebar from '$lib/components/Sidebar.svelte'
 	import { supabaseClient } from '$lib/db'
 
+
+
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 
-	import { pages, allPages, user, users, isPanelVisible, assets } from '$lib/utils/store.js'; // Adjust the path as necessary
+	import { pages, allPages, user, users, isPanelVisible, assets, folders, openFolders } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 	import Panel from '$lib/components/Panel.svelte';
 
@@ -44,6 +46,43 @@
 	let path;
 
 	let newID = crypto.randomUUID()
+
+	let isFetched = false
+
+
+	async function fetchFolders() {
+		if (!isFetched) {
+			const { data: d, error } = await supabaseClient.from('folders').select('*').eq('user_id', data.user.id)
+			if (!error) {
+				folders.set(d);
+				setTimeout(() => {
+					$folders.forEach(async (folder, index) => {
+
+
+
+						folder.pages = folder.pages.filter(function(item, pos) {
+							return folder.pages.indexOf(item) == pos;
+						})
+
+
+						folder.objects = []
+
+						folder.pages.forEach(page => {
+
+							let object = $pages.find(x => x.id == page)
+							folder.objects.push(object)
+						})
+
+						$folders.forEach(folder => {
+							folder.open = $openFolders.includes(folder.id);
+						});
+					})
+				}, 100);
+			} else {
+				console.error('Error fetching folders:', error);
+			}
+		}
+	}
 
 	$: if ($page && $page.route && $page.route.id) {
 		path = $page.url.pathname
@@ -156,6 +195,8 @@ async function loadImagesFromSupabase() {
 	fetchAllPages()
 	fetchUser()
 	fetchUsers()
+	fetchFolders()
+
 
 </script>
 

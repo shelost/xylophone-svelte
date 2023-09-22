@@ -171,6 +171,7 @@ import {supabaseClient} from '$lib/db'
 export let data;
 
 let title = data.title
+let color = data.color
 let saved = false
 
 onMount(()=> {
@@ -694,7 +695,8 @@ async function saveCanvasToSupabase() {
             {
                 id: data.id,
                 title: title,
-                content: canvasState
+                content: canvasState,
+                color: color
             }
         ]);
 

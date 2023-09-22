@@ -2,8 +2,13 @@
 
 
   <div id = 'bar'>
+
+    <div id = 'mast'>
+
+
     <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
+    </div>
 
 
     <div id = 'buttons'>
@@ -46,10 +51,28 @@
     </div>
 
 
-    <div id = 'input'>
-      <input id = 'height' bind:value = {height} type = 'number' style='outline: none !important;'>
-      <button id = 'setHeight'> <h1> Save </h1> </button>
+
+    <div id = 'corner'>
+
+      <h2 id = 'status'>
+        {#if saved}
+          Saved
+        {:else}
+          Saving...
+        {/if}
+      </h2>
+
+      <div id = 'input'>
+        <input id = 'height' bind:value = {height} type = 'number' style='outline: none !important;'>
+        <button id = 'setHeight'> <h1> Update </h1> </button>
+      </div>
+
     </div>
+
+
+    <!--
+    <button id = 'clear'> <h1> Clear </h1> </button>
+    -->
 
   </div>
 
@@ -76,7 +99,7 @@
 
 
 <svelte:head>
-	<title> Arachne | Build Your Perfect Web </title>
+	<title> {data.title} </title>
 	<meta name="description" content="Arachne is a different kind of dev." />
   <link rel = 'icon' href = '{icon}'>
 </svelte:head>
@@ -154,25 +177,10 @@ input:checked + .slider:before {
       width: calc(100vw - 240px);
       margin-top: 0px;
       height: calc(100vh);
-
-
-
       margin-left: 240px;
-
-      //padding-left: 240px;
-
       overflow: visible !important;
-
       display: flex;
-
       justify-content: center;
-
-
-
-      //border: 1px solid rgba(black, 0.1);
-
-      //box-shadow: 0px 10px 50px rgba(black, 0.1);
-
   }
 
   #url{
@@ -400,51 +408,82 @@ input:checked + .slider:before {
 
   #bar{
 
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding-right: 20px;
-margin-left: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 20px;
+    margin-left: 10px;
 
-height: 45px;
-border-bottom: 1px solid rgba(black, 0.02);
-//box-shadow: 0px 20px 60px rgba(black, 0.05);
-width: calc(100vw - 250px);
-color: black;
+    height: 45px;
+    border-bottom: 1px solid rgba(black, 0.02);
+    //box-shadow: 0px 20px 60px rgba(black, 0.05);
+    width: calc(100vw - 250px);
+    color: black;
 
-z-index: 3;
-
-
-position: fixed;
+    z-index: 3;
 
 
-//border-bottom: 1px solid rgba(black, 0.1);
+    position: fixed;
 
 
-#title{
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.3px;
-  padding: 0 5px;
-  height: 24px;
+    //border-bottom: 1px solid rgba(black, 0.1);
 
-  border-radius: 5px;
-}
 
-#buttons{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    #title{
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      padding: 0 5px;
+      height: 24px;
 
-#input{
-  display: flex;
-  input{
-    width: 80px;
-    font-size: 14px;
-  }
-}
+      border-radius: 5px;
+    }
 
+    #buttons{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #corner{
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      #status{
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.2px;
+        padding: 5px 10px;
+        color: #ff004d;
+
+        border-radius: 8px;
+        background: rgba(#ff004d, 0.08);
+      }
+    }
+
+    #input{
+      display: flex;
+      align-items: center;
+      margin-right: -60px;
+      input{
+        width: 140px;
+        height: 36px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+        background: rgba(black, 0.05) !important;
+        border-radius: 8px;
+      }
+      button{
+        height: 32px;
+        font-size: 12px;
+        font-weight: 500;
+        border-radius: 8px;
+        transform: translateX(-60px);
+        box-shadow: none;
+      }
+    }
 }
 
 
@@ -719,8 +758,11 @@ let title= data.title
 let color = data.color
 let height = data.height
 let ruler = false
+let saved = true
 let activeObject;
 let MODE
+
+
 
 
 onMount(()=> {
@@ -780,11 +822,25 @@ onMount(()=> {
     offsetY: 40,
     offsetX: -16,
     cursorStyle: 'pointer',
-    mouseUpHandler: cloneObject,
+    //mouseUpHandler: cloneObject,
     render: renderIcon(cloneImg),
     cornerSize: 24
   });
 
+  /*
+
+  fabric.Object.prototype.controls.text = new fabric.Control({
+    x: -0.5,
+    y: -0.5,
+    offsetY: -20,
+    offsetX: 10,
+    cursorStyle: 'pointer',
+    //mouseUpHandler: cloneObject,
+    render: renderText('bro'),
+    cornerSize: 18
+  });
+
+*/
 
   fabric.Textbox.prototype.controls.clone = fabric.Object.prototype.controls.clone;
 
@@ -800,6 +856,25 @@ onMount(()=> {
       ctx.restore();
     }
   }
+
+
+
+  function renderText(textContent) {
+    return function renderText(ctx, left, top, styleOverride, fabricObject) {
+        var size = this.cornerSize;
+        ctx.save();
+        ctx.translate(left, top);
+        ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle));
+        ctx.font = size + 'px Arial';  // Set the font size and family; adjust as needed
+        ctx.fillStyle = 'black'
+        ctx.fillText(textContent, -size/2, size/2);  // Using fillText to draw the text on canvas
+        ctx.restore();
+    }
+}
+
+
+
+
 
   function cloneObject(eventData, transform) {
     var target = transform.target;
@@ -857,71 +932,103 @@ const strong = 20
 
 canvas.on('object:moving', (event) => {
 
+  activeObject = event.target;
 
-  clearGuides();  // Clear old guides
-
+  // Ruler guides
+  clearGuides();
   if (ruler){
-
-    let activeObject = event.target;
-
-    let midPoint = canvas.width / 2;
-
-
-    canvas.getObjects().forEach((obj) => {
-        if (obj === activeObject || obj.excludeFromExport) return;
-
-        // Check horizontal alignments
-        if (isClose(activeObject.left, obj.left, threshold)) {
-            drawGuide(obj.left, 0, obj.left, canvas.height);
-            activeObject.left = obj.left;
-        } else if (isClose(activeObject.left + activeObject.width * activeObject.scaleX, obj.left, threshold)) {
-            drawGuide(obj.left, 0, obj.left, canvas.height);
-            activeObject.left = obj.left - activeObject.width * activeObject.scaleX;
-        } else if (isClose(activeObject.left, obj.left + obj.width * obj.scaleX, threshold)) {
-            drawGuide(obj.left + obj.width * obj.scaleX, 0, obj.left + obj.width * obj.scaleX, canvas.height);
-            activeObject.left = obj.left + obj.width * obj.scaleX;
-        }
-
-        // Check vertical alignments
-        if (isClose(activeObject.top, obj.top, threshold)) {
-            drawGuide(0, obj.top, canvas.width, obj.top);
-            activeObject.top = obj.top;
-        } else if (isClose(activeObject.top + activeObject.height * activeObject.scaleY, obj.top, threshold)) {
-            drawGuide(0, obj.top, canvas.width, obj.top);
-            activeObject.top = obj.top - activeObject.height * activeObject.scaleY;
-        } else if (isClose(activeObject.top, obj.top + obj.height * obj.scaleY, threshold)) {
-            drawGuide(0, obj.top + obj.height * obj.scaleY, canvas.width, obj.top + obj.height * obj.scaleY);
-            activeObject.top = obj.top + obj.height * obj.scaleY;
-        }
-    });
-
-
-     // First priority: Object's center aligning with canvas center
-     if (isClose(activeObject.left + (activeObject.width * activeObject.scaleX) / 2, midPoint, strong)) {
-
-        drawGuide(midPoint, 0, midPoint, canvas.height, 'blue');
-        activeObject.left = midPoint - (activeObject.width * activeObject.scaleX) / 2;
-        //return;  // Exit the function after snapping to center
-    }
-
-    // Second priority: Object's edges and center aligning with every 10th gridline
-    for (let i = 0; i <= canvas.width; i += 10) {
-        if (isClose(activeObject.left, i, threshold)) {
-            drawGuide(i, 0, i, canvas.height, 'green');
-            activeObject.left = i;
-        } else if (isClose(activeObject.left + activeObject.width * activeObject.scaleX, i, threshold)) {
-            drawGuide(i, 0, i, canvas.height, 'green');
-            activeObject.left = i - activeObject.width * activeObject.scaleX;
-        } else if (isClose(activeObject.left + (activeObject.width * activeObject.scaleX) / 2, i, threshold)) {
-            drawGuide(i, 0, i, canvas.height, 'yellow');
-            activeObject.left = i - (activeObject.width * activeObject.scaleX) / 2;
-        }
-    }
-
-    canvas.renderAll()
+    drawGuides()
   }
 
+  // Handle transformations for each object in the active selection.
+  if (activeObject.type === 'activeSelection') {
+      activeObject.getObjects().forEach(handleObject);
+  } else {
+      handleObject(activeObject);
+  }
+  applyParallaxEffect();
+
+
+
+  // Property text
+  if (activeObject.type === 'activeSelection') {
+        activeObject.getObjects().forEach(obj => {
+            handleObject(obj);
+
+
+            createPropertyText(activeObject)
+
+
+            updatePropertyText(obj); // <-- updating the text for each activeObject in the activeSelection
+        });
+    } else {
+        handleObject(activeObject);
+        createPropertyText(activeObject)
+        updatePropertyText(activeObject); // <-- updating the text for the single moved object
+    }
+
 });
+
+
+
+
+function drawGuides(){
+
+  let midPoint = canvas.width / 2;
+
+  canvas.getObjects().forEach((obj) => {
+      if (obj === activeObject || obj.excludeFromExport) return;
+
+      // Check horizontal alignments
+      if (isClose(activeObject.left, obj.left, threshold)) {
+          drawGuide(obj.left, 0, obj.left, canvas.height);
+          activeObject.left = obj.left;
+      } else if (isClose(activeObject.left + activeObject.width * activeObject.scaleX, obj.left, threshold)) {
+          drawGuide(obj.left, 0, obj.left, canvas.height);
+          activeObject.left = obj.left - activeObject.width * activeObject.scaleX;
+      } else if (isClose(activeObject.left, obj.left + obj.width * obj.scaleX, threshold)) {
+          drawGuide(obj.left + obj.width * obj.scaleX, 0, obj.left + obj.width * obj.scaleX, canvas.height);
+          activeObject.left = obj.left + obj.width * obj.scaleX;
+      }
+
+      // Check vertical alignments
+      if (isClose(activeObject.top, obj.top, threshold)) {
+          drawGuide(0, obj.top, canvas.width, obj.top);
+          activeObject.top = obj.top;
+      } else if (isClose(activeObject.top + activeObject.height * activeObject.scaleY, obj.top, threshold)) {
+          drawGuide(0, obj.top, canvas.width, obj.top);
+          activeObject.top = obj.top - activeObject.height * activeObject.scaleY;
+      } else if (isClose(activeObject.top, obj.top + obj.height * obj.scaleY, threshold)) {
+          drawGuide(0, obj.top + obj.height * obj.scaleY, canvas.width, obj.top + obj.height * obj.scaleY);
+          activeObject.top = obj.top + obj.height * obj.scaleY;
+      }
+  });
+
+
+  // First priority: Object's center aligning with canvas center
+  if (isClose(activeObject.left + (activeObject.width * activeObject.scaleX) / 2, midPoint, strong)) {
+
+      drawGuide(midPoint, 0, midPoint, canvas.height, 'blue');
+      activeObject.left = midPoint - (activeObject.width * activeObject.scaleX) / 2;
+      //return;  // Exit the function after snapping to center
+  }
+
+  // Second priority: Object's edges and center aligning with every 10th gridline
+  for (let i = 0; i <= canvas.width; i += 10) {
+      if (isClose(activeObject.left, i, threshold)) {
+          drawGuide(i, 0, i, canvas.height, 'green');
+          activeObject.left = i;
+      } else if (isClose(activeObject.left + activeObject.width * activeObject.scaleX, i, threshold)) {
+          drawGuide(i, 0, i, canvas.height, 'green');
+          activeObject.left = i - activeObject.width * activeObject.scaleX;
+      } else if (isClose(activeObject.left + (activeObject.width * activeObject.scaleX) / 2, i, threshold)) {
+          drawGuide(i, 0, i, canvas.height, 'yellow');
+          activeObject.left = i - (activeObject.width * activeObject.scaleX) / 2;
+      }
+  }
+
+  canvas.renderAll()
+}
 
 
 
@@ -944,7 +1051,7 @@ function updatePropertyElements(property, value) {
 
 // Automatically sync UI elements based on the active object's properties
 function updateUIFromCanvasObject(obj) {
-  const properties = ['width', 'height', 'angle', 'fontFamily', 'fill', 'charSpacing', 'fontSize', 'textAlign', 'fontWeight', 'fontStyle', 'fill', 'depth'];
+  const properties = ['width', 'height', 'angle', 'fontFamily', 'fill', 'charSpacing', 'fontSize', 'textAlign', 'fontWeight', 'fontStyle', 'fill', 'xPercent', 'depth'];
 
   properties.forEach(property => {
     let value = obj[property];
@@ -952,6 +1059,8 @@ function updateUIFromCanvasObject(obj) {
     if (property === 'width') value = Math.round(obj.width * obj.scaleX);
     if (property === 'height') value = Math.round(obj.height * obj.scaleY);
     if (property === 'angle') value = Math.round(obj.angle);
+
+
 
     updatePropertyElements(property, value);
   });
@@ -973,6 +1082,10 @@ window.applyStyles = function(prop, value) {
             activeObject[prop] = value;
         }
 
+        if (prop == 'depth'){
+          updateDepth(activeObject);
+        }
+
         activeObject.dirty = true;
         activeObject.textBackgroundColor = 'rgba(0,0,0,0)'
         canvas.requestRenderAll();
@@ -987,6 +1100,11 @@ window.applyStyles = function(prop, value) {
   canvas.calcOffset();
   saveCanvasToSupabase();
 };
+
+
+function clearCanvas() {
+  canvas.remove(...canvas.getObjects());
+}
 
 
 
@@ -1055,8 +1173,11 @@ attachInputListeners(`range-${property}`, property);
 });
 
 
-document.getElementById("sendToFront").addEventListener("click", sendObjectToFront);
+if (document.getElementById("sendToFront")){
+  document.getElementById("sendToFront").addEventListener("click", sendObjectToFront);
 document.getElementById("sendToBack").addEventListener("click", sendObjectToBack);
+
+}
 
 
 
@@ -1127,7 +1248,7 @@ canvas.on('object:modified', function(event) {
 
 
 
-///////////////////////////////////////////////////
+/////////////////xfd//////////////////////////////////
 ////////////////// LOAD CANVAS ////////////////////
 ///////////////////////////////////////////////////
 
@@ -1137,6 +1258,7 @@ canvas.on('object:modified', function(event) {
   let gridLines = [];
 
 
+  /*
 
   setTimeout(() => {
 
@@ -1153,6 +1275,7 @@ canvas.on('object:modified', function(event) {
     Id('loader').style.display = 'none'
   }
 }, 500);
+*/
 
 
 const loadCanvasFromSupabase = async () => {
@@ -1195,7 +1318,9 @@ const loadCanvasFromSupabase = async () => {
 
         // Load the parsed data into the canvas
         canvas.loadFromJSON(fileJson, () => {
-          Id('loader').style.display = 'none';
+
+
+            Id('loader').style.display = 'none';
 
             const canvasCenterX = canvas.width / 2;
 
@@ -1203,25 +1328,38 @@ const loadCanvasFromSupabase = async () => {
                 if (object.xPercent !== undefined) {
                     const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
                     object.set('left', newLeftPos);
-                    //object.set('top', object.originalTop)
+
                 }
+
+                if (object.originalTop !== undefined) {
+                  object.set('top', object.originalTop);
+                  console.log(object.originalTop)
+                }else{
+                  object.originalTop = object.top;
+                }
+
+
+
+
+                createPropertyText(object)
+                // Update the text's position and content.
+                updatePropertyText(object);
+
+
 
             });
 
 
+
+
+            unifiedResize()
+
             applyParallaxEffect();
             canvas.setHeight(data.height);
+            canvas.setHeight(height);
             canvas.setBackgroundColor(data.color);
 
-
-           // calculateGrid()
-            //drawGrid()
-
-
             canvas.renderAll();
-           // canvas.calcOffset()
-
-
         });
 
     } catch (parseError) {
@@ -1235,16 +1373,9 @@ const loadCanvasFromSupabase = async () => {
 
 
 
-
-
-
-
 setTimeout(() => {
-
    loadCanvasFromSupabase()
-
 },2000)
-
 
 
 
@@ -1257,25 +1388,35 @@ Id('color').addEventListener('input', e => {
 Id('setHeight').addEventListener('click', async () => {
 
   canvas.setHeight(height)
-  //Id('bar').style.background = Id('color').value
   saveCanvasToSupabase()
 })
+
+/*
+Id('clear').addEventListener('click', async () => {
+
+  clearCanvas()
+  saveCanvasToSupabase()
+})
+*/
+
+
 
 
 
 
 
 function applyParallaxEffect() {
+  /*
     let scrollAmount = document.getElementById('canvas-container').scrollTop;
 
     canvas.forEachObject(object => {
         let depth = object.depth || 1;
-        let parallaxShift = 0.2 * depth * scrollAmount;
-        let newTopPosition = object.originalTop + parallaxShift;
-        object.set('top', newTopPosition);
+        let parallaxShift = 0.15 * depth * scrollAmount;
+        object.set('top', object.originalTop + parallaxShift);
     });
 
     canvas.renderAll();
+    */
 }
 
 document.getElementById('canvas-container').addEventListener('scroll', applyParallaxEffect);
@@ -1295,8 +1436,31 @@ let isObjectBeingModified = false; // Track if an object is being edited, resize
 // Listen for object modification events
 canvas.on('object:modified', function() {
     isObjectBeingModified = true;
+    activeObject = canvas.getActiveObject()
+
+
     activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2  - canvas.width/2 )/ canvas.width
     MODE = null
+
+
+
+    // If multiple objects were moved together.
+    if (activeObject.type === 'activeSelection') {
+        // Update actual positions of each object.
+        activeObject.getObjects().forEach(obj => {
+            // Update the object's absolute positions.
+            obj.set({
+               // left: obj.left + activeObject.left,
+               // top: obj.top + activeObject.top
+            });
+            handleObject(obj);  // Re-calculate and store originalTop and other properties.
+        });
+
+        // Deselect the active selection and dissolve the group.
+        canvas.discardActiveObject().renderAll();
+    }
+
+
    // applyParallaxEffect();
 });
 
@@ -1304,36 +1468,132 @@ canvas.on('selection:created', function() {
   //MODE = null
     isObjectBeingModified = true;
 
-    let activeObject = canvas.getActiveObject()
+    activeObject = canvas.getActiveObject()
 
     activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2  - canvas.width/2 )/ canvas.width
 
 });
 
 
+
 function handleObject(obj) {
     let depth = obj.depth || 0;
     let scrollAmount = document.getElementById('canvas-container').scrollTop;
-    let parallaxShift = 0.2 * depth * scrollAmount;
+    let parallaxShift = 0.15 * depth * scrollAmount;
     obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
-
     obj.originalTop = obj.top - parallaxShift;
+    obj.top = Math.round(obj.top)
+}
+
+
+
+
+const propertyTexts = new Map();  // A Map to keep track of our text objects.
+
+
+// A helper function to create or update the property text for an object.
+function createPropertyText(object) {
+
+
+  /*
+    const text = new fabric.Text(`Top: ${object.originalTop}, X%: ${object.xPercent}`, {
+        left: object.left,
+        top: object.top - 20,
+        fontSize: 14,
+        selectable: false,
+        excludeFromExport: true
+    });
+    canvas.add(text);
+    propertyTexts.set(object, text); // <-- adding the association to the map
+  */
+}
+
+function updatePropertyText(object) {
+  /*
+    const textObject = propertyTexts.get(object); // <-- fetching the text object using the map
+    if (textObject) {
+        textObject.text = `Top: ${object.originalTop}, X%: ${object.xPercent}`;
+        textObject.set({
+            left: object.left,
+            top: object.top - 20
+        });
+        textObject.setCoords();
+    }
+    */
+}
+
+
+/*
+
+function updatePropertyText(object) {
+    const textObject = object.propertyText;
+
+    if (textObject) {
+        // Update content
+        textObject.text = `Top: ${object.originalTop}, X%: ${object.xPercent}`;
+
+        // Update position
+        textObject.left = object.left;
+        textObject.top = object.top - 20;  // slightly above the object
+
+        textObject.setCoords(); // Make sure to update the object's coordinates in fabric.js
+    }
+}
+
+canvas.on('object:moved', function(options) {
+    const movedObject = options.target;
+
+    if (movedObject.type === 'activeSelection') {
+        movedObject.getObjects().forEach(obj => {
+            handleObject(obj);
+            updatePropertyText(obj);
+        });
+    } else {
+        handleObject(movedObject);
+        updatePropertyText(movedObject);
+    }
+
+    applyParallaxEffect();
+    canvas.renderAll();  // Ensure that the canvas is re-rendered.
+});
+*/
+
+
+
+
+
+
+
+/*
+function handleObject(obj, groupOffset = { left: 0, top: 0 }) {
+    let depth = obj.depth || 0;
+    let scrollAmount = document.getElementById('canvas-container').scrollTop;
+
+    const absoluteLeft = obj.left + groupOffset.left;
+    const absoluteTop = obj.top
+
+    let parallaxShift = 0.15 * depth * scrollAmount;
+
+    obj.xPercent = (absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
+    obj.originalTop = absoluteTop - parallaxShift;
+    obj.top = Math.round(absoluteTop);
 }
 
 canvas.on('object:moving', function(options) {
-    let activeObject = options.target;
-
-
-    activeObject.top = Math.round(activeObject.top)
+    const activeObject = options.target;
 
     if (activeObject.type === 'activeSelection') {
-        activeObject.getObjects().forEach(x => handleObject(x));
+        activeObject.getObjects().forEach(obj => {
+            handleObject(obj, { left: activeObject.left, top: activeObject.top });
+        });
     } else {
         handleObject(activeObject);
     }
 
     applyParallaxEffect();
 });
+
+*/
 
 
 canvas.on('object:scaling', function() {
@@ -1616,7 +1876,6 @@ window.deleteObject = function(){
   canvas.calcOffset()
     }
   }
-  resizeCanvas()
   saveCanvasToSupabase()
 }
 
@@ -1673,10 +1932,18 @@ canvas.on('object:added', function(options) {
   const obj = options.target;
   const canvasCenterX = canvas.width / 2;
 
+
+  obj.originalTop = obj.top;
   // Calculate offset from the center.
   obj.xPercent = (obj.left + (obj.width*obj.scaleX)/2  - canvasCenterX)/ canvas.width
 
-  obj.originalTop = obj.top
+
+  let depth = obj.depth || 0;
+    let scrollAmount = document.getElementById('canvas-container').scrollTop;
+    let parallaxShift = 0.15 * depth * scrollAmount;
+    obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
+
+    obj.originalTop = obj.top - parallaxShift;
 
 
   // Store initial properties directly in the object.
@@ -1689,115 +1956,49 @@ canvas.on('object:added', function(options) {
     scaleY: obj.scaleY,
     xPercent: obj.xPercent
   };
+
+
+
+  if (obj.type !== 'text') {  // Avoid recursion!
+        createPropertyText(obj)
+        updatePropertyText(obj);
+        canvas.renderAll();
+    }
+
 });
-
-
 
 
 function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
-    /*
-    if (window.innerWidth < 800) {
-        newContainerWidth = window.innerWidth;
-    }
-    */
+const newWidth = newContainerWidth;
+const canvasCenterX = newWidth / 2;
 
-    const newWidth = newContainerWidth;
-    const canvasCenterX = newWidth / 2;
+// Set canvas width to the new value
+canvas.setWidth(newWidth);
 
-    const maxObjectWidth = newWidth * 0.95;
+// Update position of each object based on xPercent and new canvas width
+canvas.getObjects().forEach((object) => {
+    const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+    object.left = newLeftPos;
+    object.xPercent = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2) / canvas.width;
+    object.setCoords();
+});
 
-    canvas.setWidth(newWidth);
+// Adjust the widths of the container and canvas-container
+const container = document.getElementById('container');
+const canvasContainer = document.getElementById('canvas-container');
 
-
-    canvas.getObjects().forEach((object) => {
-        const isTextbox = object.type === 'textbox';
-
-        /*
-        if (isTextbox) {
-
-
-            let maxLineWidth = 0;
-            object._textLines.forEach(line => {
-                const lineWidth = object.get2DCursorLocation(line.length).left;
-                if (lineWidth > maxLineWidth) {
-                    maxLineWidth = lineWidth;
-                }
-            });
-            const actualTextWidth = maxLineWidth;
-
-
-            if (Math.round(object.width * object.scaleX) < Math.round(maxObjectWidth)) {
-                const origProps = object.originalProperties;
-                object.width = origProps.width
-            } else {
-                object.width = actualTextWidth
-            }
-            object.setCoords();
-
-
-        } else {
-            const origProps = object.originalProperties;
-            object.set({
-                left: origProps.left,
-                top: origProps.top,
-                width: origProps.width,
-                height: origProps.height,
-                scaleX: origProps.scaleX,
-                scaleY: origProps.scaleY
-            });
-            object.setCoords();
-        }
-        */
-
-
-        /*
-        const origProps = object.originalProperties;
-            object.set({
-                //left: origProps.left,
-                //top: origProps.top,
-                width: origProps.width,
-                height: origProps.height,
-                scaleX: origProps.scaleX,
-                scaleY: origProps.scaleY
-        });
-        */
-        //object.xPercent = (object.left + (object.width*object.scaleX)/2  - canvas.width/2 )/ canvas.width
-        // Adjust position relative to the canvas width change.
-        const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX)/2
-
-
-
-        object.left = newLeftPos
-        object.setCoords();
-
-    });
-
-    /*
-    canvas.clipTo = function(ctx) {
-        ctx.rect(0, 0, newWidth, canvas.getHeight());
-        ctx.clip();
-    };
-    */
-
-
-    // Adjust the widths of both the container and the canvas-container.
-    const container = document.getElementById('container');
-    const canvasContainer = document.getElementById('canvas-container');
-
-    if (container) {
-        container.style.width = `${newWidth}px`;
-    }
-    if (canvasContainer) {
-        canvasContainer.style.width = `${newWidth}px`;
-    }
-
-    canvas.setWidth(newWidth);
-
-    //canvas.renderAll();
-    canvas.calcOffset();
+if (container) {
+    container.style.width = `${newWidth}px`;
+}
+if (canvasContainer) {
+    canvasContainer.style.width = `${newWidth}px`;
 }
 
+// Render the canvas
+canvas.renderAll();
+canvas.calcOffset();
+}
 
 
 
@@ -1825,6 +2026,7 @@ let initialX, initialY;
 
 
 function getOverlappingProperties(objects) {
+
     if (objects.length === 0) {
         return [];
     }
@@ -1850,9 +2052,19 @@ function updateUIFromCanvasObjects(objects) {
         if (property === 'height') value = Math.round(objects[0].height * objects[0].scaleY);
         if (property === 'angle') value = Math.round(objects[0].angle);
 
+
         updatePropertyElements(property, value);
     });
 }
+
+
+function updateDepth(object) {
+    let scrollAmount = document.getElementById('canvas-container').scrollTop;
+    let depth = object.depth || 1;
+    let parallaxShift = 0.15 * depth * scrollAmount;
+    object.originalTop = object.top - parallaxShift;
+}
+
 
 
 
@@ -1863,11 +2075,15 @@ function capitalize(string) {
 function handleSelection(event) {
   const activeObjects = canvas.getActiveObjects()
 
+
+
   $isPanelVisible = true;
 
-  if(activeObjects.length === 1) {
+  if(true) {
 
     let activeObject = activeObjects[0];
+
+    console.log(activeObject.top, activeObject.originalTop)
   let options = {};
 
   switch (activeObject.type) {
@@ -2267,7 +2483,7 @@ function debounce(func, wait) {
   };
 }
 
-const debouncedResize = debounce(resizeCanvas, 100);
+
 
 // Function to add video
 function addVideo(x,y) {
@@ -2550,7 +2766,7 @@ function addButton(x, y) {
       { label: 'Height', id: 'height', type: 'number', icon: IconH, value: activeObject.height * activeObject.scaleY, min: 0, max: 1000, },
       { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
       { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
-      { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+      { label: 'Y', id: 'originalTop', type: 'number', icon: IconY, value: activeObject.originalTop, min: 0, max: 1000 },
 
       { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
     ];
@@ -2624,6 +2840,13 @@ function saveCanvasToSupabase() {
     // Center of the canvas
     const canvasCenterX = canvas.width / 2;
 
+    saved = false
+
+    console.log(saved)
+
+
+    let initialCanvasWidth = canvas.width
+
 
     canvas.getObjects().forEach((obj) => {
       /*
@@ -2671,6 +2894,8 @@ function saveCanvasToSupabase() {
 
     // Temporarily reset the canvas to its full/original size
     canvas.setWidth(originalCanvasWidth);
+
+    console.log(canvas.width)
     //canvas.setHeight(originalCanvasHeight);
 
     // Upload the full canvas version to the database
@@ -2678,6 +2903,7 @@ function saveCanvasToSupabase() {
 
     // Restore the canvas to the backed-up size and reposition all objects
     canvas.setWidth(initialCanvasWidth);
+    console.log(canvas.width)
     //canvas.setHeight(initialCanvasHeight);
 
 
@@ -2710,6 +2936,8 @@ function saveCanvasToSupabase() {
         top: scrollTop,
     });
     Id('canvas-container').scrollTop = scrollTop
+
+
 
     // Remove the event listener to allow scrolling
     window.removeEventListener('scroll', preventScroll);
@@ -2790,9 +3018,7 @@ async function uploadCanvas() {
         console.error('Error saving reference to database: ', dbError);
     } else {
 
-
-
-        console.log('Canvas saved and reference stored successfully: ', dbData);
+      saved = true
     }
 }
 

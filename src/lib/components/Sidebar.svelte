@@ -14,13 +14,15 @@
 	import IconProfile from '$lib/img/iconx-3.svg'
 	import IconData from '$lib/img/iconx-2.svg'
 	import IconAssets from '$lib/img/iconx-1.svg'
+	import icon from '$lib/img/favicon.svg'
 	import { page } from '$app/stores';
 	import { fly } from 'svelte/transition';
 	import Sidebar from '$lib/components/Sidebar.svelte'
 	import {invalidate} from '$app/navigation'
 	import { supabaseClient } from '$lib/db'
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { pages, user, scrollPosition } from '$lib/utils/store.js';  // Adjust the path as needed
+	import { pages, user, scrollPosition, openFolders, folders } from '$lib/utils/store.js';  // Adjust the path as needed
+
 	export let data;
 
 
@@ -31,7 +33,7 @@
 	let pagesDiv;
 	let isFetched = false;
 	let path;
-	let folders = writable([]);  // Store for the folders
+
     let newFolderName = "";  // Temporary variable to hold the name of the new folder during creation
 
 
@@ -42,6 +44,13 @@
 	// ... [rest of the imports and variables]
 
 onMount(() => {
+
+	if(pagesDiv) {
+        pagesDiv.scrollTop = $scrollPosition;
+    }
+
+
+
 	let sortable = Sortable.create(document.querySelector('.pages'), {
 		group: 'shared',
 		animation: 150,
@@ -59,6 +68,7 @@ onMount(() => {
 		},
 
 
+
 		onRemove: async function (evt) {
 			const item = $pages[evt.oldIndex];
 
@@ -70,6 +80,53 @@ onMount(() => {
 			$pages = [...$pages, item];
 		}
 	});
+
+
+
+	async function fetchFolders() {
+		if (!isFetched) {
+			const { data: d, error } = await supabaseClient.from('folders').select('*').eq('user_id', data.user.id)
+			if (!error) {
+				folders.set(d);
+				setTimeout(() => {
+					$folders.forEach(async (folder, index) => {
+
+						let sortable = Sortable.create(document.getElementById('content-' + folder.id), {
+							group: 'shared',
+							animation: 150,
+							onAdd: function (evt) {
+								let pageID = evt.item.firstElementChild.id
+								sortFolder(folder, pageID)
+							}
+						});
+
+
+
+						folder.pages = folder.pages.filter(function(item, pos) {
+							return folder.pages.indexOf(item) == pos;
+						})
+
+
+						folder.objects = []
+
+						folder.pages.forEach(page => {
+
+							let object = $pages.find(x => x.id == page)
+							folder.objects.push(object)
+						})
+						folder.open = $openFolders.includes(folder.id);
+
+
+					})
+				}, 100);
+			} else {
+				console.error('Error fetching folders:', error);
+			}
+		}
+	}
+
+
+	fetchFolders()
 });
 
 async function movePageToFolder(pageId, folderId) {
@@ -170,44 +227,6 @@ async function removePageFromFolder(pageId) {
 		}
 	}
 
-	async function fetchFolders() {
-		if (!isFetched) {
-			const { data: d, error } = await supabaseClient.from('folders').select('*').eq('user_id', data.user.id)
-			if (!error) {
-				folders.set(d);
-				setTimeout(() => {
-					$folders.forEach(async (folder, index) => {
-
-						let sortable = Sortable.create(document.getElementById('content-' + folder.id), {
-							group: 'shared',
-							animation: 150,
-							onAdd: function (evt) {
-								let pageID = evt.item.firstElementChild.id
-								sortFolder(folder, pageID)
-							}
-						});
-
-
-
-						folder.pages = folder.pages.filter(function(item, pos) {
-							return folder.pages.indexOf(item) == pos;
-						})
-
-
-						folder.objects = []
-
-						folder.pages.forEach(page => {
-
-							let object = $pages.find(x => x.id == page)
-							folder.objects.push(object)
-						})
-					})
-				}, 100);
-			} else {
-				console.error('Error fetching folders:', error);
-			}
-		}
-	}
 
 
 	async function addPage() {
@@ -226,7 +245,6 @@ async function removePageFromFolder(pageId) {
 	}
 
 	fetchPages();
-	fetchFolders()
 
 
 
@@ -255,10 +273,18 @@ async function removePageFromFolder(pageId) {
 
 
     function toggleFolder(folderId) {
-        let targetFolder = $folders.find(folder => folder.id === folderId);
-        targetFolder.open = !targetFolder.open;  // Toggle folder open state
-        folders.set($folders);  // Trigger update
-    }
+		let targetFolder = $folders.find(folder => folder.id === folderId);
+		targetFolder.open = !targetFolder.open;
+
+		if(targetFolder.open) {
+			openFolders.update(opened => [...opened, folderId]);
+		} else {
+			openFolders.update(opened => opened.filter(id => id !== folderId));
+		}
+
+		folders.set($folders);  // Trigger update
+	}
+
 
 </script>
 
@@ -329,6 +355,7 @@ async function removePageFromFolder(pageId) {
 
 				<div class = 'flex'>
 
+					<!--
 
 					{#if folder.open}
 					<img src = {Open} alt = 'folder'>
@@ -336,6 +363,11 @@ async function removePageFromFolder(pageId) {
 					{:else}
 					<img src = {Closed} alt = 'folder'>
 					{/if}
+					-->
+
+
+					<img src = {icon} alt = 'folder'>
+
 
 					<h2> {folder.name} </h2>
 
@@ -348,7 +380,7 @@ async function removePageFromFolder(pageId) {
 
 			</div>
 
-			<div class="folder-contents" class:active = {folder.open} id = 'content-{folder.id}'>
+			<div class="folder-contents" class:active = {folder.open} id = 'content-{folder.id}' data-sveltekit-reload>
 				{#each folder.objects as page}
 					{#if page}
 						<a href='/x/{page.id}' >
@@ -442,11 +474,11 @@ async function removePageFromFolder(pageId) {
 
 
 	.flex{
-		gap: 6px;
+		gap: 8px;
 	}
 
 	img{
-		height: 18px;
+		height: 16px;
 	}
 
 

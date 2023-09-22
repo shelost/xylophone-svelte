@@ -12,9 +12,6 @@
         </h2>
 
 
-
-
-
         {#await $folder}
 
         {:then $folder}
@@ -41,7 +38,7 @@
                     {/each}
 
                 </div>
-
+v
             {/if}
 
         {/await}
