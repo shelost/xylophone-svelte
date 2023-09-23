@@ -327,6 +327,34 @@ input:checked + .slider:before {
     }
   }
 
+  :global(#control){
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+
+  :global(.control-btn){
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.3px;
+    border-radius: 10px;
+    background: rgba(black, 0.1);
+    color: black;
+    box-shadow: none;
+    &:hover{
+      background: rgba(black, 0.15);
+    }
+  }
+
+  :global(.red){
+    color: white;
+    background: #ff004d !important;
+    &:hover{
+      background: #e20035 !important;
+    }
+  }
+
 
   /*
   #controls{
@@ -390,14 +418,13 @@ input:checked + .slider:before {
 
 
     //resize: horizontal;  // allows horizontal resizing
-    overflow: auto;      // to account for the scrollbar that may appear
     position: relative;  //
 
 
 
       display: flex;
       justify-content: center;
-      overflow-x: visible !important;
+      overflow-x: hidden;
       overflow-y: hidden;
 
       border-radius: 15px;
@@ -768,6 +795,9 @@ let MODE
 onMount(()=> {
   // Initialize fabric.js canvas
 
+  let previousCanvasWidth = document.getElementById("container").offsetWidth;
+
+
   let id = $page.params.slug
   //let data = get(pages).find(page => page.id === id);
 
@@ -1042,7 +1072,7 @@ function updatePropertyElements(property, value) {
 
 // Automatically sync UI elements based on the active object's properties
 function updateUIFromCanvasObject(obj) {
-  const properties = ['width', 'height', 'angle', 'fontFamily', 'fill', 'charSpacing', 'fontSize', 'textAlign', 'fontWeight', 'fontStyle', 'fill', 'xPercent', 'depth'];
+  const properties = ['width', 'height', 'angle', 'fontFamily', 'fill', 'charSpacing', 'fontSize', 'textAlign', 'fontWeight', 'fontStyle', 'fill', 'xPercent', 'depth', 'color'];
 
   properties.forEach(property => {
     let value = obj[property];
@@ -1050,8 +1080,6 @@ function updateUIFromCanvasObject(obj) {
     if (property === 'width') value = Math.round(obj.width * obj.scaleX);
     if (property === 'height') value = Math.round(obj.height * obj.scaleY);
     if (property === 'angle') value = Math.round(obj.angle);
-
-
 
     updatePropertyElements(property, value);
   });
@@ -1142,12 +1170,14 @@ function getCurrentObjectProperties(obj) {
         return extractPropertiesFromTemplate(rectTemplate(obj));
         break
 
+      case 'ellipse':
+        return extractPropertiesFromTemplate(ellipseTemplate(obj));
+        break
+
       default:
         return []
         break
     }
-
-
 
 }
 
@@ -1159,8 +1189,8 @@ function dynamicallyBindListeners() {
 
       properties.forEach(property => {
 
-attachInputListeners(`input-${property}`, property);
-attachInputListeners(`range-${property}`, property);
+      attachInputListeners(`input-${property}`, property);
+      attachInputListeners(`range-${property}`, property);
 });
 
 
@@ -1331,6 +1361,10 @@ const loadCanvasFromSupabase = async () => {
                 }
 
 
+
+                if (!object.pin){
+                  object.pin = 'scale'
+                }
 
 
                 createPropertyText(object)
@@ -1725,7 +1759,7 @@ canvas.on('mouse:down', (o) => {
                 originY: 'top',
                 rx: 40,
                 ry: 40,
-                fill: 'rgba(0,0,255,1)',
+                fill: '#0074ff',
                 depth: 2,
             });
             canvas.add(elem);
@@ -1949,49 +1983,79 @@ canvas.on('object:added', function(options) {
 
 function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
-const newWidth = newContainerWidth;
-const canvasCenterX = newWidth / 2;
 
-// Set canvas width to the new value
-canvas.setWidth(newWidth);
+  let previousWidth = previousCanvasWidth;
 
-// Update position of each object based on xPercent and new canvas width
-canvas.getObjects().forEach((object) => {
-    const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
-    object.left = newLeftPos;
-    //object.xPercent = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2) / canvas.width;
-    object.setCoords();
-});
+  const newWidth = newContainerWidth;
+  const canvasCenterX = newWidth / 2;
 
-// Adjust the widths of the container and canvas-container
-const container = document.getElementById('container');
-const canvasContainer = document.getElementById('canvas-container');
+  // Set canvas width to the new value
+  canvas.setWidth(newWidth);
 
-if (container) {
-    container.style.width = `${newWidth}px`;
+  // Update position of each object based on xPercent and new canvas width
+  canvas.getObjects().forEach((object) => {
+
+    let newLeftPos
+
+
+    //const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+
+    if (!object.pin){
+      object.pin = 'scale'
+    }
+
+    switch (object.pin) {
+        case 'scale':
+            newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+            break;
+        case 'left':
+            newLeftPos = object.left;
+            break;
+        case 'right':
+            const distanceFromRight = previousWidth - (object.left + object.width * object.scaleX);
+            newLeftPos = newWidth - distanceFromRight - object.width * object.scaleX;
+
+            break;
+        case 'center':
+            const originalCenterDistance = object.left - previousWidth / 2;
+            newLeftPos = canvasCenterX + originalCenterDistance;
+            break;
+        default:
+            newLeftPos = object.left;
+            break;
+    }
+
+
+      object.left = newLeftPos;
+
+      //object.xPercent = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2) / canvas.width;
+      object.setCoords();
+  });
+
+  // Adjust the widths of the container and canvas-container
+  const container = document.getElementById('container');
+  const canvasContainer = document.getElementById('canvas-container');
+
+  if (container) {
+      container.style.width = `${newWidth}px`;
+  }
+  if (canvasContainer) {
+      canvasContainer.style.width = `${newWidth}px`;
+  }
+  //canvas.setWidth(newWidth);
+
+  // Render the canvas
+
+  previousCanvasWidth = newWidth;
+
+  canvas.renderAll();
+  canvas.calcOffset();
 }
-if (canvasContainer) {
-    canvasContainer.style.width = `${newWidth}px`;
-}
-canvas.setWidth(newWidth);
-
-// Render the canvas
-canvas.renderAll();
-canvas.calcOffset();
-}
-
-
-
 
 Id('canvas-container').addEventListener('resize', () => unifiedResize());
 
 window.addEventListener('resize', () => unifiedResize());
-
-
-window.addEventListener('load', () => unifiedResize())
-
-
-
+  window.addEventListener('load', () => unifiedResize())
     setTimeout(() => {
       unifiedResize()
     },300)
@@ -2168,7 +2232,7 @@ mb
         <div id="option-${option.id}" class="option option-${option.type} option-${option.id}">
             <label>${option.label}</label>
               <img src = '${option.icon}' class = 'icon' alt = 'icon'>
-            <input id="input-${option.id}" class="input ${option.type}" value =${activeObject.fill} type="${option.type}" />
+            <input id="input-${option.id}" class="input ${option.type}" value=${activeObject.fill} type="${option.type}" />
         </div>
         `;
         break;
@@ -2189,9 +2253,11 @@ mb
     <input id = 'input-link' class = 'input' value = '${activeObject.link}' placeholder='Enter URL here...' type="text" oninput="applyStyles(canvas)">
   </div>
 
-  <button id="delete" class='red' onclick="deleteObject()"> Delete </button>
-  <button id="sendToFront" onclick="sendObjectToFront()"> Send to Front </button>
-  <button id="sendToBack" onclick="sendObjectToBack()"> Send to Back </button>
+  <div id = 'control'>
+    <button id="delete" class='red control-btn' onclick="deleteObject()"> Delete </button>
+    <button id="sendToFront" class = 'control-btn' onclick="sendObjectToFront()"> Send to Front </button>
+    <button id="sendToBack" class  ='control-btn' onclick="sendObjectToBack()"> Send to Back </button>
+  </div>
 
   `
 
@@ -2722,6 +2788,9 @@ function addButton(x, y) {
         { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
       { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
 
+
+      { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
+
       { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
     ];
 
@@ -2746,6 +2815,8 @@ function addButton(x, y) {
       { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
       { label: 'Y', id: 'originalTop', type: 'number', icon: IconY, value: activeObject.originalTop, min: 0, max: 1000 },
 
+      { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
+
       { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
     ];
   }
@@ -2759,6 +2830,8 @@ function addButton(x, y) {
       { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
       { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
 
+      { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
+
       { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5},
     ];
   }
@@ -2771,6 +2844,8 @@ function addButton(x, y) {
       { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
       { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
       { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+
+      { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
 
       { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max:  5},
     ];
