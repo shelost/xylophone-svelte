@@ -17,7 +17,8 @@
     "ionic:serve": "npm run dev",
     "heroku-postbuild": "npm run build",
     "build": "npx vite build",
-    "dev": "vite dev"
+    "dev": "vite dev",
+    "start": "node app.js"
   },
   "devDependencies": {
     "@brainandbones/skeleton": "^0.67.5",
