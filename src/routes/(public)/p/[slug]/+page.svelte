@@ -403,21 +403,21 @@ async function fetchFolder(){
 
 
 
-fetchPages()
+
+try{
+    fetchPages()
 fetchFolder()
 
+
+}catch (e){
+    console.error(e)
+}
 
 
 onMount(()=> {
 
 
-
-fetchPages()
-fetchFolder()
-
-
-
-    let isScrolling = false;  // Flag to check if scrolling is active
+let isScrolling = false;  // Flag to check if scrolling is active
 let scrollInterval;  // Store the interval ID
 
 document.addEventListener('keydown', function(e) {

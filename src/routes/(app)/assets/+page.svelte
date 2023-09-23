@@ -264,15 +264,21 @@ loadImagesFromSupabase()
 		margin-top: 40px;
 
 		.col{
-			width: 100%;
+			//width: 100%;
+			//flex: 1;
+			flex-grow: 1;
+			//overflow-x: visible;
+
+			//width: calc((100vw - 240px) / 6);
 		}
 
 		.page{
 
+			max-width: 100%;
 			background: white;
 			padding: 5px;
 			border-radius: 5px;
-			box-shadow: 0px 0px 50px rgba(black, 0.08);
+
 			padding-bottom: 10px;
 			transition: 0.2s ease;
 
@@ -281,11 +287,16 @@ loadImagesFromSupabase()
             flex-grow: 0;
             height: fit-content;
 
+			flex-shrink: 0;
+
 			cursor: pointer;
 
 
             img{
                 width: 350px;
+				box-shadow: 0px 10px 40px rgba(black, 0.05);
+				border: 1px solid rgba(black, 0.1);
+				border-radius: 10px;
             }
 
 			canvas{
@@ -294,11 +305,15 @@ loadImagesFromSupabase()
 			}
 
 			h1{
-				margin-top: 8px;
+				width: calc((100vw - 400px) / 3);
+				margin-top: 5px;
 				margin-left: 5px;
-				font-size: 14px;
-				font-weight: 600;
+				font-size: 12px;
+				font-weight: 500;
 				letter-spacing: -0.3px;
+				overflow-wrap: break-word;
+				word-wrap: break-word;
+				color: rgba(black, 0.5);
 			}
 
 			&:hover{

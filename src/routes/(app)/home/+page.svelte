@@ -37,13 +37,15 @@
 			const left = obj.left || 0;
 			const top = obj.top || 0;
 
-
 			obj.scaleX *= scaleX
 			obj.scaleY *= scaleX
 			obj.left *= scaleX
 			obj.top *= scaleX
 
-			obj.left += (canvas.width/2)
+			if (obj.xPercent !== undefined) {
+                const newLeftPos = canvas.width/2 + obj.xPercent * canvas.width - (obj.width * obj.scaleX) / 2;
+                obj.set('left', newLeftPos);
+            }
 
 			obj.setCoords(); // Refresh object coordinates after updates
 		});
