@@ -1,22 +1,24 @@
 export async function load({ params }) {
 
 	try {
-
-		// If you want to keep the supabaseClient call and just add additional Lambda processing:
-		 const { data: note, error } = await supabaseClient
+		// Fetch data from Supabase
+		const { data: note, error } = await supabaseClient
 		 	.from('pages')
 		 	.select('*')
 		 	.eq('id', params.slug)
 		 	.single();
 
+		if (error) {
+			throw new Error(error.message);
+		}
 
-		// If you're replacing the supabaseClient call:
+		// Call AWS Lambda function
 		const lambdaResponse = await fetch('https://fcuexopxqi.execute-api.us-east-2.amazonaws.com', {
-			method: 'POST', // or 'GET' depending on your Lambda function setup
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ slug: params.slug }) // if you need to pass the slug to Lambda
+			body: JSON.stringify({ slug: params.slug })
 		});
 
 		if (!lambdaResponse.ok) {
@@ -25,6 +27,9 @@ export async function load({ params }) {
 
 		const note2 = await lambdaResponse.json();
 
+		// Additional processing if required using note2
+
+		// Return Supabase data
 		return note;
 
 	} catch (e) {
