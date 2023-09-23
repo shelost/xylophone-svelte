@@ -941,11 +941,6 @@ canvas.on('object:moving', (event) => {
   }
 
   // Handle transformations for each object in the active selection.
-  if (activeObject.type === 'activeSelection') {
-      activeObject.getObjects().forEach(handleObject);
-  } else {
-      handleObject(activeObject);
-  }
   applyParallaxEffect();
 
 
@@ -953,12 +948,8 @@ canvas.on('object:moving', (event) => {
   // Property text
   if (activeObject.type === 'activeSelection') {
         activeObject.getObjects().forEach(obj => {
-            handleObject(obj);
-
-
+            handleObject(obj, activeObject);
             createPropertyText(activeObject)
-
-
             updatePropertyText(obj); // <-- updating the text for each activeObject in the activeSelection
         });
     } else {
@@ -1202,8 +1193,9 @@ canvas.on('object:scaling', function(event) {
         obj.set('scaleX', 1);
         obj.set('scaleY', 1);
         obj.initDimensions();
-    }else if (obj.width) {
+    }else if (obj.width && Id('input-width')) {
         // Update the width and height input values to the current scaled dimensions
+
         Id('input-width').value = Math.round(obj.width * obj.scaleX)
         Id('input-height').value = Math.round(obj.height * obj.scaleY)
         Id('range-width').value =  Math.round(obj.height * obj.scaleY)
@@ -1438,53 +1430,40 @@ canvas.on('object:modified', function() {
     isObjectBeingModified = true;
     activeObject = canvas.getActiveObject()
 
-
-    activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2  - canvas.width/2 )/ canvas.width
     MODE = null
-
-
-
-    // If multiple objects were moved together.
-    if (activeObject.type === 'activeSelection') {
-        // Update actual positions of each object.
-        activeObject.getObjects().forEach(obj => {
-            // Update the object's absolute positions.
-            obj.set({
-               // left: obj.left + activeObject.left,
-               // top: obj.top + activeObject.top
-            });
-            handleObject(obj);  // Re-calculate and store originalTop and other properties.
-        });
-
-        // Deselect the active selection and dissolve the group.
-        canvas.discardActiveObject().renderAll();
-    }
-
-
-   // applyParallaxEffect();
 });
 
 canvas.on('selection:created', function() {
   //MODE = null
     isObjectBeingModified = true;
 
-    activeObject = canvas.getActiveObject()
-
-    activeObject.xPercent = (activeObject.left + (activeObject.width*activeObject.scaleX)/2  - canvas.width/2 )/ canvas.width
-
 });
 
 
-
-function handleObject(obj) {
+function handleObject(obj, activeSelection) {
+  console.log('yo')
     let depth = obj.depth || 0;
     let scrollAmount = document.getElementById('canvas-container').scrollTop;
-    let parallaxShift = 0.15 * depth * scrollAmount;
-    obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
-    obj.originalTop = obj.top - parallaxShift;
-    obj.top = Math.round(obj.top)
-}
 
+    let absoluteLeft = obj.left;
+    let absoluteTop = obj.top;
+
+    if (activeSelection) {
+      console.log('bro')
+        absoluteLeft = obj.left + activeSelection.left + activeSelection.width/2
+        //absoluteTop += activeSelection.top - (activeSelection.height * activeSelection.scaleY) / 2;
+    }
+
+
+
+
+    let parallaxShift = 0.15 * depth * scrollAmount;
+    obj.xPercent = (absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
+    obj.originalTop = absoluteTop - parallaxShift;
+    obj.top = Math.round(absoluteTop);
+    console.log(obj.left, absoluteLeft)
+    console.log(obj.xPercent)
+}
 
 
 
@@ -1980,7 +1959,7 @@ canvas.setWidth(newWidth);
 canvas.getObjects().forEach((object) => {
     const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
     object.left = newLeftPos;
-    object.xPercent = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2) / canvas.width;
+    //object.xPercent = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2) / canvas.width;
     object.setCoords();
 });
 
@@ -1994,6 +1973,7 @@ if (container) {
 if (canvasContainer) {
     canvasContainer.style.width = `${newWidth}px`;
 }
+canvas.setWidth(newWidth);
 
 // Render the canvas
 canvas.renderAll();
@@ -2079,11 +2059,9 @@ function handleSelection(event) {
 
   $isPanelVisible = true;
 
-  if(true) {
+  if(activeObjects.length == 1) {
 
     let activeObject = activeObjects[0];
-
-    console.log(activeObject.top, activeObject.originalTop)
   let options = {};
 
   switch (activeObject.type) {
@@ -2861,7 +2839,7 @@ function saveCanvasToSupabase() {
         */
 
 
-        obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
+        //obj.xPercent = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
     });
 
     // Save the scroll position
