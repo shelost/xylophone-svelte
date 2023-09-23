@@ -25,10 +25,6 @@
 
 	export let data;
 
-
-	import Open from '$lib/img/folder-open.svg'
-	import Closed from '$lib/img/folder-closed.svg'
-
 	let newID = crypto.randomUUID();
 	let pagesDiv;
 	let isFetched = false;
