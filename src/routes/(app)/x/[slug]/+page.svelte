@@ -1,6 +1,10 @@
 <div id = 'app'>
 
 
+
+  <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
+
+
   <div id = 'bar'>
 
     <div id = 'mast'>
@@ -81,14 +85,17 @@
 
 
 
-  <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
 
+  <div id = 'subcontainer'>
     <div id = 'canvas-container'>
       <div id="loader"></div>
       <canvas id = 'canvas'></canvas>
     </div>
 
     <div id="handle"></div>
+  </div>
+
+
 </div>
 
 
@@ -229,7 +236,7 @@ input:checked + .slider:before {
     overflow-x: hidden !important;
     overflow-y: scroll !important;
     width: calc(100vw - 260px) !important;
-    height: calc(100vh - 60px) !important;
+    height: calc(100vh - 30px) !important;
 
     background: none;
 
@@ -272,10 +279,10 @@ input:checked + .slider:before {
 
 
   #color{
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     transition: 0.2s ease;
-    margin-top: 3px;
+    margin-top: 5px;
     border: none;
     outline: none;
     //box-shadow: 0x 5px 20px rgba(black, 0.2);
@@ -313,8 +320,8 @@ input:checked + .slider:before {
     color: black;
     box-shadow: none;
 
-    width: 28px;
-    height: 28px;
+    width: 18px;
+    height: 18px;
     border-radius: 3px;
     cursor: pointer;
     transition: 0.2s ease;
@@ -416,72 +423,63 @@ input:checked + .slider:before {
   }
 
   #container {
-
       width: calc(100vw - 255px);
-      height: calc(100vh - 50px);
-      margin-top: 40px;
-
+      height: calc(100vh - 20px);
+      margin-top: 10px;
       border: 5px solid white;
       box-shadow: 20px 50px 150px rgba(black, 0.15);
-
-      //border: 3px solid black;
-
-
-
-
-    //resize: horizontal;  // allows horizontal resizing
-    position: relative;  //
-
-
-
+      position: relative;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: flex-start;
       overflow-x: hidden;
       overflow-y: hidden;
-
       border-radius: 15px;
 
+      position: relative;
   }
-
-
 
   #bar{
 
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 20px;
-    margin-left: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
 
     height: 45px;
-    border-bottom: 1px solid rgba(black, 0.02);
-    //box-shadow: 0px 20px 60px rgba(black, 0.05);
-    width: calc(100vw - 250px);
+   // border-bottom: 1px solid rgba(black, 0.02);
     color: black;
 
+    width: 100%;
+
     z-index: 3;
+    //border: 1px solid black;
 
-
-    position: fixed;
-
-
-    //border-bottom: 1px solid rgba(black, 0.1);
+    position: absolute;
 
 
     #title{
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       letter-spacing: -0.3px;
-      padding: 0 5px;
-      height: 24px;
+      padding: 0px 10px;
+      height: 30px;
+      border-radius: 8px;
 
-      border-radius: 5px;
+      width: 140px;
+
+
+      background: rgba(white, 0.9) !important;
     }
 
     #buttons{
       display: flex;
       align-items: center;
       gap: 10px;
+      background: rgba(white, 0.9) !important;
+      padding: 2px 8px;
+      border-radius: 8px;
     }
 
     #corner{
@@ -494,10 +492,12 @@ input:checked + .slider:before {
         font-weight: 500;
         letter-spacing: -0.2px;
         padding: 5px 10px;
-        color: #ff004d;
+        color: white;
+        width: 140px;
+        text-align: center;
 
         border-radius: 8px;
-        background: rgba(#ff004d, 0.08);
+        background: #ff004d;
       }
     }
 
@@ -505,6 +505,7 @@ input:checked + .slider:before {
       display: flex;
       align-items: center;
       margin-right: -80px;
+      display: none;
       input{
         width: 160px;
         height: 36px;
@@ -539,19 +540,7 @@ button:focus {
     outline: none !important;
 }
 
-#app #container #bar #title{
-    background: none !important;
-    border: none !important;
-    outline: none !important;
 
-
-    &:focus{
-        border: none !important;
-        outline: none !important;
-        -webkit-appearance: none !important;
-
-    }
-}
 
 
 *:focus {
@@ -1049,8 +1038,6 @@ canvas.on('object:moving', (event) => {
   // Handle transformations for each object in the active selection.
   applyParallaxEffect();
 
-
-
   // Property text
   if (activeObject.type === 'activeSelection') {
         activeObject.getObjects().forEach(obj => {
@@ -1424,7 +1411,12 @@ const loadCanvasFromSupabase = async () => {
 
             const canvasCenterX = canvas.width / 2;
 
+
             canvas.getObjects().forEach((object) => {
+
+                if (!object.pin){
+                  object.pin = 'scale'
+                }
 
                 if (object.pin && object.xPercent !== undefined) {
                  let newLeftPos;
@@ -1434,18 +1426,22 @@ const loadCanvasFromSupabase = async () => {
                   switch (object.pin) {
                       case 'scale':
                           newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+
+
                           break;
                       case 'left':
                           newLeftPos = object.left; // Use the given value
                           break;
                       case 'right':
                           if (object.right){
-                            newLeftPos = canvas.width - object.right - object.width * object.scaleX;
+                            newLeftPos = canvas.width - object.right - (object.width * object.scaleX)/2;
                           }
+                          console.log(object.right)
+                          console.log(newLeftPos)
                           break;
                       case 'center':
                           if (object.center){
-                            newLeftPos = object.center - (object.width * object.scaleX) / 2
+                            newLeftPos = object.left
                           }
                           break;
                       default:
@@ -1453,20 +1449,23 @@ const loadCanvasFromSupabase = async () => {
                           break;
                   }
 
+
+                  console.log(newLeftPos)
+
+
                   object.set('left', newLeftPos);
               }
 
 
                 if (object.originalTop !== undefined) {
                   object.set('top', object.originalTop);
-                  console.log(object.originalTop)
                 }else{
                   object.originalTop = object.top;
                 }
 
 
                 object.right = canvas.width - object.left + object.width * object.scaleX
-                object.center = (absoluteLeft + (object.width * object.scaleX) / 2 - canvas.width / 2)
+                object.center = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2)
 
 
                 if (!object.pin){
@@ -1633,6 +1632,7 @@ function applyParallaxEffect() {
 
     canvas.renderAll();
     */
+
 }
 
 document.getElementById('canvas-container').addEventListener('scroll', applyParallaxEffect);
@@ -1665,12 +1665,11 @@ canvas.on('selection:created', function() {
 
 
 function handleObject(obj, activeSelection) {
-  console.log('yo')
+
     let depth = obj.depth || 0;
     let scrollAmount = document.getElementById('canvas-container').scrollTop;
 
     let absoluteLeft = obj.left;
-    let absoluteTop = obj.top;
 
     if (activeSelection) {
         absoluteLeft = obj.left + activeSelection.left + activeSelection.width/2
@@ -1679,12 +1678,11 @@ function handleObject(obj, activeSelection) {
     let parallaxShift = 0.15 * depth * scrollAmount;
     obj.xPercent = (absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
 
-    obj.right = canvas.width - absoluteLeft + obj.width * obj.scaleX
+    obj.right = absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width
     obj.center = (absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width / 2)
 
-
-    obj.originalTop = absoluteTop - parallaxShift;
-    obj.top = Math.round(absoluteTop);
+    obj.originalTop = obj.top - parallaxShift;
+    obj.top = Math.round(obj.top);
     console.log(obj.left, absoluteLeft)
     console.log(obj.xPercent)
 }
@@ -2139,6 +2137,11 @@ canvas.on('object:added', function(options) {
   obj.originalTop = obj.top;
   // Calculate offset from the center.
   obj.xPercent = (obj.left + (obj.width*obj.scaleX)/2  - canvasCenterX)/ canvas.width
+
+
+  obj.right = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width)
+  obj.center = (obj.left + (obj.width * obj.scaleX) / 2 - canvas.width / 2)
+
 
 
   let depth = obj.depth || 0;
@@ -2993,7 +2996,7 @@ function addButton(x, y) {
       { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
       { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', icon: IconLS, type: 'number', value: activeObject.charSpacing || 0, min: -50, max: 50 },
       { label: 'Font Size', id: 'fontSize', type: 'number', step: 1, icon: IconS, prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
-      { label: 'Text Align', id: 'textAlign', type: 'dropdown', icon: IconP, prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right', 'justify'] },
+      { label: 'Text Align', id: 'textAlign', type: 'dropdown', icon: IconP, prop: 'textAlign', value: activeObject.textAlign, options: ['left', 'center', 'right'] },
       { label: 'Font Weight', id: 'fontWeight', type: 'number', icon: IconB, step: 100,prop: 'fontWeight', value: activeObject.fontWeight || 500, min: 100, max: 900 },
       { label: 'Font Style', id: 'fontStyle', type: 'dropdown', icon: IconT, prop: 'fontStyle', value: activeObject.fontStyle, options: ['normal', 'italic', 'oblique'] },
       { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0,  max: 360 },
@@ -3318,7 +3321,7 @@ async function uploadCanvas() {
  // document.getElementById('upload').addEventListener('click', saveCanvasToSupabase);
   // document.getElementById('delete').addEventListener('click', deleteObject);
   document.getElementById('title').addEventListener('input', saveCanvasToSupabase);
-  document.getElementById('exitEditMode').addEventListener('click', handleExit);
+  //document.getElementById('exitEditMode').addEventListener('click', handleExit);
 
   /*
   document.getElementById('url').addEventListener('click', () => {
