@@ -344,23 +344,13 @@ async function removePageFromFolder(pageId) {
     <button id='add' on:click={addPage}> + Add Page </button>
     <button id='group' on:click={addFolder}> + Add Group </button>
 
-	 <!-- Folders display -->
+	<!--
+
 	 {#each $folders as folder}
 		<div class="folder" id = '{folder.id}' data-id={folder.id}>
 			<div class="folder-header" class:active = {folder.open} on:click={() => toggleFolder(folder.id)}>
 
 				<div class = 'flex'>
-
-					<!--
-
-					{#if folder.open}
-					<img src = {Open} alt = 'folder'>
-
-					{:else}
-					<img src = {Closed} alt = 'folder'>
-					{/if}
-					-->
-
 
 					<img src = {icon} alt = 'folder'>
 
@@ -392,8 +382,10 @@ async function removePageFromFolder(pageId) {
 		</div>
 	{/each}
 
+-->
+
 	<div class = 'pages'>
-		{#each $pages.filter(p => !p.folder_id) as page}
+		{#each $pages as page}
 			<a href='/x/{page.id}' >
 				<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
 					<div class='color' style='background-color: {page.color}'></div>

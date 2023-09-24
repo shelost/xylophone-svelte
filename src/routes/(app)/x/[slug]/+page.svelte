@@ -48,6 +48,9 @@
         <input type="color" id="color" name="head" bind:value={color} />
       </div>
 
+
+
+
     </div>
 
 
@@ -109,6 +112,15 @@
 <style lang='scss'>
 
 
+
+::-webkit-scrollbar{
+  width: 3px;
+  background: rgba(255,255,255,0);
+}
+
+::-webkit-scrollbar-thumb{
+  background: #a0a0a0;
+}
 
 .switch {
   position: relative;
@@ -409,7 +421,7 @@ input:checked + .slider:before {
       height: calc(100vh - 50px);
       margin-top: 40px;
 
-      border: 4px solid white;
+      border: 5px solid white;
       box-shadow: 20px 50px 150px rgba(black, 0.15);
 
       //border: 3px solid black;
@@ -492,9 +504,9 @@ input:checked + .slider:before {
     #input{
       display: flex;
       align-items: center;
-      margin-right: -60px;
+      margin-right: -80px;
       input{
-        width: 140px;
+        width: 160px;
         height: 36px;
         font-size: 12px;
         font-weight: 600;
@@ -507,7 +519,7 @@ input:checked + .slider:before {
         font-size: 12px;
         font-weight: 500;
         border-radius: 8px;
-        transform: translateX(-60px);
+        transform: translateX(-75px);
         box-shadow: none;
       }
     }
@@ -597,102 +609,98 @@ input:-webkit-autofill:active  {
 
 
 
-  #panel{
-    position: fixed;
-    top: 0px;
-    left: -400px;
-    width: 240px;
-    padding: 20px;
-    height: 100vh;
-    background: #FF004D;
-    background: rgb(10, 5, 19);
-    background: white;
-    //background: #fff3f5;
-    //border-radius: 10px;
-    border: 1px solid rgba(black, 0.1);
-   // box-shadow: -20px 0px 70px rgba(black, 0.1);
-    transition: 0.3s ease-in-out;
-    overflow-y: scroll;
-
-
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    letter-spacing: -0.4px;
-
-    z-index: 4;
-
-
-    :global(#controls-title){
-      font-weight: 600;
-      color: black;
-    }
-
-    :global(.control){
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-    }
-
-
-
-      :global(.range){
-        -webkit-appearance: none;
-        width: 80%;
-        height: 20px;
-        background: #d3d3d3;
-        outline: none;
-        opacity: 1;
-        -webkit-transition: .2s;
-        transition: opacity .2s;
-      }
-
-      :global(.range:hover) {
-        //opacity: 1;
-        opacity: 1;
-      }
-
-      :global(.range::-webkit-slider-thumb) {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 8px;
-        height: 20px;
-        border-radius: 3px;
-        background: rgba(black, 0.3);
-        cursor: pointer;
-      }
-
-      :global(.range::-moz-range-thumb) {
-        width: 8px;
-        height: 20px;
-        background: rgba(black, 0.3);
-         border-radius: 3px;
-        cursor: pointer;
-      }
-
-
-    :global(.option){
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    :global(.icon){
-      width: 16px;
-      margin-right: 12px;
-    }
-
-
-
-    &.active{
-      left: 0 !important;
-    }
-  }
 
   .active{
       left: 0px !important;
     }
+
+
+
+    /*
+
+    :global(.sliding-selector) {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+
+:global(.options span) {
+    cursor: pointer;
+    padding: 10px;
+    z-index: 2;
+    position: relative;
+}
+
+
+
+:global(.slider-background) {
+    position: absolute;
+    height: 100%;
+    background-color: rgba(black, 0.1);
+    transition: all 0.3s ease;
+    border-radius: 5px;
+    z-index: 1;
+}
+*/
+
+
+:global(.option) {
+    position: relative;
+}
+
+:global(.sliding-selector) {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+}
+
+:global(.option-item) {
+    margin: 2px 5px;
+    padding: 5px 10px;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+
+    cursor: pointer;
+}
+
+:global(.options){
+  display: flex;
+  flex-wrap: wrap;
+ // border: 1px solid rgba(black, 0.2);
+ background: rgba(black, 0.05);
+ border-radius: 8px;
+ padding: 5px;
+}
+
+:global(.options span){
+  white-space: nowrap;
+  padding: 5px 10px;
+  z-index: 2;
+
+  //background: rgba(white, 0.5);
+  //margin: 5px;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+:global(.slider-background) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    height: 30px;
+    background-color: white;
+    box-shadow: 0px 10px 10px rgba(black, 0.05);
+    //z-index: -1;
+    transition: all 0.2s ease;
+    border-radius: 5px;
+}
+
 
 
 
@@ -852,10 +860,78 @@ onMount(()=> {
     offsetY: 40,
     offsetX: -16,
     cursorStyle: 'pointer',
-    //mouseUpHandler: cloneObject,
+    mouseUpHandler: enterEditMode,
     render: renderIcon(cloneImg),
     cornerSize: 24
   });
+
+
+
+
+
+
+  let croppingRect;
+function enterEditMode(eventData, transform) {
+
+  let target = transform.target
+  console.log('yo')
+    croppingRect = new fabric.Rect({
+        fill: 'transparent',
+        strokeWidth: 1,
+        stroke: 'red',
+        left: target.left,
+        top: target.top,
+        width: target.width * target.scaleX * 0.5,
+        height: target.height * target.scaleY * 0.5,
+        hasRotatingPoint: false,
+        transparentCorners: false,
+        selectable: true,
+    });
+    canvas.add(croppingRect);
+    console.log(croppingRect)
+}
+
+function applyCrop(target) {
+    const cropped = new fabric.Image(target._element, {
+        left: target.left,
+        top: target.top,
+    });
+
+    const rectLeft = croppingRect.left - croppingRect.width / 2;
+    const rectTop = croppingRect.top - croppingRect.height / 2;
+
+    cropped.clipPath = new fabric.Rect({
+        left: -target.width / 2 + rectLeft - target.left,
+        top: -target.height / 2 + rectTop - target.top,
+        width: croppingRect.width,
+        height: croppingRect.height,
+        absolutePositioned: true,
+    });
+
+    canvas.remove(target);
+    canvas.add(cropped);
+}
+
+function exitEditMode(applyChanges = true) {
+    if (applyChanges) {
+        const activeObject = canvas.getActiveObject();
+        if (activeObject && croppingRect) {
+            applyCrop(activeObject);
+        }
+    }
+
+    if (croppingRect) {
+        canvas.remove(croppingRect);
+        croppingRect = null;
+    }
+}
+
+function handleExit() {
+    const applyChanges = confirm('Do you want to apply the crop?');
+    exitEditMode(applyChanges);
+}
+
+
 
   /*
 
@@ -1105,6 +1181,8 @@ window.applyStyles = function(prop, value) {
           updateDepth(activeObject);
         }
 
+
+
         activeObject.dirty = true;
         activeObject.textBackgroundColor = 'rgba(0,0,0,0)'
         canvas.requestRenderAll();
@@ -1347,11 +1425,37 @@ const loadCanvasFromSupabase = async () => {
             const canvasCenterX = canvas.width / 2;
 
             canvas.getObjects().forEach((object) => {
-                if (object.xPercent !== undefined) {
-                    const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
-                    object.set('left', newLeftPos);
 
-                }
+                if (object.pin && object.xPercent !== undefined) {
+                 let newLeftPos;
+
+                  const canvasCenterX = canvas.width / 2;
+
+                  switch (object.pin) {
+                      case 'scale':
+                          newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+                          break;
+                      case 'left':
+                          newLeftPos = object.left; // Use the given value
+                          break;
+                      case 'right':
+                          if (object.right){
+                            newLeftPos = canvas.width - object.right - object.width * object.scaleX;
+                          }
+                          break;
+                      case 'center':
+                          if (object.center){
+                            newLeftPos = object.center - (object.width * object.scaleX) / 2
+                          }
+                          break;
+                      default:
+                          newLeftPos = object.left; // Default behavior is like 'left' pin
+                          break;
+                  }
+
+                  object.set('left', newLeftPos);
+              }
+
 
                 if (object.originalTop !== undefined) {
                   object.set('top', object.originalTop);
@@ -1360,6 +1464,9 @@ const loadCanvasFromSupabase = async () => {
                   object.originalTop = object.top;
                 }
 
+
+                object.right = canvas.width - object.left + object.width * object.scaleX
+                object.center = (absoluteLeft + (object.width * object.scaleX) / 2 - canvas.width / 2)
 
 
                 if (!object.pin){
@@ -1429,6 +1536,89 @@ Id('clear').addEventListener('click', async () => {
 
 
 
+document.querySelectorAll('.sliding-selector .options span').forEach(option => {
+    option.addEventListener('click', function() {
+        const parent = this.closest('.sliding-selector');
+        const background = parent.querySelector('.slider-background');
+
+        // Move the background to the clicked option's position
+        background.style.left = this.offsetLeft + 'px';
+        background.style.width = this.offsetWidth + 'px';
+
+        // Handle the selection logic (e.g., update the corresponding property value)
+        const value = this.dataset.value;
+        console.log('Selected:', value);
+    });
+});
+
+
+/*
+// Initialize the slider-background for the currently selected option
+// Assuming the first option is selected by default
+const firstOption = document.querySelector('.sliding-selector .options span');
+const background = document.querySelector('.sliding-selector .slider-background');
+background.style.left = firstOption.offsetLeft + 'px';
+background.style.width = firstOption.offsetWidth + 'px';
+*/
+
+
+function positionSliderBackground(selectorElement) {
+    const activeOption = selectorElement.querySelector('.options span.selected');
+    const sliderBackground = selectorElement.querySelector('.slider-background');
+
+    if (activeOption) {
+        const activeOptionPosition = activeOption.getBoundingClientRect();
+        const selectorPosition = selectorElement.getBoundingClientRect();
+
+        sliderBackground.style.left = (activeOptionPosition.left - selectorPosition.left - 27) + 'px';
+        sliderBackground.style.width = activeOptionPosition.width + 'px';
+        sliderBackground.style.top = (activeOptionPosition.top - selectorPosition.top) + 'px';
+        sliderBackground.style.height = activeOptionPosition.height + 'px';
+    }
+}
+
+
+
+// Function to handle option click
+function handleOptionClick(event) {
+    const targetOption = event.target;
+
+    // Check if the clicked element is a sliding option
+    if (!targetOption.matches('.sliding-selector .options span')) return;
+
+    const selectorElement = targetOption.closest('.sliding-selector');
+    const allOptions = selectorElement.querySelectorAll('.options span');
+    const sliderBackground = selectorElement.querySelector('.slider-background');
+
+    // Remove the 'selected' class from all options and add it to the clicked one
+    allOptions.forEach(opt => opt.classList.remove('selected'));
+    targetOption.classList.add('selected');
+
+    // Move the slider background to the clicked option
+    const targetOptionPosition = targetOption.getBoundingClientRect();
+    const selectorPosition = selectorElement.getBoundingClientRect();
+
+    sliderBackground.style.left = (targetOptionPosition.left - selectorPosition.left) + 'px';
+    sliderBackground.style.width = targetOptionPosition.width + 'px';
+
+    // Adjust the vertical position of the slider background to match the clicked option
+    sliderBackground.style.top = (targetOptionPosition.top - selectorPosition.top) + 'px';
+    sliderBackground.style.height = targetOptionPosition.height + 'px';
+
+    // Apply style to the canvas
+    const prop = selectorElement.getAttribute('data-option-prop');
+    const value = targetOption.getAttribute('data-value');
+
+    applyStyles(prop, value);
+}
+
+// Attach an event listener to the document (event delegation)
+document.addEventListener('click', handleOptionClick);
+
+
+
+
+
 
 
 function applyParallaxEffect() {
@@ -1483,16 +1673,16 @@ function handleObject(obj, activeSelection) {
     let absoluteTop = obj.top;
 
     if (activeSelection) {
-      console.log('bro')
         absoluteLeft = obj.left + activeSelection.left + activeSelection.width/2
-        //absoluteTop += activeSelection.top - (activeSelection.height * activeSelection.scaleY) / 2;
     }
-
-
-
 
     let parallaxShift = 0.15 * depth * scrollAmount;
     obj.xPercent = (absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
+
+    obj.right = canvas.width - absoluteLeft + obj.width * obj.scaleX
+    obj.center = (absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width / 2)
+
+
     obj.originalTop = absoluteTop - parallaxShift;
     obj.top = Math.round(absoluteTop);
     console.log(obj.left, absoluteLeft)
@@ -2190,32 +2380,36 @@ mb
         `;
         break;
 
-      case 'dropdown':
-        opt = `
-        <div id = 'option-${option.id}' class="option option-${option.type} option-${option.id}">
-          <label> ${option.label} </label>
-                <img src = '${option.icon}' class = 'icon' alt = 'icon'>
-          <select id = 'input-${option.prop}' class = 'input dropdown' onchange="applyStyles(canvas)">
-        `
+        case 'dropdown':
+    opt = `
+    <div id="option-${option.id}" class="option option-${option.type} option-${option.id}">
+        <label>${option.label}</label>
+        <img src="${option.icon}" class="icon" alt="icon">
 
-        for (let i=0; i<option.options.length; i++) {
-          let o = option.options[i];
+        <div class="sliding-selector" data-option-prop="${option.prop}">
+            <div class="options">
+    `;
 
-          if (activeObject[option.id] == o) {
-            opt += `<option value = '${o}' selected> ${o} </option> `
-          }else{
-            opt += `<option value = '${o}'> ${o} </option> `
-          }
+    for (let i = 0; i < option.options.length; i++) {
+        let o = option.options[i];
+        const isSelected = (activeObject[option.id] == o) ? 'selected' : '';
 
-        }
-        opt +=
-        `
-        </select>
+        console.log(activeObject[option.id], o)
+        console.log(activeObject[option.id] == o)
+        console.log(isSelected)
+
+        opt += `<span data-value="${o}" class="${isSelected}">${o}</span>`;
+    }
+
+    opt += `
+            </div>
+            <div class="slider-background"></div>
         </div>
+    </div>
+    `;
 
-        `;
+    break;
 
-        break;
 
       case 'checkbox':
         const isChecked = activeObject[option.id] ? 'checked' : '';
@@ -2261,7 +2455,25 @@ mb
 
   `
 
+
+
   PANEL.innerHTML = div;
+
+
+  for (let i = 0; i < options.length; i++) {
+    let option = options[i];
+
+    switch (option.type) {
+      case 'dropdown':
+        const newSelector = document.getElementById(`option-${option.id}`);
+        positionSliderBackground(newSelector);
+        break;
+      default:
+        break;
+
+    }
+  }
+
 
 
   dynamicallyBindListeners()
@@ -3018,7 +3230,7 @@ async function uploadCanvas() {
     };
 
     // Serialize the current canvas state
-    const canv = canvas.toJSON(['link', 'depth', 'xPercent', 'scaler', 'originalProperties', 'originalTop']);
+    const canv = canvas.toJSON(['link', 'depth', 'xPercent', 'scaler', 'originalProperties', 'originalTop', 'pin', 'right', 'center']);
     const json = JSON.stringify(canv);
 
     // Prepare the file for Supabase Storage
@@ -3106,6 +3318,7 @@ async function uploadCanvas() {
  // document.getElementById('upload').addEventListener('click', saveCanvasToSupabase);
   // document.getElementById('delete').addEventListener('click', deleteObject);
   document.getElementById('title').addEventListener('input', saveCanvasToSupabase);
+  document.getElementById('exitEditMode').addEventListener('click', handleExit);
 
   /*
   document.getElementById('url').addEventListener('click', () => {

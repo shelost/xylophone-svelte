@@ -11,6 +11,7 @@ export async function load({ params }) {
 		if (error) {
 			throw new Error(error.message);
 		}
+		/*
 
 		// Call AWS Lambda function
 		const lambdaResponse = await fetch('https://fcuexopxqi.execute-api.us-east-2.amazonaws.com', {
@@ -26,6 +27,7 @@ export async function load({ params }) {
 		}
 
 		const note2 = await lambdaResponse.json();
+		*/
 
 		// Additional processing if required using note2
 

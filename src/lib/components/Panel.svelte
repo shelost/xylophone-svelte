@@ -151,6 +151,15 @@ function populatePanel(activeObject) {
 <style lang="scss">
 
 
+::-webkit-scrollbar{
+  width: 2px;
+  background: white;
+}
+
+::-webkit-scrollbar-thumb{
+  background: #d0d0d0;
+}
+
 
 #panel{
     position: fixed;
@@ -162,9 +171,8 @@ function populatePanel(activeObject) {
     background: #FF004D;
     background: rgb(10, 5, 19);
     background: white !important;
-    //background: #fff3f5;
-    //border-radius: 10px;
-    //border: 1px solid rgba(black, 0.1);
+
+
     box-shadow: 20px 0px 70px rgba(black, 0.02);
     transition: 0.3s ease-in-out;
     overflow-y: scroll;
@@ -178,6 +186,7 @@ function populatePanel(activeObject) {
     letter-spacing: -0.4px;
 
     z-index: 10 !important;
+
 
 
     :global(#controls-title){
@@ -212,7 +221,7 @@ function populatePanel(activeObject) {
         -webkit-appearance: none;
         appearance: none;
         width: 8px;
-        height: 20px;
+        height: 24px;
         border-radius: 3px;
         background: rgba(black, 0.3);
         cursor: pointer;
@@ -239,10 +248,15 @@ function populatePanel(activeObject) {
     }
 
 
+    :global(input){
+      padding: 1px 7px !important;
+    }
+
 
     &.active{
       left: 0 !important;
     }
+
   }
 
 </style>
