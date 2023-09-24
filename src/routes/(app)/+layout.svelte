@@ -232,9 +232,13 @@ async function loadImagesFromSupabase() {
 
 
 	#settings{
-		z-index: 5 !important;
+		z-index: 4 !important;
 	}
 
+
+	:global(#navbar){
+		z-index: 3 !important;
+	}
 
 	#app{
 		position: fixed;
@@ -244,9 +248,10 @@ async function loadImagesFromSupabase() {
 		height: 100vh;
 		overflow-x: visible !important;
 		overflow-y: hidden;
-		background: white;
+		background: none;
 		//background: #f4f4f4;
 		//background: #FF004D
+		z-index: 1 !important;
 
 	}
 

@@ -9,7 +9,6 @@
 
     <div id = 'mast'>
 
-
     <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
 
     </div>
@@ -60,6 +59,12 @@
 
 
     <div id = 'corner'>
+
+
+      <label class="switch">
+        <input type="checkbox" id = 'max' bind:checked={MAX} >
+        <span class="slider round"></span>
+      </label>
 
       <h2 id = 'status'>
         {#if saved}
@@ -126,7 +131,7 @@
 }
 
 ::-webkit-scrollbar-thumb{
-  background: #a0a0a0;
+  //background: #a0a0a0;
 }
 
 .switch {
@@ -200,6 +205,8 @@ input:checked + .slider:before {
       overflow: visible !important;
       display: flex;
       justify-content: center;
+
+      z-index: 10 !important;
   }
 
   #url{
@@ -235,19 +242,17 @@ input:checked + .slider:before {
 
     overflow-x: hidden !important;
     overflow-y: scroll !important;
-    width: calc(100vw - 260px) !important;
-    height: calc(100vh - 30px) !important;
+    width: calc(100vw - 260px);
+    height: calc(100vh - 25px);
 
     background: none;
 
-    //border: 1px solid rgba(black, 0.05);
 
     #canvas{
       flex-shrink: 0;
       width: calc(100vw - 255px);
       margin: 0;
-
-  }
+    }
 
 
 
@@ -320,9 +325,9 @@ input:checked + .slider:before {
     color: black;
     box-shadow: none;
 
-    width: 18px;
-    height: 18px;
-    border-radius: 3px;
+    width: 32px;
+    height: 24px;
+    border-radius: 15px;
     cursor: pointer;
     transition: 0.2s ease;
 
@@ -340,8 +345,8 @@ input:checked + .slider:before {
     }
 
     .icon{
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
 
     }
   }
@@ -426,7 +431,7 @@ input:checked + .slider:before {
       width: calc(100vw - 255px);
       height: calc(100vh - 20px);
       margin-top: 10px;
-      border: 5px solid white;
+      border: 3px solid white;
       box-shadow: 20px 50px 150px rgba(black, 0.15);
       position: relative;
       display: flex;
@@ -434,10 +439,23 @@ input:checked + .slider:before {
       align-items: flex-start;
       overflow-x: hidden;
       overflow-y: hidden;
-      border-radius: 15px;
-
+      border-radius: 20px;
+      transition: 0.4s ease;
       position: relative;
   }
+
+  :global(.max){
+    width: 100vw !important;
+    height: 100vh !important;
+    margin-top: 0 !important;
+    //margin-left: -240px;
+    //z-index: 10 !important;
+    border-radius: 0 !important;
+    border: none !important;
+
+    position: fixed;
+  }
+
 
   #bar{
 
@@ -459,46 +477,57 @@ input:checked + .slider:before {
     position: absolute;
 
 
-    #title{
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: -0.3px;
-      padding: 0px 10px;
-      height: 30px;
-      border-radius: 8px;
-
+    #mast{
       width: 140px;
 
-
-      background: rgba(white, 0.9) !important;
+      #title {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+  padding: 0px 12px;
+  height: 30px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 1) !important;  /* corrected the rgba format */
+  width: auto;   /* flexible width */
+  max-width: 140px;  /* maximum width */
+  border: none; /* remove default border */
+  overflow: hidden; /* hide overflowed text */
+  white-space: nowrap; /* ensure single line of text */
+}
     }
+
 
     #buttons{
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(white, 0.9) !important;
-      padding: 2px 8px;
-      border-radius: 8px;
+      gap: 5px;
+      background: rgba(white, 1) !important;
+      padding: 2px 8px 2px 5px;
+      border-radius: 20px;
     }
 
     #corner{
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 15px;
+      width: 140px;
 
-      #status{
-        font-size: 13px;
-        font-weight: 500;
-        letter-spacing: -0.2px;
-        padding: 5px 10px;
-        color: white;
-        width: 140px;
-        text-align: center;
+        #status{
+          font-size: 13px;
+          font-weight: 500;
+          letter-spacing: -0.2px;
+          padding: 5px 12px;
+          color: white;
 
-        border-radius: 8px;
-        background: #ff004d;
-      }
+          text-align: center;
+
+          border-radius: 20px;
+
+
+          color: #ff004d;
+          background: rgba(white, 1) !important;
+        }
     }
 
     #input{
@@ -649,7 +678,6 @@ input:-webkit-autofill:active  {
 :global(.option-item) {
     margin: 2px 5px;
     padding: 5px 10px;
-    border: 1px solid lightgray;
     border-radius: 3px;
 
     cursor: pointer;
@@ -658,7 +686,6 @@ input:-webkit-autofill:active  {
 :global(.options){
   display: flex;
   flex-wrap: wrap;
- // border: 1px solid rgba(black, 0.2);
  background: rgba(black, 0.05);
  border-radius: 8px;
  padding: 5px;
@@ -692,6 +719,38 @@ input:-webkit-autofill:active  {
 
 
 
+
+
+:global(#container.max){
+    width: 100vw !important;
+    height: 100vh !important;
+    margin-top: 0 !important;
+    margin-left: -240px;
+    //z-index: 10 !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+
+  :global(#canvas-container.max){
+    width: 100vw !important;
+    height: 100vh !important;
+    margin-top: 0 !important;
+    //z-index: 10 !important;
+    border-radius: 0 !important;
+    //border: none !important;
+    //border: 5px solid red !important;
+
+  }
+
+  :global(#subcontainer.max){
+    width: 100vw !important;
+    height: 100vh !important;
+    margin-top: 0 !important;
+    //z-index: 10 !important;
+    border-radius: 0 !important;
+    border: none !important;
+
+  }
 
 
 
@@ -786,10 +845,19 @@ let saved = true
 let activeObject;
 let MODE
 
+let MAX = false
+
+
+
 
 
 
 onMount(()=> {
+
+  document.getElementById('title').addEventListener('input', function() {
+    console.log('yo')
+    adjustWidth();
+  });
   // Initialize fabric.js canvas
 
   let previousCanvasWidth = document.getElementById("container").offsetWidth;
@@ -806,6 +874,7 @@ onMount(()=> {
   function Id(e){
     return document.getElementById(e)
   }
+
 
 
   const panelWidth = 260
@@ -1335,6 +1404,8 @@ canvas.on('object:modified', function(event) {
 
 
 
+
+
 /////////////////xfd//////////////////////////////////
 ////////////////// LOAD CANVAS ////////////////////
 ///////////////////////////////////////////////////
@@ -1418,6 +1489,8 @@ const loadCanvasFromSupabase = async () => {
                   object.pin = 'scale'
                 }
 
+                console.log(object.pin)
+
                 if (object.pin && object.xPercent !== undefined) {
                  let newLeftPos;
 
@@ -1447,10 +1520,8 @@ const loadCanvasFromSupabase = async () => {
                       default:
                           newLeftPos = object.left; // Default behavior is like 'left' pin
                           break;
+
                   }
-
-
-                  console.log(newLeftPos)
 
 
                   object.set('left', newLeftPos);
@@ -1467,10 +1538,6 @@ const loadCanvasFromSupabase = async () => {
                 object.right = canvas.width - object.left + object.width * object.scaleX
                 object.center = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2)
 
-
-                if (!object.pin){
-                  object.pin = 'scale'
-                }
 
 
                 createPropertyText(object)
@@ -1490,6 +1557,7 @@ const loadCanvasFromSupabase = async () => {
             canvas.setHeight(data.height);
             canvas.setHeight(height);
             canvas.setBackgroundColor(data.color);
+            Id('container').style.background = data.color
 
             canvas.renderAll();
         });
@@ -1512,6 +1580,7 @@ setTimeout(() => {
 
 
 Id('color').addEventListener('input', e => {
+  Id('container').style.background = Id('color').value
   canvas.setBackgroundColor(Id('color').value, () => canvas.renderAll());
   //Id('bar').style.background = Id('color').value
   saveCanvasToSupabase()
@@ -1683,8 +1752,6 @@ function handleObject(obj, activeSelection) {
 
     obj.originalTop = obj.top - parallaxShift;
     obj.top = Math.round(obj.top);
-    console.log(obj.left, absoluteLeft)
-    console.log(obj.xPercent)
 }
 
 
@@ -2105,18 +2172,18 @@ document.getElementById("handle").addEventListener("mousedown", function(event) 
 
 
 function handleMouseMove(event) {
-    let deltaX = (event.clientX - lastX)*2
-    let container = document.getElementById("container");
+    let deltaX = (event.clientX - lastX)*4
+    let container = Id("container");
     const previousWidth = container.offsetWidth;
     let newWidth = previousWidth + deltaX;
 
-    if (newWidth > 300 && newWidth < window.innerWidth - 260) {
+    if (newWidth > 300 && newWidth < window.innerWidth - 260 && !MAX) {
         container.style.width = `${newWidth}px`;
         if (container.offsetWidth !== previousWidth) {
             unifiedResize(container.offsetWidth);
         }
-        lastX = event.clientX;
     }
+    lastX = event.clientX;
 }
 
 canvas.getObjects().forEach((object) => {
@@ -2176,22 +2243,17 @@ canvas.on('object:added', function(options) {
 
 function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
-
   let previousWidth = previousCanvasWidth;
 
   const newWidth = newContainerWidth;
   const canvasCenterX = newWidth / 2;
 
-  // Set canvas width to the new value
   canvas.setWidth(newWidth);
 
   // Update position of each object based on xPercent and new canvas width
   canvas.getObjects().forEach((object) => {
 
     let newLeftPos
-
-
-    //const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
 
     if (!object.pin){
       object.pin = 'scale'
@@ -2229,12 +2291,15 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   const container = document.getElementById('container');
   const canvasContainer = document.getElementById('canvas-container');
 
-  if (container) {
+  if (!MAX){
+    if (container) {
       container.style.width = `${newWidth}px`;
+    }
+    if (canvasContainer) {
+        canvasContainer.style.width = `${newWidth}px`;
+    }
   }
-  if (canvasContainer) {
-      canvasContainer.style.width = `${newWidth}px`;
-  }
+
   //canvas.setWidth(newWidth);
 
   // Render the canvas
@@ -2396,10 +2461,6 @@ mb
     for (let i = 0; i < option.options.length; i++) {
         let o = option.options[i];
         const isSelected = (activeObject[option.id] == o) ? 'selected' : '';
-
-        console.log(activeObject[option.id], o)
-        console.log(activeObject[option.id] == o)
-        console.log(isSelected)
 
         opt += `<span data-value="${o}" class="${isSelected}">${o}</span>`;
     }
@@ -3110,11 +3171,7 @@ function saveCanvasToSupabase() {
 
     saved = false
 
-    console.log(saved)
-
-
     let initialCanvasWidth = canvas.width
-
 
     canvas.getObjects().forEach((obj) => {
       /*
@@ -3162,8 +3219,6 @@ function saveCanvasToSupabase() {
 
     // Temporarily reset the canvas to its full/original size
     canvas.setWidth(originalCanvasWidth);
-
-    console.log(canvas.width)
     //canvas.setHeight(originalCanvasHeight);
 
     // Upload the full canvas version to the database
@@ -3171,7 +3226,6 @@ function saveCanvasToSupabase() {
 
     // Restore the canvas to the backed-up size and reposition all objects
     canvas.setWidth(initialCanvasWidth);
-    console.log(canvas.width)
     //canvas.setHeight(initialCanvasHeight);
 
 
@@ -3283,9 +3337,8 @@ async function uploadCanvas() {
         ]);
 
     if (dbError) {
-        console.error('Error saving reference to database: ', dbError);
+      console.error('Error saving reference to database: ', dbError);
     } else {
-
       saved = true
     }
 }
@@ -3322,6 +3375,31 @@ async function uploadCanvas() {
   // document.getElementById('delete').addEventListener('click', deleteObject);
   document.getElementById('title').addEventListener('input', saveCanvasToSupabase);
   //document.getElementById('exitEditMode').addEventListener('click', handleExit);
+
+
+  document.getElementById('max').addEventListener('input', () => {
+    const app = document.getElementById('app');
+    const container = document.getElementById('container');
+    const canvasContainer = document.getElementById('canvas-container');
+    const subContainer = document.getElementById('subcontainer');
+
+    MAX = !MAX
+    if (!MAX){
+
+      app.classList.remove('max')
+      container.classList.remove('max')
+      canvasContainer.classList.remove('max')
+      subContainer.classList.remove('max')
+    }else{
+      app.classList.add('max')
+      container.classList.add('max')
+      canvasContainer.classList.add('max')
+      subContainer.classList.add('max')
+      //canvas.setWidth(window.innerWidth)
+
+      console.log('tro')
+    }
+  });
 
   /*
   document.getElementById('url').addEventListener('click', () => {

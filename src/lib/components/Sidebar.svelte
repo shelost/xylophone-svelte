@@ -122,7 +122,7 @@ onMount(() => {
 	}
 
 
-	fetchFolders()
+	//fetchFolders()
 });
 
 async function movePageToFolder(pageId, folderId) {
