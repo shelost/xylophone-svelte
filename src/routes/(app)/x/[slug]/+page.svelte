@@ -16,7 +16,7 @@
 
     <div id = 'buttons'>
       <div class = 'add' id="pointer"  class:active = { MODE == null } >
-        <img src = {Text} class = 'icon'  alt = 'icon'>
+        <img src = {Pointer} class = 'icon'  alt = 'icon'>
       </div>
       <div class = 'add' id="addText"  class:active = { MODE == 'text' } >
         <img src = {Text} class = 'icon'  alt = 'icon'>
@@ -38,7 +38,7 @@
       </div>
 
       <div class = 'add' id="addDraw" class:active = { MODE == 'draw' }>
-        <img src = {Ellipse} class = 'icon'  alt = 'icon'>
+        <img src = {Draw} class = 'icon'  alt = 'icon'>
       </div>
 
 
@@ -129,7 +129,7 @@
 }
 
 ::-webkit-scrollbar-thumb{
-  background: #a0a0a0;
+  background: white;
 }
 
 .switch {
@@ -480,21 +480,22 @@ input:checked + .slider:before {
 
     #mast{
       width: 140px;
+      box-shadow: 0 10px 30px rgba(black, 0.06);
 
       #title {
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.3px;
-  padding: 0px 12px;
-  height: 30px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 1) !important;  /* corrected the rgba format */
-  width: auto;   /* flexible width */
-  max-width: 140px;  /* maximum width */
-  border: none; /* remove default border */
-  overflow: hidden; /* hide overflowed text */
-  white-space: nowrap; /* ensure single line of text */
-}
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+        padding: 0px 12px;
+        height: 30px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 1) !important;  /* corrected the rgba format */
+        width: auto;   /* flexible width */
+        max-width: 140px;  /* maximum width */
+        border: none; /* remove default border */
+        overflow: hidden; /* hide overflowed text */
+        white-space: nowrap; /* ensure single line of text */
+      }
     }
 
 
@@ -506,6 +507,7 @@ input:checked + .slider:before {
       background: rgba(white, 1) !important;
       padding: 2px 8px 2px 5px;
       border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(black, 0.06);
     }
 
     #corner{
@@ -521,6 +523,7 @@ input:checked + .slider:before {
           letter-spacing: -0.2px;
           padding: 5px 12px;
           color: white;
+          width: 70px;
 
           text-align: center;
 
@@ -808,10 +811,13 @@ import Sidebar from '$lib/components/Sidebar.svelte'
 import Text from '$lib/img/i-text.svg'
 import Button from '$lib/img/i-button.svg'
 import Image from '$lib/img/i-img.svg'
-import Triangle from '$lib/img/i-triangle.svg'
+import Triangle from '$lib/img/i-polygon.svg'
 import Rect from '$lib/img/i-rect.svg'
 import Ellipse from '$lib/img/i-ellipse.svg'
+import Draw from '$lib/img/i-draw.svg'
+import Pointer from '$lib/img/i-pointer.svg'
 import Copy from '$lib/img/copy.svg'
+
 
 import { fly } from 'svelte/transition'
 
@@ -847,7 +853,7 @@ import IconB from '$lib/img/icon-b.svg'
 
 
 
-export const ssr = false
+
 export let data
 
 let title= data.title
@@ -1306,7 +1312,6 @@ function attachInputListeners(id, property) {
   const element = Id(id);
   if (element) {
     element.addEventListener('input', function() {
-
       applyStyles(property, element.value);
       updatePropertyElements(property, element.value); // Automatically sync input and range
     });
@@ -1398,13 +1403,23 @@ canvas.on('object:scaling', function(event) {
         obj.set('scaleX', 1);
         obj.set('scaleY', 1);
         obj.initDimensions();
-    }else if (obj.width && Id('input-width')) {
+    }else if (obj.width) {
         // Update the width and height input values to the current scaled dimensions
 
-        Id('input-width').value = Math.round(obj.width * obj.scaleX)
-        Id('input-height').value = Math.round(obj.height * obj.scaleY)
-        Id('range-width').value =  Math.round(obj.height * obj.scaleY)
-        Id('range-height').value =Math.round(obj.width * obj.scaleX)
+        if (Id('input-width')){
+          Id('input-width').value = Math.round(obj.width * obj.scaleX)
+          Id('input-height').value = Math.round(obj.height * obj.scaleY)
+          Id('range-width').value =  Math.round(obj.height * obj.scaleY)
+          Id('range-height').value =Math.round(obj.width * obj.scaleX)
+        }
+
+        if (Id('input-left')){
+          Id('input-left').value =  Math.round(obj.left)
+          Id('range-left').value = Math.round(obj.left)
+          Id('input-top').value =  Math.round(obj.top)
+          Id('range-top').value = Math.round(obj.top)
+        }
+
     }
 
     canvas.renderAll();
@@ -1522,7 +1537,7 @@ const loadCanvasFromSupabase = async () => {
             Id('loader').style.display = 'none';
 
             const canvasCenterX = canvas.width / 2;
-
+            const scaleX = canvas.width / data.iwidth
 
             canvas.getObjects().forEach((object) => {
 
@@ -1530,16 +1545,21 @@ const loadCanvasFromSupabase = async () => {
                   object.pin = 'scale'
                 }
 
+
+
+                object.set({
+                  left: object.left * scaleX,
+                  top: object.top * scaleX,
+                })
+
+
+
                 if (object.pin && object.xPercent !== undefined) {
                  let newLeftPos;
-
-                  const canvasCenterX = canvas.width / 2;
 
                   switch (object.pin) {
                       case 'scale':
                           newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
-
-
                           break;
                       case 'left':
                           newLeftPos = object.left; // Use the given value
@@ -1548,8 +1568,6 @@ const loadCanvasFromSupabase = async () => {
                           if (object.right){
                             newLeftPos = canvas.width - object.right - (object.width * object.scaleX)/2;
                           }
-                          console.log(object.right)
-                          console.log(newLeftPos)
                           break;
                       case 'center':
                           if (object.center){
@@ -1560,11 +1578,6 @@ const loadCanvasFromSupabase = async () => {
                           newLeftPos = object.left; // Default behavior is like 'left' pin
                           break;
                   }
-
-
-                  console.log(newLeftPos)
-
-
                   object.set('left', newLeftPos);
               }
 
@@ -1588,7 +1601,6 @@ const loadCanvasFromSupabase = async () => {
                 createPropertyText(object)
                 // Update the text's position and content.
                 updatePropertyText(object);
-
 
 
             });
@@ -1621,6 +1633,7 @@ const loadCanvasFromSupabase = async () => {
 
 setTimeout(() => {
    loadCanvasFromSupabase()
+   canvas.setHeight(data.height);
 },2000)
 
 
@@ -2047,16 +2060,15 @@ canvas.on('mouse:down', (o) => {
             canvas.setActiveObject(elem);
             break;
         case 'polygon':
-            elem = new fabric.Triangle({
+            elem = new fabric.Polygon([
+                {x: 0, y: 0},
+                {x: 50, y: -80},
+                {x: 100, y: 0},
+            ], {
                 left: origX,
                 top: origY,
-                originX: 'left',
-                originY: 'top',
-                width: 100,
-                height: 100,
                 fill: 'rgba(0,255,0,1)',
-                depth: 2,
-                pin: 'scale'
+                selectable: true
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -3486,6 +3498,7 @@ async function uploadCanvas() {
       setTimeout(() => {
         document.getElementById('container').style.transition = 'none'
         document.getElementById('canvas-container').style.transition = 'none'
+        document.getElementById('canvas').style.transition = 'none'
       }, 500);
     }else{
       document.getElementById('container').classList.add('max')
@@ -3493,9 +3506,15 @@ async function uploadCanvas() {
       document.getElementById('subcontainer').classList.add('max')
       document.getElementById('container').style.transition = '0.4s ease'
       document.getElementById('canvas-container').style.transition = '0.4s ease'
+      document.getElementById('canvas').style.transition = '0.4s ease'
 
-      //canvas.setWidth(window.innerWidth)
-      unifiedResize(window.innerWidth)
+      let width = canvas.width
+
+      while (width < window.innerWidth){
+        unifiedResize(width)
+        width += 10
+      }
+
     }
   });
 

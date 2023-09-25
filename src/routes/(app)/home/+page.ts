@@ -1,6 +1,9 @@
 import type { PageLoad, PageLoadEvent } from './$types';
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 
+
+export const ssr = false
+
 export const load: PageLoad = async (event: PageLoadEvent) => {
     const { user } = await event.parent();
 
