@@ -11,3 +11,4 @@ export const assets = writable([])
 export const openFolders = writable([]);
 export const folders = writable([])
 export const activePage = writable(null);
+export const MAX = writable(false);

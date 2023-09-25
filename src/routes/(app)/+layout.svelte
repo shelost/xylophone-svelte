@@ -19,7 +19,7 @@
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 
-	import { pages, allPages, user, users, isPanelVisible, assets, folders, openFolders } from '$lib/utils/store.js'; // Adjust the path as necessary
+	import { pages, allPages, user, users, isPanelVisible, assets, folders, openFolders, MAX } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 	import Panel from '$lib/components/Panel.svelte';
 
@@ -206,7 +206,10 @@ async function loadImagesFromSupabase() {
 
 <section>
 
-	<Sidebar {data}/>
+
+	{#if !$MAX}
+		<Sidebar {data}/>
+	{/if}
 
 	<div id = 'app'>
 	  <slot />

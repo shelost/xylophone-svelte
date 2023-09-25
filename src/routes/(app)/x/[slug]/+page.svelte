@@ -62,7 +62,7 @@
 
 
       <label class="switch">
-        <input type="checkbox" id = 'max' bind:checked={MAX} >
+        <input type="checkbox" id = 'max' bind:checked={$MAX} >
         <span class="slider round"></span>
       </label>
 
@@ -131,7 +131,7 @@
 }
 
 ::-webkit-scrollbar-thumb{
-  //background: #a0a0a0;
+  background: #a0a0a0;
 }
 
 .switch {
@@ -139,6 +139,8 @@
   display: inline-block;
   width: 28px;
   height: 16px;
+  //border: 1px solid white;
+  border-radius: 50px;
 }
 
 /* Hide default HTML checkbox */
@@ -159,6 +161,7 @@
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
+  border: 1px solid rgba(white, 0.5);
 }
 
 .slider:before {
@@ -167,7 +170,7 @@
   height: 14px;
   width: 14px;
   left: 1px;
-  bottom: 1px;
+  bottom: 0px;
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
@@ -182,16 +185,19 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(11px);
+  transform: translateX(8px);
 }
 
 /* Rounded sliders */
 .slider.round {
   border-radius: 34px;
+ // margin-top: 15px;
+  margin-right: 3px;
 }
 
 .slider.round:before {
   border-radius: 50%;
+  margin-top: 15px;
 }
 
 
@@ -205,8 +211,6 @@ input:checked + .slider:before {
       overflow: visible !important;
       display: flex;
       justify-content: center;
-
-      z-index: 10 !important;
   }
 
   #url{
@@ -238,14 +242,17 @@ input:checked + .slider:before {
     align-items: flex-start;
     justify-content: flex-start;
 
-
-
     overflow-x: hidden !important;
     overflow-y: scroll !important;
     width: calc(100vw - 260px);
     height: calc(100vh - 25px);
 
     background: none;
+
+    //border: 1px solid rgba(black, 0.05);
+
+    //border: 10px solid yellow;
+
 
 
     #canvas{
@@ -431,8 +438,8 @@ input:checked + .slider:before {
       width: calc(100vw - 255px);
       height: calc(100vh - 20px);
       margin-top: 10px;
-      border: 3px solid white;
-      box-shadow: 20px 50px 150px rgba(black, 0.15);
+      border: 5px solid white;
+      box-shadow: 20px 50px 150px rgba(black, 0.3);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -440,22 +447,18 @@ input:checked + .slider:before {
       overflow-x: hidden;
       overflow-y: hidden;
       border-radius: 20px;
-      transition: 0.4s ease;
       position: relative;
+      //transition: 0.5s ease;
   }
 
-  :global(.max){
+  .max{
+    position: fixed !important;
     width: 100vw !important;
     height: 100vh !important;
-    margin-top: 0 !important;
-    //margin-left: -240px;
-    //z-index: 10 !important;
-    border-radius: 0 !important;
-    border: none !important;
-
-    position: fixed;
+    top: 0 !important;
+    left: 0 !important;
+    border: 5px solid green !important;
   }
-
 
   #bar{
 
@@ -678,6 +681,7 @@ input:-webkit-autofill:active  {
 :global(.option-item) {
     margin: 2px 5px;
     padding: 5px 10px;
+    border: 1px solid lightgray;
     border-radius: 3px;
 
     cursor: pointer;
@@ -686,6 +690,7 @@ input:-webkit-autofill:active  {
 :global(.options){
   display: flex;
   flex-wrap: wrap;
+ // border: 1px solid rgba(black, 0.2);
  background: rgba(black, 0.05);
  border-radius: 8px;
  padding: 5px;
@@ -719,7 +724,11 @@ input:-webkit-autofill:active  {
 
 
 
+#subcontainer{
+  display: flex;
+  justify-content: center;
 
+}
 
 :global(#container.max){
     width: 100vw !important;
@@ -739,7 +748,11 @@ input:-webkit-autofill:active  {
     border-radius: 0 !important;
     //border: none !important;
     //border: 5px solid red !important;
+    display: flex !important;
+    justify-content: center !important;
 
+    #canvas{
+    }
   }
 
   :global(#subcontainer.max){
@@ -751,6 +764,7 @@ input:-webkit-autofill:active  {
     border: none !important;
 
   }
+
 
 
 
@@ -805,7 +819,7 @@ import { fly } from 'svelte/transition'
 import Grid from '$lib/components/Grid.svelte'
 import { object_without_properties } from 'svelte/internal';
 
-import { pages, isPanelVisible, assets} from '$lib/utils/store.js'; // Adjust the path as necessary
+import { pages, isPanelVisible, assets, MAX} from '$lib/utils/store.js'; // Adjust the path as necessary
 
 //import { pages, isPanelVisible, assets } from '../../../../store'; // Adjust the path as necessary
 
@@ -845,9 +859,37 @@ let saved = true
 let activeObject;
 let MODE
 
-let MAX = false
 
 
+
+
+let inputWidth = 'auto';
+
+  // Function to adjust the width of the input based on its content
+function adjustWidth() {
+    console.log('to')
+    const testSpan = document.createElement('span');
+    document.body.appendChild(testSpan);
+    testSpan.style.fontSize = '13px';
+    testSpan.style.fontWeight = '500';
+    testSpan.style.letterSpacing = '-0.3px';
+    testSpan.style.whiteSpace = 'nowrap';
+    testSpan.innerText = title || 'Untitled Page';
+
+    // Calculate new width
+    let newWidth = testSpan.getBoundingClientRect().width + 20;  // adding 20 for padding
+    if (newWidth > 140) {
+      newWidth = 140;
+    }
+    inputWidth = `${newWidth}px`;
+
+    document.body.removeChild(testSpan);
+  }
+
+  // Watch for changes in title
+  $: {
+    adjustWidth();
+  }
 
 
 
@@ -1489,8 +1531,6 @@ const loadCanvasFromSupabase = async () => {
                   object.pin = 'scale'
                 }
 
-                console.log(object.pin)
-
                 if (object.pin && object.xPercent !== undefined) {
                  let newLeftPos;
 
@@ -1520,8 +1560,10 @@ const loadCanvasFromSupabase = async () => {
                       default:
                           newLeftPos = object.left; // Default behavior is like 'left' pin
                           break;
-
                   }
+
+
+                  console.log(newLeftPos)
 
 
                   object.set('left', newLeftPos);
@@ -1538,6 +1580,10 @@ const loadCanvasFromSupabase = async () => {
                 object.right = canvas.width - object.left + object.width * object.scaleX
                 object.center = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2)
 
+
+                if (!object.pin){
+                  object.pin = 'scale'
+                }
 
 
                 createPropertyText(object)
@@ -1557,6 +1603,7 @@ const loadCanvasFromSupabase = async () => {
             canvas.setHeight(data.height);
             canvas.setHeight(height);
             canvas.setBackgroundColor(data.color);
+            Id('canvas-container').style.background = data.color
             Id('container').style.background = data.color
 
             canvas.renderAll();
@@ -1580,7 +1627,6 @@ setTimeout(() => {
 
 
 Id('color').addEventListener('input', e => {
-  Id('container').style.background = Id('color').value
   canvas.setBackgroundColor(Id('color').value, () => canvas.renderAll());
   //Id('bar').style.background = Id('color').value
   saveCanvasToSupabase()
@@ -1631,6 +1677,8 @@ background.style.width = firstOption.offsetWidth + 'px';
 
 
 function positionSliderBackground(selectorElement) {
+
+  if (selectorElement){
     const activeOption = selectorElement.querySelector('.options span.selected');
     const sliderBackground = selectorElement.querySelector('.slider-background');
 
@@ -1643,6 +1691,7 @@ function positionSliderBackground(selectorElement) {
         sliderBackground.style.top = (activeOptionPosition.top - selectorPosition.top) + 'px';
         sliderBackground.style.height = activeOptionPosition.height + 'px';
     }
+  }
 }
 
 
@@ -1752,6 +1801,8 @@ function handleObject(obj, activeSelection) {
 
     obj.originalTop = obj.top - parallaxShift;
     obj.top = Math.round(obj.top);
+    console.log(obj.left, absoluteLeft)
+    console.log(obj.xPercent)
 }
 
 
@@ -2172,18 +2223,18 @@ document.getElementById("handle").addEventListener("mousedown", function(event) 
 
 
 function handleMouseMove(event) {
-    let deltaX = (event.clientX - lastX)*4
-    let container = Id("container");
+    let deltaX = (event.clientX - lastX)*2
+    let container = document.getElementById("container");
     const previousWidth = container.offsetWidth;
     let newWidth = previousWidth + deltaX;
 
-    if (newWidth > 300 && newWidth < window.innerWidth - 260 && !MAX) {
+    if (newWidth > 300 && newWidth < window.innerWidth - 260) {
         container.style.width = `${newWidth}px`;
         if (container.offsetWidth !== previousWidth) {
             unifiedResize(container.offsetWidth);
         }
+        lastX = event.clientX;
     }
-    lastX = event.clientX;
 }
 
 canvas.getObjects().forEach((object) => {
@@ -2243,17 +2294,22 @@ canvas.on('object:added', function(options) {
 
 function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
+
   let previousWidth = previousCanvasWidth;
 
   const newWidth = newContainerWidth;
   const canvasCenterX = newWidth / 2;
 
+  // Set canvas width to the new value
   canvas.setWidth(newWidth);
 
   // Update position of each object based on xPercent and new canvas width
   canvas.getObjects().forEach((object) => {
 
     let newLeftPos
+
+
+    //const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
 
     if (!object.pin){
       object.pin = 'scale'
@@ -2291,15 +2347,12 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   const container = document.getElementById('container');
   const canvasContainer = document.getElementById('canvas-container');
 
-  if (!MAX){
-    if (container) {
+  if (container) {
       container.style.width = `${newWidth}px`;
-    }
-    if (canvasContainer) {
-        canvasContainer.style.width = `${newWidth}px`;
-    }
   }
-
+  if (canvasContainer) {
+      canvasContainer.style.width = `${newWidth}px`;
+  }
   //canvas.setWidth(newWidth);
 
   // Render the canvas
@@ -2461,6 +2514,10 @@ mb
     for (let i = 0; i < option.options.length; i++) {
         let o = option.options[i];
         const isSelected = (activeObject[option.id] == o) ? 'selected' : '';
+
+        console.log(activeObject[option.id], o)
+        console.log(activeObject[option.id] == o)
+        console.log(isSelected)
 
         opt += `<span data-value="${o}" class="${isSelected}">${o}</span>`;
     }
@@ -3171,7 +3228,11 @@ function saveCanvasToSupabase() {
 
     saved = false
 
+    console.log(saved)
+
+
     let initialCanvasWidth = canvas.width
+
 
     canvas.getObjects().forEach((obj) => {
       /*
@@ -3337,8 +3398,9 @@ async function uploadCanvas() {
         ]);
 
     if (dbError) {
-      console.error('Error saving reference to database: ', dbError);
+        console.error('Error saving reference to database: ', dbError);
     } else {
+
       saved = true
     }
 }
@@ -3378,26 +3440,28 @@ async function uploadCanvas() {
 
 
   document.getElementById('max').addEventListener('input', () => {
-    const app = document.getElementById('app');
-    const container = document.getElementById('container');
-    const canvasContainer = document.getElementById('canvas-container');
-    const subContainer = document.getElementById('subcontainer');
+    $MAX = !$MAX
 
-    MAX = !MAX
-    if (!MAX){
+    if (!$MAX){
+      document.getElementById('container').classList.remove('max')
+      document.getElementById('canvas-container').classList.remove('max')
+      document.getElementById('subcontainer').classList.remove('max')
 
-      app.classList.remove('max')
-      container.classList.remove('max')
-      canvasContainer.classList.remove('max')
-      subContainer.classList.remove('max')
+      unifiedResize(window.innerWidth - 260)
+
+      setTimeout(() => {
+        document.getElementById('container').style.transition = 'none'
+        document.getElementById('canvas-container').style.transition = 'none'
+      }, 500);
     }else{
-      app.classList.add('max')
-      container.classList.add('max')
-      canvasContainer.classList.add('max')
-      subContainer.classList.add('max')
-      //canvas.setWidth(window.innerWidth)
+      document.getElementById('container').classList.add('max')
+      document.getElementById('canvas-container').classList.add('max')
+      document.getElementById('subcontainer').classList.add('max')
+      document.getElementById('container').style.transition = '0.4s ease'
+      document.getElementById('canvas-container').style.transition = '0.4s ease'
 
-      console.log('tro')
+      //canvas.setWidth(window.innerWidth)
+      unifiedResize(window.innerWidth)
     }
   });
 

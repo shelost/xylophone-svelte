@@ -31,9 +31,7 @@
                                 </h2>
                             </a>
 
-                            {/if}
-
-
+                        {/if}
 
                     {/each}
 
@@ -70,7 +68,6 @@ v
       </div>
     </a>
 
-
     <h1 id = 'link'> Hello </h1>
 
 </div>
@@ -93,8 +90,6 @@ v
         opacity: 0;
     }
 
-
-
     ::-webkit-scrollbar{
         width: 0px;
         height: 0;
@@ -114,8 +109,6 @@ v
         flex-direction: column;
         align-items: center !important;
     }
-
-
 
     #canvas{
         height: 100vh;
