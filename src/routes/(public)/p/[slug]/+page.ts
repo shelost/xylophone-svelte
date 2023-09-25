@@ -1,5 +1,7 @@
 import {supabaseClient} from '$lib/db'
 
+export const ssr = false
+
 export async function load({ params }) {
 
 	try {
