@@ -24,7 +24,7 @@
       <div class = 'add' id="addImage" class:active = { MODE == 'image' }>
         <img src = {Image} class = 'icon'  alt = 'icon'>
       </div>
-      <div class = 'add' id="addVideo" class:active = { MODE == 'video' }>
+      <div class = 'add' id="addPolygon" class:active = { MODE == 'polygon' }>
         <img src = {Triangle} class = 'icon'  alt = 'icon'>
       </div>
       <div class = 'add' id="addButton" class:active = { MODE == 'button' }>
@@ -50,8 +50,6 @@
       <div>
         <input type="color" id="color" name="head" bind:value={color} />
       </div>
-
-
 
 
     </div>
@@ -503,6 +501,7 @@ input:checked + .slider:before {
     #buttons{
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 5px;
       background: rgba(white, 1) !important;
       padding: 2px 8px 2px 5px;
@@ -1969,6 +1968,7 @@ canvas.on('mouse:down', (o) => {
                 transparentCorners: false,
                 link: 'https://capsule.pw',
                 depth: 2,
+                pin: 'scale'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -1988,6 +1988,7 @@ canvas.on('mouse:down', (o) => {
               editable: true,
               link: 'https://capsule.pw',
               depth: 2,
+              pin: 'scale'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -2001,6 +2002,7 @@ canvas.on('mouse:down', (o) => {
                     originY: 'top',
                     link: 'https://path_to_video.com',
                     depth: 2,
+                    pin: 'scale'
                 });
                 canvas.add(img);
                 canvas.setActiveObject(img);
@@ -2039,11 +2041,12 @@ canvas.on('mouse:down', (o) => {
                 label: 'Click Me!',
                 link: 'https://capsule.pw',
                 depth: 2,
+                pin: 'scale'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
             break;
-        case 'triangle':
+        case 'polygon':
             elem = new fabric.Triangle({
                 left: origX,
                 top: origY,
@@ -2053,6 +2056,7 @@ canvas.on('mouse:down', (o) => {
                 height: 100,
                 fill: 'rgba(0,255,0,1)',
                 depth: 2,
+                pin: 'scale'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -2067,6 +2071,7 @@ canvas.on('mouse:down', (o) => {
                 ry: 40,
                 fill: '#0074ff',
                 depth: 2,
+                pin: 'scale'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -2228,7 +2233,7 @@ function handleMouseMove(event) {
     const previousWidth = container.offsetWidth;
     let newWidth = previousWidth + deltaX;
 
-    if (newWidth > 300 && newWidth < window.innerWidth - 260) {
+    if (newWidth > 400 && newWidth < window.innerWidth - 260) {
         container.style.width = `${newWidth}px`;
         if (container.offsetWidth !== previousWidth) {
             unifiedResize(container.offsetWidth);
@@ -2303,6 +2308,8 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   // Set canvas width to the new value
   canvas.setWidth(newWidth);
 
+
+
   // Update position of each object based on xPercent and new canvas width
   canvas.getObjects().forEach((object) => {
 
@@ -2356,6 +2363,16 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   //canvas.setWidth(newWidth);
 
   // Render the canvas
+
+  if (newWidth < 600){
+    Id('mast').style.display = 'none'
+    Id('corner').style.display = 'none'
+    Id('buttons').style.width = '100%'
+  }else{
+    Id('mast').style.display = 'flex'
+    Id('corner').style.display = 'flex'
+    Id('buttons').style.width = 'fit-content'
+  }
 
   previousCanvasWidth = newWidth;
 
@@ -2950,6 +2967,7 @@ function addButton(x, y) {
     //CONTROLS.style.opacity = '0'
   })
 
+
   document.getElementById('pointer').addEventListener('click', ()=> {
     //addText(10,10);
 
@@ -2965,6 +2983,13 @@ function addButton(x, y) {
     //addText(10,10);
 
     MODE = 'text'
+
+  });
+
+  document.getElementById('addPolygon').addEventListener('click', ()=> {
+    //addText(10,10);
+
+    MODE = 'polygon'
 
   });
 
@@ -3024,12 +3049,14 @@ function addButton(x, y) {
 
   });
 
+  /*
   // Add video on button click
   document.getElementById('addVideo').addEventListener('click', () => {
     //addText(10,10);
 
      MODE = 'video'
   });
+  */
 
   // Add video on button click
   document.getElementById('addButton').addEventListener('click', () => {
