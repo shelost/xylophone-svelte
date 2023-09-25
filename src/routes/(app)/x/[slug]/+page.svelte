@@ -847,7 +847,7 @@ import IconB from '$lib/img/icon-b.svg'
 
 
 
-
+export const ssr = false
 export let data
 
 let title= data.title
@@ -2389,6 +2389,13 @@ window.addEventListener('resize', () => unifiedResize());
     },300)
 
 
+    setTimeout(() => {
+    document.getElementById('app').style.background = 'white'
+}, 3000);
+
+setTimeout(() => {
+    document.getElementById('app').style.background = 'white'
+}, 1000);
 
 
 
@@ -2997,7 +3004,7 @@ function addButton(x, y) {
   document.getElementById('addDraw').addEventListener('click', ()=> {
     //addText(10,10);
 
-    MODE = 'bound'
+    MODE = 'draw'
   });
 
 

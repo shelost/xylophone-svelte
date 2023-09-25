@@ -296,7 +296,7 @@ loadImagesFromSupabase()
                 width: 350px;
 				box-shadow: 0px 10px 40px rgba(black, 0.05);
 				border: 1px solid rgba(black, 0.1);
-				border-radius: 10px;
+				border-radius: 20px;
             }
 
 			canvas{

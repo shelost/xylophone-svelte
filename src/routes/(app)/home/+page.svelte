@@ -230,7 +230,7 @@
 			background: white;
 			padding: 5px;
 			border-radius: 5px;
-			box-shadow: 0px 0px 50px rgba(black, 0.08);
+			//box-shadow: 0px 0px 50px rgba(black, 0.08);
 			padding-bottom: 10px;
 			transition: 0.2s ease;
 			cursor: pointer;
@@ -263,8 +263,14 @@
 
 
 			canvas{
-				border-radius: 5px;
+				border-radius: 15px;
+				border: 1px solid rgba(black, 0.05);
+				transition: 0.2s ease;
+				box-shadow: 0px 20px 50px rgba(black, 0.03);
 				cursor: pointer;
+				&:hover{
+					opacity: 0.8;
+				}
 			}
 
 			h1{
@@ -275,10 +281,7 @@
 				letter-spacing: -0.2px;
 			}
 
-			&:hover{
 
-				transform: translateY(-5px);
-			}
 		}
 	}
 

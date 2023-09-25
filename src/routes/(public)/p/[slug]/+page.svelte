@@ -510,6 +510,8 @@ const loadCanvasFromSupabase = async () => {
 
             });
 
+            document.getElementById('app').style.background = data.color
+
 
             applyParallaxEffect();
             canvas.setHeight(data.height);
@@ -805,6 +807,15 @@ function debounce(func, wait) {
 
 let originalTops = {};
 let originalScales = {};
+
+
+setTimeout(() => {
+    document.getElementById('app').style.background = data.color
+}, 3000);
+
+setTimeout(() => {
+    document.getElementById('app').style.background = data.color
+}, 1000);
 
 
 
