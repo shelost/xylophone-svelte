@@ -396,7 +396,7 @@ async function fetchFolder(){
 
 try{
     fetchPages()
-fetchFolder()
+//fetchFolder()
 
 
 }catch (e){
