@@ -223,14 +223,18 @@ input:checked + .slider:before {
   #handle {
     cursor: ew-resize;  // cursor indicates horizontal resizing
     position: absolute;
-    right: 0;
+    right: 8px;
     top: calc(50vh - 50px);
-    width: 14px;
-    height: 60px;
+    width: 8px;
+    height: 50px;
     background: white; // semi-transparent background for the handle
     border-radius: 50px;
-    box-shadow: 0px 20px 40px rgba(black, 0.3);
-    transform: translateX(5px);
+    box-shadow: 0px 20px 40px rgba(black, 0.2);
+    transition: 0.2s ease;
+
+    &:hover{
+      transform: scale(1.2);
+    }
 }
 
   #canvas-container{
@@ -438,14 +442,14 @@ input:checked + .slider:before {
       height: calc(100vh - 20px);
       margin-top: 10px;
       border: 8px solid white;
-      box-shadow: 20px 50px 150px rgba(black, 0.3);
+      box-shadow: 20px 50px 150px rgba(black, 0.2);
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       overflow-x: hidden;
       overflow-y: hidden;
-      border-radius: 20px;
+      border-radius: 25px;
       position: relative;
       //transition: 0.5s ease;
   }
