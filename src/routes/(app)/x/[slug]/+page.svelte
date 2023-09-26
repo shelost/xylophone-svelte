@@ -225,7 +225,7 @@ input:checked + .slider:before {
     position: absolute;
     right: 0;
     top: calc(50vh - 50px);
-    width: 12px;
+    width: 14px;
     height: 60px;
     background: white; // semi-transparent background for the handle
     border-radius: 50px;
@@ -437,7 +437,7 @@ input:checked + .slider:before {
       width: calc(100vw - 255px);
       height: calc(100vh - 20px);
       margin-top: 10px;
-      border: 5px solid white;
+      border: 8px solid white;
       box-shadow: 20px 50px 150px rgba(black, 0.3);
       position: relative;
       display: flex;
@@ -1355,6 +1355,15 @@ function getCurrentObjectProperties(obj) {
         return extractPropertiesFromTemplate(ellipseTemplate(obj));
         break
 
+      case 'polygon':
+        return extractPropertiesFromTemplate(polygonTemplate(obj));
+        break
+
+      case 'path':
+        return extractPropertiesFromTemplate(pathTemplate(obj));
+        break
+
+
       default:
         return []
         break
@@ -1969,6 +1978,8 @@ canvas.on('mouse:down', (o) => {
     switch (MODE){
         case 'rect':
             elem = new fabric.Rect({
+                strokeWidth: 1,
+                stroke: 'black',
                 left: origX,
                 top: origY,
                 originX: 'left',
@@ -1976,7 +1987,7 @@ canvas.on('mouse:down', (o) => {
                 width: 50,
                 height: 50,
                 angle: 0,
-                fill: 'rgba(255,0,0,1)',
+                fill: 'white',
                 transparentCorners: false,
                 link: 'https://capsule.pw',
                 depth: 2,
@@ -2074,13 +2085,15 @@ canvas.on('mouse:down', (o) => {
             break;
         case 'ellipse':
             elem = new fabric.Ellipse({
+              strokeWidth: 1,
+                stroke: 'black',
                 left: origX,
                 top: origY,
                 originX: 'left',
                 originY: 'top',
                 rx: 40,
                 ry: 40,
-                fill: '#0074ff',
+                fill: 'white',
                 depth: 2,
                 pin: 'center'
             });
@@ -2486,6 +2499,12 @@ function handleSelection(event) {
       break;
     case 'ellipse':
       options = ellipseTemplate(activeObject);
+      break;
+    case 'polygon':
+      options = polygonTemplate(activeObject);
+      break;
+    case 'path':
+      options = pathTemplate(activeObject);
       break;
     case 'video':
       options = videoTemplate(activeObject);
@@ -3208,9 +3227,22 @@ function addButton(x, y) {
       { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
       { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
 
+
+      { label: 'strokeWifth', id: 'strokeWidth', type: 'number', icon: IconW, value: activeObject.strokeWidth, min: 0, max: 10, },
+
       { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
 
       { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5},
+    ];
+  }
+
+  function polygonTemplate(activeObject) {
+    return [
+    ];
+  }
+
+  function pathTemplate(activeObject) {
+    return [
     ];
   }
 
@@ -3222,6 +3254,10 @@ function addButton(x, y) {
       { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
       { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
       { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+
+      { label: 'strokeWifth', id: 'strokeWidth', type: 'number', icon: IconW, value: activeObject.strokeWidth, min: 0, max: 10, },
+
+
 
       { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
 
@@ -3244,10 +3280,14 @@ function addButton(x, y) {
 
 
 window.addEventListener('keyup', e => {
+
+  console.log(e.code)
   switch (e.code){
     case 'Backspace':
-
       //deleteObject()
+      break;
+    case 'KeyF':
+      toggleFullScreen()
       break;
     default:
       break;
@@ -3485,8 +3525,16 @@ async function uploadCanvas() {
   //document.getElementById('exitEditMode').addEventListener('click', handleExit);
 
 
-  document.getElementById('max').addEventListener('input', () => {
+  let togglable = true
+
+  function toggleFullScreen(){
     $MAX = !$MAX
+
+    if (!togglable){
+      return
+    }
+
+    togglable = false
 
     if (!$MAX){
       document.getElementById('container').classList.remove('max')
@@ -3499,24 +3547,34 @@ async function uploadCanvas() {
         document.getElementById('container').style.transition = 'none'
         document.getElementById('canvas-container').style.transition = 'none'
         document.getElementById('canvas').style.transition = 'none'
+        togglable = true
       }, 500);
     }else{
-      document.getElementById('container').classList.add('max')
-      document.getElementById('canvas-container').classList.add('max')
-      document.getElementById('subcontainer').classList.add('max')
       document.getElementById('container').style.transition = '0.4s ease'
       document.getElementById('canvas-container').style.transition = '0.4s ease'
       document.getElementById('canvas').style.transition = '0.4s ease'
+      setTimeout( () => {
+        document.getElementById('container').classList.add('max')
+        document.getElementById('canvas-container').classList.add('max')
+        document.getElementById('subcontainer').classList.add('max')
+        togglable = true
+      }, 200);
+
 
       let width = canvas.width
 
-      while (width < window.innerWidth){
-        unifiedResize(width)
-        width += 10
+      if (width < window.innerWidth){
+        while (width < window.innerWidth){
+          unifiedResize(width)
+          width += 10
+        }
       }
 
+
     }
-  });
+  }
+
+  document.getElementById('max').addEventListener('input', toggleFullScreen);
 
   /*
   document.getElementById('url').addEventListener('click', () => {
