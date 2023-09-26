@@ -522,17 +522,26 @@ const loadCanvasFromSupabase = async () => {
 
         }, function (o, object) {
 
-            if (object){
-                object.selectable = false
-                object.set('selectable', false)
+            (async () => {
+                if (object) {
+                    object.selectable = false;
+                    object.set('selectable', false);
 
-                if (!object.link){
-                    object.set('evented', false);
+                    if (object.type === 'image' || object.type === 'video') {
+                        const src = object.get('src');
+                        if (!src || !(await isUrlReachable(src))) {
+                            canvas.remove(object);
+                        }
+                    }
+
+                    if (!object.link) {
+                        object.set('evented', false);
+                    }
                 }
-            }
 
-            canvas.selection = false;
-            canvas.allowTouchScrolling = true;
+                canvas.selection = false;
+                canvas.allowTouchScrolling = true;
+            })();
 
         });
 
@@ -541,6 +550,16 @@ const loadCanvasFromSupabase = async () => {
     }
 };
 
+
+
+async function isUrlReachable(url) {
+    try {
+        const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+        return true; // URL is reachable
+    } catch (error) {
+        return false; // URL is not reachable
+    }
+}
 
 
 loadCanvasFromSupabase()

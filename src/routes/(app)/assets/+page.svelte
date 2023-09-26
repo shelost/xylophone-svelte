@@ -53,6 +53,8 @@
 			return;
 		}
 
+		assets.update(allAssets => allAssets.filter(asset => asset.id !== toBeDeleted.id));
+
 		try {
 			// Delete asset from Supabase storage
 			const { error } = await supabaseClient.storage.from('images').remove(data.user.id + '/' + toBeDeleted.name);
