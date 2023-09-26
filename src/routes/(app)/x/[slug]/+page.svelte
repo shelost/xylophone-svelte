@@ -114,9 +114,8 @@
 <svelte:head>
 	<title> {data.title} </title>
 	<meta name="description" content="Arachne is a different kind of dev." />
-  <link rel = 'icon' href = '{icon}'>
+	<link rel ='icon' href='{icon}'>
 </svelte:head>
-
 
 
 <style lang='scss'>
@@ -250,6 +249,8 @@ input:checked + .slider:before {
     //border: 1px solid rgba(black, 0.05);
 
     //border: 10px solid yellow;
+
+
 
 
 
@@ -1542,7 +1543,7 @@ const loadCanvasFromSupabase = async () => {
             canvas.getObjects().forEach((object) => {
 
                 if (!object.pin){
-                  object.pin = 'scale'
+                  object.pin = 'center'
                 }
 
 
@@ -1594,7 +1595,7 @@ const loadCanvasFromSupabase = async () => {
 
 
                 if (!object.pin){
-                  object.pin = 'scale'
+                  object.pin = 'center'
                 }
 
 
@@ -1813,8 +1814,6 @@ function handleObject(obj, activeSelection) {
 
     obj.originalTop = obj.top - parallaxShift;
     obj.top = Math.round(obj.top);
-    console.log(obj.left, absoluteLeft)
-    console.log(obj.xPercent)
 }
 
 
@@ -1981,7 +1980,7 @@ canvas.on('mouse:down', (o) => {
                 transparentCorners: false,
                 link: 'https://capsule.pw',
                 depth: 2,
-                pin: 'scale'
+                pin: 'center'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -2001,7 +2000,7 @@ canvas.on('mouse:down', (o) => {
               editable: true,
               link: 'https://capsule.pw',
               depth: 2,
-              pin: 'scale'
+              pin: 'center'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem)
@@ -2015,7 +2014,7 @@ canvas.on('mouse:down', (o) => {
                     originY: 'top',
                     link: 'https://path_to_video.com',
                     depth: 2,
-                    pin: 'scale'
+                    pin: 'center'
                 });
                 canvas.add(img);
                 canvas.setActiveObject(img);
@@ -2054,7 +2053,7 @@ canvas.on('mouse:down', (o) => {
                 label: 'Click Me!',
                 link: 'https://capsule.pw',
                 depth: 2,
-                pin: 'scale'
+                pin: 'center'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -2083,7 +2082,7 @@ canvas.on('mouse:down', (o) => {
                 ry: 40,
                 fill: '#0074ff',
                 depth: 2,
-                pin: 'scale'
+                pin: 'center'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -2331,7 +2330,7 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
     //const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
 
     if (!object.pin){
-      object.pin = 'scale'
+      object.pin = 'center'
     }
 
     switch (object.pin) {
@@ -3274,7 +3273,7 @@ function saveCanvasToSupabase() {
 
     saved = false
 
-    console.log(saved)
+
 
 
     let initialCanvasWidth = canvas.width
@@ -3448,6 +3447,7 @@ async function uploadCanvas() {
     } else {
 
       saved = true
+      console.log('Saved!')
     }
 }
 

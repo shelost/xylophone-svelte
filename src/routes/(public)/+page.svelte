@@ -56,13 +56,6 @@
 </script>
 
 
-<svelte:head>
-	<title> Arachne | Build Your Perfect Web </title>
-	<meta name="description" content="Arachne is a different kind of dev." />
-</svelte:head>
-
-
-
 <div id = 'app' >
 
 	<Navbar />

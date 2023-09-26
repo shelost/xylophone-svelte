@@ -2,6 +2,7 @@
     import type { PageData } from './$types';
     import { supabaseClient } from '$lib/db';
     import { onMount } from 'svelte';
+    import icon from '$lib/img/favicon.svg'
 
     import V from '$lib/img/verified.svg'
 
@@ -160,6 +161,9 @@ async function updateProfile() {
             </div>
         </form>
     {:else}
+
+    <div id = 'banner'> </div>
+
         <div id = 'mast'>
 
             <img class="image-preview" src={profile.pfp} alt="Profile Picture"/>
@@ -174,6 +178,15 @@ async function updateProfile() {
     {/if}
 </section>
 
+
+<svelte:head>
+	<title> Profile </title>
+	<meta name="description" content="Arachne is a different kind of dev." />
+	<link rel ='icon' href='{icon}'>
+</svelte:head>
+
+
+
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 
@@ -182,12 +195,21 @@ section {
     margin-left: 240px;
 }
 
+#banner{
+    background: #ffce00;
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+}
+
 #mast{
+    margin-top: -80px;
+    margin-left: 20px;
 
     h2{
         font-size: 20px;
         font-weight: 700;
-        margin-top: 10px;
+
     }
 
     p{
@@ -203,6 +225,7 @@ section {
     letter-spacing: -0.7px;
     font-size: 32px;
     font-weight: 600;
+
 }
 
 form {
@@ -217,11 +240,13 @@ form {
 #name{
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    margin-top: 20px;
+    margin-bottom: 5px;
 
     img{
         height: 16px;
-        margin-top: 11px;
+        margin-top: 1px;
     }
 }
 
@@ -238,6 +263,7 @@ button {
     height: 120px;
     object-fit: cover;
     border-radius: 10px;
+    box-shadow: 0px 10px 50px rgba(black, 0.1);
 }
 
 .error-text {

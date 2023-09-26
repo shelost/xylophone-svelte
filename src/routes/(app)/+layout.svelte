@@ -19,7 +19,7 @@
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 
-	import { pages, allPages, user, users, isPanelVisible, assets, folders, openFolders, MAX } from '$lib/utils/store.js'; // Adjust the path as necessary
+	import { pages, allPages, user, users, isPanelVisible, assets, folders, openFolders, MAX, showModal } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 	import Panel from '$lib/components/Panel.svelte';
 
@@ -187,9 +187,6 @@ async function loadImagesFromSupabase() {
 	}
 }
 
-
-
-
 	loadImagesFromSupabase()
 	fetchPages()
 	fetchAllPages()
@@ -207,7 +204,7 @@ async function loadImagesFromSupabase() {
 <section>
 
 
-	{#if !$MAX}
+	{#if !$MAX && !$showModal}
 		<Sidebar {data}/>
 	{/if}
 
@@ -222,13 +219,6 @@ async function loadImagesFromSupabase() {
 {/key}
 
 
-<svelte:head>
-	<title> Arachne | Build Your Perfect Web </title>
-	<meta name="description" content="Arachne is a different kind of dev." />
-</svelte:head>
-
-
-
 <style lang="scss">
 
 
@@ -239,9 +229,6 @@ async function loadImagesFromSupabase() {
 	}
 
 
-	:global(#navbar){
-		z-index: 3 !important;
-	}
 
 	#app{
 		position: fixed;
@@ -254,14 +241,6 @@ async function loadImagesFromSupabase() {
 		background: none;
 		//background: #f4f4f4;
 		//background: #FF004D
-		z-index: 1 !important;
-
-	}
-
-	:global(#panel){
-		position: fixed;
-		z-index: 10 !important;
-		//background: yellow !important;
 	}
 
 

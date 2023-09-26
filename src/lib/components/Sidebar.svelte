@@ -413,12 +413,13 @@ async function removePageFromFolder(pageId) {
 	display: flex;
 	align-items: center;
 	background: white;
-	height: 44px;
-	padding: 10px 10px;
-	margin: 10px 5px;
+	height: 36px;
+	padding: 5px 10px;
+	margin: 15px 5px 10px 5px;
 	//margin-top: 10px;
 	gap: 10px;
 	border-radius: 5px;
+	transition: 0.2s ease;
 
 	img{
 		border: 1px solid rgba(black, 0.2);

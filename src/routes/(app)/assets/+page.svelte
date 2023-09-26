@@ -8,13 +8,80 @@
     import type { PageData, Task } from '../../routes/$types';
 	import {fly} from 'svelte/transition'
 	import {fabric} from 'fabric'
+	import Modal from '$lib/components/Modal.svelte';
+	import {canvasElements, allPages, users, assets, showModal} from '$lib/utils/store'
     export let data: PageData;
-    let user = {}; // Define the 'user' variable to store data about the active user
+
+
+    let user = {};
     let userData = {};
 	let books = []
 	let loading = true
+	let toBeDeleted = null;
 
-	import {canvasElements, allPages, users, assets} from '../../../store'
+
+	async function downloadAsset(image) {
+		try {
+			const { data: fileData, error } = await supabaseClient.storage.from('images').download(data.user.id + '/' + image.name);
+
+			if (error) {
+				throw error;
+			}
+
+			const blobUrl = URL.createObjectURL(fileData);
+			const anchorElement = document.createElement('a');
+			anchorElement.href = blobUrl;
+			anchorElement.download = image.name;
+			anchorElement.click();
+			anchorElement.remove();
+
+			URL.revokeObjectURL(blobUrl);  // Optional: Free up memory
+
+		} catch (err) {
+			console.error("Error downloading the asset:", err)
+		}
+	}
+
+
+    async function handleDeleteConfirmation() {
+		// Close the modal first
+		$showModal = false;
+
+		// Check if there's an asset selected for deletion
+		if (!toBeDeleted) {
+			console.error("No asset selected for deletion.");
+			return;
+		}
+
+		try {
+			// Delete asset from Supabase storage
+			const { error } = await supabaseClient.storage.from('images').remove(data.user.id + '/' + toBeDeleted.name);
+
+			if (error) {
+				throw error;
+			}
+
+			// Remove asset from the $assets store
+			assets.update(allAssets => allAssets.filter(asset => asset.id !== toBeDeleted.id));
+
+			// Clear the toBeDeleted variable for safety
+			toBeDeleted = null;
+
+			COLS = [[],[],[]]
+
+			for (let i=0; i<$assets.length; i++){
+
+				let asset = $assets[i]
+
+				COLS[i%3].push(asset)
+			}
+
+
+		} catch (err) {
+			console.error("Error deleting the asset:", err);
+		}
+	}
+
 
 
 
@@ -131,10 +198,6 @@
 		}
 
 
-
-
-
-
 		// Iterate through the files and download each one
 		for (const file of files) {
 			const { data: fileData, error } = await supabaseClient.storage.from(`images/${data.user.id}`).download(file.name);
@@ -161,7 +224,7 @@
 	}
 
 
-loadImagesFromSupabase()
+	loadImagesFromSupabase()
 
 
 	onMount(() => {
@@ -187,7 +250,7 @@ loadImagesFromSupabase()
 
 
 
-<div id = 'app'>
+<div id = 'app' class:center={$showModal}>
 
 	<section>
 	<h1 id = 'title'> Assets </h1>
@@ -208,12 +271,18 @@ loadImagesFromSupabase()
 			<div class = 'col'>
 
 				{#each col as image, i}
-					<div class='page' id='{image.id}' >
-						<img src = '{image.url}' alt = 'image'>
-						<h1> {image.name} </h1>
-					</div>
-				{/each}
+    <div class='page' id='{image.id}'>
 
+		<div class = 'container'>
+			<div class='overlay'>
+				<button class = 'download' on:click={() => downloadAsset(image)}>Download</button>
+				<button class = 'remove' on:click={() => { $showModal = true; toBeDeleted = image; }}>Remove</button>
+			</div>
+			<img src='{image.url}' alt='image'>
+		</div>
+        <h1>{image.name}</h1>
+    </div>
+{/each}
 			</div>
 
 		{/each}
@@ -224,7 +293,24 @@ loadImagesFromSupabase()
 
 </section>
 
+
 </div>
+
+
+{#if $showModal}
+
+<Modal
+    active={$showModal}
+	header="Are You Sure?"
+    message="This action is irreversible and will permanently delete this asset from your library."
+    confirmText="Delete"
+    closeText="Keep"
+    onConfirm={handleDeleteConfirmation}
+    onClose={() => { $showModal = false; }}
+/>
+
+{/if}
+
 
 
 
@@ -240,6 +326,10 @@ loadImagesFromSupabase()
 		margin-left: 240px;
 		height: 100vh;
 		overflow-y: scroll;
+		transition: 0.2s ease;
+		&.center{
+			margin-left: 100px;
+		}
 	}
 
 	:global(canvas){
@@ -268,35 +358,74 @@ loadImagesFromSupabase()
 			//flex: 1;
 			flex-grow: 1;
 			//overflow-x: visible;
-
 			//width: calc((100vw - 240px) / 6);
 		}
 
 		.page{
-
 			max-width: 100%;
 			background: white;
 			padding: 5px;
 			border-radius: 5px;
-
 			padding-bottom: 10px;
 			transition: 0.2s ease;
-
 			margin: 20px 0;
-
             flex-grow: 0;
             height: fit-content;
-
 			flex-shrink: 0;
-
+			position: relative;
 			cursor: pointer;
 
+			.container{
+				width: 350px;
+				border-radius: 20px;
+				position: relative;
+			}
+
+			.overlay{
+				position: absolute;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				gap: 15px;
+				top: 0;
+				left: 0;
+				width: 350px;
+				height: 100%;
+				background: rgba(black, 0.5);
+				border-radius: 15px;
+				opacity: 0;
+				visibility: hidden;
+				transition: 0.2s ease;
+
+				button{
+					width: fit-content;
+					font-size: 12px;
+					font-weight: 600;
+					letter-spacing: -0.2px;
+					border-radius: 10px;
+
+					&.download{
+						background: #f0f0f0;
+						color: black;
+						&:hover{
+							background: #e0e0e0;
+						}
+					}
+
+					&.remove{
+						&:hover{
+							background: #e20035;
+						}
+					}
+				}
+			}
 
             img{
-                width: 350px;
+
 				box-shadow: 0px 10px 40px rgba(black, 0.05);
 				border: 1px solid rgba(black, 0.1);
-				border-radius: 20px;
+				border-radius: 15px;
             }
 
 			canvas{
@@ -319,7 +448,15 @@ loadImagesFromSupabase()
 			&:hover{
 
 				transform: translateY(-5px);
+
+				.overlay{
+					opacity: 1;
+					visibility: visible;
+				}
+
 			}
+
+
 		}
 	}
 

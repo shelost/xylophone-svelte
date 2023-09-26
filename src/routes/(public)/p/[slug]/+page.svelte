@@ -12,6 +12,7 @@
         </h2>
 
 
+        <!--
         {#await $folder}
 
         {:then $folder}
@@ -40,6 +41,8 @@ v
             {/if}
 
         {/await}
+
+        -->
 
 
         {#await $user}
@@ -310,12 +313,6 @@ v
 </style>
 
 
-<svelte:head>
-	<title> {data.title} </title>
-	<meta name="description" content="Explore Scrollable - your final reading app. Find all the classics in a scrollable form, get the recent releases, and subscribe to our updates!" />
-    <link rel = 'icon' href = '{X}'>
-
-</svelte:head>
 
 
 <script>
@@ -525,7 +522,10 @@ const loadCanvasFromSupabase = async () => {
 
         }, function (o, object) {
 
-            object.selectable = false
+            if (object){
+                object.selectable = false
+            }
+
         });
 
     } catch (parseError) {

@@ -8,6 +8,7 @@
     import type { PageData, Task } from '../../routes/$types';
 	import {fly} from 'svelte/transition'
 	import {fabric} from 'fabric'
+	import icon from '$lib/img/favicon.svg'
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
     let userData = {};
@@ -98,6 +99,10 @@
 				resizeObjectsToCanvas(canvas, page.iwidth, 300);
 				canvas.renderAll();
 			}, (o, object, error) => {
+
+				object.set({
+					selectable: false
+				})
 			});
 
 
@@ -125,7 +130,7 @@
 
 			let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
 				width: 350,
-				height: 250,
+				height: 300,
 				renderOnAddRemove: false
 			});
 
@@ -188,6 +193,12 @@
 </div>
 
 
+<svelte:head>
+	<title> Arachne | Build Your Perfect Web </title>
+	<meta name="description" content="Arachne is a different kind of dev." />
+	<link rel ='icon' href='{icon}'>
+</svelte:head>
+
 
 <style lang="scss">
 
@@ -207,7 +218,7 @@
 	:global(canvas){
 		//border: 1px solid rgba(black, 0.1);
 		width: 350px;
-		height: 250px;
+		height: 300px;
 		border-radius: 5px;
 
 		// box-shadow: 0px 0px 50px rgba(black, 0.04);

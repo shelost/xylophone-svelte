@@ -5,6 +5,7 @@
 	import { loader } from '$lib/utils/loader';
 	import { AppShell } from '@brainandbones/skeleton';
 	import NavBar from '$lib/components/common/NavBar.svelte';
+	import icon from '$lib/img/favicon.svg'
 
 	//import { pages } from '$lib/utils/store';
 
@@ -33,12 +34,7 @@
 	*/
 
 
-
-
-
   </script>
-
-
 
 
 
@@ -48,6 +44,15 @@
 		<slot />
 
 </div>
+
+
+
+<svelte:head>
+	<title> Arachne | Build Your Perfect Web </title>
+	<meta name="description" content="Arachne is a different kind of dev." />
+	<link rel ='icon' href='{icon}'>
+</svelte:head>
+
 
 
 <style>

@@ -12,3 +12,4 @@ export const openFolders = writable([]);
 export const folders = writable([])
 export const activePage = writable(null);
 export const MAX = writable(false);
+export const showModal = writable(false);
