@@ -524,7 +524,15 @@ const loadCanvasFromSupabase = async () => {
 
             if (object){
                 object.selectable = false
+                object.set('selectable', false)
+
+                if (!object.link){
+                    object.set('evented', false);
+                }
             }
+
+            canvas.selection = false;
+            canvas.allowTouchScrolling = true;
 
         });
 
