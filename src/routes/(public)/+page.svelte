@@ -3,54 +3,160 @@
 	import { writable } from 'svelte/store'
 	import { supabaseClient } from '$lib/db';
 	import { fly } from 'svelte/transition'
+	import { fabric } from 'fabric'
 	import Space from '$lib/components/Space.svelte'
 	import bg from '$lib/img/background.svg'
 	import icon from '$lib/img/x.svg'
-
 	import Navbar from '$lib/components/common/NavBar.svelte'
-	import Gradient from '$lib/img/gradient.png'
-	import Hero from '$lib/img/Hero.png'
-	import Hero1 from '$lib/img/herox.svg'
-	import Hero2 from '$lib/img/herox-1.svg'
-	import Feature from '$lib/img/feature.png'
-	import Collection from '$lib/img/collection.png'
-	import Jagged from '$lib/img/jagged.svg'
-
-	import Phone1 from '$lib/img/phone-1.svg'
-	import Phone2 from '$lib/img/phone-2.svg'
-
-	import Bubble1 from '$lib/img/bubble.svg'
-	import Bubble2 from '$lib/img/bubble-1.svg'
-	import Bubble3 from '$lib/img/bubble-2.svg'
-	import Bubble4 from '$lib/img/bubble-3.svg'
-	import Bubble5 from '$lib/img/bubble-4.svg'
-	import Bubble6 from '$lib/img/bubble-5.svg'
-
-	import Sherlock from '$lib/img/sherlock-x.png'
-	import Pride from '$lib/img/pride-x.png'
-	import Republic from '$lib/img/republic-x.png'
-	import Montecristo from '$lib/img/montecristo-x.png'
-	import Mobydick from '$lib/img/mobydick-x.png'
-
 	import Paine from '$lib/img/paine.png'
+
+
+	export let data
 
 
 	onMount(()=>{
 
-		let ratio = 0
-		let app = document.getElementById('app')
+		let canvas = new fabric.Canvas('canvas', {
+			width: window.innerWidth,
+			height: window.innerHeight,
+			renderOnAddRemove: false,
+		})
 
-		let loop = () => {
 
-			ratio = app.scrollTop / document.body.scrollHeight
-			app.style.setProperty('--parallax-1', ratio * 0.6 * -160 + 'px')
-			app.style.setProperty('--parallax-2', ratio * 1.4 * -160 + 'px')
-			app.style.setProperty('--parallax-3', ratio * 1 * -160 + 'px')
 
-			window.requestAnimationFrame(loop)
-		}
-		window.requestAnimationFrame(loop)
+
+
+		const loadCanvasFromSupabase = async () => {
+			if (!data.content) {
+				return;
+			}
+
+			// Ensure that the user has an active session
+			const session = data.session;
+
+			if (!session) {
+				return;
+			}
+			// Use the session's access token in headers for authorization
+			const headers = {
+				'Authorization': `Bearer ${session.access_token}`
+			};
+
+			const { data: fileData, error } = await supabaseClient.storage.from('fabric')
+				.download(data.content, { headers });  // Provide headers as options
+
+			if (error) {
+				console.error('Error downloading the file:', error);
+				return;
+			}
+
+			// Convert blob data to JSON string
+			const blobToText = (blob) => {
+				return new Promise((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onloadend = () => resolve(reader.result);
+					reader.onerror = reject;
+					reader.readAsText(blob);
+				});
+			};
+
+			try {
+				const fileText = await blobToText(fileData);
+				const fileJson = JSON.parse(fileText);
+
+				// Load the parsed data into the canvas
+				canvas.loadFromJSON(fileJson, () => {
+
+
+					// Id('loader').style.display = 'none';
+
+					const canvasCenterX = canvas.width / 2;
+					const scaleX = canvas.width / data.iwidth
+
+
+					canvas.getObjects().forEach((object) => {
+
+						if (!object.pin){
+							object.pin = 'center'
+						}
+
+
+
+						object.set({
+							left: object.left * scaleX,
+							top: object.top * scaleX,
+						})
+
+
+
+						if (object.pin && object.xPercent !== undefined) {
+							let newLeftPos;
+
+							switch (object.pin) {
+								case 'scale':
+									newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+									break;
+								case 'left':
+									newLeftPos = object.left; // Use the given value
+									break;
+								case 'right':
+									if (object.right){
+										newLeftPos = canvas.width - object.right - (object.width * object.scaleX)/2;
+									}
+									break;
+								case 'center':
+									if (object.center){
+										newLeftPos = object.left
+									}
+									break;
+								default:
+									newLeftPos = object.left; // Default behavior is like 'left' pin
+									break;
+							}
+							object.set('left', newLeftPos);
+					}
+
+
+						if (object.originalTop !== undefined) {
+							object.set('top', object.originalTop);
+						}else{
+							object.originalTop = object.top;
+						}
+
+
+						object.right = canvas.width - object.left + object.width * object.scaleX
+						object.center = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2)
+
+						if (!object.pin){
+							object.pin = 'center'
+						}
+
+
+
+					});
+
+
+					// unifiedResize()
+
+					canvas.setHeight(data.height);
+					canvas.setBackgroundColor(data.color);
+					//Id('canvas-container').style.background = data.color
+					//Id('container').style.background = data.color
+
+					canvas.renderAll();
+				});
+
+			} catch (parseError) {
+				console.error('Error parsing the blob data:', parseError);
+			}
+		};
+
+		loadCanvasFromSupabase()
+
 	})
+
+
+
 
 
 </script>
@@ -59,6 +165,9 @@
 <div id = 'app' >
 
 	<Navbar />
+
+
+	<canvas id = 'canvas'></canvas>
 
 	<div id = 'splash' in:fly={{duration: 500, y: 50}}>
 
@@ -122,6 +231,17 @@
 		--parallax-2: 0;
 		--parallax-3: 0;
 		color: black !important;
+		position: relative;
+	}
+
+	#canvas{
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+
 	}
 
 	#banner{
@@ -542,8 +662,7 @@
 		justify-content: center;
 		align-items: center;
 		padding: 60px;
-
-
+		display: none;
 
 		.flex{
 			gap: 30px;

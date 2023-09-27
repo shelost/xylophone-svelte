@@ -5,7 +5,7 @@
 	import QuickLinks from '../private/QuickLinks.svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import logo from '$lib/img/scrollable.svg';
-	import X from '$lib/img/x.svg'
+	import X from '$lib/img/arachne.svg'
 
 
 	import { invalidate } from '$app/navigation';
@@ -123,6 +123,7 @@
 			font-size: 14px;
 			font-weight: 600;
 			letter-spacing: -0.2px;
+			color: white;
 		}
 	}
 
@@ -143,11 +144,12 @@
 
 	#logo{
 		height: 26px;
+		filter: brightness(1000%);
 	}
 
 	button{
-		background: #FF004D;
-		color: white;
+		background: white;
+		color: #FF004D;
 		display: flex;
 		align-items: center;
 		justify-content: center;

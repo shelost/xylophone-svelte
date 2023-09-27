@@ -3,6 +3,7 @@
     import { supabaseClient } from '$lib/db';
     import { onMount } from 'svelte';
     import icon from '$lib/img/favicon.svg'
+    import { pages } from '$lib/utils/store';
 
     import V from '$lib/img/verified.svg'
 
@@ -176,6 +177,43 @@ async function updateProfile() {
             <button on:click={() => editMode = true}>Edit Profile</button>
         </div>
     {/if}
+
+
+    {#await $pages}
+
+	<div id = 'loading'>
+		<div class="lds-ripple"><div></div><div></div></div>
+		<h1> Loading... </h1>
+	</div>
+
+{:then}
+
+	<div id = 'pages' in:fly={{ y: 50, duration: 300}} out:fly={{ x: 200, duration: 300 }}>
+
+		{#each $pages as page, i}
+
+			{#if page.content}
+			<a href='/p/{page.id}'>
+				<div class='page' id='{page.id}' >
+					<canvas id='canvas-{page.id}' class='canvas'></canvas>
+					<h1> {page.title} </h1>
+					{#if page.user}
+					<div class = 'user'>
+						<img src = {page.user.pfp} >
+						<p> {page.user.full_name} </p>
+					</div>
+					{/if}
+				</div>
+			</a>
+			{/if}
+		{/each}
+
+
+	</div>
+
+{/await}
+
+
 </section>
 
 

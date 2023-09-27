@@ -229,7 +229,7 @@ input:checked + .slider:before {
     height: 50px;
     background: white; // semi-transparent background for the handle
     border-radius: 50px;
-    box-shadow: 0px 20px 40px rgba(black, 0.2);
+    box-shadow: 0px 20px 40px rgba(black, 0.8);
     transition: 0.2s ease;
 
     &:hover{
@@ -1553,6 +1553,7 @@ const loadCanvasFromSupabase = async () => {
             const canvasCenterX = canvas.width / 2;
             const scaleX = canvas.width / data.iwidth
 
+
             canvas.getObjects().forEach((object) => {
 
                 if (!object.pin){
@@ -1618,8 +1619,6 @@ const loadCanvasFromSupabase = async () => {
 
 
             });
-
-
 
 
             unifiedResize()
