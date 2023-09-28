@@ -252,7 +252,7 @@
 
 
 
-<div id = 'app' class:center={$showModal}>
+<div id = 'app' class:center={$showModal}  in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
 
 	<section>
 	<h1 id = 'title'> Assets </h1>

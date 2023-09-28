@@ -120,7 +120,7 @@ v
         border-radius: 10px;
         flex-shrink: 0;
 
-        transition: 0.2s ease;
+        //transition: 0.2s ease;
 
         //box-shadow: 0 30px 90px rgba(black, 0.1);
     }
@@ -210,7 +210,7 @@ v
 
     #container {
         flex-grow: 1;
-        width: calc(100vw - 480px);
+        width: 100vw;
         height: 100vh;
         display: flex;
         flex-direction: column;
@@ -439,19 +439,13 @@ document.addEventListener('keydown', function(e) {
     });
 
 
-    let panelWidth = 260
-    let newWidth = window.innerWidth - panelWidth;
-    if (window.innerWidth < 800){
-      newWidth = window.innerWidth
-    }
+    let newWidth = window.innerWidth
 
     canvas.setWidth(newWidth)
+
     let scaleX = newWidth / data.iwidth
 
     resizeCanvas()
-
-
-
 
 ///
 
@@ -754,36 +748,67 @@ window.addEventListener('resize', debounce(() => {
 */
 
 
-/*
+
 
 window.addEventListener('resize', unifiedResize)
 
-function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
+
+
+let previousCanvasWidth = window.innerWidth
 
 
 
+function unifiedResize() {
 
-    const canvasCenterX = canvas.width/2
-    // Adjust position relative to the canvas width change.
-    const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX)/2
+    const previousWidth = previousCanvasWidth;
+    const newWidth = window.innerWidth
+    const canvasCenterX = newWidth / 2;
 
-    object.left = newLeftPos
-    object.setCoords();
-
-
-
-    canvas.clipTo = function(ctx) {
-        ctx.rect(0, 0, newWidth, canvas.getHeight());
-        ctx.clip();
-    };
-
+    // Set canvas width to the new value
     canvas.setWidth(newWidth);
 
+
+    // Update position of each object based on xPercent and new canvas width
+    canvas.getObjects().forEach((object) => {
+
+        let newLeftPos
+
+        if (!object.pin){
+            object.pin = 'center'
+        }
+
+        console.log(newWidth)
+
+        switch (object.pin) {
+            case 'scale':
+                newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+                break;
+            case 'left':
+                newLeftPos = object.left;
+                break;
+            case 'right':
+                const distanceFromRight = previousWidth - (object.left + object.width * object.scaleX);
+                newLeftPos = newWidth - distanceFromRight - object.width * object.scaleX;
+
+                break;
+            case 'center':
+                const originalCenterDistance = object.left - previousWidth / 2;
+                newLeftPos = canvasCenterX + originalCenterDistance;
+                break;
+            default:
+                newLeftPos = object.left;
+                break;
+        }
+
+        object.left = newLeftPos;
+        object.setCoords();
+    });
+
+    previousCanvasWidth = newWidth;
 
     canvas.renderAll();
     canvas.calcOffset();
 }
-*/
 
 
 

@@ -160,11 +160,12 @@
 </script>
 
 
-
-<div id = 'app'>
+<div id = 'app' in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
 
 	<section>
-	<h1 id = 'title'> Gallery </h1>
+
+
+	<h1 id = 'title'> Home </h1>
 
 {#await $allPages}
 
@@ -175,12 +176,12 @@
 
 {:then}
 
-	<div id = 'pages' in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
+	<div id = 'pages'>
 
 		{#each $allPages as page, i}
 
 			{#if page.content}
-			<a href='/p/{page.id}' in:fly={{ y: 50, duration: 300, delay: 1200+30*i}}>
+			<a href='/p/{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
 				<div class='page' id='{page.id}' >
 					<canvas id='canvas-{page.id}' class='canvas'></canvas>
 					<h1> {page.title} </h1>
@@ -290,6 +291,7 @@
 				border: 1px solid rgba(black, 0.05);
 				transition: 0.2s ease;
 				box-shadow: 0px 20px 50px rgba(black, 0.03);
+				transition: 0.2s ease;
 				cursor: pointer;
 				&:hover{
 					opacity: 0.8;

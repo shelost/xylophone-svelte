@@ -213,6 +213,8 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
 
 <section in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
 
+    <h1 id = 'title'> Profile </h1>
+
     {#if editMode}
         <form on:submit|preventDefault="{updateProfile}" class="flex flex-col gap-2">
             <!-- Profile Picture Upload -->
@@ -370,12 +372,10 @@ section {
     }
 }
 
-#title {
-    font-family: 'Newsreader', sans-serif;
-    letter-spacing: -0.7px;
-    font-size: 32px;
-    font-weight: 600;
-
+#title{
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
 }
 
 form {
