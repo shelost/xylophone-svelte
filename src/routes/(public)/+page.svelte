@@ -131,19 +131,15 @@
 							object.pin = 'center'
 						}
 
-
-
 					});
 
 
-					// unifiedResize()
 
 					canvas.setHeight(data.height);
 					canvas.setBackgroundColor(data.color);
-					//Id('canvas-container').style.background = data.color
-					//Id('container').style.background = data.color
-
 					canvas.renderAll();
+
+
 				});
 
 			} catch (parseError) {
@@ -198,6 +194,8 @@
 
 
 	<div id = 'footer'>
+
+		<h2> This is the footer. </h2>
 
 		<div id = 'socials'>
 
@@ -295,7 +293,6 @@
 	}
 
 	#phones{
-		padding-bottom: 100px;
 		.flex{
 			display: flex;
 			justify-content: center;
@@ -464,6 +461,11 @@
 		letter-spacing: -0.3px;
 	}
 
+	#footer{
+		height: 240px;
+		border: 5px solid white;
+	}
+
 	#form{
 		display: flex;
 		align-items: center;
@@ -584,15 +586,6 @@
 		margin-bottom: 5px;
 	}
 
-	#spaces{
-		display: flex;
-		align-items: flex-start;
-		justify-content: center;
-		flex-wrap: wrap;
-		gap: 30px;
-		padding-bottom: 50px;
-	}
-
 	#app{
 		position: fixed;
 		top: 0px;
@@ -602,7 +595,7 @@
 		background: white;
 		overflow-y: scroll;
 		overflow-x: hidden;
-		padding-bottom: 200px;
+		//padding-bottom: 200px;
 	}
 
 	html{
@@ -653,84 +646,6 @@
 	}
 
 	/* Splash */
-	#splash {
-		margin: 0;
-		width: 100vw;
-		height: 100vh;
-		background-size: cover;
-		background-position: center center;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 60px;
-		display: none;
-
-		.flex{
-			gap: 30px;
-			padding-bottom: 40px;
-			.hero{
-				border-radius: 15px;
-				animation: slide 0.6s ease;
-				box-shadow: 0px 30px 60px rgba(rgb(255, 0, 55), 0.1);
-			}
-
-			#hero1{
-				width: 220px;
-				height: 220px;
-				margin-top: -30px;
-				transform: translate(0, var(--parallax-2));
-			}
-
-			#hero2{
-				width: 160px;
-				height: 160px;
-				transform: translate(0, var(--parallax-3));
-			}
-
-			#hero3{
-				width: 150px;
-				height: 150px;
-				margin-top: -10px;
-				transform: translate(0, var(--parallax-1));
-			}
-		}
-
-		#mast{
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			margin-bottom: 50px;
-			color: white;
-
-			h1{
-				font-size: 90px;
-				line-height: 100%;
-				letter-spacing: -4px;
-				margin-bottom: 30px;
-				font-weight: 700;
-				text-align: flex-start;
-				font-family: 'Newsreader', 'Inter', sans-serif;
-				text-align: center;
-			}
-
-			p{
-				font-size: 18px;
-				margin: auto;
-				text-align: center;
-				margin-bottom: 50px;
-				letter-spacing: 0.2px;
-				font-weight: 300;
-			}
-
-			form{
-				background: rgba(white, 0.2);
-				input{
-					color: white !important;
-				}
-			}
-		}
-
-	}
 
 	@keyframes slide{
 		from{
@@ -760,6 +675,7 @@
 
 	.white h1{
 		color: white;
+
 	}
 
 
@@ -880,6 +796,9 @@
 		width: 90vw;
 	}
 
+	#splash{
+		display: none;
+	}
 
 	.post {
 		width: 900px;
@@ -894,7 +813,6 @@
 
 	.post:not(:last-child) {
 		border-bottom: 1px solid var(--border);
-		padding-bottom: var(--size-7);
 	}
 
 	.title {
