@@ -117,13 +117,7 @@
 	let userInfo = {}
 
 
-	onMount(() => {
-
-		for (let i=0; i<$users.length; i++){
-			userInfo[$users[i].id] = $users[i]
-		}
-
-
+	function setPages(){
 
 		for (let i=0; i<$allPages.length; i++){
 			let page = $allPages[i];
@@ -140,7 +134,25 @@
 			if (page.content){
 				loadCanvas(page, canvas);
 			}
+
+			setTimeout(() => {
+                if (page.content){
+                    loadCanvas(page, canvas);
+                }
+            }, 1000);
 		}
+	}
+
+
+	onMount(() => {
+
+		for (let i=0; i<$users.length; i++){
+			userInfo[$users[i].id] = $users[i]
+		}
+
+		setPages()
+
+		setTimeout(setPages, 1000);
 	});
 
 
@@ -163,12 +175,12 @@
 
 {:then}
 
-	<div id = 'pages' in:fly={{ y: 50, duration: 300}} out:fly={{ x: 200, duration: 300 }}>
+	<div id = 'pages' in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
 
 		{#each $allPages as page, i}
 
 			{#if page.content}
-			<a href='/p/{page.id}'>
+			<a href='/p/{page.id}' in:fly={{ y: 50, duration: 300, delay: 1200+30*i}}>
 				<div class='page' id='{page.id}' >
 					<canvas id='canvas-{page.id}' class='canvas'></canvas>
 					<h1> {page.title} </h1>
@@ -286,7 +298,7 @@
 
 			h1{
 				margin-top: 10px;
-				margin-left: 7px;
+				margin-left: 5px;
 				font-size: 16px;
 				font-weight: 600;
 				letter-spacing: -0.2px;

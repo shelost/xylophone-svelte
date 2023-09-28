@@ -463,7 +463,10 @@
 
 	#footer{
 		height: 240px;
-		border: 5px solid white;
+		color: white;
+		letter-spacing: -0.1px;
+		font-weight: 300;
+		font-size: 14px;
 	}
 
 	#form{

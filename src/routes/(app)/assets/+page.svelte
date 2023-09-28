@@ -266,7 +266,7 @@
 
 {:then}
 
-	<div id = 'pages' in:fly={{ y: 50, duration: 300, delay: 1000}} out:fly={{ x: 200, duration: 300 }}>
+	<div id = 'pages' in:fly={{ y: 50, duration: 300, delay: 1000}} out:fly={{ y: -50, duration: 300 }}>
 
 		{#each COLS as col}
 

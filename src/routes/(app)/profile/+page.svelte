@@ -4,7 +4,7 @@
     import { onMount } from 'svelte';
     import icon from '$lib/img/favicon.svg'
     import { pages } from '$lib/utils/store';
-
+    import { fly } from 'svelte/transition'
     import V from '$lib/img/verified.svg'
 
     export let data: PageData;
@@ -96,12 +96,122 @@ async function updateProfile() {
 }
 
 
+
+
+
+function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
+		const scaleX = targetWidth / originalWidth
+
+
+		canvas.forEachObject((obj: any) => {
+			const left = obj.left || 0;
+			const top = obj.top || 0;
+
+			obj.scaleX *= scaleX
+			obj.scaleY *= scaleX
+			obj.left *= scaleX
+			obj.top *= scaleX
+
+			if (obj.xPercent !== undefined) {
+                const newLeftPos = canvas.width/2 + obj.xPercent * canvas.width - (obj.width * obj.scaleX) / 2;
+                obj.set('left', newLeftPos);
+            }
+
+			obj.setCoords(); // Refresh object coordinates after updates
+		});
+		canvas.renderAll();
+	}
+
+
+
+	async function loadCanvas(page, canvas) {
+		if (!page.content) {
+			return;
+		}
+
+		// Ensure that the user has an active session
+		const session = data.session
+
+		// Use the session's access token in headers for authorization
+		const headers = {
+			'Authorization': `Bearer ${session.access_token}`
+		};
+
+		const { data: fileData, error } = await supabaseClient.storage.from('fabric')
+			.download(page.content, { headers });  // Provide headers as options
+
+		if (error) {
+			console.error('Error downloading the file:', error);
+			return;
+		}
+
+		// Convert blob data to JSON string
+		const blobToText = (blob) => {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onloadend = () => resolve(reader.result);
+				reader.onerror = reject;
+				reader.readAsText(blob);
+			});
+		};
+
+		try {
+			const fileText = await blobToText(fileData);
+			const fileJson = JSON.parse(fileText);
+
+
+			// Log the parsed data for confirmation
+
+
+			// Load the parsed data into the canvas
+			canvas.loadFromJSON(fileJson, () => {
+				resizeObjectsToCanvas(canvas, page.iwidth, 300);
+				canvas.renderAll();
+			}, (o, object, error) => {
+
+                if (object){
+                    object.set({
+                        selectable: false
+                    })
+                }
+
+			});
+
+
+
+		} catch (parseError) {
+			console.error('Error parsing the blob data:', parseError);
+		}
+	}
+
+
+
     onMount(() => {
-        // Fetch user profile data or other operations...
+        for (let i=0; i<$pages.length; i++){
+			let page = $pages[i];
+
+			let canvas = new fabric.Canvas(document.getElementById(`canvas-${page.id}`), {
+				width: 350,
+				height: 300,
+				renderOnAddRemove: false
+			});
+
+
+			if (page.content){
+				loadCanvas(page, canvas);
+			}
+
+            setTimeout(() => {
+                if (page.content){
+                    loadCanvas(page, canvas);
+                }
+            }, 200);
+		}
     });
+
 </script>
 
-<section>
+<section in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
 
     {#if editMode}
         <form on:submit|preventDefault="{updateProfile}" class="flex flex-col gap-2">
@@ -163,18 +273,18 @@ async function updateProfile() {
         </form>
     {:else}
 
-    <div id = 'banner'> </div>
+    <div id = 'banner' in:fly={{ y: 50, duration: 300, delay: 0}}> </div>
 
         <div id = 'mast'>
 
-            <img class="image-preview" src={profile.pfp} alt="Profile Picture"/>
-            <div id = 'name'>
+            <img class="image-preview" src={profile.pfp} alt="Profile Picture"  in:fly={{ y: 50, duration: 300, delay: 50}}/>
+            <div id = 'name'  in:fly={{ y: 50, duration: 300, delay: 100}}>
                 <h2>{profile.full_name}</h2>
                 <img src = '{V}' alt = 'verified'>
             </div>
 
-            <p>@{profile.username}</p>
-            <button on:click={() => editMode = true}>Edit Profile</button>
+            <p  in:fly={{ y: 50, duration: 300, delay: 150}}>@{profile.username}</p>
+            <button on:click={() => editMode = true}  in:fly={{ y: 50, duration: 300, delay: 200}}>Edit Profile</button>
         </div>
     {/if}
 
@@ -193,7 +303,7 @@ async function updateProfile() {
 		{#each $pages as page, i}
 
 			{#if page.content}
-			<a href='/p/{page.id}'>
+			<a href='/p/{page.id}'  in:fly={{ y: 50, duration: 300, delay: 250+50*i}}>
 				<div class='page' id='{page.id}' >
 					<canvas id='canvas-{page.id}' class='canvas'></canvas>
 					<h1> {page.title} </h1>
@@ -231,6 +341,8 @@ async function updateProfile() {
 section {
     padding: 30px;
     margin-left: 240px;
+    height: 100vh;
+    overflow-y: scroll;
 }
 
 #banner{
@@ -287,6 +399,76 @@ form {
         margin-top: 1px;
     }
 }
+
+
+#pages{
+		display: flex;
+		flex-wrap: wrap;
+		gap: 30px;
+		margin-top: 40px;
+
+		.page{
+
+			background: white;
+			padding: 5px;
+			border-radius: 5px;
+			//box-shadow: 0px 0px 50px rgba(black, 0.08);
+			padding-bottom: 10px;
+			transition: 0.2s ease;
+			cursor: pointer;
+
+
+			.user{
+				display: flex;
+				align-items: center;
+				padding: 6px 10px 6px 8px;
+				gap: 8px;
+				margin: 5px;
+				margin-top: 10px;
+				background: rgba(black, 0.05);
+				width: fit-content;
+				border-radius: 10px;
+
+
+				img{
+					height: 15px;
+					border-radius: 5px;
+					border: 1px solid rgba(black, 0.3);
+				}
+				p{
+					font-size: 12px;
+					font-weight: 500;
+					letter-spacing: -0.3px;
+					color: rgba(black, 0.8);
+				}
+			}
+
+
+			canvas{
+				border-radius: 15px;
+				border: 1px solid rgba(black, 0.05);
+				transition: 0.2s ease;
+				box-shadow: 0px 20px 50px rgba(black, 0.03);
+				cursor: pointer;
+				&:hover{
+					opacity: 0.8;
+				}
+			}
+
+			h1{
+				margin-top: 10px;
+				margin-left: 7px;
+				font-size: 16px;
+				font-weight: 600;
+				letter-spacing: -0.2px;
+			}
+
+
+		}
+	}
+
+
+
 
 input {
     background: rgba(black, 0.05) !important;
