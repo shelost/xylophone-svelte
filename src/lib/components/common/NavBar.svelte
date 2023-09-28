@@ -128,23 +128,23 @@
 	}
 
 	#navbar{
-		height: 64px;
-		top: 0px;
-		left: 0px;
-		/*position: fixed;*/
+		height: 54px;
+		top: 10px;
+		left: 10px;
+		position: fixed;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 20px 20px;
+		padding: 20px 15px;
 		color: black;
-		width: 100vw;
-		backdrop-filter: blur(15px);
+		width: calc(100vw - 20px);
+		background: white;
+		border-radius: 18px;
 		z-index: 6 !important;
 	}
 
 	#logo{
-		height: 26px;
-		filter: brightness(1000%);
+		height: 22px;
 	}
 
 	button{
