@@ -139,6 +139,8 @@
 					canvas.setBackgroundColor(data.color);
 					canvas.renderAll();
 
+					unifiedResize()
+
 
 				});
 
@@ -149,7 +151,72 @@
 
 		loadCanvasFromSupabase()
 
+
+
+
+
+		window.addEventListener('resize', unifiedResize)
+
+let previousCanvasWidth = window.innerWidth
+
+
+
+function unifiedResize() {
+
+    const previousWidth = previousCanvasWidth;
+    const newWidth = window.innerWidth
+    const canvasCenterX = newWidth / 2;
+
+    // Set canvas width to the new value
+    canvas.setWidth(newWidth);
+
+
+    // Update position of each object based on xPercent and new canvas width
+    canvas.getObjects().forEach((object) => {
+
+        let newLeftPos
+
+        if (!object.pin){
+            object.pin = 'center'
+        }
+
+        console.log(newWidth)
+
+        switch (object.pin) {
+            case 'scale':
+                newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+                break;
+            case 'left':
+                newLeftPos = object.left;
+                break;
+            case 'right':
+                const distanceFromRight = previousWidth - (object.left + object.width * object.scaleX);
+                newLeftPos = newWidth - distanceFromRight - object.width * object.scaleX;
+
+                break;
+            case 'center':
+                const originalCenterDistance = object.left - previousWidth / 2;
+                newLeftPos = canvasCenterX + originalCenterDistance;
+                break;
+            default:
+                newLeftPos = object.left;
+                break;
+        }
+
+        object.left = newLeftPos;
+        object.setCoords();
+    });
+
+    previousCanvasWidth = newWidth;
+
+    canvas.renderAll();
+    canvas.calcOffset();
+}
+
+
 	})
+
+
 
 
 

@@ -1157,7 +1157,7 @@ canvas.on('object:moving', (event) => {
   }
 
   // Handle transformations for each object in the active selection.
-  applyParallaxEffect();
+  //applyParallaxEffect();
 
   // Property text
   if (activeObject.type === 'activeSelection') {
@@ -1407,6 +1407,56 @@ document.getElementById("sendToBack").addEventListener("click", sendObjectToBack
 
 // Input Correspondence
 
+function adjustDimensionsAfterScaling(obj) {
+    if (obj.type === 'rect') {
+        obj.set({
+            width: obj.width * obj.scaleX,
+            height: obj.height * obj.scaleY,
+            scaleX: 1,
+            scaleY: 1
+        });
+    } else if (obj.type === 'circle') {
+        obj.set({
+            radius: obj.radius * obj.scaleX, // assuming uniform scaling
+            scaleX: 1,
+            scaleY: 1
+        });
+    } else if (obj.type === 'path' || obj.type === 'polygon') {
+        let newPath = obj.path.map(segment => {
+            return segment.map((point, index) => {
+                if (typeof point === 'number') { // avoid adjusting command letters like M, L, etc.
+                    return point * (index % 2 === 0 ? obj.scaleX : obj.scaleY);
+                }
+                return point;
+            });
+        });
+        obj.set({
+            path: newPath,
+            scaleX: 1,
+            scaleY: 1
+        });
+    }else if (obj.type === 'ellipse') {
+        obj.set({
+            rx: obj.rx * obj.scaleX,
+            ry: obj.ry * obj.scaleY,
+            scaleX: 1,
+            scaleY: 1
+        });
+    }
+
+    // ... Handle other object types similarly
+    obj.setCoords();  // Recalculate object's bounding box after modifications
+    canvas.renderAll();
+    canvas.requestRenderAll();
+}
+
+canvas.on('object:scaling', function(e) {
+    adjustDimensionsAfterScaling(e.target);
+    canvas.renderAll();
+});
+
+
+
 canvas.on('object:scaling', function(event) {
     const obj = event.target;
 
@@ -1434,7 +1484,7 @@ canvas.on('object:scaling', function(event) {
           Id('range-top').value = Math.round(obj.top)
         }
 
-    }
+      }
 
     canvas.renderAll();
     dynamicallyBindListeners();
@@ -1599,11 +1649,9 @@ const loadCanvasFromSupabase = async () => {
 
                 if (object.originalTop !== undefined) {
                   object.set('top', object.originalTop);
-                }else{
-                  object.originalTop = object.top;
                 }
 
-
+                object.originalTop = object.top;
                 object.right = canvas.width - object.left + object.width * object.scaleX
                 object.center = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2)
 
@@ -1614,9 +1662,7 @@ const loadCanvasFromSupabase = async () => {
 
 
                 createPropertyText(object)
-                // Update the text's position and content.
                 updatePropertyText(object);
-
 
             });
 
@@ -1631,6 +1677,8 @@ const loadCanvasFromSupabase = async () => {
             Id('container').style.background = data.color
 
             canvas.renderAll();
+        }, function (o, object){
+
         });
 
     } catch (parseError) {
@@ -1764,17 +1812,17 @@ document.addEventListener('click', handleOptionClick);
 
 
 function applyParallaxEffect() {
-  /*
+
     let scrollAmount = document.getElementById('canvas-container').scrollTop;
 
     canvas.forEachObject(object => {
         let depth = object.depth || 1;
         let parallaxShift = 0.15 * depth * scrollAmount;
-        object.set('top', object.originalTop + parallaxShift);
+        //object.set('top', object.originalTop + parallaxShift);
     });
 
     canvas.renderAll();
-    */
+
 
 }
 
@@ -3224,6 +3272,7 @@ function addButton(x, y) {
   function rectTemplate(activeObject) {
     return [
       { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
+      { label: 'Stroke', id: 'stroke', type: 'color', prop: 'stroke', icon: IconC, value: activeObject.stroke },
       { label: 'Width', id: 'width', type: 'number', icon: IconW, value: activeObject.width * activeObject.scaleX, min: 0, max: 1000, },
       { label: 'Height', id: 'height', type: 'number', icon: IconH, value: activeObject.height * activeObject.scaleY, min: 0, max: 1000, },
       { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
@@ -3231,7 +3280,7 @@ function addButton(x, y) {
       { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
 
 
-      { label: 'strokeWifth', id: 'strokeWidth', type: 'number', icon: IconW, value: activeObject.strokeWidth, min: 0, max: 10, },
+      { label: 'strokeWidth', id: 'strokeWidth', type: 'number', icon: IconW, value: activeObject.strokeWidth, min: 0, max: 10, },
 
       { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
 
@@ -3239,19 +3288,37 @@ function addButton(x, y) {
     ];
   }
 
-  function polygonTemplate(activeObject) {
-    return [
-    ];
-  }
-
   function pathTemplate(activeObject) {
     return [
+        { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
+        { label: 'Stroke', id: 'stroke', type: 'color', prop: 'stroke', icon: IconC, value: activeObject.stroke },
+        { label: 'Stroke Width', id: 'strokeWidth', type: 'number', icon: IconW, value: activeObject.strokeWidth, min: 0, max: 10 },
+        { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
+        { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
+        { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+        { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
+        { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
     ];
-  }
+}
+
+function polygonTemplate(activeObject) {
+    return [
+        { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
+        { label: 'Stroke', id: 'stroke', type: 'color', prop: 'stroke', icon: IconC, value: activeObject.stroke },
+        { label: 'Stroke Width', id: 'strokeWidth', type: 'number', icon: IconW, value: activeObject.strokeWidth, min: 0, max: 10 },
+        { label: 'Points', id: 'points', type: 'text', icon: IconP, value: JSON.stringify(activeObject.points) }, // This is an assumption. You may want a more interactive UI for editing points.
+        { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },
+        { label: 'X', id: 'left', type: 'number', icon: IconX, value: activeObject.left, min: 0, max: canvas.width },
+        { label: 'Y', id: 'top', type: 'number', icon: IconY, value: activeObject.top, min: 0, max: 1000 },
+        { label: 'Pin', id: 'pin', type: 'dropdown', icon: IconP, prop: 'pin', value: activeObject.pin, options: ['scale', 'left', 'center', 'right'] },
+        { label: 'Depth', id: 'depth', type: 'number', icon: IconD, value: activeObject.depth, min: 0, max: 5 },
+    ];
+}
 
   function ellipseTemplate(activeObject) {
     return [
       { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
+      { label: 'Stroke', id: 'stroke', type: 'color', prop: 'stroke', icon: IconC, value: activeObject.stroke },
       { label: 'Width', id: 'width', type: 'number', icon: IconW, value: activeObject.width * activeObject.scaleX, min: 0, max: 1000, },
       { label: 'Height', id: 'height', type: 'number', icon: IconH, value: activeObject.height * activeObject.scaleY, min: 0, max: 1000, },
       { label: 'Angle', id: 'angle', type: 'number', icon: IconA, value: activeObject.angle, min: 0, max: 360 },

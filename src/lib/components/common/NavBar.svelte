@@ -155,27 +155,30 @@
 	}
 
 	#navbar{
-		height: 48px;
-		top: 10px;
-		left: 10px;
+		height: 54px;
+		top: 5px;
+		left: 5px;
 		position: fixed;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 20px 5px;
+		padding: 0px 5px;
 		color: black;
-		width: calc(100vw - 20px);
-		//background: white;
+		width: calc(100vw - 10px);
+		background: #ff004d;
 		border-radius: 8px;
+		//background: white;
 		z-index: 6 !important;
+		box-shadow: 0px 0px 50px rgba(black, 0.1);
 	}
 
 	#logo{
-		height: 40px;
-		background: white;
-		padding: 10px 12px;
+		height: 42px;
+		//background: white;
+		padding: 10px 5px;
 		border-radius: 8px;
-		box-shadow: 0 20px 50px rgba(black, 0.2);
+		filter: brightness(1000%);
+		//box-shadow: 0 20px 50px rgba(black, 0.2);
 	}
 
 	button{
@@ -184,22 +187,25 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 8px;
-		padding: 9px 12px 9px 15px;
-		border-radius: 8px;
-		font-size: 14px;
+		gap: 6px;
+		padding: 6px 12px;
+		border-radius: 5px;
+		font-size: 10px !important;
 		font-weight: 700;
 		letter-spacing: -0.2px;
 		box-shadow: none;
 		transition: 0.2s ease;
-
 		box-shadow: 0 20px 50px rgba(black, 0.2);
 
+		h1{
+			font-size: 13px !important;
+			letter-spacing: -0.2px;
+			font-weight: 700;
+		}
 
 		&:hover{
-			gap: 15px;
-
-			background: rgb(255, 241, 243) !important;
+			gap: 12px;
+			background: white !important;
 		}
 	}
 
@@ -220,8 +226,8 @@
 	}
 
 	svg{
-		height: 16px;
-		width: 16px;
+		height: 14px;
+		width: 14px;
 		path{
 			stroke: #FF004D;
 		}

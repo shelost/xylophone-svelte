@@ -313,7 +313,7 @@ v
 </style>
 
 
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script>
 
@@ -504,7 +504,7 @@ const loadCanvasFromSupabase = async () => {
             document.getElementById('app').style.background = data.color
 
 
-            applyParallaxEffect();
+
             canvas.setHeight(data.height);
             //document.getElementById('app').style.height = data.height + 'px'
 
@@ -583,32 +583,30 @@ fetchUser()
 
 
 function applyParallaxEffect() {
-
-
     let scrollAmount = document.getElementById('app').scrollTop;
 
-        canvas.forEachObject(object => {
-            // Assuming default depth is 0 if not specified
-            let depth = object.depth || 0;
+    canvas.forEachObject(object => {
+        // Assuming default depth is 0 if not specified
+        let depth = object.depth || 0;
 
-            // Calculate the parallax shift. The '0.2' is the factor which
-            // determines how "fast" depth 1 objects move relative to the canvas.
-            let parallaxShift = 0.3 * depth * scrollAmount;
+        // Calculate the parallax shift using logarithmic adjustment
+        let parallaxShift = Math.log2(1 + depth) * 0.01 * scrollAmount;
 
-            // Depth 0 objects should move with the canvas, so we subtract the scroll amount
-            let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
+        // Depth 0 objects should move with the canvas, so we subtract the scroll amount
+        let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
 
-            // Set the new top position for the object
-
+        // Set the new top position for the object
+        if (newTopPosition > 0){
             object.set('top', newTopPosition);
-        });
+        }
+    });
 
-        canvas.renderAll(); // Refresh the canvas to reflect the changes
-        canvas.calcOffset()
-    }
+    canvas.renderAll(); // Refresh the canvas to reflect the changes
+    canvas.calcOffset();
+}
 
     // Listen for the scroll event on the #app element
-    document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
+   // document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
 
     document.getElementById('app').style.background = data.color
 
