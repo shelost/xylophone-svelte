@@ -521,6 +521,12 @@ input:checked + .slider:before {
       justify-content: flex-end;
       gap: 15px;
       width: 140px;
+      margin-right: 5px;
+
+      .slider{
+        width: 25px;
+
+      }
 
         #status{
           font-size: 13px;
@@ -534,6 +540,7 @@ input:checked + .slider:before {
 
           border-radius: 20px;
 
+          display: none;
 
           color: #ff004d;
           background: rgba(white, 1) !important;
@@ -543,23 +550,26 @@ input:checked + .slider:before {
     #input{
       display: flex;
       align-items: center;
-      margin-right: -80px;
-      display: none;
+      margin-right: -75px;
+      margin-left: 15px;
+      //display: none;
       input{
-        width: 160px;
-        height: 36px;
+        width: 140px;
+        height: 30px;
         font-size: 12px;
         font-weight: 600;
         letter-spacing: -0.3px;
-        background: rgba(black, 0.05) !important;
-        border-radius: 8px;
+        background: white !important;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(black, 0.06);
       }
       button{
         height: 32px;
         font-size: 12px;
         font-weight: 500;
-        border-radius: 8px;
-        transform: translateX(-75px);
+        border-radius: 30px;
+        transform: translateX(-70px);
+        border: 1px solid rgba(white, 0.5);
         box-shadow: none;
       }
     }
@@ -1421,7 +1431,7 @@ function adjustDimensionsAfterScaling(obj) {
             scaleX: 1,
             scaleY: 1
         });
-    } else if (obj.type === 'path' || obj.type === 'polygon') {
+    } else if (obj.type === 'polygon') {
         let newPath = obj.path.map(segment => {
             return segment.map((point, index) => {
                 if (typeof point === 'number') { // avoid adjusting command letters like M, L, etc.

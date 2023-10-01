@@ -66,82 +66,18 @@
 
 				// Load the parsed data into the canvas
 				canvas.loadFromJSON(fileJson, () => {
-
-
-					// Id('loader').style.display = 'none';
-
 					const canvasCenterX = canvas.width / 2;
-					const scaleX = canvas.width / data.iwidth
-
 
 					canvas.getObjects().forEach((object) => {
-
-						if (!object.pin){
-							object.pin = 'center'
-						}
-
-
-
-						object.set({
-							left: object.left * scaleX,
-							top: object.top * scaleX,
-						})
-
-
-
-						if (object.pin && object.xPercent !== undefined) {
-							let newLeftPos;
-
-							switch (object.pin) {
-								case 'scale':
-									newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
-									break;
-								case 'left':
-									newLeftPos = object.left; // Use the given value
-									break;
-								case 'right':
-									if (object.right){
-										newLeftPos = canvas.width - object.right - (object.width * object.scaleX)/2;
-									}
-									break;
-								case 'center':
-									if (object.center){
-										newLeftPos = object.left
-									}
-									break;
-								default:
-									newLeftPos = object.left; // Default behavior is like 'left' pin
-									break;
-							}
+						if (object.xPercent !== undefined) {
+							const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
 							object.set('left', newLeftPos);
-					}
-
-
-						if (object.originalTop !== undefined) {
-							object.set('top', object.originalTop);
-						}else{
-							object.originalTop = object.top;
 						}
-
-
-						object.right = canvas.width - object.left + object.width * object.scaleX
-						object.center = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2)
-
-						if (!object.pin){
-							object.pin = 'center'
-						}
-
 					});
-
-
 
 					canvas.setHeight(data.height);
 					canvas.setBackgroundColor(data.color);
 					canvas.renderAll();
-
-					unifiedResize()
-
-
 				});
 
 			} catch (parseError) {
@@ -149,70 +85,38 @@
 			}
 		};
 
+
+
+
 		loadCanvasFromSupabase()
 
 
+		window.addEventListener('resize', unifiedResize);
+    let previousCanvasWidth = window.innerWidth;
 
+    function unifiedResize() {
+        const previousWidth = previousCanvasWidth;
+        const newWidth = window.innerWidth;
+        const canvasCenterX = newWidth / 2;
 
+        canvas.setWidth(newWidth);
 
-		window.addEventListener('resize', unifiedResize)
+        canvas.getObjects().forEach((object) => {
+            let newLeftPos;
 
-let previousCanvasWidth = window.innerWidth
-
-
-
-function unifiedResize() {
-
-    const previousWidth = previousCanvasWidth;
-    const newWidth = window.innerWidth
-    const canvasCenterX = newWidth / 2;
-
-    // Set canvas width to the new value
-    canvas.setWidth(newWidth);
-
-
-    // Update position of each object based on xPercent and new canvas width
-    canvas.getObjects().forEach((object) => {
-
-        let newLeftPos
-
-        if (!object.pin){
-            object.pin = 'center'
-        }
-
-        console.log(newWidth)
-
-        switch (object.pin) {
-            case 'scale':
+            if (object.xPercent !== undefined) {
                 newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
-                break;
-            case 'left':
-                newLeftPos = object.left;
-                break;
-            case 'right':
-                const distanceFromRight = previousWidth - (object.left + object.width * object.scaleX);
-                newLeftPos = newWidth - distanceFromRight - object.width * object.scaleX;
+                object.left = newLeftPos;
+            }
 
-                break;
-            case 'center':
-                const originalCenterDistance = object.left - previousWidth / 2;
-                newLeftPos = canvasCenterX + originalCenterDistance;
-                break;
-            default:
-                newLeftPos = object.left;
-                break;
-        }
+            object.setCoords();
+        });
 
-        object.left = newLeftPos;
-        object.setCoords();
-    });
+        previousCanvasWidth = newWidth;
 
-    previousCanvasWidth = newWidth;
-
-    canvas.renderAll();
-    canvas.calcOffset();
-}
-
+        canvas.renderAll();
+        canvas.calcOffset();
+    }
 
 	})
 

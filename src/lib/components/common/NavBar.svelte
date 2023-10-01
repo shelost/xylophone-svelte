@@ -165,7 +165,7 @@
 		padding: 0px 5px;
 		color: black;
 		width: calc(100vw - 10px);
-		background: #ff004d;
+		background: black;
 		border-radius: 8px;
 		//background: white;
 		z-index: 6 !important;
@@ -173,7 +173,7 @@
 	}
 
 	#logo{
-		height: 42px;
+		height: 44px;
 		//background: white;
 		padding: 10px 5px;
 		border-radius: 8px;
@@ -188,7 +188,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 6px;
-		padding: 6px 12px;
+		padding: 8px 14px;
 		border-radius: 5px;
 		font-size: 10px !important;
 		font-weight: 700;
