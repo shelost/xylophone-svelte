@@ -5,7 +5,7 @@
 	import QuickLinks from '../private/QuickLinks.svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import logo from '$lib/img/scrollable.svg';
-	import X from '$lib/img/arachne.svg'
+	import X from '$lib/img/arachne-white.svg'
 	import Arrow from '$lib/img/arrow.svg'
 
 
@@ -43,7 +43,7 @@
 
 		{#if !$page.url.pathname.startsWith('/home')}
 
-		<!--
+
 			<a href="/">
 				<h2 class = 'text-btn'>
 					Home
@@ -59,7 +59,7 @@
 					Contact
 				</h2>
 			</a>
-			-->
+
 
 
 		{:else}
@@ -137,7 +137,9 @@
 		gap: 10px;
 		border-radius: 50px;
 		//background: #FF004D;
-		padding: 5px;
+		//padding: 5px;
+
+
 
 		h2{
 			font-size: 14px;
@@ -155,42 +157,42 @@
 	}
 
 	#navbar{
-		height: 54px;
-		top: 5px;
-		left: 5px;
+		height: 60px;
+		top: 10px;
+		left: 10px;
 		position: fixed;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		padding: 0px 5px;
 		color: black;
-		width: calc(100vw - 10px);
-		background: black;
-		border-radius: 8px;
+		width: calc(100vw - 20px);
+		//background: black;
+		border-radius: 30px;
 		//background: white;
 		z-index: 6 !important;
-		box-shadow: 0px 0px 50px rgba(black, 0.1);
+		//box-shadow: 0px 20px 50px rgba(black, 0.2);
 	}
 
 	#logo{
-		height: 44px;
+		height: 46px;
 		//background: white;
-		padding: 10px 5px;
-		border-radius: 8px;
-		filter: brightness(1000%);
+		padding: 13px 15px;
+		border-radius: 50px;
+		background: black;
+		box-shadow: 0 20px 50px rgba(black, 0.2);
 		//box-shadow: 0 20px 50px rgba(black, 0.2);
 	}
 
 	button{
-		background: white;
-		color: #FF004D;
+		background: #ffdc4e;
+		color: black;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 6px;
-		padding: 8px 14px;
-		border-radius: 5px;
-		font-size: 10px !important;
+		padding: 10px 20px;
+		border-radius: 50px;
 		font-weight: 700;
 		letter-spacing: -0.2px;
 		box-shadow: none;
@@ -198,13 +200,15 @@
 		box-shadow: 0 20px 50px rgba(black, 0.2);
 
 		h1{
-			font-size: 13px !important;
+			font-size: 14px !important;
 			letter-spacing: -0.2px;
 			font-weight: 700;
 		}
 
+
+
 		&:hover{
-			gap: 12px;
+			//gap: 12px;
 			background: white !important;
 		}
 	}
@@ -223,23 +227,31 @@
 		align-items: center;
 		justify-content: center;
 		gap: 20px;
+		background: black;
+		padding: 13px 25px;
+		border-radius: 50px;
+		box-shadow: 0 20px 50px rgba(black, 0.2);
 	}
 
 	svg{
-		height: 14px;
-		width: 14px;
+		height: 16px;
+		width: 16px;
 		path{
-			stroke: #FF004D;
+			stroke: black;
 		}
 	}
 
 	.text-btn{
-		color: black;
+		color: rgba(white, 0.7);
 		text-decoration: none;
 		font-family: 'Inter', sans-serif;
-		font-weight: 500;
-		letter-spacing: -0.5px;
-		font-size: 15px;
+		font-weight: 400;
+		letter-spacing: -0.1px;
+		font-size: 13px;
+		transition: 0.2s ease;
+		&:hover{
+			color: rgba(white, 1);
+		}
 	}
 
 	@media screen and (max-width: 800px){

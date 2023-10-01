@@ -73,6 +73,11 @@
 							const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
 							object.set('left', newLeftPos);
 						}
+
+						if (object.type == 'textbox'){
+        					object.set('charSpacing', object.charSpacing || 0); // Use the object's charSpacing or default to 0
+							console.log('yo')
+						}
 					});
 
 					canvas.setHeight(data.height);
