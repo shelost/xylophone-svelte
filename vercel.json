@@ -8,6 +8,11 @@
           "source": "/app/(.*)",
           "destination": "https://studio.arachne.so/$1",
           "statusCode": 301
+        },
+        {
+            "source": "/(.*)",
+            "destination": "https://arachne.so/$1",
+            "statusCode": 301
         }
       ]
 }
