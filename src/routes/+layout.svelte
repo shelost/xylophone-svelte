@@ -6,12 +6,22 @@
 	import { AppShell } from '@brainandbones/skeleton';
 	import NavBar from '$lib/components/common/NavBar.svelte';
 	import icon from '$lib/img/favicon.svg'
+	import { onMount } from 'svelte'
 
 	//import { pages } from '$lib/utils/store';
 
 	//import { supabaseClient } from '$lib/db';
 
 	export let data;
+
+
+	onMount(() => {
+		if (window.location.hostname === "arachne.so" && window.location.pathname.startsWith("/app")) {
+            window.location.replace(`https://studio.arachne.so${window.location.pathname.replace("/app", "")}`);
+        } else if (window.location.hostname === "studio.arachne.so" && !window.location.pathname.startsWith("/app")) {
+            window.location.replace(`https://arachne.so/app${window.location.pathname}`);
+        }
+	})
 
 	// ... other imports ...
 
@@ -39,9 +49,8 @@
 
 
 <div  use:loader = {loader}>
-	<!-- Use the Loader component here -->
 
-		<slot />
+	<slot />
 
 </div>
 

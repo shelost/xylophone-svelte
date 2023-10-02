@@ -9,12 +9,5 @@
           "destination": "https://studio.arachne.so/$1",
           "statusCode": 301
         }
-    ],
-    "scopes": {
-        "studio.arachne.so": {
-            "rewrites": [
-                { "source": "/(.*)", "destination": "/app/$1" }
-            ]
-        }
-    }
+      ]
 }
