@@ -308,14 +308,14 @@ async function removePageFromFolder(pageId) {
 
 		{/if}
 		{/await}
-		<a href = '/home'>
+		<a href = '/app/home'>
 			<div class = 'text-btn' id = 'home' class:active={path === '/home'}>
 				<div class = 'icon' style = 'background-image: url({IconHome}'>
 				</div>
 				<h2> Home </h2>
 			</div>
 		</a>
-		<a href = '/profile' id = 'settings' >
+		<a href = '/app/profile' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/profile'}>
 				<div class = 'icon' style = 'background-image: url({IconProfile})'>
 				</div>
@@ -323,7 +323,7 @@ async function removePageFromFolder(pageId) {
 			</div>
 		</a>
 
-		<a href = '/assets' id = 'settings' >
+		<a href = '/app/assets' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/assets'}>
 				<div class = 'icon' style = 'background-image: url({IconAssets})'>
 				</div>
@@ -331,7 +331,7 @@ async function removePageFromFolder(pageId) {
 			</div>
 		</a>
 
-		<a href = '/data' id = 'settings' >
+		<a href = '/app/data' id = 'settings' >
 			<div class = 'text-btn' class:active={path === '/data'}>
 				<div class = 'icon' style = 'background-image: url({IconData})'>
 				</div>
@@ -342,7 +342,9 @@ async function removePageFromFolder(pageId) {
 
 <div id='pages' bind:this={pagesDiv} on:click={saveScrollPosition}>
     <button id='add' on:click={addPage}> + Add Page </button>
+	<!--
     <button id='group' on:click={addFolder}> + Add Group </button>
+	-->
 
 	<!--
 
@@ -386,7 +388,7 @@ async function removePageFromFolder(pageId) {
 
 	<div class = 'pages'>
 		{#each $pages as page}
-			<a href='/x/{page.id}' >
+			<a href='/app/x/{page.id}' >
 				<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
 					<div class='color' style='background-color: {page.color}'></div>
 					<h2> {page.title} </h2>

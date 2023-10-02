@@ -103,7 +103,7 @@
 			</a>
 			-->
 
-			<a class="button" href="/home">
+			<a class="button" href="/app/home">
 				<button>
 					<h1> Launch </h1>
 

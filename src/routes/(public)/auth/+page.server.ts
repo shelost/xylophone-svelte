@@ -50,7 +50,7 @@ export const actions: Actions = {
 
 
 
-		throw redirect(303, '/home');
+		throw redirect(303, '/app/home');
 	},
 
 	async signup(

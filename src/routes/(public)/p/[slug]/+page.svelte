@@ -119,6 +119,7 @@ v
 
         border-radius: 10px;
         flex-shrink: 0;
+        margin-top: 0;
 
         //transition: 0.2s ease;
 
@@ -224,15 +225,18 @@ v
 
 
     #bar{
-        padding: 10px 16px;
+       // padding: 10px 16px;
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         z-index: 3;
 
+
         display: flex;
         justify-content: center;
+
+
 
 
 
@@ -590,10 +594,10 @@ function applyParallaxEffect() {
         let depth = object.depth || 0;
 
         // Calculate the parallax shift using logarithmic adjustment
-        let parallaxShift = Math.log2(1 + depth) * 0.01 * scrollAmount;
+        let parallaxShift = 0.15 * depth * scrollAmount;
 
         // Depth 0 objects should move with the canvas, so we subtract the scroll amount
-        let newTopPosition = object.originalTop + parallaxShift - scrollAmount;
+        let newTopPosition = object.originalTop + parallaxShift
 
         // Set the new top position for the object
         if (newTopPosition > 0){
@@ -606,7 +610,7 @@ function applyParallaxEffect() {
 }
 
     // Listen for the scroll event on the #app element
-   // document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
+   document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
 
     document.getElementById('app').style.background = data.color
 

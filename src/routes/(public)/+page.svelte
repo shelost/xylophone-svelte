@@ -14,6 +14,8 @@
 	export let data
 
 
+
+
 	onMount(()=>{
 
 		let canvas = new fabric.Canvas('canvas', {
@@ -23,7 +25,31 @@
 		})
 
 
+		function applyParallaxEffect() {
+    let scrollAmount = document.getElementById('app').scrollTop;
 
+    canvas.forEachObject(object => {
+        // Assuming default depth is 0 if not specified
+        let depth = object.depth || 0;
+
+        // Calculate the parallax shift using logarithmic adjustment
+        let parallaxShift = 0.15 * depth * scrollAmount;
+
+        // Depth 0 objects should move with the canvas, so we subtract the scroll amount
+        let newTopPosition = object.originalTop + parallaxShift
+
+        // Set the new top position for the object
+        if (newTopPosition > 0){
+            object.set('top', newTopPosition);
+        }
+    });
+
+    canvas.renderAll(); // Refresh the canvas to reflect the changes
+    canvas.calcOffset();
+}
+
+    // Listen for the scroll event on the #app element
+   document.getElementById('app').addEventListener('scroll', applyParallaxEffect);
 
 
 		const loadCanvasFromSupabase = async () => {
@@ -100,28 +126,58 @@
     let previousCanvasWidth = window.innerWidth;
 
     function unifiedResize() {
-        const previousWidth = previousCanvasWidth;
-        const newWidth = window.innerWidth;
-        const canvasCenterX = newWidth / 2;
 
-        canvas.setWidth(newWidth);
+		const previousWidth = previousCanvasWidth;
+		const newWidth = window.innerWidth
+		const canvasCenterX = newWidth / 2;
 
-        canvas.getObjects().forEach((object) => {
-            let newLeftPos;
+		// Set canvas width to the new value
+		canvas.setWidth(newWidth);
 
-            if (object.xPercent !== undefined) {
-                newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
-                object.left = newLeftPos;
-            }
 
-            object.setCoords();
-        });
+		// Update position of each object based on xPercent and new canvas width
+		canvas.getObjects().forEach((object) => {
 
-        previousCanvasWidth = newWidth;
+			let newLeftPos
 
-        canvas.renderAll();
-        canvas.calcOffset();
-    }
+			if (!object.pin){
+				object.pin = 'center'
+			}
+
+			console.log(newWidth)
+
+			switch (object.pin) {
+				case 'scale':
+					newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+					break;
+				case 'left':
+					newLeftPos = object.left;
+					break;
+				case 'right':
+					const distanceFromRight = previousWidth - (object.left + object.width * object.scaleX);
+					newLeftPos = newWidth - distanceFromRight - object.width * object.scaleX;
+
+					break;
+				case 'center':
+					const originalCenterDistance = object.left - previousWidth / 2;
+					newLeftPos = canvasCenterX + originalCenterDistance;
+					break;
+				default:
+					newLeftPos = object.left;
+					break;
+			}
+
+			object.left = newLeftPos;
+			object.setCoords();
+		});
+
+		previousCanvasWidth = newWidth;
+
+		canvas.renderAll();
+		canvas.calcOffset();
+	}
+
+
 
 	})
 
