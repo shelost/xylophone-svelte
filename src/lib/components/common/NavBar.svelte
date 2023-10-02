@@ -175,24 +175,24 @@
 	}
 
 	#logo{
-		height: 46px;
+		height: 44px;
 		//background: white;
-		padding: 13px 15px;
-		border-radius: 50px;
+		padding: 12px 15px;
+		border-radius: 8px;
 		background: black;
 		box-shadow: 0 20px 50px rgba(black, 0.2);
 		//box-shadow: 0 20px 50px rgba(black, 0.2);
 	}
 
 	button{
-		background: #ffdc4e;
-		color: black;
+		background: #FF004D;
+		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 6px;
 		padding: 10px 20px;
-		border-radius: 50px;
+		border-radius: 8px;
 		font-weight: 700;
 		letter-spacing: -0.2px;
 		box-shadow: none;
@@ -227,17 +227,18 @@
 		align-items: center;
 		justify-content: center;
 		gap: 20px;
-		background: white;
-		padding: 13px 25px;
-		border-radius: 50px;
-		box-shadow: 0 20px 50px rgba(black, 0.1);
+		background: rgba(white, 0.8);
+		backdrop-filter: blur(10px);
+		padding: 12px 25px;
+		border-radius: 8px;
+		box-shadow: 0 40px 50px rgba(black, 0.1);
 	}
 
 	svg{
 		height: 16px;
 		width: 16px;
 		path{
-			stroke: black;
+			stroke: white;
 		}
 	}
 
@@ -247,7 +248,7 @@
 		font-family: 'Inter', sans-serif;
 		font-weight: 600;
 		letter-spacing: -0.4px;
-		font-size: 14px;
+		font-size: 13px;
 		transition: 0.2s ease;
 		&:hover{
 			color: rgba(black, 1);

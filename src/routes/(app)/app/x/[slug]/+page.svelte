@@ -91,7 +91,9 @@
 
   <div id = 'subcontainer'>
     <div id = 'canvas-container'>
-      <div id="loader"></div>
+
+
+      <div id = 'loader' class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
       <canvas id = 'canvas'></canvas>
     </div>
 
@@ -119,6 +121,67 @@
 
 
 <style lang='scss'>
+
+
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #ff004d;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+
+
 
 
 
@@ -265,7 +328,6 @@ input:checked + .slider:before {
     }
 
 
-
     #loader {
       position: absolute;
       left: calc(50% - 20px);
@@ -273,12 +335,8 @@ input:checked + .slider:before {
       z-index: 1;
       width: 50px;
       height: 50px;
-      border: 4px solid rgba(black, 0.1);
-      border-radius: 50%;
-      border-top: 4px solid black;
-      animation: spin 1s linear infinite;
-      transition: 0.3s ease;
   }
+
 
   @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
@@ -438,11 +496,11 @@ input:checked + .slider:before {
   }
 
   #container {
-      width: calc(100vw - 255px);
-      height: calc(100vh - 20px);
-      margin-top: 10px;
-      border: 3px solid white;
-      box-shadow: 20px 70px 150px rgba(black, 0.3);
+      width: calc(100vw - 260px);
+      height: calc(100vh - 30px);
+      margin-top: 15px;
+      border: 3px solid rgba(white, 0.7);
+      box-shadow: 20px 70px 150px rgba(black, 0.2);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -1843,7 +1901,7 @@ function applyParallaxEffect() {
         if (object.originalTop !== undefined) {
             let depth = object.depth || 1;
             let parallaxShift = 0.15 * depth * scrollAmount;
-            object.set('top', object.originalTop + parallaxShift);
+            //object.set('top', object.originalTop + parallaxShift);
         }
     });
     canvas.renderAll();

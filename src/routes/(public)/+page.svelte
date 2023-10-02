@@ -104,6 +104,16 @@
         					object.set('charSpacing', object.charSpacing || 0); // Use the object's charSpacing or default to 0
 							console.log('yo')
 						}
+
+						object.set({
+							borderColor: 'white',
+							cornerColor: '#FF004D',
+							cornerSize: 10,
+							borderScaleFactor: 1.5,
+							cornerStrokeColor: 'white',
+							cornerStyle: 'circle',
+							transparentCorners: false
+						});
 					});
 
 					canvas.setHeight(data.height);
