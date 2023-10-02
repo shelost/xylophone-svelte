@@ -227,10 +227,10 @@
 		align-items: center;
 		justify-content: center;
 		gap: 20px;
-		background: black;
+		background: white;
 		padding: 13px 25px;
 		border-radius: 50px;
-		box-shadow: 0 20px 50px rgba(black, 0.2);
+		box-shadow: 0 20px 50px rgba(black, 0.1);
 	}
 
 	svg{
@@ -242,15 +242,15 @@
 	}
 
 	.text-btn{
-		color: rgba(white, 0.7);
+		color: rgba(black, 0.4);
 		text-decoration: none;
 		font-family: 'Inter', sans-serif;
-		font-weight: 400;
-		letter-spacing: -0.1px;
-		font-size: 13px;
+		font-weight: 600;
+		letter-spacing: -0.4px;
+		font-size: 14px;
 		transition: 0.2s ease;
 		&:hover{
-			color: rgba(white, 1);
+			color: rgba(black, 1);
 		}
 	}
 

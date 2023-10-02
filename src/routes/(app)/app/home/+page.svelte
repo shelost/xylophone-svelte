@@ -144,6 +144,8 @@
 
 	onMount(() => {
 
+		Id('app').style.background = 'white'
+
 		for (let i=0; i<$users.length; i++){
 			userInfo[$users[i].id] = $users[i]
 		}
@@ -286,13 +288,13 @@
 
 			canvas{
 				border-radius: 15px;
-				border: 1px solid rgba(black, 0.05);
+				border: 5px solid white;
 				transition: 0.2s ease;
 				box-shadow: 0px 20px 50px rgba(black, 0.03);
 				transition: 0.2s ease;
-				cursor: pointer;
+				cursor: pointer !important;
 				&:hover{
-					opacity: 0.8;
+					transform: scale(1.05) !important;
 				}
 			}
 

@@ -2,7 +2,7 @@
 
 
 
-  <div id = 'container' in:fly={{ y: 100, duration: 500 }}>
+  <div id = 'container' in:fly={{ y: 100, duration: 300 }}>
 
 
   <div id = 'bar'>
@@ -229,7 +229,7 @@ input:checked + .slider:before {
     height: 50px;
     background: white; // semi-transparent background for the handle
     border-radius: 50px;
-    box-shadow: 0px 20px 40px rgba(black, 0.8);
+    box-shadow: 0px 20px 40px rgba(black, 1);
     transition: 0.2s ease;
 
     &:hover{
@@ -441,15 +441,15 @@ input:checked + .slider:before {
       width: calc(100vw - 255px);
       height: calc(100vh - 20px);
       margin-top: 10px;
-      border: 8px solid white;
-      box-shadow: 20px 50px 150px rgba(black, 0.2);
+      border: 3px solid white;
+      box-shadow: 20px 70px 150px rgba(black, 0.3);
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       overflow-x: hidden;
       overflow-y: hidden;
-      border-radius: 25px;
+      border-radius: 15px;
       position: relative;
       //transition: 0.5s ease;
   }
@@ -1884,8 +1884,8 @@ function handleObject(obj, activeSelection) {
     let absoluteTop = obj.top;
 
     if (activeSelection) {
-        absoluteLeft += activeSelection.left;
-        absoluteTop += activeSelection.top;
+        absoluteLeft = obj.left + activeSelection.left + activeSelection.width/2
+        absoluteTop = obj.top + activeSelection.top + activeSelection.height/2
     }
 
     obj.xPercent = (absoluteLeft + (obj.width * obj.scaleX) / 2 - canvas.width / 2) / canvas.width;
@@ -1899,7 +1899,7 @@ function updateDepth(object, top = object.top) {
     let scrollAmount = document.getElementById('canvas-container').scrollTop;
     let depth = object.depth || 1;
     let parallaxShift = 0.15 * depth * scrollAmount;
-    object.originalTop = object.top - parallaxShift;
+    object.originalTop = top - parallaxShift
 }
 
 
@@ -1929,6 +1929,37 @@ let CLICK = 0
 ///////////////////////////////////////////////////
 //////////////// CREATING ELEMENTS ////////////////
 ///////////////////////////////////////////////////
+
+
+
+function isPathOverRect(path, rect) {
+    const pathBounds = path.getBoundingRect();
+    const rectBounds = rect.getBoundingRect();
+
+    return pathBounds.left < rectBounds.left + rectBounds.width &&
+           pathBounds.left + pathBounds.width > rectBounds.left &&
+           pathBounds.top < rectBounds.top + rectBounds.height &&
+           pathBounds.top + pathBounds.height > rectBounds.top;
+}
+
+function clipPathUsingRect(path, rect) {
+
+rect.clone(function(clonedRect) {
+  clonedRect.objectCaching = false
+  path.objectCaching = false
+    path.clipPath = clonedRect;
+    path.stroke = 'red';
+    path.objectCaching = false;
+
+    // Rerender to apply changes.
+    canvas.requestRenderAll();
+});
+
+console.log(path.clipPath)
+}
+
+
+
 
 
 
@@ -2204,6 +2235,7 @@ canvas.on('object:added', function(options) {
 
 
 
+
   obj.set({
     borderColor: '#E0E0E0',
     cornerColor: '#FF004D',
@@ -2211,7 +2243,8 @@ canvas.on('object:added', function(options) {
     borderScaleFactor: 1.5,
     cornerStrokeColor: 'white',
     cornerStyle: 'circle',
-    transparentCorners: false
+    transparentCorners: false,
+    depth: 2
   });
 
 
@@ -2226,6 +2259,17 @@ canvas.on('object:added', function(options) {
     xPercent: obj.xPercent
   };
 
+
+  if (obj.type === 'path') {
+
+      obj.objectCaching = false;
+        // Check for overlapping rects and clip if necessary
+        canvas.forEachObject(function(object) {
+            if (object.type === 'rect' && isPathOverRect(obj, object)) {
+                clipPathUsingRect(obj, object);
+            }
+        });
+    }
 
 
   if (obj.type !== 'text') {  // Avoid recursion!

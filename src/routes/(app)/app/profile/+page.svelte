@@ -446,7 +446,7 @@ form {
 
 			canvas{
 				border-radius: 15px;
-				border: 1px solid rgba(black, 0.05);
+				border: 5px solid white;
 				transition: 0.2s ease;
 				box-shadow: 0px 20px 50px rgba(black, 0.03);
 				cursor: pointer;
