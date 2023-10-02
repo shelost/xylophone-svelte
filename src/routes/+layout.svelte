@@ -19,7 +19,7 @@
 		if (window.location.hostname === "arachne.so" && window.location.pathname.startsWith("/app")) {
             window.location.replace(`https://studio.arachne.so${window.location.pathname.replace("/app", "")}`);
         } else if (window.location.hostname === "studio.arachne.so" && !window.location.pathname.startsWith("/app")) {
-            window.location.replace(`https://arachne.so/app${window.location.pathname}`);
+           // window.location.replace(`https://arachne.so/app${window.location.pathname}`);
         }
 	})
 
