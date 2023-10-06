@@ -307,7 +307,12 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
 			{#if page.content}
 			<a href='/p/{page.id}'  in:fly={{ y: 50, duration: 300, delay: 250+50*i}}>
 				<div class='page' id='{page.id}' >
-					<canvas id='canvas-{page.id}' class='canvas'></canvas>
+
+                    <div class = 'container' style='background: {page.color}'>
+						<canvas id='canvas-{page.id}' class='canvas'></canvas>
+						<div class = 'gradient'></div>
+					</div>
+
 					<h1> {page.title} </h1>
 					{#if page.user}
 					<div class = 'user'>
@@ -404,7 +409,7 @@ form {
 #pages{
 		display: flex;
 		flex-wrap: wrap;
-		gap: 30px;
+		gap: 24px;
 		margin-top: 40px;
 
 		.page{
@@ -418,21 +423,22 @@ form {
 			cursor: pointer;
 
 
+
 			.user{
 				display: flex;
 				align-items: center;
-				padding: 6px 10px 6px 8px;
+				padding: 6px 12px 6px 8px;
 				gap: 8px;
 				margin: 5px;
-				margin-top: 10px;
+				margin-top: 12px;
 				background: rgba(black, 0.05);
 				width: fit-content;
-				border-radius: 10px;
+				border-radius: 20px;
 
 
 				img{
 					height: 15px;
-					border-radius: 5px;
+					border-radius: 20px;
 					border: 1px solid rgba(black, 0.3);
 				}
 				p{
@@ -444,30 +450,54 @@ form {
 			}
 
 
-			canvas{
-				border-radius: 15px;
-				border: 5px solid white;
+			.container{
+				border-radius: 10px;
+				background-image: linear-gradient(to bottom right, rgba(white, 0.9), rgba(white, 0.5)) !important;
+				box-shadow: -10px 15px 30px rgba(black, 0.08);
+				padding: 1px;
 				transition: 0.2s ease;
-				box-shadow: 0px 20px 50px rgba(black, 0.03);
-				cursor: pointer;
+				position: relative;
+
+
+				.gradient{
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 50%;
+					z-index: 3;
+					background-image: linear-gradient(190deg, rgba(white, 0.5), rgba(white, 0), rgba(white, 0));
+				}
+
 				&:hover{
-					opacity: 0.8;
+					transform: scale(1.02);
+				}
+			}
+
+			canvas{
+				border-radius: 8px;
+
+				transition: 0.2s ease;
+
+				transition: 0.2s ease;
+				cursor: pointer !important;
+				&:hover{
+					//transform: scale(1.05) !important;
 				}
 			}
 
 			h1{
-				margin-top: 10px;
-				margin-left: 7px;
+				margin-top: 15px;
+				margin-left: 3px;
 				font-size: 16px;
-				font-weight: 600;
-				letter-spacing: -0.2px;
+				font-weight: 900;
+				letter-spacing: -0.4px;
+				font-family: Libre Baskerville, Newsreader, Inter, sans-serif;
 			}
 
 
 		}
 	}
-
-
 
 
 input {

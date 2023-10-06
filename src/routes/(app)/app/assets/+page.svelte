@@ -211,13 +211,13 @@
 			const url = URL.createObjectURL(fileData);
 			assets.update(urls => [...urls, {name: file.name, id: file.id, url: url}]);
 
-			COLS = [[],[],[]]
+			COLS = [[],[],[], []]
 
 			for (let i=0; i<$assets.length; i++){
 
 				let asset = $assets[i]
 
-				COLS[i%3].push(asset)
+				COLS[i%4].push(asset)
 			}
 		}
 	}
@@ -231,7 +231,7 @@
 			let page = $users[i];
 
 			let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
-				width: 350,
+				width: 250,
 				height: 250,
 				renderOnAddRemove: false
 			});
@@ -268,20 +268,21 @@
 		{#each COLS as col}
 
 			<div class = 'col'>
-
 				{#each col as image, i}
-    <div class='page' id='{image.id}'>
+					<div class='page' id='{image.id}'>
 
-		<div class = 'container'>
-			<div class='overlay'>
-				<button class = 'download' on:click={() => downloadAsset(image)}>Download</button>
-				<button class = 'remove' on:click={() => { $showModal = true; toBeDeleted = image; }}>Remove</button>
-			</div>
-			<img src='{image.url}' alt='image'>
-		</div>
-        <h1>{image.name}</h1>
-    </div>
-{/each}
+						<div class = 'container'>
+							<div class='overlay'>
+								<button class = 'download' on:click={() => downloadAsset(image)}>Download</button>
+								<button class = 'remove' on:click={() => { $showModal = true; toBeDeleted = image; }}>Remove</button>
+							</div>
+							<div class = 'gradient-top'></div>
+							<div class = 'gradient-bottom'></div>
+							<img src='{image.url}' alt='image'>
+						</div>
+						<h1>{image.name}</h1>
+					</div>
+				{/each}
 			</div>
 
 		{/each}
@@ -316,6 +317,8 @@
 <style lang="scss">
 
 	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 
 	h1{
 		color: black;
@@ -333,7 +336,7 @@
 
 	:global(canvas){
 		//border: 1px solid rgba(black, 0.1);
-		width: 350px;
+		width: 250px;
 		height: 250px;
 		border-radius: 5px;
 
@@ -345,24 +348,26 @@
 		font-weight: 700;
 	}
 
-
 	#pages{
 		display: flex;
+		justify-content: flex-start;
 		//flex-wrap: wrap;
 		gap: 20px;
 		margin-top: 40px;
+		width: calc(100vw - 300px);
 
 		.col{
+			flex: 1;
+			width: 250px;
 			//width: 100%;
 			//flex: 1;
-			flex-grow: 1;
+			//flex-grow: 1;
 			//overflow-x: visible;
 			//width: calc((100vw - 240px) / 6);
 		}
 
 		.page{
-			max-width: 100%;
-			background: white;
+			width: 100%;
 			padding: 5px;
 			border-radius: 5px;
 			padding-bottom: 10px;
@@ -375,24 +380,54 @@
 			cursor: pointer;
 
 			.container{
-				width: 350px;
-				border-radius: 20px;
+				width: 100%;
+				height: 100%;
+				//padding: 5px;
+				border-radius: 8px;
 				position: relative;
+				overflow: hidden;
+				box-shadow: 10px 15px 60px rgba(black, 0.12);
+				border: 1px solid white;
 			}
+
+			.gradient-top{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 30%;
+				pointer-events: none;
+				z-index: 3;
+				background-image: linear-gradient(185deg, rgba(white, 0.4), rgba(white, 0), rgba(white, 0));
+			}
+
+			.gradient-bottom{
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: 3;
+				pointer-events: none;
+				background-image: linear-gradient(5deg, rgba(black, 0.05), rgba(white, 0), rgba(white, 0));
+			}
+
+
+
+
 
 			.overlay{
 				position: absolute;
 				display: flex;
-				flex-direction: column;
+				//flex-direction: column;
 				justify-content: center;
 				align-items: center;
 				gap: 15px;
-				top: 0;
-				left: 0;
-				width: 350px;
-				height: 100%;
-				background: rgba(black, 0.5);
-				border-radius: 15px;
+				bottom: 10px;
+				right: 10px;
+				//width: 100%;
+				height: 50px;
+				//background: rgba(black, 0.5);
 				opacity: 0;
 				visibility: hidden;
 				transition: 0.2s ease;
@@ -421,27 +456,22 @@
 			}
 
             img{
-
 				box-shadow: 0px 10px 40px rgba(black, 0.05);
-				border: 1px solid rgba(black, 0.1);
-				border-radius: 15px;
+				border-radius: 5px;
             }
 
-			canvas{
-				border-radius: 5px;
-				cursor: pointer;
-			}
-
 			h1{
-				width: calc((100vw - 400px) / 3);
-				margin-top: 5px;
-				margin-left: 5px;
-				font-size: 12px;
-				font-weight: 500;
-				letter-spacing: -0.3px;
+				width: calc((100vw - 420px) / 4);
+				margin-top: 15px;
+				margin-left: 0px;
+				font-size: 16px;
+				font-weight: 600;
+				letter-spacing: -0.2px;
 				overflow-wrap: break-word;
 				word-wrap: break-word;
-				color: rgba(black, 0.5);
+				color: rgba(black, 0.8);
+				font-family: Onest, Inter, sans-serif;
+				display: none;
 			}
 
 			&:hover{

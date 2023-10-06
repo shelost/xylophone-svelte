@@ -122,7 +122,7 @@
 
 			let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
 				width: 350,
-				height: 300,
+				height: 250,
 				renderOnAddRemove: false
 			});
 
@@ -183,7 +183,10 @@
 			{#if page.content}
 			<a href='/p/{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
 				<div class='page' id='{page.id}' >
-					<canvas id='canvas-{page.id}' class='canvas'></canvas>
+					<div class = 'container' style='background: {page.color}'>
+						<canvas id='canvas-{page.id}' class='canvas'></canvas>
+						<div class = 'gradient'></div>
+					</div>
 					<h1> {page.title} </h1>
 					{#if page.user}
 					<div class = 'user'>
@@ -216,6 +219,8 @@
 <style lang="scss">
 
 	@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 
 	h1{
 		color: black;
@@ -246,7 +251,7 @@
 	#pages{
 		display: flex;
 		flex-wrap: wrap;
-		gap: 30px;
+		gap: 24px;
 		margin-top: 40px;
 
 		.page{
@@ -260,21 +265,22 @@
 			cursor: pointer;
 
 
+
 			.user{
 				display: flex;
 				align-items: center;
-				padding: 6px 10px 6px 8px;
+				padding: 6px 12px 6px 8px;
 				gap: 8px;
 				margin: 5px;
-				margin-top: 10px;
+				margin-top: 12px;
 				background: rgba(black, 0.05);
 				width: fit-content;
-				border-radius: 10px;
+				border-radius: 20px;
 
 
 				img{
 					height: 15px;
-					border-radius: 5px;
+					border-radius: 20px;
 					border: 1px solid rgba(black, 0.3);
 				}
 				p{
@@ -286,24 +292,49 @@
 			}
 
 
-			canvas{
-				border-radius: 15px;
-				border: 5px solid white;
+			.container{
+				border-radius: 10px;
+				background-image: linear-gradient(to bottom right, rgba(white, 0.9), rgba(white, 0.5)) !important;
+				box-shadow: -10px 15px 30px rgba(black, 0.08);
+				padding: 1px;
 				transition: 0.2s ease;
-				box-shadow: 0px 20px 50px rgba(black, 0.03);
+				position: relative;
+
+
+				.gradient{
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 50%;
+					z-index: 3;
+					background-image: linear-gradient(190deg, rgba(white, 0.5), rgba(white, 0), rgba(white, 0));
+				}
+
+				&:hover{
+					transform: scale(1.02);
+				}
+			}
+
+			canvas{
+				border-radius: 8px;
+
+				transition: 0.2s ease;
+
 				transition: 0.2s ease;
 				cursor: pointer !important;
 				&:hover{
-					transform: scale(1.05) !important;
+					//transform: scale(1.05) !important;
 				}
 			}
 
 			h1{
-				margin-top: 10px;
-				margin-left: 5px;
-				font-size: 16px;
+				margin-top: 15px;
+				margin-left: 2px;
+				font-size: 18px;
 				font-weight: 600;
 				letter-spacing: -0.2px;
+				font-family: Onest, Inter, sans-serif;
 			}
 
 

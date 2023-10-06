@@ -2,14 +2,14 @@
 
 
 
-  <div id = 'container' in:fly={{ y: 100, duration: 300 }}>
+  <div id = 'container' in:fly={{ y: 100, duration: 300 }} style='border: 1px solid {data.color}'>
 
 
   <div id = 'bar'>
 
     <div id = 'mast'>
 
-    <input id = 'title' bind:value = {title} placeholder = 'Untitled Page' style='outline: none !important;'>
+    <input id = 'title' bind:value = {MODE} placeholder = 'Untitled Page' style='outline: none !important;'>
 
     </div>
 
@@ -89,12 +89,15 @@
 
 
 
-  <div id = 'subcontainer'>
+  <div id = 'subcontainer' style='background: {data.color};  background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.6))'>
+
     <div id = 'canvas-container'>
-
-
       <div id = 'loader' class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
       <canvas id = 'canvas'></canvas>
+      <div id = 'flare-1'></div>
+      <div id = 'flare-2'></div>
+      <div id = 'gradient-top'></div>
+      <div id = 'gradient-bottom'></div>
     </div>
 
     <div id="handle"></div>
@@ -187,7 +190,7 @@
 
 ::-webkit-scrollbar{
   width: 3px;
-  background: rgba(255,255,255,0);
+  background: rgba(white, 0.5);
 }
 
 ::-webkit-scrollbar-thumb{
@@ -286,7 +289,7 @@ input:checked + .slider:before {
   #handle {
     cursor: ew-resize;  // cursor indicates horizontal resizing
     position: absolute;
-    right: 8px;
+    right: 10px;
     top: calc(50vh - 50px);
     width: 8px;
     height: 50px;
@@ -302,6 +305,11 @@ input:checked + .slider:before {
 
   #canvas-container{
     //height: fit-content;
+
+    display: inline-block;
+
+    box-shadow: inset 0 20px 50px rgba(black, 0.5);
+
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -312,10 +320,6 @@ input:checked + .slider:before {
     height: calc(100vh - 25px);
 
     background: none;
-
-    //border: 1px solid rgba(black, 0.05);
-
-    //border: 10px solid yellow;
 
 
 
@@ -448,40 +452,6 @@ input:checked + .slider:before {
   }
 
 
-  /*
-  #controls{
-
-    position: fixed;
-
-    z-index: 3;
-    margin-top: 0px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 45px;
-      width: calc(100vw - 240px);
-      background: black;
-
-      #buttons{
-          display: flex;
-          align-items: center;
-          gap: 0px;
-
-
-          button{
-            width: 20px;
-            height: 20px;
-            filter: invert(100%);
-          }
-      }
-
-  }
-  */
-
-
-
-
-
 
   :global(.option){
       font-size: 12px;
@@ -496,11 +466,17 @@ input:checked + .slider:before {
   }
 
   #container {
-      width: calc(100vw - 260px);
+      width: calc(100vw - 270px);
       height: calc(100vh - 30px);
       margin-top: 15px;
-      border: 3px solid rgba(white, 0.7);
-      box-shadow: 20px 70px 150px rgba(black, 0.2);
+
+      //box-shadow: -15px 20px 40px rgba(black, 0.1);
+
+
+
+
+      background-image: linear-gradient(to bottom right, rgba(white,0.8), rgba(white, 0.4)) !important;
+
       position: relative;
       display: flex;
       flex-direction: column;
@@ -510,7 +486,8 @@ input:checked + .slider:before {
       border-radius: 15px;
       position: relative;
       //transition: 0.5s ease;
-  }
+
+    }
 
   .max{
     position: fixed !important;
@@ -526,10 +503,10 @@ input:checked + .slider:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
 
-    height: 45px;
+    height: 54px;
    // border-bottom: 1px solid rgba(black, 0.02);
     color: black;
 
@@ -543,7 +520,12 @@ input:checked + .slider:before {
 
     #mast{
       width: 140px;
-      box-shadow: 0 10px 30px rgba(black, 0.06);
+      box-shadow: 0 20px 50px rgba(black, 0.15);
+
+
+      transform: translateY(50px);
+      opacity: 0;
+      animation: 0.3s slide 0.1s ease forwards;
 
       #title {
         font-size: 13px;
@@ -570,7 +552,22 @@ input:checked + .slider:before {
       background: rgba(white, 1) !important;
       padding: 2px 8px 2px 5px;
       border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(black, 0.06);
+      box-shadow: 0 20px 50px rgba(black, 0.15);
+
+      transform: translateY(50px);
+      opacity: 0;
+      animation: 0.3s slide 0.2s ease forwards;
+    }
+
+    @keyframes slide{
+      from{
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to{
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
 
     #corner{
@@ -580,6 +577,10 @@ input:checked + .slider:before {
       gap: 15px;
       width: 140px;
       margin-right: 5px;
+
+      transform: translateY(50px);
+      opacity: 0;
+      animation: 0.3s slide 0.3s ease forwards;
 
       .slider{
         width: 25px;
@@ -619,7 +620,7 @@ input:checked + .slider:before {
         letter-spacing: -0.3px;
         background: white !important;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(black, 0.06);
+        box-shadow: 0 20px 50px rgba(black, 0.15);
       }
       button{
         height: 32px;
@@ -703,42 +704,9 @@ input:-webkit-autofill:active  {
     border: none;
   }
 
-
-
-
   .active{
       left: 0px !important;
     }
-
-
-
-    /*
-
-    :global(.sliding-selector) {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-
-:global(.options span) {
-    cursor: pointer;
-    padding: 10px;
-    z-index: 2;
-    position: relative;
-}
-
-
-
-:global(.slider-background) {
-    position: absolute;
-    height: 100%;
-    background-color: rgba(black, 0.1);
-    transition: all 0.3s ease;
-    border-radius: 5px;
-    z-index: 1;
-}
-*/
 
 
 :global(.option) {
@@ -802,8 +770,53 @@ input:-webkit-autofill:active  {
 #subcontainer{
   display: flex;
   justify-content: center;
+  position: relative;
 
+  #gradient-top{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    pointer-events: none;
+    background-image: linear-gradient(185deg, rgba(white, 0.3), rgba(white, 0), rgba(white, 0));
+    transition: 0.4s ease;
+	}
+
+  #gradient-bottom{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    pointer-events: none;
+    background-image: linear-gradient(10deg, rgba(white, 0.3), rgba(white, 0), rgba(white, 0));
+    transition: 0.4s ease;
+	}
+
+  #flare-1{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 4px;
+    width: 60%;
+
+    filter: blur(3px);
+    background-image: linear-gradient(90deg, rgba(white, 0.4), rgba(white, 1), rgba(white, 1), rgba(white, 0.4));
+  }
+
+  #flare-2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 80%;
+    width: 3px;
+
+    filter: blur(3px);
+    background-image: linear-gradient(0deg, rgba(white, 0.4), rgba(white, 1), rgba(white, 0.4));
+  }
 }
+
 
 :global(#container.max){
     width: 100vw !important;
@@ -813,6 +826,7 @@ input:-webkit-autofill:active  {
     //z-index: 10 !important;
     border-radius: 0 !important;
     border: none !important;
+    transform: scale(1.01);
   }
 
   :global(#canvas-container.max){
@@ -935,7 +949,7 @@ let height = data.height
 let ruler = false
 let saved = true
 let activeObject;
-let MODE
+let MODE = null
 
 
 
@@ -978,6 +992,9 @@ onMount(()=> {
     console.log('yo')
     adjustWidth();
   });
+
+
+
   // Initialize fabric.js canvas
 
   let previousCanvasWidth = document.getElementById("container").offsetWidth;
@@ -1010,6 +1027,17 @@ onMount(()=> {
       height: initialCanvasHeight,
       renderOnAddRemove: false,
   });
+
+
+
+  const link = document.createElement('link');
+  link.href = 'https://fonts.googleapis.com/css2?family=Gabarito&display=swap';
+  link.rel = 'stylesheet';
+
+  document.head.appendChild(link);
+
+
+
 
   unifiedResize()
 
@@ -1045,29 +1073,24 @@ onMount(()=> {
 
 
 
-
-
-
+  let activeBoundary = null
+  let currentDrawings = []
   let croppingRect;
-function enterEditMode(eventData, transform) {
 
-  let target = transform.target
-  console.log('yo')
-    croppingRect = new fabric.Rect({
-        fill: 'transparent',
-        strokeWidth: 1,
-        stroke: 'red',
-        left: target.left,
-        top: target.top,
-        width: target.width * target.scaleX * 0.5,
-        height: target.height * target.scaleY * 0.5,
-        hasRotatingPoint: false,
-        transparentCorners: false,
-        selectable: true,
-    });
-    canvas.add(croppingRect);
-    console.log(croppingRect)
-}
+
+
+  function enterEditMode(eventData, transform) {
+      const object = transform.target;
+      MODE = 'draw';
+      currentGroup = object;  // Update currentGroup reference
+      canvas.setActiveObject(currentGroup);
+      canvas.selection = false;  // Turn off object selection
+      canvas.isDrawingMode = true;  // Activate drawing mode
+      canvas.freeDrawingBrush.color = 'black'
+      canvas.renderAll();
+  }
+
+
 
 function applyCrop(target) {
     const cropped = new fabric.Image(target._element, {
@@ -1527,6 +1550,18 @@ function adjustDimensionsAfterScaling(obj) {
             scaleX: 1,
             scaleY: 1
         });
+    }if (obj.type === "group") {
+      // Loop through each child of the group
+      obj.getObjects().forEach(child => {
+            // Adjust the dimensions of each child
+            adjustDimensionsAfterScaling(child);
+        });
+
+        // Reset group's scaling
+        obj.set({
+            scaleX: 1,
+            scaleY: 1
+        });
     }
 
     // ... Handle other object types similarly
@@ -1534,12 +1569,6 @@ function adjustDimensionsAfterScaling(obj) {
     canvas.renderAll();
     canvas.requestRenderAll();
 }
-
-canvas.on('object:scaling', function(e) {
-    adjustDimensionsAfterScaling(e.target);
-    canvas.renderAll();
-});
-
 
 
 canvas.on('object:scaling', function(event) {
@@ -1570,6 +1599,8 @@ canvas.on('object:scaling', function(event) {
         }
 
       }
+
+      adjustDimensionsAfterScaling(obj);
 
     canvas.renderAll();
     dynamicallyBindListeners();
@@ -2019,23 +2050,45 @@ console.log(path.clipPath)
 
 
 
+let currentGroup = null;
+let editButton = null;
 
 
-let boundingBoxGroup
+
+let overlay = new fabric.Rect({
+    selectable: false,
+    evented: false,
+    fill: 'rgba(0, 0, 0, 0.7)', // semi-transparent black
+    width: canvas.width,
+    height: canvas.height
+});
+
+
+
+
+
 
 canvas.on('mouse:down', (o) => {
-   Id('loader').style.display = 'none'
+    Id('loader').style.display = 'none';
+
+    // If the activeObject is a drawing group, show the Edit button
+    activeObject = canvas.getActiveObject();
+
+    if (activeObject && activeObject.type == 'group'){
+      currentGroup = activeObject
+    }
+
     if (isObjectBeingModified || canvas.getActiveObject() || CLICK > 0) {
         // Reset and exit early if an object is being modified
         isObjectBeingModified = false;
-        CLICK = 0
+        CLICK = 0;
         return;
     }
 
     isDown = true;
     var pointer = canvas.getPointer(o.e);
-    origX = pointer.x
-    origY = pointer.y
+    origX = pointer.x;
+    origY = pointer.y;
 
     switch (MODE){
         case 'rect':
@@ -2062,7 +2115,7 @@ canvas.on('mouse:down', (o) => {
           elem= new fabric.Textbox('Hello World!', {
               left: origX,
               top: origY,
-              fontFamily: 'Helvetica',
+              fontFamily: 'Gabarito',
               fill: '#000',
               charSpacing: -20,
               fontSize: 16,
@@ -2164,9 +2217,10 @@ canvas.on('mouse:down', (o) => {
             break;
 
         case 'draw':
-            canvas.isDrawingMode = true; // Enable free drawing
-            canvas.freeDrawingBrush.width = 1; // Set brush width
-            canvas.freeDrawingBrush.color = "#000"; // Set brush color
+            canvas.isDrawingMode = true; // Enable free drawing mode on mouse down
+            canvas.freeDrawingBrush.width = 2;
+            canvas.freeDrawingBrush.color = "#000";
+            canvas.selection = false;
             break;
 
         case 'erase':
@@ -2176,30 +2230,33 @@ canvas.on('mouse:down', (o) => {
             break;
 
         case 'bound':
-            isDown = true;
             let pointer = canvas.getPointer(o.e);
-            origX = pointer.x;
-            origY = pointer.y;
-            boundingBoxGroup = new fabric.Rect({
-              left: origX,
-              top: origY,
-              width: pointer.x-origX,
-              height: pointer.y-origY,
-              fill: 'transparent',
-              stroke: 'black',
-              strokeWidth: 2
+            activeBoundary = new fabric.Rect({
+                left: pointer.x,
+                top: pointer.y,
+                originX: 'left',
+                originY: 'top',
+                width: 0,
+                height: 0,
+                //selectable: false,
+                stroke: '#d0d0d0',
+                fill: 'white',
+                pin: 'center',
+                hasControls: false,
+                rx: 5,
+                ry: 5
             });
-            canvas.add(boundingBoxGroup);
+            canvas.add(activeBoundary);
             break;
         default:
-            canvas.isDrawingMode = false;
             break;
 
     }
 
 
-    if (MODE !== 'draw' && MODE !== 'erase') {
+    if (MODE != 'draw' && MODE != 'erase') {
         canvas.isDrawingMode = false;
+        canvas.selection = true
     }
 
 
@@ -2211,6 +2268,153 @@ canvas.on('mouse:down', (o) => {
 
 })
 
+
+
+
+canvas.on('mouse:move', function (o) {
+    if (MODE === 'bound' && activeBoundary) {
+        let pointer = canvas.getPointer(o.e);
+        activeBoundary.set({ width: Math.abs(pointer.x - activeBoundary.left), height: Math.abs(pointer.y - activeBoundary.top) });
+        canvas.renderAll();
+    }
+
+});
+
+canvas.on('mouse:up', function () {
+
+  isDown = false;
+/*
+  if (currentGroup) {
+        // Collect all paths on the canvas and add them to the currentGroup
+        let allPaths = canvas.getObjects('path');
+        allPaths.forEach(path => {
+            currentGroup.addWithUpdate(path);
+            canvas.remove(path);
+        });
+
+
+        if (MODE === 'bound' && activeBoundary) {
+            currentGroup.setControlVisible('edit', true);
+            canvas.remove(activeBoundary);
+            activeBoundary = null;
+            MODE = 'draw';
+        } else {
+            MODE = 'bound';
+        }
+    }
+
+
+    */
+
+    if (MODE === 'draw' || MODE === 'erase') {
+
+        // Check if there's an active boundary and drawn paths inside it
+        if (activeBoundary && currentDrawings.length > 0) {
+            // Create a group with the boundary and paths
+            let group = new fabric.Group([activeBoundary].concat(currentDrawings), {
+                selectable: true // Adjust as per your requirement
+            });
+
+            // Add this group to the canvas
+            canvas.add(group);
+            currentGroup = group;  // Update the current group reference
+
+            // Remove the individual boundary and paths from the canvas
+            canvas.remove(activeBoundary);
+            currentDrawings.forEach(path => canvas.remove(path));
+
+            // Clear the currentDrawings array and nullify activeBoundary
+            currentDrawings = [];
+            activeBoundary = null;
+
+            // Optional: If you want to automatically transition back to boundary mode after saving the drawings
+            MODE = 'bound';
+        }
+    } else if (MODE === 'bound') {
+        // If in bound mode and a boundary was being drawn, prepare for the drawing mode
+        if (activeBoundary) {
+            let group = new fabric.Group([activeBoundary], {
+                selectable: true
+            });
+            canvas.add(group);
+            currentGroup = group;  // Update the current group reference
+
+            group.setControlVisible('edit', true);
+
+            // Remove the individual boundary from the canvas
+            canvas.remove(activeBoundary);
+
+            activeBoundary = null;
+            MODE = 'draw';
+
+        }
+    }
+
+    // Other modes can be handled similarly
+});
+
+
+
+
+function clipByRect(ctx) {
+    let boundary = currentGroup.getBoundingRect();
+    ctx.rect(boundary.left, boundary.top, boundary.width, boundary.height);
+}
+
+canvas.on('path:created', function(event) {
+    const originalPath = event.path;
+    const boundaryRect = currentGroup.item(0);
+
+    // Extract points from the original path
+    let originalPoints = originalPath.path.map(segment => {
+        return new fabric.Point(segment[1], segment[2]);
+    });
+
+    // Filter points that are inside the boundary
+    let clippedPoints = originalPoints.filter(point => boundaryRect.containsPoint(point));
+
+    // If we have any remaining points, recreate the path, else remove the path
+    if (clippedPoints.length > 1) {
+        let newPathData = "M " + clippedPoints.map(p => p.x + " " + p.y).join(" L ");
+        let newPath = new fabric.Path(newPathData);
+        newPath.set({
+            left: originalPath.left,
+            top: originalPath.top,
+            stroke: originalPath.stroke,
+            strokeWidth: originalPath.strokeWidth,
+            fill: originalPath.fill
+        });
+        canvas.add(newPath);
+        currentGroup.addWithUpdate(newPath);
+        canvas.remove(originalPath);
+    } else {
+        canvas.remove(originalPath);
+    }
+
+    canvas.renderAll();
+});
+
+canvas.on('object:moving', function(e) {
+    if (editButton && activeObject.type === 'group') {
+        let left = activeObject.left + activeObject.width + 5;
+        let top = activeObject.top;
+
+        editButton.set({ left: left, top: top });
+    }
+
+    if (activeObject.eventType) {  // Check if it's our created button
+        activeObject.setCoords();
+        canvas.forEachObject(function(targ) {
+           activeObject.setCoords();
+            if (targ.eventType && targ != activeObject) {
+                if (activeObj.intersectsWithObject(targ)) {
+                   activeObject.left = activeObject.originalState.left;
+                   activeObject.top = activeObject.originalState.top;
+                }
+            }
+        });
+    }
+});
 
 
 
@@ -2229,10 +2433,6 @@ window.deleteObject = function(){
   saveCanvasToSupabase()
 }
 
-
-canvas.on('mouse:up', function(o){
-  isDown = false;
-});
 
 
 
@@ -2391,13 +2591,17 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   });
 
   // Adjust the widths of the container and canvas-container
-  const container = document.getElementById('container');
-  const canvasContainer = document.getElementById('canvas-container');
+  const container = Id('container');
+  const canvasContainer = Id('canvas-container');
+  const subContainer = Id('subcontainer');
 
   if (container) {
       container.style.width = `${newWidth}px`;
   }
   if (canvasContainer) {
+      canvasContainer.style.width = `${newWidth}px`;
+  }
+  if (subContainer) {
       canvasContainer.style.width = `${newWidth}px`;
   }
   //canvas.setWidth(newWidth);
@@ -2407,8 +2611,10 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   if (newWidth < 600){
     Id('mast').style.display = 'none'
     Id('corner').style.display = 'none'
-    Id('buttons').style.width = '100%'
+    Id('buttons').style.width = 'fit-content'
+    Id('bar').style.justifyContent = 'center'
   }else{
+    Id('bar').style.justifyContent = 'space-between'
     Id('mast').style.display = 'flex'
     Id('corner').style.display = 'flex'
     Id('buttons').style.width = 'fit-content'
@@ -3041,7 +3247,7 @@ function addButton(x, y) {
   document.getElementById('addDraw').addEventListener('click', ()=> {
     //addText(10,10);
 
-    MODE = 'draw'
+    MODE = 'bound'
   });
 
 
@@ -3181,7 +3387,7 @@ function addButton(x, y) {
 
   function textTemplate(activeObject) {
     const options = [
-      { label: 'Font', id: 'fontFamily', type: 'dropdown', prop: 'fontFamily', icon: IconT, value: activeObject.fontFamily, options: ['Arial', 'Newsreader', 'Helvetica', 'Times New Roman', 'Courier New'] },
+      { label: 'Font', id: 'fontFamily', type: 'dropdown', prop: 'fontFamily', icon: IconT, value: activeObject.fontFamily, options: ['Arial', 'Newsreader', 'Gabarito', 'Helvetica', 'Times New Roman', 'Courier New'] },
       { label: 'Color', id: 'fill', type: 'color', prop: 'fill', icon: IconC, value: activeObject.fill },
       { label: 'Letter Spacing', id: 'charSpacing', prop: 'charSpacing', icon: IconLS, type: 'number', value: activeObject.charSpacing || 0, min: -50, max: 50 },
       { label: 'Font Size', id: 'fontSize', type: 'number', step: 1, icon: IconS, prop: 'fontSize', value: activeObject.fontSize || 20, min: 5, max: 100 },
@@ -3340,8 +3546,6 @@ function saveCanvasToSupabase() {
     saved = false
 
 
-
-
     let initialCanvasWidth = canvas.width
 
 
@@ -3387,7 +3591,7 @@ function saveCanvasToSupabase() {
     });
 
     // Remove clipping (if any)
-    canvas.clipTo = null;
+   // canvas.clipTo = null;
 
     // Temporarily reset the canvas to its full/original size
     canvas.setWidth(originalCanvasWidth);
@@ -3563,26 +3767,30 @@ async function uploadCanvas() {
     togglable = false
 
     if (!$MAX){
-      document.getElementById('container').classList.remove('max')
-      document.getElementById('canvas-container').classList.remove('max')
-      document.getElementById('subcontainer').classList.remove('max')
+      Id('container').classList.remove('max')
+      Id('canvas-container').classList.remove('max')
+      Id('subcontainer').classList.remove('max')
+      Id('gradient-top').style.opacity = 1
+      Id('gradient-bottom').style.opacity = 1
 
       unifiedResize(window.innerWidth - 260)
 
       setTimeout(() => {
-        document.getElementById('container').style.transition = 'none'
-        document.getElementById('canvas-container').style.transition = 'none'
-        document.getElementById('canvas').style.transition = 'none'
+        Id('container').style.transition = 'none'
+        Id('canvas-container').style.transition = 'none'
+        Id('canvas').style.transition = 'none'
         togglable = true
       }, 500);
     }else{
-      document.getElementById('container').style.transition = '0.4s ease'
-      document.getElementById('canvas-container').style.transition = '0.4s ease'
-      document.getElementById('canvas').style.transition = '0.4s ease'
+      Id('container').style.transition = '0.4s ease'
+      Id('canvas-container').style.transition = '0.4s ease'
+      Id('canvas').style.transition = '0.4s ease'
+      Id('gradient-top').style.opacity = 0
+      Id('gradient-bottom').style.opacity = 0
       setTimeout( () => {
-        document.getElementById('container').classList.add('max')
-        document.getElementById('canvas-container').classList.add('max')
-        document.getElementById('subcontainer').classList.add('max')
+        Id('container').classList.add('max')
+        Id('canvas-container').classList.add('max')
+        Id('subcontainer').classList.add('max')
         togglable = true
       }, 200);
 

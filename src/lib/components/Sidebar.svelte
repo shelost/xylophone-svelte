@@ -5,6 +5,7 @@
 	import { cubicIn, cubicOut } from 'svelte/easing'
 	import Navbar from '$lib/components/common/NavBar.svelte'
 	import Scrollable from '$lib/img/scrollable.svg'
+	import Down from '$lib/img/down.svg'
 	import X from '$lib/img/x.svg'
 	import Xylophone from '$lib/img/xylophone.svg'
 	import { onMount } from 'svelte'
@@ -299,7 +300,7 @@ async function removePageFromFolder(pageId) {
 		{:then $user}
 
 		{#if $user[0]}
-		<a href = '/home'>
+		<a href = '/app/home'>
 			<div id = 'profile'>
 				<img src = '{$user[0].pfp}' alt = 'Scrollable Logo' id = 'logo'>
 				<h2> {$user[0].full_name} </h2>
@@ -309,14 +310,14 @@ async function removePageFromFolder(pageId) {
 		{/if}
 		{/await}
 		<a href = '/app/home'>
-			<div class = 'text-btn' id = 'home' class:active={path === '/home'}>
+			<div class = 'text-btn' id = 'home' class:active={path === '/app/home'}>
 				<div class = 'icon' style = 'background-image: url({IconHome}'>
 				</div>
 				<h2> Home </h2>
 			</div>
 		</a>
 		<a href = '/app/profile' id = 'settings' >
-			<div class = 'text-btn' class:active={path === '/profile'}>
+			<div class = 'text-btn' class:active={path === '/app/profile'}>
 				<div class = 'icon' style = 'background-image: url({IconProfile})'>
 				</div>
 				<h2> Profile </h2>
@@ -324,24 +325,33 @@ async function removePageFromFolder(pageId) {
 		</a>
 
 		<a href = '/app/assets' id = 'settings' >
-			<div class = 'text-btn' class:active={path === '/assets'}>
+			<div class = 'text-btn' class:active={path === '/app/assets'}>
 				<div class = 'icon' style = 'background-image: url({IconAssets})'>
 				</div>
 				<h2> Assets </h2>
 			</div>
 		</a>
 
+		<!--
+
 		<a href = '/app/data' id = 'settings' >
-			<div class = 'text-btn' class:active={path === '/data'}>
+			<div class = 'text-btn' class:active={path === '/app/data'}>
 				<div class = 'icon' style = 'background-image: url({IconData})'>
 				</div>
 				<h2> Database </h2>
 			</div>
 		</a>
+		-->
+
 	</div>
 
 <div id='pages' bind:this={pagesDiv} on:click={saveScrollPosition}>
-    <button id='add' on:click={addPage}> + Add Page </button>
+    <button id='add' on:click={addPage}>
+		Add Page
+		<svg width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path d="M12 31L46.788 66.2779C47.1796 66.6751 47.8204 66.6751 48.212 66.2779L83 31" stroke="white" stroke-width="10"/>
+		</svg>
+	</button>
 	<!--
     <button id='group' on:click={addFolder}> + Add Group </button>
 	-->
@@ -389,7 +399,7 @@ async function removePageFromFolder(pageId) {
 	<div class = 'pages'>
 		{#each $pages as page}
 			<a href='/app/x/{page.id}' >
-				<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
+				<div class='text-btn page' id = '{page.id}' class:active={path === `/app/x/${page.id}`}>
 					<div class='color' style='background-color: {page.color}'></div>
 					<h2> {page.title} </h2>
 				</div>
@@ -404,6 +414,9 @@ async function removePageFromFolder(pageId) {
 
 
 <style lang="scss">
+
+@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
 
 
 ::-webkit-scrollbar{
@@ -430,9 +443,9 @@ async function removePageFromFolder(pageId) {
 	}
 
 	h2{
-		font-size: 14px;
+		font-size: 15px;
 		letter-spacing: -0.2px;
-		font-weight: 500;
+		font-weight: 700;
 	}
 
 	&:hover{
@@ -444,8 +457,8 @@ async function removePageFromFolder(pageId) {
 .color{
 	width: 14px;
 	height: 14px;
-	border-radius: 10px;
-	border: 1px solid rgba(0,0,0,0.1);
+	border-radius: 3px;
+	border: 1px solid rgba(0,0,0,0.05);
 }
 
 
@@ -520,11 +533,11 @@ async function removePageFromFolder(pageId) {
 
 
 .text-btn{
-		margin: 0 5px;
+
 		padding: 7px 12px;
 		border-radius: 8px;
 		font-size: 13px;
-		letter-spacing: -0.3px;
+
 		font-weight: 500;
 		color: rgba(black, 0.4);
 		transition: 0.2s ease;
@@ -532,6 +545,14 @@ async function removePageFromFolder(pageId) {
 		align-items: center;
 		width: 95%;
 		gap: 8px;
+		margin-left: 5px;
+
+		h2{
+
+			font-family: Onest, Inter, sans-serif;
+			letter-spacing: -0.2px;
+			font-weight: 500;
+		}
 
 		.icon{
 			width: 18px;
@@ -576,19 +597,22 @@ async function removePageFromFolder(pageId) {
 	#add{
 		width: calc(100% - 24px);
 		margin: 15px;
-		margin-bottom: 0px;
+		margin-bottom: 10px;
 		box-shadow: none;
 		background: rgba(black, 0.05);
 		background: #ff004d;
 		border-radius: 8px;
-		padding: 8px 0;
+		padding: 8px 0px;
 		color: white;
 		font-size: 12px;
 		font-weight: 500;
 		letter-spacing: -0.2px;
-
-
 		transition: 0.2s ease;
+
+		svg{
+			height: 12px;
+			width: 12px;
+		}
 
 		&:hover{
 			background: rgba(black, 0.1);
@@ -630,17 +654,15 @@ async function removePageFromFolder(pageId) {
 	#pages{
 		width: 240px;
 		flex: 1;
-		//border-radius: 10px;
-
 		overflow-y: scroll;
-		//background: #DD0044;
-		//background: rgba(black, 0.05);
 		border-top: 1px solid rgba(black, 0.08);
-		//margin: 15px;
 		margin-bottom: 10px;
 		margin-top: 10px;
-
 		padding-bottom: 10px;
+
+		.text-btn{
+			margin-left: 8px;
+		}
 	}
 }
 

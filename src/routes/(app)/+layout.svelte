@@ -203,7 +203,6 @@ async function loadImagesFromSupabase() {
 
 <section>
 
-
 	{#if !$MAX && !$showModal}
 		<Sidebar {data}/>
 	{/if}
