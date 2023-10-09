@@ -131,7 +131,9 @@ function populatePanel(activeObject) {
 
 
 <div id="panel" class:active={active}>
-      <h1> Controls </h1>
+
+  <div id = 'scroll'>
+    <h1> Controls </h1>
       {#each options as option (option.id)}
     <label>
         {option.label}:
@@ -144,6 +146,8 @@ function populatePanel(activeObject) {
         {/if}
     </label>
 {/each}
+  </div>
+
 </div>
 
 
@@ -163,27 +167,49 @@ function populatePanel(activeObject) {
 
 #panel{
     position: fixed;
-    top: 0px;
+    top: 15px;
     left: -400px;
-    width: 240px;
-    padding: 20px;
-    height: 100vh;
+    width: 230px;
+
+
+    height: calc(100vh - 30px);
     background: #FF004D;
     background: rgb(10, 5, 19);
     background: white !important;
 
+   //border: 2px solid red;
+    border-radius: 10px;
 
-    box-shadow: 20px 0px 70px rgba(black, 0.02);
-    transition: 0.3s ease-in-out;
-    overflow-y: scroll;
+    box-shadow: -40px 10px 70px rgba(black, 0.15);
 
-
-    //background: red;
 
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    letter-spacing: -0.4px;
+    justify-content: flex-start;
+
+    transition: 0.3s ease-in-out;
+    overflow-y: hidden;
+
+
+    padding: 5px;
+
+    //background: red;
+
+
+    #scroll{
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+
+      height: calc(100vh - 30px);
+
+      overflow-y: scroll;
+      gap: 18px;
+      letter-spacing: -0.4px;
+      padding: 15px;
+    }
+
 
     z-index: 10 !important;
 
@@ -254,7 +280,7 @@ function populatePanel(activeObject) {
 
 
     &.active{
-      left: 0 !important;
+      left: 10px !important;
     }
 
   }

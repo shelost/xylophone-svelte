@@ -189,7 +189,7 @@
 
 
 ::-webkit-scrollbar{
-  width: 3px;
+  width: 5px;
   background: rgba(white, 0.5);
 }
 
@@ -392,36 +392,7 @@ input:checked + .slider:before {
   }
 
 
-  .add{
-    //background: rgba(black, 0.1);
-    color: black;
-    box-shadow: none;
 
-    width: 32px;
-    height: 24px;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: 0.2s ease;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-
-    &.active{
-      background: rgba(black, 0.1);
-    }
-    &:hover{
-      background: rgba(black, 0.1);
-    }
-
-    .icon{
-      width: 12px;
-      height: 12px;
-
-    }
-  }
 
   :global(#control){
     display: flex;
@@ -470,7 +441,8 @@ input:checked + .slider:before {
       height: calc(100vh - 30px);
       margin-top: 15px;
 
-      //box-shadow: -15px 20px 40px rgba(black, 0.1);
+
+      box-shadow: -15px 30px 40px rgba(black, 0.2);
 
 
 
@@ -483,8 +455,7 @@ input:checked + .slider:before {
       align-items: flex-start;
       overflow-x: hidden;
       overflow-y: hidden;
-      border-radius: 15px;
-      position: relative;
+      border-radius: 10px;
       //transition: 0.5s ease;
 
     }
@@ -500,6 +471,7 @@ input:checked + .slider:before {
 
   #bar{
 
+    /*
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -515,12 +487,18 @@ input:checked + .slider:before {
     z-index: 3;
     //border: 1px solid black;
 
-    position: absolute;
+    //position: absolute;
+    */
 
 
     #mast{
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      z-index: 3;
+
       width: 140px;
-      box-shadow: 0 20px 50px rgba(black, 0.15);
+
 
 
       transform: translateY(50px);
@@ -528,13 +506,14 @@ input:checked + .slider:before {
       animation: 0.3s slide 0.1s ease forwards;
 
       #title {
+        box-shadow: 0 20px 50px rgba(black, 0.15);
         font-size: 13px;
         font-weight: 500;
         letter-spacing: -0.3px;
         padding: 0px 12px;
         height: 30px;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 1) !important;  /* corrected the rgba format */
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.8) !important;  /* corrected the rgba format */
         width: auto;   /* flexible width */
         max-width: 140px;  /* maximum width */
         border: none; /* remove default border */
@@ -545,18 +524,61 @@ input:checked + .slider:before {
 
 
     #buttons{
+      position: absolute;
+
+      top: calc(50% - 160px);
+      left: 15px;
+
+      height: 320px;
+      z-index: 3;
+
+
+      padding: 0 0px;
+
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 5px;
       background: rgba(white, 1) !important;
-      padding: 2px 8px 2px 5px;
-      border-radius: 20px;
+     // padding: 2px 8px 2px 5px;
+      border-radius: 12px;
       box-shadow: 0 20px 50px rgba(black, 0.15);
 
       transform: translateY(50px);
       opacity: 0;
       animation: 0.3s slide 0.2s ease forwards;
+
+      .add{
+        //background: rgba(black, 0.1);
+        color: black;
+        box-shadow: none;
+
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s ease;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+
+        &.active{
+          background: rgba(black, 0.1);
+        }
+        &:hover{
+          background: rgba(black, 0.1);
+        }
+
+        .icon{
+          width: 12px;
+          height: 12px;
+
+        }
+  }
     }
 
     @keyframes slide{
@@ -571,6 +593,13 @@ input:checked + .slider:before {
     }
 
     #corner{
+
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 3;
+
+
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -602,7 +631,7 @@ input:checked + .slider:before {
           display: none;
 
           color: #ff004d;
-          background: rgba(white, 1) !important;
+          background: rgba(white, 0.8) !important;
         }
     }
 
@@ -611,6 +640,7 @@ input:checked + .slider:before {
       align-items: center;
       margin-right: -75px;
       margin-left: 15px;
+
       //display: none;
       input{
         width: 140px;
@@ -618,17 +648,17 @@ input:checked + .slider:before {
         font-size: 12px;
         font-weight: 600;
         letter-spacing: -0.3px;
-        background: white !important;
-        border-radius: 20px;
+        background: rgba(white, 0.8) !important;
+        border-radius: 8px;
         box-shadow: 0 20px 50px rgba(black, 0.15);
       }
       button{
         height: 32px;
         font-size: 12px;
         font-weight: 500;
-        border-radius: 30px;
+        border-radius: 8px;
         transform: translateX(-70px);
-        border: 1px solid rgba(white, 0.5);
+        //border: 1px solid rgba(white, 0.5);
         box-shadow: none;
       }
     }
@@ -949,6 +979,7 @@ let height = data.height
 let ruler = false
 let saved = true
 let activeObject;
+let alignmentGuides = [];
 let MODE = null
 
 
@@ -988,9 +1019,35 @@ function adjustWidth() {
 
 onMount(()=> {
 
-  document.getElementById('title').addEventListener('input', function() {
+  Id('title').addEventListener('input', function() {
     console.log('yo')
-    adjustWidth();
+
+    let value = Id('title').value
+
+
+    const testSpan = document.createElement('span');
+    document.createElement('span');
+    document.body.appendChild(testSpan);
+    testSpan.style.fontSize = '13px';
+    testSpan.style.fontWeight = '500';
+    testSpan.style.letterSpacing = '-0.3px';
+    testSpan.style.whiteSpace = 'nowrap';
+    testSpan.innerText = Id('title').value || 'Untitled Page';
+
+
+    let width = testSpan.getBoundingClientRect().width + 30;
+
+    if (!value){
+      width = testSpan.getBoundingClientRect().width + 30;
+    }
+
+
+
+    console.log(width)
+
+    Id('title').style.width = width + 'px'
+
+
   });
 
 
@@ -1003,7 +1060,6 @@ onMount(()=> {
   let id = $page.params.slug
   //let data = get(pages).find(page => page.id === id);
 
-  MODE = 'text'
   title = data.title
   color = data.color
 
@@ -1017,6 +1073,7 @@ onMount(()=> {
   const panelWidth = 260
 
   const PANEL = Id('panel')
+  const SCROLL = Id('scroll')
 
   let initialCanvasWidth = window.innerWidth - panelWidth;  // Initial canvas width, 250 is the panel width
   let initialCanvasHeight = window.innerHeight;  // Initial canvas height
@@ -1214,7 +1271,8 @@ function isClose(val1, val2, threshold) {
 function drawGuide(x1, y1, x2, y2, stroke = '#ff0000') {
   let line = new fabric.Line([x1, y1, x2, y2], {
       stroke: stroke,
-      opacity: 0.4,
+      strokeWidth: 2,
+      opacity: 0.3,
       selectable: false,
       evented: false,
       excludeFromExport: true
@@ -1245,6 +1303,29 @@ canvas.on('object:moving', (event) => {
   clearGuides();
   if (ruler){
     drawGuides()
+  }
+
+
+
+  let centerX = activeObject.left+(activeObject.width*activeObject.scaleX)/2
+  let centerY = activeObject.top+(activeObject.height*activeObject.scaleY)/2
+
+
+  switch (activeObject.pin){
+
+    case 'left':
+      drawGuide(0, centerY, centerX, centerY)
+      break
+    case 'right':
+      drawGuide(centerX, centerY, canvas.width, centerY)
+      break
+
+    case 'center':
+      drawGuide(centerX, 0, centerX, canvas.height)
+      break
+
+    default:
+      break
   }
 
   // Handle transformations for each object in the active selection.
@@ -1652,6 +1733,16 @@ canvas.on('object:modified', function(event) {
   let gridLines = [];
 
 
+
+
+  let shadow = new fabric.Shadow({
+            color: 'rgba(0,0,0,0.1)', // Set the shadow color
+            blur: 40,                 // Blur amount
+            offsetX: -10,               // Horizontal shadow offset
+            offsetY: 50                // Vertical shadow offset
+          })
+
+
 const loadCanvasFromSupabase = async () => {
     if (!data.content) {
         return;
@@ -1707,10 +1798,11 @@ const loadCanvasFromSupabase = async () => {
                   object.pin = 'center'
                 }
 
+          object.shadow = shadow
 
 
                 object.set({
-                  left: object.left * scaleX,
+                  //left: object.left * scaleX,
                   top: object.top
                 })
 
@@ -1724,36 +1816,6 @@ const loadCanvasFromSupabase = async () => {
                   cornerStyle: 'circle',
                   transparentCorners: false
                 });
-
-
-
-                if (object.pin && object.xPercent !== undefined) {
-                 let newLeftPos;
-
-                  switch (object.pin) {
-                      case 'scale':
-                          newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
-                          break;
-                      case 'left':
-                          newLeftPos = object.left; // Use the given value
-                          break;
-                      case 'right':
-                          if (object.right){
-                            newLeftPos = canvas.width - object.right - (object.width * object.scaleX)/2;
-                          }
-                          break;
-                      case 'center':
-                          if (object.center){
-                            newLeftPos = object.left
-                          }
-                          break;
-                      default:
-                          newLeftPos = object.left; // Default behavior is like 'left' pin
-                          break;
-                  }
-                  object.set('left', newLeftPos);
-              }
-
 
 
               if (object.originalTop === undefined) {
@@ -1796,11 +1858,31 @@ const loadCanvasFromSupabase = async () => {
 // loadCanvasFromSupabase(yourData);
 
 
+function addShadows() {
+  canvas.forEachObject(function(object) {
+    let shadow = new fabric.Shadow({
+      color: 'black', // Set the shadow color
+      blur: 50,                 // Blur amount
+      offsetX: 5,               // Horizontal shadow offset
+      offsetY: 5                // Vertical shadow offset
+    })
+
+    object.shadow = shadow
+
+    console.log(object.shadow)
+    console.log('yo')
+  });
+  canvas.renderAll(); // Always remember to re-render the canvas after making changes
+}
+
+
+
 
 canvas.setBackgroundColor(data.color);
     Id('canvas-container').style.background = data.color
 
    loadCanvasFromSupabase()
+
    canvas.setHeight(data.height);
 
 
@@ -2193,7 +2275,8 @@ canvas.on('mouse:down', (o) => {
                 left: origX,
                 top: origY,
                 fill: 'rgba(0,255,0,1)',
-                selectable: true
+                selectable: true,
+                pin: 'center'
             });
             canvas.add(elem);
             canvas.setActiveObject(elem);
@@ -2494,6 +2577,7 @@ canvas.on('object:added', function(options) {
 
 
 
+
   obj.set({
     borderColor: '#E0E0E0',
     cornerColor: '#FF004D',
@@ -2502,7 +2586,8 @@ canvas.on('object:added', function(options) {
     cornerStrokeColor: 'white',
     cornerStyle: 'circle',
     transparentCorners: false,
-    depth: 2
+    depth: 2,
+    shadow: shadow
   });
 
 
@@ -2537,6 +2622,8 @@ canvas.on('object:added', function(options) {
 });
 
 
+
+
 function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
 
 
@@ -2549,12 +2636,10 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   canvas.setWidth(newWidth);
 
 
-
   // Update position of each object based on xPercent and new canvas width
   canvas.getObjects().forEach((object) => {
 
     let newLeftPos
-
 
     //const newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
 
@@ -2572,7 +2657,6 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
         case 'right':
             const distanceFromRight = previousWidth - (object.left + object.width * object.scaleX);
             newLeftPos = newWidth - distanceFromRight - object.width * object.scaleX;
-
             break;
         case 'center':
             const originalCenterDistance = object.left - previousWidth / 2;
@@ -2583,8 +2667,7 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
             break;
     }
 
-
-      object.left = newLeftPos;
+      object.set('left', newLeftPos)
 
       //object.xPercent = (object.left + (object.width * object.scaleX) / 2 - canvas.width / 2) / canvas.width;
       object.setCoords();
@@ -2609,13 +2692,13 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   // Render the canvas
 
   if (newWidth < 600){
-    Id('mast').style.display = 'none'
+   //Id('mast').style.display = 'none'
     Id('corner').style.display = 'none'
     Id('buttons').style.width = 'fit-content'
     Id('bar').style.justifyContent = 'center'
   }else{
     Id('bar').style.justifyContent = 'space-between'
-    Id('mast').style.display = 'flex'
+   // Id('mast').style.display = 'flex'
     Id('corner').style.display = 'flex'
     Id('buttons').style.width = 'fit-content'
   }
@@ -2625,6 +2708,8 @@ function unifiedResize(newContainerWidth = window.innerWidth - panelWidth) {
   canvas.renderAll();
   canvas.calcOffset();
 }
+
+
 
 Id('canvas-container').addEventListener('resize', () => unifiedResize());
 
@@ -2845,7 +2930,7 @@ mb
 
 
 
-  PANEL.innerHTML = div;
+  SCROLL.innerHTML = div;
 
 
   for (let i = 0; i < options.length; i++) {
@@ -3295,7 +3380,7 @@ function addButton(x, y) {
         `;
     }
 
-    PANEL.innerHTML = div
+    SCROLL.innerHTML = div
 
   });
 
@@ -3513,7 +3598,6 @@ function polygonTemplate(activeObject) {
 
 window.addEventListener('keyup', e => {
 
-  console.log(e.code)
   switch (e.code){
     case 'Backspace':
       //deleteObject()
@@ -3583,57 +3667,83 @@ function saveCanvasToSupabase() {
         scaleY: object.scaleY
     }));
 
+    const newWidth = window.innerWidth - panelWidth;
+
+    const previousWidth = originalCanvasWidth
+
+
+    canvas.setWidth(originalCanvasWidth);
+
+/*
     // Adjust object positions relative to the center of the canvas before upload
     canvas.getObjects().forEach(object => {
-        object.set({
-            //left: object.left - canvasCenterX
-        }).setCoords();
+
+      if (!object.pin){
+        object.pin = 'center'
+      }
+
+      let newLeftPos
+
+      switch (object.pin) {
+          case 'scale':
+              newLeftPos = canvasCenterX + object.xPercent * canvas.width - (object.width * object.scaleX) / 2;
+              break;
+          case 'left':
+              newLeftPos = object.left;
+              break;
+          case 'right':
+              const distanceFromRight = previousWidth - (object.left + object.width * object.scaleX);
+              newLeftPos = newWidth - distanceFromRight - object.width * object.scaleX;
+              break;
+          case 'center':
+              const originalCenterDistance = object.left - previousWidth / 2;
+              newLeftPos = canvasCenterX + originalCenterDistance;
+              break;
+          default:
+              newLeftPos = object.left;
+              break;
+      }
+
+      object.set('left', newLeftPos)
     });
+    */
 
     // Remove clipping (if any)
    // canvas.clipTo = null;
 
     // Temporarily reset the canvas to its full/original size
-    canvas.setWidth(originalCanvasWidth);
+
+
     //canvas.setHeight(originalCanvasHeight);
 
     // Upload the full canvas version to the database
-    uploadCanvas();
-
-    // Restore the canvas to the backed-up size and reposition all objects
-    canvas.setWidth(initialCanvasWidth);
-    //canvas.setHeight(initialCanvasHeight);
 
 
-    canvas.getObjects().forEach((object, index) => {
-        object.set({
-            left: backupObjects[index].left,
-            top: backupObjects[index].top,
-            xPercent: backupObjects[index].xPercent,
-            scaleX: backupObjects[index].scaleX,
-            scaleY: backupObjects[index].scaleY
-        }).setCoords();
-    });
+    setTimeout(() => {
+      uploadCanvas();
 
-    // Restore the clipping
-    const newWidth = window.innerWidth - panelWidth;
-    const scaleX = newWidth / originalCanvasWidth;
-    canvas.clipTo = function(ctx) {
-        ctx.rect(0, 0, newWidth, originalCanvasHeight * scaleX);
-        ctx.clip();
-    };
+      // Restore the canvas to the backed-up size and reposition all objects
+      canvas.setWidth(initialCanvasWidth);
 
-    canvas.renderAll();
-    canvas.calcOffset();
+      const scaleX = newWidth / originalCanvasWidth;
+      canvas.clipTo = function(ctx) {
+          ctx.rect(0, 0, newWidth, originalCanvasHeight * scaleX);
+          ctx.clip();
+      };
 
-    gridLines = backupGridLines;
-    gridLines.forEach(circle => canvas.add(circle));
+      canvas.renderAll();
+      canvas.calcOffset();
 
-    // Restore the scroll position
-    Id('canvas-container').scrollTo({
-        top: scrollTop,
-    });
-    Id('canvas-container').scrollTop = scrollTop
+      gridLines = backupGridLines;
+      gridLines.forEach(circle => canvas.add(circle));
+
+      // Restore the scroll position
+      Id('canvas-container').scrollTo({
+          top: scrollTop,
+      });
+      Id('canvas-container').scrollTop = scrollTop
+    }, 1000);
+
 
 
 
