@@ -22,7 +22,7 @@
 	import {invalidate} from '$app/navigation'
 	import { supabaseClient } from '$lib/db'
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import { pages, user, scrollPosition, openFolders, folders } from '$lib/utils/store.js';  // Adjust the path as needed
+	import { pages, user, scrollPosition, openFolders, folders, tools } from '$lib/utils/store';  // Adjust the path as needed
 
 	export let data;
 
@@ -332,6 +332,15 @@ async function removePageFromFolder(pageId) {
 			</div>
 		</a>
 
+
+		<a href = '/tools' id = 'settings' >
+			<div class = 'text-btn' class:active={path === '/tools'}>
+				<div class = 'icon' style = 'background-image: url({IconAssets})'>
+				</div>
+				<h2> Assets </h2>
+			</div>
+		</a>
+
 		<!--
 
 		<a href = '/app/data' id = 'settings' >
@@ -429,23 +438,28 @@ async function removePageFromFolder(pageId) {
 	align-items: center;
 	background: white;
 	height: 36px;
-	padding: 5px 10px;
-	margin: 15px 5px 10px 5px;
+	padding: 5px 8px;
+	margin: 10px 0px 10px 5px;
 	//margin-top: 10px;
 	gap: 10px;
-	border-radius: 5px;
+	border-radius: 10px;
 	transition: 0.2s ease;
 
+	width: 200px;
+	background: rgba(white, 0.2);
+
 	img{
-		border: 1px solid rgba(black, 0.2);
-		border-radius: 5px;
-		height: 22px;
+		//border: 1px solid rgba(black, 0.2);
+		border-radius: 15px;
+		height: 20px;
+
 	}
 
 	h2{
-		font-size: 15px;
-		letter-spacing: -0.2px;
-		font-weight: 700;
+		font-size: 14px;
+		letter-spacing: -0.1px;
+		font-weight: 600;
+		color: white;
 	}
 
 	&:hover{
@@ -457,7 +471,7 @@ async function removePageFromFolder(pageId) {
 .color{
 	width: 14px;
 	height: 14px;
-	border-radius: 3px;
+	border-radius: 10px;
 	border: 1px solid rgba(0,0,0,0.05);
 }
 
@@ -539,7 +553,7 @@ async function removePageFromFolder(pageId) {
 		font-size: 13px;
 
 		font-weight: 500;
-		color: rgba(black, 0.4);
+		color: rgba(white, 0.7);
 		transition: 0.2s ease;
 		display: flex;
 		align-items: center;
@@ -550,7 +564,7 @@ async function removePageFromFolder(pageId) {
 		h2{
 
 			font-family: Onest, Inter, sans-serif;
-			letter-spacing: -0.2px;
+			letter-spacing: -0.1px;
 			font-weight: 500;
 		}
 
@@ -558,24 +572,28 @@ async function removePageFromFolder(pageId) {
 			width: 18px;
 			height: 18px;
 			background-size: cover;
-			filter: invert(20%);
+
+			filter: brightness(200%);
 		}
 
-		&.active{
-			background: white;
-			color: black;
-			//box-shadow: -3px 5px 15px rgba(black, 0.05);
-
-			background: rgba(black, 0.05);
-		}
 
 		&:hover{
 			//background: rgba(black, 0.05);
 			background: white;
 			//box-shadow: -3px 5px 15px rgba(black, 0.05);
 
-			background: rgba(black, 0.05);
+			background: rgba(white, 0.3);
 		}
+
+		&.active{
+			background: white;
+			color: white;
+			//box-shadow: -3px 5px 15px rgba(black, 0.05);
+
+			background: rgba(white, 1);
+			color: #ff004d;
+		}
+
 	}
 
 
@@ -593,6 +611,17 @@ async function removePageFromFolder(pageId) {
 	z-index: 3 !important;
     opacity: 1;
 
+	background: #ff004d;
+
+	background-image: linear-gradient(180deg, #ff004d, #ff0080);
+
+	top: 15px;
+	left: 15px;
+	height: calc(100vh - 30px);
+	width: 220px;
+	border-radius: 10px;
+	//box-shadow: -10px 20px 60px rgba(black, 0.12);
+
 
 	#add{
 		width: calc(100% - 24px);
@@ -606,7 +635,7 @@ async function removePageFromFolder(pageId) {
 		color: white;
 		font-size: 12px;
 		font-weight: 500;
-		letter-spacing: -0.2px;
+		letter-spacing: -0.1px;
 		transition: 0.2s ease;
 
 		svg{
@@ -644,24 +673,26 @@ async function removePageFromFolder(pageId) {
 
 
 	#top{
-		width: 230px;
-		background: #EE0044;
-		background: rgba(white, 0.1);
+		width: 210px;
 		margin-left: 5px;
 		padding-bottom: 15px;
 	}
 
 	#pages{
-		width: 240px;
+		width: 215px;
 		flex: 1;
 		overflow-y: scroll;
-		border-top: 1px solid rgba(black, 0.08);
-		margin-bottom: 10px;
+		border-top: 1px solid rgba(white, 0.4);
+		//margin-bottom: 10px;
 		margin-top: 10px;
-		padding-bottom: 10px;
+		margin-bottom: 0;
+		border: 5px solid white;
+		//padding-bottom: 10px;
 
 		.text-btn{
-			margin-left: 8px;
+			margin: 0 8px;
+			width: 92%;
+
 		}
 	}
 }

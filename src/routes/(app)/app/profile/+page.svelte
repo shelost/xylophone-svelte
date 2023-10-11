@@ -213,8 +213,6 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
 
 <section in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
 
-    <h1 id = 'title'> Profile </h1>
-
     {#if editMode}
         <form on:submit|preventDefault="{updateProfile}" class="flex flex-col gap-2">
             <!-- Profile Picture Upload -->
@@ -286,8 +284,15 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
             </div>
 
             <p  in:fly={{ y: 50, duration: 300, delay: 150}}>@{profile.username}</p>
-            <button on:click={() => editMode = true}  in:fly={{ y: 50, duration: 300, delay: 200}}>Edit Profile</button>
+
+            <div id = 'buttons'>
+                <button id = 'create' in:fly={{ y: 50, duration: 300, delay: 250}}> + Create Page </button>
+                <button on:click={() => editMode = true}  in:fly={{ y: 50, duration: 300, delay: 200}}>Edit Profile</button>
+            </div>
+
         </div>
+
+
     {/if}
 
 
@@ -344,36 +349,65 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
 
 <style lang="scss">
     @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Onest:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+
 
 section {
-    padding: 30px;
+    padding: 15px;
     margin-left: 240px;
     height: 100vh;
     overflow-y: scroll;
+    font-family: Onest, Inter, sans-serif;
 }
 
 #banner{
     background: #ffce00;
     width: 100%;
-    height: 200px;
-    border-radius: 10px;
+    height: 280px;
+    border-radius: 12px;
 }
 
 #mast{
-    margin-top: -80px;
+    margin-top: -160px;
     margin-left: 20px;
+    line-height: 1.3;
 
     h2{
-        font-size: 20px;
+        font-size: 28px;
         font-weight: 700;
-
+        letter-spacing: -0.3px;
     }
 
     p{
-        font-size: 14px;
-        letter-spacing: -0.2px;
-        color: rgba(black, 0.4);
-        margin-bottom: 10px;
+        font-size: 18px;
+        letter-spacing: -0.1px;
+        font-weight: 500;
+        color: rgba(black, 0.3);
+        margin-bottom: 20px;
+    }
+
+    #buttons{
+        display: flex;
+        gap: 10px;
+
+        button{
+            font-size: 13px !important;
+            box-shadow: none;
+            background: #f0f0f0;
+            color: black;
+            &:hover{
+                background: #e0e0e0;
+            }
+        }
+
+        #create{
+            background: #ff004d;
+            color: white;
+            &:hover{
+                background: #e7002e;
+            }
+        }
     }
 }
 
@@ -395,12 +429,12 @@ form {
 #name{
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 36px;
     margin-bottom: 5px;
 
     img{
-        height: 16px;
+        height: 20px;
         margin-top: 1px;
     }
 }
@@ -490,9 +524,8 @@ form {
 				margin-top: 15px;
 				margin-left: 3px;
 				font-size: 16px;
-				font-weight: 900;
+				font-weight: 500;
 				letter-spacing: -0.4px;
-				font-family: Libre Baskerville, Newsreader, Inter, sans-serif;
 			}
 
 
@@ -509,11 +542,13 @@ button {
 }
 
 .image-preview {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     object-fit: cover;
     border-radius: 10px;
-    box-shadow: 0px 10px 50px rgba(black, 0.1);
+    box-shadow: 0px 20px 50px rgba(black, 0.15);
+
+    margin-bottom: 40px;
 }
 
 .error-text {

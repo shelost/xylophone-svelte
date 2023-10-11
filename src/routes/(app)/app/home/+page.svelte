@@ -165,7 +165,17 @@
 	<section>
 
 
-	<h1 id = 'title'> Home </h1>
+	<div id = 'banner'>
+		<div id = 'expo'>
+			<h1> Introducing Arachne </h1>
+			<p> An all-new way to create web experiences. </p>
+			<a href = '/about'>
+				<button>
+					Read Our Manifesto
+				</button>
+			</a>
+		</div>
+	</div>
 
 {#await $allPages}
 
@@ -222,10 +232,58 @@
 	@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 
+	#banner{
+		height: 600px;
+		width: 100%;
+		margin-top: 15px;
+		background-image: linear-gradient(to bottom left, #4f001f, black);
+
+		background: #e9e9e9;
+
+		border-radius: 10px;
+		//box-shadow: 0px 10px 50px rgba(black, 0.1);
+
+		display: flex;
+		align-items: center;
+
+		#expo{
+			width: 700px;
+			line-height: 1.1;
+			padding: 20px;
+			padding-left: 40px;
+			h1{
+				font-size: 48px;
+				font-weight: 700;
+				color: black;
+				margin-bottom: 10px;
+				letter-spacing: -0.8px;
+			}
+			p{
+				font-size: 48px;
+				font-weight: 700;
+				color: rgba(black, 0.3);
+				letter-spacing: -0.3px;
+			}
+			button{
+				background: #ff004d;
+				color: white;
+				box-shadow: none;
+				font-size: 16px !important;
+				font-weight: 700;
+				padding: 15px 20px;
+				margin-top: 30px;
+				transition: 0.2s ease;
+
+				&:hover{
+					transform: scale(1.03);
+				}
+			}
+		}
+	}
+
 	h1{
 		color: black;
 	}
-
 
 	#app{
 		margin-left: 240px;
@@ -259,12 +317,11 @@
 			background: white;
 			padding: 5px;
 			border-radius: 5px;
+
 			//box-shadow: 0px 0px 50px rgba(black, 0.08);
 			padding-bottom: 10px;
 			transition: 0.2s ease;
 			cursor: pointer;
-
-
 
 			.user{
 				display: flex;
@@ -281,7 +338,6 @@
 				img{
 					height: 15px;
 					border-radius: 20px;
-					border: 1px solid rgba(black, 0.3);
 				}
 				p{
 					font-size: 12px;
@@ -291,11 +347,10 @@
 				}
 			}
 
-
 			.container{
-				border-radius: 10px;
+				border-radius: 12px;
 				background-image: linear-gradient(to bottom right, rgba(white, 0.9), rgba(white, 0.5)) !important;
-				box-shadow: -10px 15px 30px rgba(black, 0.08);
+				//box-shadow: -10px 15px 30px rgba(black, 0.08);
 				padding: 1px;
 				transition: 0.2s ease;
 				position: relative;
@@ -317,8 +372,7 @@
 			}
 
 			canvas{
-				border-radius: 8px;
-
+				border-radius: 10px;
 				transition: 0.2s ease;
 
 				transition: 0.2s ease;
@@ -345,7 +399,8 @@
 
 
 	section{
-		margin: 30px 30px;
+		margin: 15px 15px;
+		font-family: Onest, Inter, sans-serif;
 	}
 
 

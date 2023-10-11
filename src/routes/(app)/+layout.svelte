@@ -237,7 +237,7 @@ async function loadImagesFromSupabase() {
 		height: 100vh;
 		overflow-x: visible !important;
 		overflow-y: hidden;
-		background: none;
+		background: white;
 		//background: #f4f4f4;
 		//background: #FF004D
 	}

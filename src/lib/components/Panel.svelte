@@ -6,7 +6,7 @@
     let options = []
 
     import { writable } from 'svelte/store';
-    import {isPanelVisible} from '../../store'
+    import {isPanelVisible} from '$lib/utils/store'
 
 
 function textTemplate(activeObject) {
