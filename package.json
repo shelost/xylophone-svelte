@@ -3,9 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "engines": {
-    "node": "18.x"
+    "node": ">=18.x"
   },
-
   "scripts": {
     "preview": "vite preview",
     "test": "playwright test",
@@ -79,6 +78,7 @@
     "dart-sass": "^1.25.0",
     "esbuild": "^0.19.2",
     "firebase": "^10.3.1",
+    "marked": "^9.1.0",
     "prosemirror": "^0.11.1",
     "prosemirror-commands": "^1.5.2",
     "prosemirror-dropcursor": "^1.8.1",

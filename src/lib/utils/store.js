@@ -13,3 +13,5 @@ export const folders = writable([])
 export const activePage = writable(null);
 export const MAX = writable(false);
 export const showModal = writable(false);
+export const toolName = writable('Arachne Tools')
+export const tools = writable([])

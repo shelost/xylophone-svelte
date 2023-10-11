@@ -189,7 +189,7 @@
 
 
 ::-webkit-scrollbar{
-  width: 5px;
+  width: 8px;
   background: rgba(white, 0.5);
 }
 
