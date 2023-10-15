@@ -361,50 +361,6 @@ async function removePageFromFolder(pageId) {
 			<path d="M12 31L46.788 66.2779C47.1796 66.6751 47.8204 66.6751 48.212 66.2779L83 31" stroke="white" stroke-width="10"/>
 		</svg>
 	</button>
-	<!--
-    <button id='group' on:click={addFolder}> + Add Group </button>
-	-->
-
-	<!--
-
-	 {#each $folders as folder}
-		<div class="folder" id = '{folder.id}' data-id={folder.id}>
-			<div class="folder-header" class:active = {folder.open} on:click={() => toggleFolder(folder.id)}>
-
-				<div class = 'flex'>
-
-					<img src = {icon} alt = 'folder'>
-
-
-					<h2> {folder.name} </h2>
-
-				</div>
-
-
-					<svg width="39" height="39" viewBox="0 0 39 39" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M5 25L18.781 10.7438C19.1741 10.3371 19.8259 10.3371 20.219 10.7438L34 25" stroke="black" stroke-width="5" stroke-linecap="round"/>
-					</svg>
-
-			</div>
-
-			<div class="folder-contents" class:active = {folder.open} id = 'content-{folder.id}' data-sveltekit-reload>
-				{#each folder.objects as page}
-					{#if page}
-						<a href='/x/{page.id}' >
-							<div class='text-btn page' id = '{page.id}' class:active={path === `/x/${page.id}`}>
-								<div class='color' style='background-color: {page.color}'></div>
-								<h2> {page.title} </h2>
-							</div>
-						</a>
-					{/if}
-				{/each}
-			</div>
-
-		</div>
-	{/each}
-
--->
-
 	<div class = 'pages'>
 		{#each $pages as page}
 			<a href='/app/x/{page.id}' >
@@ -424,6 +380,8 @@ async function removePageFromFolder(pageId) {
 
 <style lang="scss">
 
+
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,200;0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;0,6..72,800;1,6..72,200;1,6..72,300;1,6..72,400;1,6..72,500;1,6..72,600;1,6..72,700;1,6..72,800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Onest:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 
@@ -442,14 +400,13 @@ async function removePageFromFolder(pageId) {
 	margin: 10px 0px 10px 5px;
 	//margin-top: 10px;
 	gap: 10px;
-	border-radius: 10px;
+	border-radius: 5px;
 	transition: 0.2s ease;
 
 	width: 200px;
-	background: rgba(white, 0.2);
+	background: rgba(white, 1);
 
 	img{
-		//border: 1px solid rgba(black, 0.2);
 		border-radius: 15px;
 		height: 20px;
 
@@ -459,7 +416,8 @@ async function removePageFromFolder(pageId) {
 		font-size: 14px;
 		letter-spacing: -0.1px;
 		font-weight: 600;
-		color: white;
+		color: black;
+		font-family: Onest, Inter, sans-serif;
 	}
 
 	&:hover{
@@ -549,7 +507,7 @@ async function removePageFromFolder(pageId) {
 .text-btn{
 
 		padding: 7px 12px;
-		border-radius: 8px;
+		border-radius: 5px;
 		font-size: 13px;
 
 		font-weight: 500;
@@ -592,6 +550,10 @@ async function removePageFromFolder(pageId) {
 
 			background: rgba(white, 1);
 			color: #ff004d;
+
+			.icon{
+				filter: brightness(0%);
+			}
 		}
 
 	}
@@ -610,28 +572,26 @@ async function removePageFromFolder(pageId) {
 	flex-direction: column;
 	z-index: 3 !important;
     opacity: 1;
-
 	background: #ff004d;
-
 	background-image: linear-gradient(180deg, #ff004d, #ff0080);
-
 	top: 15px;
 	left: 15px;
 	height: calc(100vh - 30px);
 	width: 220px;
 	border-radius: 10px;
-	//box-shadow: -10px 20px 60px rgba(black, 0.12);
+	box-shadow: 0px 20px 70px rgba(black, 0.3);
 
 
 	#add{
 		width: calc(100% - 24px);
-		margin: 15px;
-		margin-bottom: 10px;
+		margin: 10px;
+		margin-top: 15px;
+
 		box-shadow: none;
-		background: rgba(black, 0.05);
-		background: #ff004d;
-		border-radius: 8px;
-		padding: 8px 0px;
+		background: rgba(white, 0.05);
+		border: 1px solid white;
+		border-radius: 5px;
+		padding: 6px 0px;
 		color: white;
 		font-size: 12px;
 		font-weight: 500;
@@ -644,8 +604,7 @@ async function removePageFromFolder(pageId) {
 		}
 
 		&:hover{
-			background: rgba(black, 0.1);
-			background: #de0025;
+			background: rgba(white, 0.2);
 		}
 	}
 
@@ -679,15 +638,14 @@ async function removePageFromFolder(pageId) {
 	}
 
 	#pages{
-		width: 215px;
+		width: 220px;
 		flex: 1;
 		overflow-y: scroll;
 		border-top: 1px solid rgba(white, 0.4);
 		//margin-bottom: 10px;
-		margin-top: 10px;
-		margin-bottom: 0;
-		border: 5px solid white;
-		//padding-bottom: 10px;
+		margin-bottom: 0 !important;
+		padding-bottom: 10px;
+		overflow-x: hidden;
 
 		.text-btn{
 			margin: 0 8px;

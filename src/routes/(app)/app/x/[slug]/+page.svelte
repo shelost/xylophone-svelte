@@ -443,24 +443,15 @@ input:checked + .slider:before {
       width: calc(100vw - 270px);
       height: calc(100vh - 30px);
       margin-top: 15px;
-
-
-      box-shadow: -15px 30px 40px rgba(black, 0.2);
-
-
-
-
       background-image: linear-gradient(to bottom right, rgba(white,0.8), rgba(white, 0.4)) !important;
-
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      overflow-x: hidden;
+      overflow-x: hidden !important;
       overflow-y: hidden;
       border-radius: 10px;
-      //transition: 0.5s ease;
-
+      box-shadow: 0px 20px 70px rgba(#00106D, 0.1);
     }
 
   .max{
@@ -830,6 +821,7 @@ input:-webkit-autofill:active  {
   display: flex;
   justify-content: center;
   position: relative;
+  overflow-x: hidden !important;
 
   #gradient-top{
     position: absolute;
@@ -878,7 +870,7 @@ input:-webkit-autofill:active  {
 
 
 :global(#container.max){
-    width: 100vw !important;
+    width: 99vw !important;
     height: 100vh !important;
     margin-top: 0 !important;
     margin-left: -240px;
@@ -886,6 +878,7 @@ input:-webkit-autofill:active  {
     border-radius: 0 !important;
     border: none !important;
     transform: scale(1.01);
+    overflow-x: hidden !important;
   }
 
   :global(#canvas-container.max){
@@ -898,9 +891,7 @@ input:-webkit-autofill:active  {
     //border: 5px solid red !important;
     display: flex !important;
     justify-content: center !important;
-
-    #canvas{
-    }
+    overflow-x: hidden !important;
   }
 
   :global(#subcontainer.max){
@@ -910,6 +901,7 @@ input:-webkit-autofill:active  {
     //z-index: 10 !important;
     border-radius: 0 !important;
     border: none !important;
+    overflow-x: hidden !important;
 
   }
 

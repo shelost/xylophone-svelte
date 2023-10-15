@@ -252,8 +252,6 @@
 <div id = 'app' class:center={$showModal}  in:fly={{ y: 50, duration: 300}} out:fly={{ y:-50, duration: 300 }}>
 
 	<section>
-	<h1 id = 'title'> Assets </h1>
-
 {#await $allPages}
 
 	<div id = 'loading'>
@@ -340,7 +338,6 @@
 		height: 250px;
 		border-radius: 5px;
 
-		// box-shadow: 0px 0px 50px rgba(black, 0.04);
 	}
 
 	#title{
@@ -386,8 +383,7 @@
 				border-radius: 8px;
 				position: relative;
 				overflow: hidden;
-				box-shadow: 10px 15px 60px rgba(black, 0.12);
-				border: 1px solid white;
+				box-shadow: 10px 15px 60px rgba(black, 0.1);
 			}
 
 			.gradient-top{
@@ -398,7 +394,7 @@
 				height: 30%;
 				pointer-events: none;
 				z-index: 3;
-				background-image: linear-gradient(185deg, rgba(white, 0.4), rgba(white, 0), rgba(white, 0));
+				//background-image: linear-gradient(185deg, rgba(white, 0.4), rgba(white, 0), rgba(white, 0));
 			}
 
 			.gradient-bottom{
@@ -409,7 +405,7 @@
 				height: 100%;
 				z-index: 3;
 				pointer-events: none;
-				background-image: linear-gradient(5deg, rgba(black, 0.05), rgba(white, 0), rgba(white, 0));
+				//background-image: linear-gradient(5deg, rgba(black, 0.05), rgba(white, 0), rgba(white, 0));
 			}
 
 
@@ -493,7 +489,8 @@
 
 
 	section{
-		margin: 30px 30px;
+		margin: 0px 30px;
+		transform: translateY(-30px);
 	}
 
 

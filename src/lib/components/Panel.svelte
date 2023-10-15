@@ -169,7 +169,7 @@ function populatePanel(activeObject) {
     position: fixed;
     top: 15px;
     left: -400px;
-    width: 230px;
+    width: 220px;
 
 
     height: calc(100vh - 30px);
@@ -180,7 +180,7 @@ function populatePanel(activeObject) {
    //border: 2px solid red;
     border-radius: 10px;
 
-    box-shadow: -40px 10px 70px rgba(black, 0.15);
+    //box-shadow: -40px 10px 70px rgba(black, 0.15);
 
 
     display: flex;
@@ -280,7 +280,7 @@ function populatePanel(activeObject) {
 
 
     &.active{
-      left: 10px !important;
+      left: 15px !important;
     }
 
   }

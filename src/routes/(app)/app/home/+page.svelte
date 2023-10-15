@@ -117,12 +117,13 @@
 
 	function setPages(){
 
+
 		for (let i=0; i<$allPages.length; i++){
 			let page = $allPages[i];
 
 			let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
-				width: 350,
-				height: 250,
+				width: 260,
+				height: 180,
 				renderOnAddRemove: false
 			});
 
@@ -232,16 +233,33 @@
 	@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 
+
+	::-webkit-scrollbar{
+		width: 5px;
+		background: rgna(#ff004d, 0.5);
+	}
+
+	::-webkit-scrollbar-track{
+		background: rgna(#ff004d, 0.5);
+	}
+
+
+	::-webkit-scrollbar-thumb{
+		background: #ff004d;
+	}
+
+
+
 	#banner{
-		height: 600px;
-		width: 100%;
-		margin-top: 15px;
+		height: 320px;
+		width: 99%;
+
+		margin: 5px;
+		margin-top: 20px;
 		background-image: linear-gradient(to bottom left, #4f001f, black);
 
 		background: #e9e9e9;
-
 		border-radius: 10px;
-		//box-shadow: 0px 10px 50px rgba(black, 0.1);
 
 		display: flex;
 		align-items: center;
@@ -251,15 +269,21 @@
 			line-height: 1.1;
 			padding: 20px;
 			padding-left: 40px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			margin: auto;
 			h1{
-				font-size: 48px;
+				font-size: 28px;
 				font-weight: 700;
 				color: black;
 				margin-bottom: 10px;
 				letter-spacing: -0.8px;
+
 			}
 			p{
-				font-size: 48px;
+				font-size: 28px;
 				font-weight: 700;
 				color: rgba(black, 0.3);
 				letter-spacing: -0.3px;
@@ -312,6 +336,7 @@
 		gap: 24px;
 		margin-top: 40px;
 
+
 		.page{
 
 			background: white;
@@ -363,7 +388,7 @@
 					width: 100%;
 					height: 50%;
 					z-index: 3;
-					background-image: linear-gradient(190deg, rgba(white, 0.5), rgba(white, 0), rgba(white, 0));
+					//background-image: linear-gradient(190deg, rgba(white, 0.5), rgba(white, 0), rgba(white, 0));
 				}
 
 				&:hover{
@@ -383,9 +408,9 @@
 			}
 
 			h1{
-				margin-top: 15px;
+				margin-top: 10px;
 				margin-left: 2px;
-				font-size: 18px;
+				font-size: 14px;
 				font-weight: 600;
 				letter-spacing: -0.2px;
 				font-family: Onest, Inter, sans-serif;

@@ -222,6 +222,14 @@ async function loadImagesFromSupabase() {
 
 
 
+::-webkit-scrollbar{
+		width: 5px !important;
+	}
+
+
+	::-webkit-scrollbar-thumb{
+		background: red !important;
+	}
 
 	#settings{
 		z-index: 4 !important;

@@ -65,4 +65,14 @@
 
 
 <style>
+
+	::-webkit-scrollbar{
+		width: 5px !important;
+	}
+
+
+	::-webkit-scrollbar-thumb{
+		background: red;
+	}
+
 </style>
