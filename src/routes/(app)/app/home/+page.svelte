@@ -2,11 +2,12 @@
     import { supabaseClient } from '$lib/db';
     import { onMount } from 'svelte';
     import { readable, writable } from 'svelte/store';
-
     import type { PageData, Task } from '../../routes/$types';
 	import {fly} from 'svelte/transition'
 	import {fabric} from 'fabric'
 	import icon from '$lib/img/favicon.svg'
+	import ThreeDotMenu from '$lib/components/ThreeDotMenu.svelte';
+  	import Modal from '$lib/components/Modal.svelte';
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
     let userData = {};
@@ -192,13 +193,35 @@
 		{#each $allPages as page, i}
 
 			{#if page.content}
-			<a href='/p/{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
-				<div class='page' id='{page.id}' >
-					<div class = 'container' style='background: {page.color}'>
-						<canvas id='canvas-{page.id}' class='canvas'></canvas>
-						<div class = 'gradient'></div>
+
+				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
+					<a href='/p/{page.id}'>
+						<div class = 'container' style='background: {page.color}'>
+							<canvas id='canvas-{page.id}' class='canvas'></canvas>
+							<div class = 'gradient'></div>
+						</div>
+					</a>
+
+					<div class = 'expo'>
+						<div class = 'title'>
+							<h1> {page.title} </h1>
+							<h2> Page </h2>
+						</div>
+
+
+						<ThreeDotMenu options={[
+							{
+							  label: 'Delete',
+							  action: () => deleteModalActive = true
+							},
+							{
+							  label: 'Preview',
+							  action: () => window.open(`/p/${page.id}`, '_blank')
+							}
+						  ]} />
 					</div>
-					<h1> {page.title} </h1>
+
+
 					{#if page.user}
 					<div class = 'user'>
 						<img src = {page.user.pfp} >
@@ -206,7 +229,7 @@
 					</div>
 					{/if}
 				</div>
-			</a>
+
 			{/if}
 		{/each}
 
@@ -292,8 +315,8 @@
 				background: #ff004d;
 				color: white;
 				box-shadow: none;
-				font-size: 16px !important;
-				font-weight: 700;
+				font-size: 14px !important;
+				font-weight: 600;
 				padding: 15px 20px;
 				margin-top: 30px;
 				transition: 0.2s ease;
@@ -333,7 +356,7 @@
 	#pages{
 		display: flex;
 		flex-wrap: wrap;
-		gap: 24px;
+		gap: 18px;
 		margin-top: 40px;
 
 
@@ -353,11 +376,11 @@
 				align-items: center;
 				padding: 6px 12px 6px 8px;
 				gap: 8px;
-				margin: 5px;
+				margin: 2px;
 				margin-top: 12px;
 				background: rgba(black, 0.05);
 				width: fit-content;
-				border-radius: 20px;
+				border-radius: 10px;
 
 
 				img{
@@ -394,6 +417,8 @@
 				&:hover{
 					transform: scale(1.02);
 				}
+
+
 			}
 
 			canvas{
@@ -407,14 +432,33 @@
 				}
 			}
 
-			h1{
-				margin-top: 10px;
-				margin-left: 2px;
-				font-size: 14px;
-				font-weight: 600;
-				letter-spacing: -0.2px;
-				font-family: Onest, Inter, sans-serif;
+			.expo{
+				display: flex;
+				justify-content: space-between;
+				width: 100%;
+
+				.title{
+					h1{
+						margin-top: 10px;
+						margin-left: 2px;
+						font-size: 14px;
+						font-weight: 600;
+						letter-spacing: -0.2px;
+						font-family: Onest, Inter, sans-serif;
+					}
+
+					h2{
+						margin-top: 2px;
+						margin-left: 2.2px;
+						font-size: 12px;
+						font-weight: 500;
+						letter-spacing: -0.2px;
+						font-family: Onest, Inter, sans-serif;
+						color: rgba(black, 0.4);
+					}
+				}
 			}
+
 
 
 		}

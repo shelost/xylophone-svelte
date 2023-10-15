@@ -366,12 +366,24 @@ section {
     width: 100%;
     height: 280px;
     border-radius: 12px;
+    display: none;
 }
 
 #mast{
-    margin-top: -160px;
+   // margin-top: -160px;
+    margin-top: 20px;
     margin-left: 20px;
     line-height: 1.3;
+
+    .image-preview{
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+    border-radius: 10px;
+    //box-shadow: 0px 20px 50px rgba(black, 0.2);
+    margin-bottom: 24px;
+
+    }
 
     h2{
         font-size: 28px;
@@ -430,7 +442,6 @@ form {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 36px;
     margin-bottom: 5px;
 
     img{
@@ -541,15 +552,6 @@ button {
     background: black;
 }
 
-.image-preview {
-    width: 140px;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0px 20px 50px rgba(black, 0.15);
-
-    margin-bottom: 40px;
-}
 
 .error-text {
     color: red;
