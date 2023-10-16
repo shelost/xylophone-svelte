@@ -569,25 +569,23 @@ async function removePageFromFolder(pageId) {
 
 
 .text-btn{
-
 		padding: 6px 10px;
 		border-radius: 5px;
 		font-size: 13px;
-
 		font-weight: 500;
 		color: rgba(white, 0.7);
-		transition: 0.2s ease;
+		color: rgba(black, 0.4);
+		transition: 0.4s ease;
 		display: flex;
 		align-items: center;
-		width: 95%;
 		gap: 8px;
+		width: 200px;
 		margin-left: 5px;
 
 		h2{
-
 			font-family: Onest, Inter, sans-serif;
 			letter-spacing: 0px;
-			font-weight: 400;
+			font-weight: 500;
 			font-size: 11.5px;
 			margin-top: 1px;
 		}
@@ -596,8 +594,7 @@ async function removePageFromFolder(pageId) {
 			width: 15px;
 			height: 15px;
 			background-size: cover;
-
-			filter: brightness(200%);
+			filter: brightness(90%);
 		}
 
 
@@ -606,16 +603,17 @@ async function removePageFromFolder(pageId) {
 			background: white;
 			//box-shadow: -3px 5px 15px rgba(black, 0.05);
 
-			background: rgba(white, 0.3);
+			background: rgba(white, 0.5);
 		}
 
 		&.active{
-			background: white;
-			color: white;
-			//box-shadow: -3px 5px 15px rgba(black, 0.05);
+			background: #fdfdfd;
 
-			background: rgba(white, 1);
-			color: #ff004d;
+			box-shadow: -5px 5px 15px rgba(black, 0.05), 5px -5px 10px rgba(white, 0.8);
+
+			color: black;
+
+
 			h2{
 				font-weight: 600;
 			}
@@ -640,14 +638,15 @@ async function removePageFromFolder(pageId) {
 	flex-direction: column;
 	z-index: 3 !important;
     opacity: 1;
-	background: #ff004d;
-	background-image: linear-gradient(180deg, #ff004d, #ff0080);
+	background: #efefef;
+	//background: #ff004d;
+	//background-image: linear-gradient(180deg, #ff004d, #ff0080);
 	top: 10px;
 	left: 10px;
 	height: calc(100vh - 20px);
 	width: 220px;
 	border-radius: 10px;
-	box-shadow: 0px 20px 70px rgba(black, 0.3);
+	//box-shadow: 0px 20px 70px rgba(black, 0.2);
 
 
 	#flare-1{
@@ -664,14 +663,14 @@ async function removePageFromFolder(pageId) {
 
 
 	#add{
-		width: calc(100% - 24px);
+		width: calc(100% - 20px);
 		margin: 10px;
 		margin-top: 15px;
-		margin-left: 12px;
 		font-family: Onest, Inter, sans-serif;
 
 		box-shadow: none;
 		background: rgba(white, 0.05);
+		background: #FF004D;
 		border: 1px solid white;
 		border-radius: 5px;
 		padding: 6px 0px;
@@ -682,7 +681,7 @@ async function removePageFromFolder(pageId) {
 
 		h2{
 			font-size: 11px;
-			font-weight: 400;
+			font-weight: 600;
 		}
 
 		svg{
@@ -691,7 +690,7 @@ async function removePageFromFolder(pageId) {
 		}
 
 		&:hover{
-			background: rgba(white, 0.2);
+			background: rgba(#FF004D, 0.9);
 		}
 	}
 
@@ -725,19 +724,18 @@ async function removePageFromFolder(pageId) {
 	}
 
 	#pages{
-		width: 220px;
+		width: 200px;
+		margin-left: 10px;
 		flex: 1;
 		overflow-y: scroll;
-		border-top: 1px solid rgba(white, 0.4);
+		border-top: 2px solid rgba(black, 0.1);
 		//margin-bottom: 10px;
 		margin-bottom: 0 !important;
 		padding-bottom: 10px;
 		overflow-x: hidden;
 
 		.text-btn{
-			margin: 0px 10px;
-			width: 90%;
-
+			margin-left: 0;
 		}
 	}
 }
