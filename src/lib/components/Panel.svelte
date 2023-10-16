@@ -167,12 +167,12 @@ function populatePanel(activeObject) {
 
 #panel{
     position: fixed;
-    top: 15px;
+    top: 10px;
     left: -400px;
     width: 220px;
 
 
-    height: calc(100vh - 30px);
+    height: calc(100vh - 20px);
     background: #FF004D;
     background: rgb(10, 5, 19);
     background: white !important;
@@ -280,7 +280,7 @@ function populatePanel(activeObject) {
 
 
     &.active{
-      left: 15px !important;
+      left: 10px !important;
     }
 
   }

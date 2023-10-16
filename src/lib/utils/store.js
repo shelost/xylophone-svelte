@@ -15,3 +15,4 @@ export const MAX = writable(false);
 export const showModal = writable(false);
 export const toolName = writable('Arachne Tools')
 export const tools = writable([])
+export const spaces = writable([])

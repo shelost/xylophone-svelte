@@ -19,7 +19,7 @@
 
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 
-	import { pages, allPages, user, users, isPanelVisible, assets, folders, openFolders, MAX, showModal } from '$lib/utils/store.js'; // Adjust the path as necessary
+	import { pages, allPages, user, users, isPanelVisible, assets, folders, openFolders, MAX, showModal, spaces } from '$lib/utils/store.js'; // Adjust the path as necessary
 
 	import Panel from '$lib/components/Panel.svelte';
 
@@ -157,14 +157,13 @@
 	}
 
 
-async function loadImagesFromSupabase() {
+	async function loadImagesFromSupabase() {
 
 	assets.set([])
 	const path = `${data.user.id}/`; // Construct the path to your subfolder
 
 	const { data: files, error } = await supabaseClient.storage.from('images').list(path);
 
-	console.log(files)
 
 	if (error) {
 		console.error("Error fetching files:", error);
@@ -187,12 +186,26 @@ async function loadImagesFromSupabase() {
 	}
 }
 
+	async function fetchSpaces(){
+		const {data: d, error} = await supabaseClient.from('user_spaces').select('*').eq('user_id', data.user.id)
+
+		if (error) {
+			console.error('Error fetching pages:', error);
+			return;
+		}else{
+			spaces.set(d);
+			console.log(d)
+		}
+	}
+
 	loadImagesFromSupabase()
 	fetchPages()
 	fetchAllPages()
 	fetchUser()
 	fetchUsers()
 	fetchFolders()
+	fetchSpaces()
+
 
 
 </script>
@@ -222,18 +235,6 @@ async function loadImagesFromSupabase() {
 
 
 
-::-webkit-scrollbar{
-		width: 5px !important;
-	}
-
-
-	::-webkit-scrollbar-thumb{
-		background: red !important;
-	}
-
-	#settings{
-		z-index: 4 !important;
-	}
 
 
 

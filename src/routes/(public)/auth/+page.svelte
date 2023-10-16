@@ -16,6 +16,16 @@
 		};
 	};
 
+	let spaces = []; // List of spaces the user is part of
+
+// Fetch the spaces for the user once they are logged in
+async function fetchSpacesForUser(userId) {
+  const { data, error } = await supabaseClient.from('spaces').select('*').eq('admin_id', userId);
+  if (data) {
+	spaces = data;
+  }
+}
+
 </script>
 
 
@@ -48,6 +58,8 @@
 					</p>
 				</div>
 			{/if}
+
+
 			<div class="field">
 				<label for="email" class="label">Email</label>
 				<p class="control">

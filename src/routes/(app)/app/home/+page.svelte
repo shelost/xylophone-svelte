@@ -195,7 +195,7 @@
 			{#if page.content}
 
 				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
-					<a href='/p/{page.id}'>
+					<a href='/app/x/{page.id}'>
 						<div class = 'container' style='background: {page.color}'>
 							<canvas id='canvas-{page.id}' class='canvas'></canvas>
 							<div class = 'gradient'></div>
@@ -402,6 +402,7 @@
 				padding: 1px;
 				transition: 0.2s ease;
 				position: relative;
+				overflow: hidden;
 
 
 				.gradient{
@@ -415,7 +416,11 @@
 				}
 
 				&:hover{
-					transform: scale(1.02);
+
+					canvas{
+						transform: scale(1.1);
+					}
+
 				}
 
 
@@ -468,7 +473,7 @@
 
 
 	section{
-		margin: 15px 15px;
+		margin: 15px 10px;
 		font-family: Onest, Inter, sans-serif;
 	}
 

@@ -271,8 +271,22 @@
 
 						<div class = 'container'>
 							<div class='overlay'>
-								<button class = 'download' on:click={() => downloadAsset(image)}>Download</button>
-								<button class = 'remove' on:click={() => { $showModal = true; toBeDeleted = image; }}>Remove</button>
+								<button class = 'download' on:click={() => downloadAsset(image)}>
+									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M6.31934 11.1112L12.0816 16.4092L17.8439 11.1112" stroke="#131F60" stroke-width="2" stroke-linecap="square"/>
+										<path d="M12 4.5L12 15.5" stroke="#131F60" stroke-width="2" stroke-linecap="square"/>
+										<path d="M4.88086 19.5H18.9985" stroke="#131F60" stroke-width="2" stroke-linecap="square"/>
+									</svg>
+								</button>
+								<button class = 'remove' on:click={() => { $showModal = true; toBeDeleted = image; }}>
+									<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M5.5 7.53406H18.5" stroke="#131F60" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+										<path d="M17.5774 7.53406V17.8193C17.5774 18.8525 16.7464 19.6893 15.7203 19.6893H8.29171C7.26564 19.6893 6.43457 18.8525 6.43457 17.8193V7.53406" stroke="#131F60" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+										<path d="M14.788 4.5H9.21655" stroke="#131F60" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+										<path d="M10.1438 11.2803V15.9554" stroke="#131F60" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+										<path d="M13.8604 11.2803V15.9554" stroke="#131F60" stroke-width="2" stroke-linecap="square" stroke-linejoin="round"/>
+									</svg>
+								</button>
 							</div>
 							<div class = 'gradient-top'></div>
 							<div class = 'gradient-bottom'></div>
@@ -383,7 +397,7 @@
 				border-radius: 8px;
 				position: relative;
 				overflow: hidden;
-				box-shadow: 10px 15px 60px rgba(black, 0.1);
+				box-shadow: 10px 15px 50px rgba(black, 0.1);
 			}
 
 			.gradient-top{
@@ -418,9 +432,9 @@
 				//flex-direction: column;
 				justify-content: center;
 				align-items: center;
-				gap: 15px;
-				bottom: 10px;
-				right: 10px;
+				gap: 12px;
+				bottom: 12px;
+				right: 15px;
 				//width: 100%;
 				height: 50px;
 				//background: rgba(black, 0.5);
@@ -433,17 +447,36 @@
 					font-size: 12px;
 					font-weight: 600;
 					letter-spacing: -0.2px;
-					border-radius: 10px;
+					border-radius: 30px;
+					padding: 10px;
+					border: 1.5px solid white;
+
+					svg{
+						width: 18px;
+						height: 18px;
+					}
 
 					&.download{
-						background: #f0f0f0;
+						background: #0074ff;
 						color: black;
+						svg{
+							path{
+								stroke-width: 2;
+								stroke: white;
+							}
+						}
 						&:hover{
-							background: #e0e0e0;
+							background: #0052ff;
 						}
 					}
 
 					&.remove{
+						svg{
+							path{
+								stroke-width: 2;
+								stroke: white;
+							}
+						}
 						&:hover{
 							background: #e20035;
 						}
@@ -452,7 +485,7 @@
 			}
 
             img{
-				box-shadow: 0px 10px 40px rgba(black, 0.05);
+				//box-shadow: 0px 10px 40px rgba(black, 0.05);
 				border-radius: 5px;
             }
 

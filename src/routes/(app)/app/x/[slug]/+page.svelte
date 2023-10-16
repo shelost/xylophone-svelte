@@ -2,7 +2,7 @@
 
 
 
-  <div id = 'container' in:fly={{ y: 100, duration: 300 }} style='border: 1px solid {data.color}'>
+  <div id = 'container' in:fly={{ y: 100, duration: 300 }} style='border: 3px solid {data.color}'>
 
 
   <div id = 'bar'>
@@ -72,7 +72,7 @@
       </div>
 
 
-      <div class='toggle'>
+      <div id='toggle'>
 
         {#if $MAX}
           <img src = {Min} alt = 'max'>
@@ -194,7 +194,8 @@
 
 
 ::-webkit-scrollbar{
-  width: 8px;
+  width: 5px;
+  height: 0px;
   background: rgba(white, 0.5);
 }
 
@@ -320,7 +321,7 @@ input:checked + .slider:before {
     overflow-x: hidden !important;
     overflow-y: scroll !important;
     width: calc(100vw - 260px);
-    height: calc(100vh - 25px);
+    height: calc(100vh - 30px);
 
     background: none;
 
@@ -373,13 +374,13 @@ input:checked + .slider:before {
 
   #color::-webkit-color-swatch{
     padding: 0;
-    border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.2)  !important;
+    border: 1px solid rgba(white, 0.3), 1px solid rgba(black, 0.1)  !important;
     border-radius: 40px !important;
   }
 
   #color::-webkit-color-swatch-wrapper{
     padding: 0;
-    border: 1px solid rgba(white, 0.3), 2px solid rgba(black, 0.2)  !important;
+    border: 1px solid rgba(white, 0.3), 1px solid rgba(black, 0.1)  !important;
     border-radius: 40px !important;
   }
 
@@ -440,9 +441,10 @@ input:checked + .slider:before {
   }
 
   #container {
-      width: calc(100vw - 270px);
-      height: calc(100vh - 30px);
-      margin-top: 15px;
+      width: calc(100vw - 240px);
+      height: calc(100vh - 20px);
+      margin-top: 10px;
+      margin-right: 10px;
       background-image: linear-gradient(to bottom right, rgba(white,0.8), rgba(white, 0.4)) !important;
       position: relative;
       display: flex;
@@ -491,9 +493,7 @@ input:checked + .slider:before {
       left: 15px;
       z-index: 3;
 
-      width: 140px;
-
-
+      width: 200px;
 
       transform: translateY(50px);
       opacity: 0;
@@ -501,16 +501,16 @@ input:checked + .slider:before {
       animation: 0.3s slide 0.1s ease forwards;
 
       #title {
-        box-shadow: 0 20px 50px rgba(black, 0.15);
+        box-shadow: 0 20px 50px rgba(black, 0.2);
         font-size: 13px;
         font-weight: 600;
         letter-spacing: -0.4px;
         padding: 0px 12px;
         height: 32px;
-        border-radius: 8px;
+        border-radius: 18px;
         background: rgba(255, 255, 255, 1) !important;  /* corrected the rgba format */
         width: auto;   /* flexible width */
-        max-width: 140px;  /* maximum width */
+        max-width: 200px;  /* maximum width */
         border: none; /* remove default border */
         overflow: hidden; /* hide overflowed text */
         white-space: nowrap; /* ensure single line of text */
@@ -524,11 +524,12 @@ input:checked + .slider:before {
       top: calc(50% - 160px);
       left: 15px;
 
-      height: 320px;
+
+      width: 36px;
+
+      height: 305px;
       z-index: 3;
 
-
-      padding: 0 0px;
 
       display: flex;
       flex-direction: column;
@@ -537,7 +538,7 @@ input:checked + .slider:before {
       gap: 5px;
       background: rgba(white, 1) !important;
      // padding: 2px 8px 2px 5px;
-      border-radius: 12px;
+      border-radius: 32px;
       box-shadow: 0 20px 50px rgba(black, 0.15);
 
       transform: translateY(50px);
@@ -550,9 +551,9 @@ input:checked + .slider:before {
         color: black;
         box-shadow: none;
 
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
+        width: 26px;
+        height: 26px;
+        border-radius: 18px;
         cursor: pointer;
         transition: 0.2s ease;
 
@@ -570,8 +571,8 @@ input:checked + .slider:before {
         }
 
         .icon{
-          width: 12px;
-          height: 12px;
+          width: 11px;
+          height: 11px;
 
         }
   }
@@ -588,48 +589,41 @@ input:checked + .slider:before {
       }
     }
 
-    #corner{
 
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      z-index: 3;
-
-
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 20px;
-      width: 140px;
-      margin-right: 5px;
-
-      transform: translateY(50px);
-      opacity: 0;
-      animation: 0.3s slide 0.3s ease forwards;
-
-      .toggle{
-        width: 24px !important;
-        height: 24px;
-        background: rgba(black, 0.1);
-        border-radius: 5px;
-        position: relative;
+#toggle{
+        width: 30px !important;
+        height: 30px;
+        background: rgba(black, 0.3);
+        border-radius: 15px;
         flex-shrink: 0;
         transition: 0.2s ease;
-        cursor: pointer;
+        cursor: pointer !important;
+
+        z-index: 6;
+
+        position: absolute;
+        top: 15px;
+        right: 15px;
+
+
 
 
         input{
           opacity: 0;
+          //opacity: 1;
+          width: 30px;
+          height: 30px;
+          cursor: pointer !important;
         }
 
         img{
           position: absolute;
-          top: 4px;
-          left: 4px;
-          width: 16px;
-          height: 16px;
+          top: 8px;
+          left: 8px;
+          width: 14px;
+          height: 14px;
          // pointer-events: none;
-          cursor: pointer;
+         cursor: pointer !important;
         }
 
         &:hover{
@@ -659,30 +653,37 @@ input:checked + .slider:before {
     #input{
       display: flex;
       align-items: center;
-      margin-right: -75px;
+
+      position: absolute;
+      top: 15px;
+      right: -10px;
+      transition: 0.8s ease;
+      animation: 0.3s slide 0.2s ease forwards;
+
+      z-index: 5;
 
       //display: none;
       input{
-        width: 140px;
+        width: 130px;
         height: 30px;
         font-size: 12px;
         font-weight: 600;
         letter-spacing: -0.3px;
         background: rgba(white, 0.9) !important;
-        border-radius: 8px;
+        border-radius: 18px;
         box-shadow: 0 20px 50px rgba(black, 0.15);
       }
       button{
         height: 32px;
         font-size: 12px;
         font-weight: 500;
-        border-radius: 8px;
+        border-radius: 18px;
         transform: translateX(-70px);
         //border: 1px solid rgba(white, 0.5);
         box-shadow: none;
       }
     }
-}
+
 
 
 
@@ -832,6 +833,8 @@ input:-webkit-autofill:active  {
     pointer-events: none;
     background-image: linear-gradient(185deg, rgba(white, 0.2), rgba(white, 0), rgba(white, 0));
     transition: 0.4s ease;
+
+
 	}
 
   #gradient-bottom{
@@ -854,6 +857,8 @@ input:-webkit-autofill:active  {
 
     filter: blur(3px);
     background-image: linear-gradient(90deg, rgba(white, 0.4), rgba(white, 1), rgba(white, 1), rgba(white, 0.4));
+
+    display: none;
   }
 
   #flare-2{
@@ -865,6 +870,8 @@ input:-webkit-autofill:active  {
 
     filter: blur(3px);
     background-image: linear-gradient(0deg, rgba(white, 0.4), rgba(white, 1), rgba(white, 0.4));
+
+    display: none;
   }
 }
 
@@ -1014,20 +1021,16 @@ let inputWidth = 'auto';
 
   // Function to adjust the width of the input based on its content
 function adjustWidth() {
-    console.log('to')
     const testSpan = document.createElement('span');
     document.body.appendChild(testSpan);
-    testSpan.style.fontSize = '13px';
+    testSpan.style.fontSize = '10px';
     testSpan.style.fontWeight = '500';
     testSpan.style.letterSpacing = '-0.3px';
     testSpan.style.whiteSpace = 'nowrap';
     testSpan.innerText = title || 'Untitled Page';
 
     // Calculate new width
-    let newWidth = testSpan.getBoundingClientRect().width + 20;  // adding 20 for padding
-    if (newWidth > 140) {
-      newWidth = 140;
-    }
+    let newWidth = testSpan.getBoundingClientRect().width - 200;  // adding 20 for padding
     inputWidth = `${newWidth}px`;
 
     document.body.removeChild(testSpan);
@@ -1059,10 +1062,10 @@ onMount(()=> {
     testSpan.innerText = Id('title').value || 'Untitled Page';
 
 
-    let width = testSpan.getBoundingClientRect().width + 30;
+    let width = testSpan.getBoundingClientRect().width + 25;
 
     if (!value){
-      width = testSpan.getBoundingClientRect().width + 30;
+      width = testSpan.getBoundingClientRect().width + 25;
     }
 
     Id('title').style.width = width + 'px'
@@ -1093,7 +1096,7 @@ onMount(()=> {
 
 
 
-  const panelWidth = 260
+  const panelWidth = 250
 
   const PANEL = Id('panel')
   const SCROLL = Id('scroll')
@@ -2570,7 +2573,7 @@ function handleMouseMove(event) {
     const previousWidth = container.offsetWidth;
     let newWidth = previousWidth + deltaX;
 
-    if (newWidth > 400 && newWidth < window.innerWidth - 260) {
+    if (newWidth > 400 && newWidth < window.innerWidth - panelWidth) {
         container.style.width = `${newWidth}px`;
         if (container.offsetWidth !== previousWidth) {
             unifiedResize(container.offsetWidth);
@@ -3899,6 +3902,8 @@ async function uploadCanvas() {
       Id('gradient-bottom').style.opacity = 1
       Id('buttons').style.left = '15px'
       Id('mast').style.top = '15px'
+      Id('input').style.top = '15px'
+
 
       unifiedResize(window.innerWidth - 260)
 
@@ -3917,6 +3922,8 @@ async function uploadCanvas() {
 
       Id('buttons').style.left = '-35px'
       Id('mast').style.top = '-30px'
+      Id('input').style.top = '-30px'
+
 
       setTimeout( () => {
         Id('container').classList.add('max')

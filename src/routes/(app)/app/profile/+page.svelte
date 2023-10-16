@@ -6,6 +6,7 @@
     import { pages } from '$lib/utils/store';
     import { fly } from 'svelte/transition'
     import V from '$lib/img/verified.svg'
+    import ThreeDotMenu from '$lib/components/ThreeDotMenu.svelte';
 
     export let data: PageData;
     let { profile } = data;
@@ -31,10 +32,6 @@
                 usernameError = null;
             }
         }
-    }
-
-    function handleProfilePictureChange(event) {
-        imageFile = event.target.files[0];
     }
 
 
@@ -65,41 +62,61 @@ async function uploadToSupabase(file) {
     return `https://daiyycuunubdakrxtztl.supabase.co/storage/v1/object/public/images/${filePath}`;
 }
 
-async function updateProfile() {
-    try {
-        let filePath = null;
-        if (imageFile) {
-            filePath = await uploadToSupabase(imageFile);
-            if (!filePath) {
-                console.error('Error processing image file.');
-                return;
+
+    let bannerImageFile = null;
+
+    async function updateProfile() {
+        try {
+            let profileFilePath = null;
+            let bannerFilePath = null;
+
+            if (imageFile) {
+                profileFilePath = await uploadToSupabase(imageFile);
+                if (!profileFilePath) {
+                    console.error('Error processing profile image file.');
+                    return;
+                }
             }
+
+            if (bannerImageFile) {
+                bannerFilePath = await uploadToSupabase(bannerImageFile);
+                if (!bannerFilePath) {
+                    console.error('Error processing banner image file.');
+                    return;
+                }
+            }
+
+            const { error: profileUpdateError } = await supabaseClient
+                .from('users')
+                .update({
+                    pfp: profileFilePath || profile.pfp,
+                    banner: bannerFilePath || profile.banner,
+                    full_name: profile.full_name,
+                    username: profile.username
+                })
+                .eq('id', profile.id);
+
+            if (profileUpdateError) {
+                console.error('Error updating profile:', profileUpdateError);
+            } else {
+                console.log('Profile updated successfully!');
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error.message);
         }
-
-        console.log(filePath)
-        console.log(profile)
-
-        const { error: profileUpdateError } = await supabaseClient
-            .from('users')
-            .update({ pfp: filePath || profile.pfp, full_name: profile.full_name, username: profile.username })
-            .eq('id', profile.id);
-
-        if (profileUpdateError) {
-            console.error('Error updating profile:', profileUpdateError);
-        } else {
-            console.log('Profile updated successfully!');
-        }
-
-    } catch (error) {
-        console.error('Error updating profile:', error.message);
     }
-}
+
+    function handleProfilePictureChange(event) {
+        imageFile = event.target.files[0];
+    }
+
+    function handleBannerPictureChange(event) {
+        bannerImageFile = event.target.files[0];
+    }
 
 
 
-
-
-function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
+    function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
 		const scaleX = targetWidth / originalWidth
 
 
@@ -191,8 +208,8 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
 			let page = $pages[i];
 
 			let canvas = new fabric.Canvas(document.getElementById(`canvas-${page.id}`), {
-				width: 350,
-				height: 300,
+				width: 260,
+				height: 180,
 				renderOnAddRemove: false
 			});
 
@@ -231,6 +248,21 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
             </div>
 
 
+            <!-- Banner Image Upload -->
+            <div class="field">
+                <label for="banner_picture" class="label">Banner</label>
+                <input
+                    type="file"
+                    id="banner_picture"
+                    accept="image/*"
+                    on:change="{handleBannerPictureChange}"
+                />
+                {#if profile.banner}
+                    <img src={profile.banner} alt="Preview" class="image-preview" />
+                {/if}
+            </div>
+
+
             <!-- Full name field -->
             <div class="field">
 
@@ -264,6 +296,21 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
                 {/if}
             </div>
 
+             <!-- Full name field -->
+             <div class="field">
+
+                <label for="bio" class="label"> Bio </label>
+                <textarea
+                    id="bio"
+                    name="bio"
+                    class="input"
+                    type="text"
+                    bind:value="{profile.bio}"
+                    required
+                ></textarea>
+            </div>
+
+
 
 
             <!-- Save button -->
@@ -273,7 +320,7 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
         </form>
     {:else}
 
-    <div id = 'banner' in:fly={{ y: 50, duration: 300, delay: 0}}> </div>
+    <div id = 'banner' style='background-image: url({profile.banner})' in:fly={{ y: 50, duration: 300, delay: 0}}> </div>
 
         <div id = 'mast'>
 
@@ -283,7 +330,10 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
                 <img src = '{V}' alt = 'verified'>
             </div>
 
-            <p  in:fly={{ y: 50, duration: 300, delay: 150}}>@{profile.username}</p>
+            <h3 in:fly={{ y: 50, duration: 300, delay: 150}}>@{profile.username}</h3>
+
+            <p  in:fly={{ y: 50, duration: 300, delay: 200}}>{profile.bio}</p>
+
 
             <div id = 'buttons'>
                 <button id = 'create' in:fly={{ y: 50, duration: 300, delay: 250}}> + Create Page </button>
@@ -310,23 +360,41 @@ function resizeObjectsToCanvas(canvas, originalWidth, targetWidth) {
 		{#each $pages as page, i}
 
 			{#if page.content}
-			<a href='/p/{page.id}'  in:fly={{ y: 50, duration: 300, delay: 250+50*i}}>
-				<div class='page' id='{page.id}' >
+                <div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
+                    <a href='/app/x/{page.id}'>
+                        <div class = 'container' style='background: {page.color}'>
+                            <canvas id='canvas-{page.id}' class='canvas'></canvas>
+                            <div class = 'gradient'></div>
+                        </div>
+                    </a>
 
-                    <div class = 'container' style='background: {page.color}'>
-						<canvas id='canvas-{page.id}' class='canvas'></canvas>
-						<div class = 'gradient'></div>
-					</div>
+                    <div class = 'expo'>
+                        <div class = 'title'>
+                            <h1> {page.title} </h1>
+                            <h2> Page </h2>
+                        </div>
 
-					<h1> {page.title} </h1>
-					{#if page.user}
-					<div class = 'user'>
-						<img src = {page.user.pfp} >
-						<p> {page.user.full_name} </p>
-					</div>
-					{/if}
-				</div>
-			</a>
+
+                        <ThreeDotMenu options={[
+                            {
+                            label: 'Delete',
+                            action: () => deleteModalActive = true
+                            },
+                            {
+                            label: 'Preview',
+                            action: () => window.open(`/p/${page.id}`, '_blank')
+                            }
+                        ]} />
+                    </div>
+
+
+                    {#if page.user}
+                    <div class = 'user'>
+                        <img src = {page.user.pfp} >
+                        <p> {page.user.full_name} </p>
+                    </div>
+                    {/if}
+                </div>
 			{/if}
 		{/each}
 
@@ -362,16 +430,15 @@ section {
 }
 
 #banner{
-    background: #ffce00;
     width: 100%;
     height: 280px;
     border-radius: 12px;
-    display: none;
+    background-size: cover;
+    background-position: center center;
 }
 
 #mast{
-   // margin-top: -160px;
-    margin-top: 20px;
+    margin-top: -100px;
     margin-left: 20px;
     line-height: 1.3;
 
@@ -379,25 +446,45 @@ section {
         width: 150px;
         height: 150px;
         object-fit: cover;
-    border-radius: 10px;
-    //box-shadow: 0px 20px 50px rgba(black, 0.2);
-    margin-bottom: 24px;
-
+        border-radius: 10px;
+        //box-shadow: 0px 20px 50px rgba(black, 0.2);
+        margin-bottom: 24px;
     }
 
     h2{
-        font-size: 28px;
+        font-size: 24px;
         font-weight: 700;
         letter-spacing: -0.3px;
     }
 
-    p{
-        font-size: 18px;
+    h3{
+        font-size: 16px;
         letter-spacing: -0.1px;
         font-weight: 500;
-        color: rgba(black, 0.3);
+        color: rgba(black, 0.4);
         margin-bottom: 20px;
     }
+
+    p{
+        font-size: 14px;
+        letter-spacing: -0.2px;
+        font-weight: 500;
+        color: rgba(black, 0.8);
+        margin-bottom: 20px;
+    }
+
+    #name{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+
+        img{
+            height: 18px;
+            margin-top: 1px;
+        }
+    }
+
 
     #buttons{
         display: flex;
@@ -438,17 +525,6 @@ form {
 }
 
 
-#name{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
-
-    img{
-        height: 20px;
-        margin-top: 1px;
-    }
-}
 
 
 #pages{
@@ -457,34 +533,32 @@ form {
 		gap: 24px;
 		margin-top: 40px;
 
-		.page{
+        .page{
 
 			background: white;
 			padding: 5px;
 			border-radius: 5px;
+
 			//box-shadow: 0px 0px 50px rgba(black, 0.08);
 			padding-bottom: 10px;
 			transition: 0.2s ease;
 			cursor: pointer;
-
-
 
 			.user{
 				display: flex;
 				align-items: center;
 				padding: 6px 12px 6px 8px;
 				gap: 8px;
-				margin: 5px;
+				margin: 2px;
 				margin-top: 12px;
 				background: rgba(black, 0.05);
 				width: fit-content;
-				border-radius: 20px;
+				border-radius: 10px;
 
 
 				img{
 					height: 15px;
 					border-radius: 20px;
-					border: 1px solid rgba(black, 0.3);
 				}
 				p{
 					font-size: 12px;
@@ -494,14 +568,14 @@ form {
 				}
 			}
 
-
 			.container{
-				border-radius: 10px;
+				border-radius: 12px;
 				background-image: linear-gradient(to bottom right, rgba(white, 0.9), rgba(white, 0.5)) !important;
-				box-shadow: -10px 15px 30px rgba(black, 0.08);
+				//box-shadow: -10px 15px 30px rgba(black, 0.08);
 				padding: 1px;
 				transition: 0.2s ease;
 				position: relative;
+				overflow: hidden;
 
 
 				.gradient{
@@ -511,17 +585,22 @@ form {
 					width: 100%;
 					height: 50%;
 					z-index: 3;
-					background-image: linear-gradient(190deg, rgba(white, 0.5), rgba(white, 0), rgba(white, 0));
+					//background-image: linear-gradient(190deg, rgba(white, 0.5), rgba(white, 0), rgba(white, 0));
 				}
 
 				&:hover{
-					transform: scale(1.02);
+
+					canvas{
+						transform: scale(1.1);
+					}
+
 				}
+
+
 			}
 
 			canvas{
-				border-radius: 8px;
-
+				border-radius: 10px;
 				transition: 0.2s ease;
 
 				transition: 0.2s ease;
@@ -531,13 +610,33 @@ form {
 				}
 			}
 
-			h1{
-				margin-top: 15px;
-				margin-left: 3px;
-				font-size: 16px;
-				font-weight: 500;
-				letter-spacing: -0.4px;
+			.expo{
+				display: flex;
+				justify-content: space-between;
+				width: 100%;
+
+				.title{
+					h1{
+						margin-top: 10px;
+						margin-left: 2px;
+						font-size: 14px;
+						font-weight: 600;
+						letter-spacing: -0.2px;
+						font-family: Onest, Inter, sans-serif;
+					}
+
+					h2{
+						margin-top: 2px;
+						margin-left: 2.2px;
+						font-size: 12px;
+						font-weight: 500;
+						letter-spacing: -0.2px;
+						font-family: Onest, Inter, sans-serif;
+						color: rgba(black, 0.4);
+					}
+				}
 			}
+
 
 
 		}
