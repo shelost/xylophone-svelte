@@ -209,7 +209,7 @@ async function uploadToSupabase(file) {
 
 			let canvas = new fabric.Canvas(document.getElementById(`canvas-${page.id}`), {
 				width: 260,
-				height: 180,
+				height: 220,
 				renderOnAddRemove: false
 			});
 
@@ -361,7 +361,7 @@ async function uploadToSupabase(file) {
 
 			{#if page.content}
                 <div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
-                    <a href='/app/x/{page.id}'>
+                    <a href='/app/page/{page.id}'>
                         <div class = 'container' style='background: {page.color}'>
                             <canvas id='canvas-{page.id}' class='canvas'></canvas>
                             <div class = 'gradient'></div>

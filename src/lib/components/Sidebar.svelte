@@ -338,6 +338,8 @@ async function removePageFromFolder(pageId) {
 
 <div id = 'navbar'>
 
+
+
 	<div id = 'top' on:mouseover={mouseOverProfileOrDropdown} on:mouseout={mouseOutFromProfileOrDropdown}>
 
 
@@ -413,8 +415,8 @@ async function removePageFromFolder(pageId) {
 	</button>
 	<div class = 'pages'>
 		{#each $pages as page}
-			<a href='/app/x/{page.id}' >
-				<div class='text-btn page' id = '{page.id}' class:active={path === `/app/x/${page.id}`}>
+			<a href='/app/page/{page.id}' >
+				<div class='text-btn page' id = '{page.id}' class:active={path === `/app/page/${page.id}`}>
 					<div class='color' style='background-color: {page.color}'></div>
 					<h2> {page.title} </h2>
 				</div>
@@ -423,6 +425,9 @@ async function removePageFromFolder(pageId) {
 	</div>
 
 </div>
+
+
+<div id = 'flare-1'></div>
 
 </div>
 
@@ -463,7 +468,7 @@ async function removePageFromFolder(pageId) {
 	}
 
 	h2{
-		font-size: 14px;
+		font-size: 13px;
 		letter-spacing: -0.1px;
 		font-weight: 600;
 		color: black;
@@ -628,7 +633,6 @@ async function removePageFromFolder(pageId) {
 	position: fixed !important;
 	top: 0px;
 	left: 0px;
-	width: 240px;
 	height: 100vh;
 	overflow: hidden;
 	background: none;
@@ -644,6 +648,19 @@ async function removePageFromFolder(pageId) {
 	width: 220px;
 	border-radius: 10px;
 	box-shadow: 0px 20px 70px rgba(black, 0.3);
+
+
+	#flare-1{
+		position: absolute;
+		top: 0;
+		right: 2px;
+		height: 60%;
+		width: 1px;
+
+		filter: blur(1px);
+		background-image: linear-gradient(0deg, rgba(white, 0.4), rgba(white, 1), rgba(white, 0.4));
+	}
+
 
 
 	#add{

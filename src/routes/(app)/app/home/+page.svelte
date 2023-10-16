@@ -8,6 +8,7 @@
 	import icon from '$lib/img/favicon.svg'
 	import ThreeDotMenu from '$lib/components/ThreeDotMenu.svelte';
   	import Modal from '$lib/components/Modal.svelte';
+	import Banner from '$lib/img/banner.svg'
     export let data: PageData;
     let user = {}; // Define the 'user' variable to store data about the active user
     let userData = {};
@@ -124,7 +125,7 @@
 
 			let canvas = new fabric.Canvas(Id(`canvas-${page.id}`), {
 				width: 260,
-				height: 180,
+				height: 220,
 				renderOnAddRemove: false
 			});
 
@@ -167,7 +168,7 @@
 	<section>
 
 
-	<div id = 'banner'>
+	<div id = 'banner' style = 'background-image: url({Banner})'>
 		<div id = 'expo'>
 			<h1> Introducing Arachne </h1>
 			<p> An all-new way to create web experiences. </p>
@@ -195,7 +196,7 @@
 			{#if page.content}
 
 				<div class='page' id='{page.id}' in:fly={{ y: 50, duration: 300, delay: 200+50*i}}>
-					<a href='/app/x/{page.id}'>
+					<a href='/app/page/{page.id}'>
 						<div class = 'container' style='background: {page.color}'>
 							<canvas id='canvas-{page.id}' class='canvas'></canvas>
 							<div class = 'gradient'></div>
@@ -274,7 +275,7 @@
 
 
 	#banner{
-		height: 320px;
+		height: 450px;
 		width: 99%;
 
 		margin: 5px;
@@ -286,6 +287,10 @@
 
 		display: flex;
 		align-items: center;
+		background-size: cover;
+		background-position: center center;
+
+		box-shadow: 0 10px 30px rgba(black, 0.1);
 
 		#expo{
 			width: 700px;
@@ -298,16 +303,16 @@
 			text-align: center;
 			margin: auto;
 			h1{
-				font-size: 28px;
+				font-size: 36px;
 				font-weight: 700;
 				color: black;
-				margin-bottom: 10px;
+				margin-bottom: 15px;
 				letter-spacing: -0.8px;
 
 			}
 			p{
-				font-size: 28px;
-				font-weight: 700;
+				font-size: 24px;
+				font-weight: 600;
 				color: rgba(black, 0.3);
 				letter-spacing: -0.3px;
 			}
@@ -320,6 +325,8 @@
 				padding: 15px 20px;
 				margin-top: 30px;
 				transition: 0.2s ease;
+
+				box-shadow: 0px 20px 50px rgba(#FF004D, 0.5);
 
 				&:hover{
 					transform: scale(1.03);
@@ -356,7 +363,7 @@
 	#pages{
 		display: flex;
 		flex-wrap: wrap;
-		gap: 18px;
+		gap: 25px;
 		margin-top: 40px;
 
 
@@ -364,7 +371,6 @@
 
 			background: white;
 			padding: 5px;
-			border-radius: 5px;
 
 			//box-shadow: 0px 0px 50px rgba(black, 0.08);
 			padding-bottom: 10px;
@@ -396,10 +402,9 @@
 			}
 
 			.container{
-				border-radius: 12px;
+				border-radius: 8px;
 				background-image: linear-gradient(to bottom right, rgba(white, 0.9), rgba(white, 0.5)) !important;
-				//box-shadow: -10px 15px 30px rgba(black, 0.08);
-				padding: 1px;
+				box-shadow: -10px 15px 20px rgba(black, 0.05);
 				transition: 0.2s ease;
 				position: relative;
 				overflow: hidden;
@@ -427,7 +432,6 @@
 			}
 
 			canvas{
-				border-radius: 10px;
 				transition: 0.2s ease;
 
 				transition: 0.2s ease;
