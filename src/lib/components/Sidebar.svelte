@@ -663,15 +663,16 @@ async function removePageFromFolder(pageId) {
 
 
 	#add{
-		width: calc(100% - 20px);
+		width: calc(100% - 10px);
 		margin: 10px;
+		margin-left: 5px;
 		margin-top: 15px;
 		font-family: Onest, Inter, sans-serif;
 
 		box-shadow: none;
 		background: rgba(white, 0.05);
 		background: #FF004D;
-		border: 1px solid white;
+
 		border-radius: 5px;
 		padding: 6px 0px;
 		color: white;
