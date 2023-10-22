@@ -8,7 +8,7 @@
 	import Down from '$lib/img/down.svg'
 	import X from '$lib/img/x.svg'
 	import Xylophone from '$lib/img/xylophone.svg'
-	import { onMount } from 'svelte'
+	import { onMount, onDestroy } from 'svelte'
 	import Sortable from 'sortablejs';
 	import Arachne from '$lib/img/arachne.svg'
 	import IconHome from '$lib/img/iconx.svg'
@@ -96,6 +96,7 @@ return () => {
 	// Cleanup event listener on component destroy
 	window.removeEventListener('click', handleClickOutside);
 };
+
 
 
 	let sortable = Sortable.create(document.querySelector('.pages'), {
@@ -336,7 +337,7 @@ async function removePageFromFolder(pageId) {
 
 
 
-<div id = 'navbar'>
+<div id = 'navbar' out:fly={{duration: 0}}>
 
 
 
@@ -574,7 +575,6 @@ async function removePageFromFolder(pageId) {
 		font-size: 13px;
 		font-weight: 500;
 		color: rgba(white, 0.7);
-		color: rgba(black, 0.4);
 		transition: 0.4s ease;
 		display: flex;
 		align-items: center;
@@ -594,7 +594,7 @@ async function removePageFromFolder(pageId) {
 			width: 15px;
 			height: 15px;
 			background-size: cover;
-			filter: brightness(90%);
+			filter: brightness(200%);
 		}
 
 
@@ -603,13 +603,13 @@ async function removePageFromFolder(pageId) {
 			background: white;
 			//box-shadow: -3px 5px 15px rgba(black, 0.05);
 
-			background: rgba(white, 0.5);
+			background: rgba(white, 0.3);
 		}
 
 		&.active{
 			background: #fdfdfd;
 
-			box-shadow: -5px 5px 15px rgba(black, 0.05), 5px -5px 10px rgba(white, 0.8);
+			box-shadow: -5px 5px 15px rgba(black, 0.1), 5px -5px 10px rgba(white, 0.3);
 
 			color: black;
 
@@ -640,13 +640,13 @@ async function removePageFromFolder(pageId) {
     opacity: 1;
 	background: #efefef;
 	//background: #ff004d;
-	//background-image: linear-gradient(180deg, #ff004d, #ff0080);
+	background-image: linear-gradient(180deg, #ff004d, #ff0080);
 	top: 10px;
 	left: 10px;
 	height: calc(100vh - 20px);
 	width: 220px;
-	border-radius: 10px;
-	//box-shadow: 0px 20px 70px rgba(black, 0.2);
+	border-radius: 8px;
+	box-shadow: 0px 20px 50px rgba(#ff004d, 0.5);
 
 
 	#flare-1{
@@ -663,18 +663,18 @@ async function removePageFromFolder(pageId) {
 
 
 	#add{
-		width: calc(100% - 10px);
+		width: calc(100% - 0px);
 		margin: 10px;
-		margin-left: 5px;
+		margin-left: 0px;
 		margin-top: 15px;
 		font-family: Onest, Inter, sans-serif;
 
 		box-shadow: none;
-		background: rgba(white, 0.05);
-		background: #FF004D;
+		background: rgba(white, 0.2);
+		//background: #FF004D;
 
 		border-radius: 5px;
-		padding: 6px 0px;
+		padding: 7px 0px;
 		color: white;
 
 		letter-spacing: -0.1px;
@@ -682,7 +682,8 @@ async function removePageFromFolder(pageId) {
 
 		h2{
 			font-size: 11px;
-			font-weight: 600;
+            letter-spacing: 0px;
+			font-weight: 500;
 		}
 
 		svg{
@@ -691,7 +692,7 @@ async function removePageFromFolder(pageId) {
 		}
 
 		&:hover{
-			background: rgba(#FF004D, 0.9);
+			background: rgba(white, 0.3);
 		}
 	}
 

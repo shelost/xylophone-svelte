@@ -178,21 +178,21 @@
 		height: 44px;
 		//background: white;
 		padding: 12px 15px;
-		border-radius: 8px;
+		border-radius: 30px;
 		background: black;
 		box-shadow: 0 20px 50px rgba(black, 0.2);
 		//box-shadow: 0 20px 50px rgba(black, 0.2);
 	}
 
 	button{
-		background: #FF004D;
+		background: #FFCE00;
 		color: white;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 6px;
 		padding: 10px 20px;
-		border-radius: 8px;
+		border-radius: 20px;
 		font-weight: 700;
 		letter-spacing: -0.2px;
 		box-shadow: none;
@@ -203,44 +203,37 @@
 			font-size: 14px !important;
 			letter-spacing: -0.2px;
 			font-weight: 700;
+			color: black;
 		}
 
-
+		svg{
+			height: 16px;
+			width: 16px;
+			path{
+				stroke: black;
+			}
+		}
 
 		&:hover{
 			//gap: 12px;
-			background: white !important;
+			background: #ffbb00;
 		}
 	}
 
-	button:hover{
-		background: #ea0008;
-	}
 
-	button h1{
-		font-size: 14px;
-		margin: 0;
-	}
 
 	.text-btns{
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		gap: 20px;
-		background: rgba(white, 0.8);
+		background: rgba(white, 1);
 		backdrop-filter: blur(10px);
 		padding: 12px 25px;
-		border-radius: 8px;
-		box-shadow: 0 40px 50px rgba(black, 0.1);
+		border-radius: 25px;
+		box-shadow: 0 40px 50px rgba(black, 0.3);
 	}
 
-	svg{
-		height: 16px;
-		width: 16px;
-		path{
-			stroke: white;
-		}
-	}
 
 	.text-btn{
 		color: rgba(black, 0.4);

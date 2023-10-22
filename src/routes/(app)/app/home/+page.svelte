@@ -375,6 +375,8 @@
 			//box-shadow: 0px 0px 50px rgba(black, 0.08);
 			padding-bottom: 10px;
 			transition: 0.2s ease;
+
+
 			cursor: pointer;
 
 			.user{
@@ -407,6 +409,8 @@
 				box-shadow: -10px 15px 20px rgba(black, 0.05);
 				transition: 0.2s ease;
 				position: relative;
+
+				border: 1px solid white;
 				overflow: hidden;
 
 
@@ -434,7 +438,6 @@
 			canvas{
 				transition: 0.2s ease;
 
-				transition: 0.2s ease;
 				cursor: pointer !important;
 				&:hover{
 					//transform: scale(1.05) !important;

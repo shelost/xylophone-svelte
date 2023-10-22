@@ -63,9 +63,6 @@ let xArr = Array.from({length: 40}, (_, i) => i * 40);
     });
 
 
-    console.log('yo')
-
-
     /*
     // Snapping function when object is moving
     canvas.on('object:moving', function(event) {

@@ -178,7 +178,7 @@ function populatePanel(activeObject) {
     background: white !important;
 
    //border: 2px solid red;
-    border-radius: 10px;
+    border-radius: 8px;
 
     //box-shadow: -40px 10px 70px rgba(black, 0.15);
 
